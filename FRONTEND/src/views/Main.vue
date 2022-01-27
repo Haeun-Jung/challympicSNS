@@ -3,8 +3,7 @@
     <tool-bar />
     <tag-bar />
     <side />
-    <fab-button />
-    <!-- 리스트 공간
+    <!-- 리스트 공간 라우터 뷰 필요 
   -->
   </v-main>
 </template>
@@ -13,9 +12,9 @@
 import ToolBar from "../components/layout/ToolBar.vue";
 import TagBar from "../components/layout/TagBar.vue";
 import Side from "../components/layout/Side.vue";
-import FabButton from "../components/button/FabButton.vue";
+
 export default {
-  components: { ToolBar, TagBar, Side, FabButton },
+  components: { ToolBar, TagBar, Side },
 };
 </script>
 
