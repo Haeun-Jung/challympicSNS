@@ -1,43 +1,21 @@
 <template>
   <v-list dense nav>
     <v-list-item>
-      <v-card-subtitle>
-        <h2>인기 급상승</h2>
-      </v-card-subtitle>
+      <popular-search></popular-search>
     </v-list-item>
-    <!-- export 인기 급상승 list -->
-    <v-list-item-content>
-      <h4 class="main-side-menu-contents">이부분 맨 마지막에 리스트로 삽입</h4>
-    </v-list-item-content>
     <v-divider />
     <v-list-item>
-      <v-card-subtitle>
-        <h2>내 관심사</h2>
-      </v-card-subtitle>
+      <my-interest></my-interest>
     </v-list-item>
-    <v-list-item-content>
-      <v-if user> </v-if>
-      <v-else>
-        <h4 class="main-side-menu-contents">
-          관심사를 등록하고 관련 영상을 찾아보세요!
-        </h4>
-        <div class="main-side-menu-btn-container">
-          <v-btn color="primary" class="main-side-menu-btn"> 로그인 </v-btn>
-        </div>
-      </v-else>
-    </v-list-item-content>
     <v-divider />
     <v-list-item>
-      <v-card-subtitle>
-        <h2>이달의 도전왕</h2>
-      </v-card-subtitle>
+      <my-subscription></my-subscription>
     </v-list-item>
-    <v-list-item-content>
-      <v-if user> </v-if>
-      <v-else>
-        <h4 class="main-side-menu-contents">도전왕 유저 리스트</h4>
-      </v-else>
-    </v-list-item-content>
+    <v-divider />
+    <v-list-item>
+      <ranking></ranking>
+    </v-list-item>
+    <v-divider />
     <div class="main-side-switch-container">
       <v-list-item>
         <v-card-subtitle>
@@ -55,8 +33,19 @@
 </template>
 
 <script>
+import PopularSearch from './PopularSearch.vue'
+import MyInterest from './MyInterest.vue'
+import MySubscription from './MySubscription.vue'
+import Ranking from './Ranking.vue'
+
 export default {
   name: "SideContents",
+  components: {
+    PopularSearch,
+    MyInterest,
+    MySubscription,
+    Ranking
+  },
   data() {
     return {
       dark: false,
@@ -69,14 +58,5 @@ export default {
 .main-side-switch-container {
   display: flex;
   justify-content: space-between;
-}
-.main-side-menu-contents {
-  margin: 1%;
-  padding-left: 7%;
-  padding-right: 7%;
-}
-.main-side-menu-btn-container {
-  margin: 5%;
-  padding-left: 30%;
 }
 </style>
