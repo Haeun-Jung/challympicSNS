@@ -19,11 +19,23 @@ public class FeedApiController {
     private final ChallengeService challengeService;
 //    private final CommentService commentService;
 
+    /**
+     * 내가 만든 챌린지 목록
+     * @param userNo
+     * @return
+     */
     @GetMapping("/feed/{userNo}/challenge")
     public FeedChallengeResponse getChallengeList(@PathVariable int userNo) {
         List<Challenge> challenges = challengeService.getChallengeByUserNo(userNo);
         return new FeedChallengeResponse(true, 200, challenges);
     }
+
+    @GetMapping("/feed/{userNo}/subscription")
+    public FeedChallengeResponse getSubscriptionChallengeList(@PathVariable int userNo) {
+        List<Challenge> challenges = challengeService.getChallengeBySubscription(userNo);
+        return new FeedChallengeResponse(true, 200, challenges);
+    }
+
 
     @Data
     @AllArgsConstructor

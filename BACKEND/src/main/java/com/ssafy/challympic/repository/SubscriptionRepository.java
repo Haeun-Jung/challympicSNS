@@ -1,10 +1,12 @@
 package com.ssafy.challympic.repository;
 
+import com.ssafy.challympic.domain.Challenge;
 import com.ssafy.challympic.domain.Subscription;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -26,5 +28,11 @@ public class SubscriptionRepository {
 
     public void deleteSubscription(Subscription subscription) {
         em.remove(subscription);
+    }
+
+    public List<Challenge> findChallengeByUserNoFromSubs(int userNo) {
+        return em.createQuery("select s.challenge_no from Subscription s where s.user_no = :user_no", Challenge.class)
+            .setParameter("user_no", userNo)
+            .getResultList();
     }
 }

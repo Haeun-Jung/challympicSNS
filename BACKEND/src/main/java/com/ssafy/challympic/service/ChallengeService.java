@@ -2,7 +2,9 @@ package com.ssafy.challympic.service;
 
 import com.ssafy.challympic.domain.Challenge;
 import com.ssafy.challympic.domain.Challenger;
+import com.ssafy.challympic.domain.Subscription;
 import com.ssafy.challympic.repository.ChallengeRepository;
+import com.ssafy.challympic.repository.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,7 @@ import java.util.List;
 public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
+    private final SubscriptionRepository subscriptionRepository;
 
     public List<Challenge> getChallengeByUserNo(int userNo) {
         return challengeRepository.findByUserNo(userNo);
@@ -50,5 +53,9 @@ public class ChallengeService {
 
     public List<Challenge> findChallengeByTitle(String title) {
         return challengeRepository.findByTitle(title);
+    }
+
+    public List<Challenge> getChallengeBySubscription(int userNo) {
+        return subscriptionRepository.findChallengeByUserNoFromSubs(userNo);
     }
 }
