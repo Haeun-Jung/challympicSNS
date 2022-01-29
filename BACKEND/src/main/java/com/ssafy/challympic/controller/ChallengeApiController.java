@@ -44,9 +44,6 @@ public class ChallengeApiController {
     @PostMapping("/challenge")
     public ChallengeResponse createChallenge(@RequestBody CreateChallengeRequest request) {
 
-        // 챌린지 생성한 사람
-        int user_no = userService.findUser(request.getUser_nickname());
-
         String challenge_access; // 권한
         List<Integer> challengers = new ArrayList<>(); // 초대된 인원
         // 챌린지 초대한 사람이 없으면 PUBLIC
@@ -63,7 +60,7 @@ public class ChallengeApiController {
         }
 
         Challenge challenge = Challenge.createChallenge(
-                user_no,
+                request.getUser_no(),
                 request.getChallenge_start(),
                 request.getChallenge_end(),
                 challenge_access,
@@ -92,7 +89,7 @@ public class ChallengeApiController {
 
     @Data
     static class CreateChallengeRequest {
-        private int user_nickname;
+        private int user_no;
         private List<String> challengers;
         private LocalDateTime challenge_start;
         private LocalDateTime challenge_end;
@@ -122,6 +119,7 @@ public class ChallengeApiController {
     @PostMapping("/challenge/{challengeNo}/subscribe/{userNo}")
     public ChallengeResponse addSubscribe(@PathVariable int challengeNo, @PathVariable int userNo) {
         subscriptionService.saveSubscription(Subscription.setSubscription(challengeNo, userNo));
+        return new ChallengeResponse(true, 200);
     }
 
     @Data
