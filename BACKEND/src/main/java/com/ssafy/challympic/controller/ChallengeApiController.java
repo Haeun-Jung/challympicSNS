@@ -1,18 +1,15 @@
 package com.ssafy.challympic.controller;
 
 import com.ssafy.challympic.domain.Challenge;
-import com.ssafy.challympic.domain.Challenger;
 import com.ssafy.challympic.domain.Subscription;
 import com.ssafy.challympic.service.ChallengeService;
 import com.ssafy.challympic.service.SubscriptionService;
-import com.ssafy.challympic.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +18,7 @@ import java.util.stream.Collectors;
 public class ChallengeApiController {
 
     private final ChallengeService challengeService;
-    private final UserService userService;
+//    private final UserService userService;
     private final SubscriptionService subscriptionService;
 
     @GetMapping("/challenge")
@@ -41,44 +38,44 @@ public class ChallengeApiController {
         private T data;
     }
 
-    @PostMapping("/challenge")
-    public ChallengeResponse createChallenge(@RequestBody CreateChallengeRequest request) {
-
-        String challenge_access; // 권한
-        List<Integer> challengers = new ArrayList<>(); // 초대된 인원
-        // 챌린지 초대한 사람이 없으면 PUBLIC
-        if(request.getChallengers().size() == 0){
-            challenge_access = "PUBLIC";
-        }
-        // 챌린지 초대한 사람이 있으면 PRIVATE
-        else{
-            challenge_access = "PRIVATE";
-            for(String user_nickname : request.getChallengers()) {
-                int challengerUserNo = userService.findUser(user_nickname);
-                challengers.add(challengerUserNo);
-            }
-        }
-
-        Challenge challenge = Challenge.createChallenge(
-                request.getUser_no(),
-                request.getChallenge_start(),
-                request.getChallenge_end(),
-                challenge_access,
-                request.getChallenge_type(),
-                request.getChallenge_title(),
-                request.getChallenge_content()
-
-        );
-        int challengeNo = challengeService.saveChallenge(challenge);
-
-        for(int cr : challengers) {
-            Challenger challenger = new Challenger();
-            challenger.setChallenge_no(challengeNo);
-            challenger.setUser_no(cr);
-            challengeService.saveChallengers(challenger);
-        }
-        return new ChallengeResponse(true, 200);
-    }
+//    @PostMapping("/challenge")
+//    public ChallengeResponse createChallenge(@RequestBody CreateChallengeRequest request) {
+//
+//        String challenge_access; // 권한
+//        List<Integer> challengers = new ArrayList<>(); // 초대된 인원
+//        // 챌린지 초대한 사람이 없으면 PUBLIC
+//        if(request.getChallengers().size() == 0){
+//            challenge_access = "PUBLIC";
+//        }
+//        // 챌린지 초대한 사람이 있으면 PRIVATE
+//        else{
+//            challenge_access = "PRIVATE";
+//            for(String user_nickname : request.getChallengers()) {
+//                int challengerUserNo = userService.findUser(user_nickname);
+//                challengers.add(challengerUserNo);
+//            }
+//        }
+//
+//        Challenge challenge = Challenge.createChallenge(
+//                request.getUser_no(),
+//                request.getChallenge_start(),
+//                request.getChallenge_end(),
+//                challenge_access,
+//                request.getChallenge_type(),
+//                request.getChallenge_title(),
+//                request.getChallenge_content()
+//
+//        );
+//        int challengeNo = challengeService.saveChallenge(challenge);
+//
+//        for(int cr : challengers) {
+//            Challenger challenger = new Challenger();
+//            challenger.setChallenge_no(challengeNo);
+//            challenger.setUser_no(cr);
+//            challengeService.saveChallengers(challenger);
+//        }
+//        return new ChallengeResponse(true, 200);
+//    }
 
     @Data
     @AllArgsConstructor

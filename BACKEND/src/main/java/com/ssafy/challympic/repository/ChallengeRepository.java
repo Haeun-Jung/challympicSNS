@@ -32,4 +32,10 @@ public class ChallengeRepository {
     public void saveChallenger(Challenger challenger) {
         em.persist(challenger);
     }
+
+    public List<Challenge> findByUserNo(int userNo) {
+        return em.createQuery("select c from Challenge c where c.user_no = :userNo", Challenge.class)
+                .setParameter("userNo", userNo)
+                .getResultList();
+    }
 }

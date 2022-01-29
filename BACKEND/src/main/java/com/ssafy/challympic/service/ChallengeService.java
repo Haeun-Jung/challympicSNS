@@ -17,6 +17,10 @@ public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
 
+    public List<Challenge> getChallengeByUserNo(int userNo) {
+        return challengeRepository.findByUserNo(userNo);
+    }
+
 
     public List<Challenge> findChallenges() {
         return challengeRepository.findAll();
