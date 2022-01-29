@@ -20,10 +20,6 @@ public class Challenge {
     @JoinColumn(name = "user_no")
     private int user_no;
 
-//    @OneToMany(fetch = LAZY)
-    @JoinColumn(name = "challenger_no")
-    private int challenger_no;
-
     private LocalDateTime challenge_start;
 
     private LocalDateTime challenge_end;
@@ -43,4 +39,17 @@ public class Challenge {
 //    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "title_no")
     private int title_no;
+
+    // 생성 메소드
+    public static Challenge createChallenge(int user_no, LocalDateTime challenge_start, LocalDateTime challenge_end, String challenge_access, String challenge_type, String challenge_title, String challenge_content) {
+        Challenge challenge = new Challenge();
+        challenge.setUser_no(user_no);
+        challenge.setChallenge_start(challenge_start);
+        challenge.setChallenge_end(challenge_end);
+        challenge.setChallenge_access(challenge_access);
+        challenge.setChallenge_type(challenge_type);
+        challenge.setChallenge_title(challenge_title);
+        challenge.setChallenge_content(challenge_content);
+        return challenge;
+    }
 }
