@@ -13,7 +13,14 @@ public class SubscriptionService {
 
     private final SubscriptionRepository subscriptionRepository;
 
+    @Transactional
     public void saveSubscription(Subscription subscription) {
         subscriptionRepository.saveSubscription(subscription);
+    }
+
+    @Transactional
+    public void deleteSubscription(Subscription subscription) {
+        Subscription sub = subscriptionRepository.findSubscription(subscription);
+        subscriptionRepository.deleteSubscription(sub);
     }
 }

@@ -117,8 +117,14 @@ public class ChallengeApiController {
     }
 
     @PostMapping("/challenge/{challengeNo}/subscribe/{userNo}")
-    public ChallengeResponse addSubscribe(@PathVariable int challengeNo, @PathVariable int userNo) {
+    public ChallengeResponse addSubscription(@PathVariable int challengeNo, @PathVariable int userNo) {
         subscriptionService.saveSubscription(Subscription.setSubscription(challengeNo, userNo));
+        return new ChallengeResponse(true, 200);
+    }
+
+    @DeleteMapping("/challenge/{challengeNo}/subscribe/{userNo}")
+    public ChallengeResponse removeSubscription(@PathVariable int challengeNo, @PathVariable int userNo) {
+        subscriptionService.deleteSubscription(Subscription.setSubscription(challengeNo, userNo));
         return new ChallengeResponse(true, 200);
     }
 

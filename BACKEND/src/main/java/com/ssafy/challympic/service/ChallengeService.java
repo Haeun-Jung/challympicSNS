@@ -22,6 +22,7 @@ public class ChallengeService {
         return challengeRepository.findAll();
     }
 
+    @Transactional
     public int saveChallenge(Challenge challenge) {
         // 중복 확인
         validateDuplicateChallenge(challenge);
@@ -38,6 +39,7 @@ public class ChallengeService {
         }
     }
 
+    @Transactional
     public void saveChallengers(Challenger challenger) {
         challengeRepository.saveChallenger(challenger);
     }
