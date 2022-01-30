@@ -1,4 +1,4 @@
-package com.ssafy.challympic.controller;
+package com.ssafy.challympic.api;
 
 import com.ssafy.challympic.domain.Challenge;
 import com.ssafy.challympic.service.ChallengeService;
