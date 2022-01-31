@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Main from "../views/Main.vue";
+
 import Account from "../components/account/Account.vue";
 /*프로필 */
 /* Desktop */
@@ -15,7 +16,6 @@ import DeleteUserMobile from "../components/account/profile/mobile/DeleteUser.vu
 import UpdateUserPasswordMobile from "../components/account/profile/mobile/PasswordUpdate.vue";
 import UpdatePushAlertSettingMobile from "../components/account/profile/mobile/PushAlert.vue";
 import QnAUserMobile from "../components/account/profile/mobile/QnA.vue";
-
 
 import Join from "../views/user/Join.vue";
 import Login from "../views/user/Login.vue";
