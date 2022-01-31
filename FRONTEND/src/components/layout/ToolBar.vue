@@ -15,7 +15,9 @@
       ></v-app-bar-nav-icon>
     </v-toolbar-items>
     <!--logo-->
-    <v-toolbar-title>Challympic</v-toolbar-title>
+    <v-toolbar-title class="v-toolbar-title" @click="goMain"
+      >Challympic</v-toolbar-title
+    >
     <v-spacer />
     <v-toolbar-items class="hidden-md-and-down">
       <div class="main-toolbar-search">
@@ -60,7 +62,9 @@
           </v-btn>
             else :
             -->
-    <v-btn color="primary" outlined small x-small>로그인</v-btn>
+    <v-btn @click="clickLoginBtn" color="primary" outlined small x-small
+      >로그인</v-btn
+    >
     <!-- Add a navigation bar -->
     <v-navigation-drawer
       hide-overlay
@@ -101,11 +105,20 @@ export default {
     menuItems() {
       return this.menu;
     },
+    goMain() {
+      this.$router.push("/");
+    },
+    clickLoginBtn() {
+      this.$router.push("/login");
+    },
   },
 };
 </script>
 
 <style scoped>
+.v-toolbar-title:hover {
+  cursor: pointer;
+}
 .v-text-field {
   width: 600px;
 }
