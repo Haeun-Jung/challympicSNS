@@ -15,7 +15,7 @@
 			></v-app-bar-nav-icon>
 		</v-toolbar-items>
 		<!--logo-->
-		<v-toolbar-title style="cursor: pointer" @click="$router.push('/')"
+		<v-toolbar-title class="v-toolbar-title" @click="goMain"
 			>Challympic</v-toolbar-title
 		>
 		<v-spacer />
@@ -55,18 +55,11 @@
 				height="50px"
 			></v-text-field>
 		</v-menu>
-		<!--v-if users>
-          </v-btn>
-            else :
-            </v-if>
-            -->
 
-		<v-btn color="primary" outlined small x-small>로그인</v-btn>
-		<!--
-		<v-btn icon @click="$router.push('/user/account/3')"
-			><v-icon>mdi-account-circle</v-icon></v-btn
+		<v-btn @click="clickLoginBtn" color="primary" outlined small x-small
+			>로그인</v-btn
 		>
--->
+
 		<div v-if="!isMobile()">
 			<v-menu bottom left>
 				<template v-slot:activator="{ on, attrs }">
@@ -130,7 +123,6 @@
 	export default {
 		name: "ToolBar",
 		components: { SideContents },
-
 		data() {
 			return {
 				drawer: false,
@@ -156,6 +148,12 @@
 			menuItems() {
 				return this.menu;
 			},
+			goMain() {
+				this.$router.push("/");
+			},
+			clickLoginBtn() {
+				this.$router.push("/login");
+			},
 			isMobile() {
 				if (
 					/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -170,8 +168,10 @@
 		},
 	};
 </script>
-
 <style scoped>
+	.v-toolbar-title:hover {
+		cursor: pointer;
+	}
 	.v-text-field {
 		width: 600px;
 	}
