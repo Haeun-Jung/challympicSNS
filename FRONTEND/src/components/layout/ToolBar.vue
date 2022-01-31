@@ -25,6 +25,7 @@
           class="ml-5"
           flat
           solo
+          rounded
           append-icon="mdi-magnify"
           width="600px"
         >

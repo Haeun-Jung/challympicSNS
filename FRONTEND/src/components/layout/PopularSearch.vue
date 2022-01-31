@@ -32,7 +32,7 @@ export default {
   justify-content: space-between;
   border: solid 0.5px;
   border-radius: 20px;
-  margin: 0.5rem;
+  margin: 0.5rem 0rem;
   padding: 0.5rem;
 }
 
