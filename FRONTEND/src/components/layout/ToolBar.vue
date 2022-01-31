@@ -55,18 +55,12 @@
 				height="50px"
 			></v-text-field>
 		</v-menu>
-		<!--v-if users>
-          </v-btn>
-            else :
-            </v-if>
-            -->
+	
+ 
+		   <v-btn @click="clickLoginBtn" color="primary" outlined small x-small
+      >로그인</v-btn
+    >
 
-		<v-btn color="primary" outlined small x-small>로그인</v-btn>
-		<!--
-		<v-btn icon @click="$router.push('/user/account/3')"
-			><v-icon>mdi-account-circle</v-icon></v-btn
-		>
--->
 		<div v-if="!isMobile()">
 			<v-menu bottom left>
 				<template v-slot:activator="{ on, attrs }">
@@ -130,7 +124,6 @@
 	export default {
 		name: "ToolBar",
 		components: { SideContents },
-
 		data() {
 			return {
 				drawer: false,
@@ -156,6 +149,9 @@
 			menuItems() {
 				return this.menu;
 			},
+			clickLoginBtn() {
+      		this.$router.push("/login");
+    		},
 			isMobile() {
 				if (
 					/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -172,11 +168,15 @@
 </script>
 
 <style scoped>
-	.v-text-field {
-		width: 600px;
-	}
-	.main-toolbar-search {
-		margin-top: 1.2%;
-		/*background-color: pink;*/
-	}
+.v-toolbar-title:hover {
+  cursor: pointer;
+}
+.v-text-field {
+  width: 600px;
+}
+.main-toolbar-search {
+  margin-top: 1.2%;
+  /*background-color: pink;*/
+}
+
 </style>
