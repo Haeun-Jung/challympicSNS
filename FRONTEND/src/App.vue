@@ -1,15 +1,18 @@
 <template>
-  <v-app>
-      <router-view />
-  </v-app>
+	<v-app class="app">
+		<tool-bar />
+		<router-view />
+	</v-app>
 </template>
 
 <script>
-export default {
-  name: "App",
+	import ToolBar from "./components/layout/ToolBar.vue";
 
-  data: () => ({
-  
-  }),
-};
+	export default {
+		name: "App",
+		components: { ToolBar },
+		data: () => ({}),
+	};
 </script>
+
+<style scoped></style>
