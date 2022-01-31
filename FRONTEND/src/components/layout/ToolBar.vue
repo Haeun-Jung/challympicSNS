@@ -55,9 +55,11 @@
 				height="50px"
 			></v-text-field>
 		</v-menu>
+
 		<v-btn @click="clickLoginBtn" color="primary" outlined small x-small
 			>로그인</v-btn
 		>
+
 		<div v-if="!isMobile()">
 			<v-menu bottom left>
 				<template v-slot:activator="{ on, attrs }">

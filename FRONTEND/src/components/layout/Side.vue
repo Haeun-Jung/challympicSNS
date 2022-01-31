@@ -20,8 +20,8 @@
 </script>
 
 <style lang="scss" scoped>
-	 //@import '~vuetify/src/components/VStepper/_variables.scss';
-	$navigation-drawer-border-width {
-		20px;
-		}
+	//@import '~vuetify/src/components/VStepper/_variables.scss';
+	//$navigation-drawer-border-width {
+	//	20px;
+	//	}
 </style>
