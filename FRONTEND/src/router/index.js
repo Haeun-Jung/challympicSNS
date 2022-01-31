@@ -17,6 +17,10 @@ import UpdatePushAlertSettingMobile from "../components/account/profile/mobile/P
 import QnAUserMobile from "../components/account/profile/mobile/QnA.vue";
 
 
+import Join from "../views/user/Join.vue";
+import Login from "../views/user/Login.vue";
+
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -83,7 +87,17 @@ const routes = [
         component: QnAUserMobile,
       },
     ],
-  }
+  },
+  {
+    path: "/join",
+    name: "Join",
+    component: Join,
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: Login,
+  },
 ];
 
 const router = new VueRouter({

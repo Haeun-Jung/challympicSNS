@@ -1,14 +1,18 @@
 <template>
-  <v-app>
-      <router-view />
-      <fab-button />
-  </v-app>
+	<v-app class="app">
+		<tool-bar />
+		<router-view />
+	</v-app>
 </template>
 
 <script>
-import FabButton from "./components/button/FabButton.vue";
-export default {
-  name: "App",
-  components : {FabButton}
-};
+	import ToolBar from "./components/layout/ToolBar.vue";
+
+	export default {
+		name: "App",
+		components: { ToolBar },
+		data: () => ({}),
+	};
 </script>
+
+<style scoped></style>
