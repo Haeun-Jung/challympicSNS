@@ -1,10 +1,5 @@
 <template>
-  <v-card
-    max-width="20%"
-    class="hidden-sm-and-down"
-    elevation="0"
-    height="100vh"
-  >
+  <v-card class="hidden-sm-and-down" elevation="0" height="100vh">
     <side-contents />
   </v-card>
 </template>
