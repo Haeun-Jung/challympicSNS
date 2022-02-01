@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -40,7 +41,7 @@ public class ChallengeService {
     private void validateDuplicateChallenge(Challenge challenge) {
         List<Challenge> findChallenges = challengeRepository.findByTitle(challenge.getChallenge_title());
         for(Challenge c : findChallenges) {
-            if(c.getChallenge_end().isAfter(LocalDateTime.now())){
+            if(c.getChallenge_end().after(new Date())){
                 throw new IllegalStateException("이미 존재하는 챌린지입니다.");
             }
         }

@@ -21,6 +21,8 @@ public class FeedApiController {
 
     /**
      * 내가 만든 챌린지 목록
+     * !!!TODO!!!
+     * 없는 사람이면 오류 출력해야함.
      * @param userNo
      * @return
      */
@@ -30,6 +32,11 @@ public class FeedApiController {
         return new FeedChallengeResponse(true, 200, challenges);
     }
 
+    /**
+     * 구독한 챌린지 목록
+     * @param userNo
+     * @return
+     */
     @GetMapping("/feed/{userNo}/subscription")
     public FeedChallengeResponse getSubscriptionChallengeList(@PathVariable int userNo) {
         List<Challenge> challenges = challengeService.getChallengeBySubscription(userNo);

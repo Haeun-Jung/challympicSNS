@@ -77,5 +77,8 @@ public class UserService {
         userRepository.delete(user_no);
     }
 
-    public void findUser(String user_nickname){ userRepository.validateNickname(user_nickname); }
+    public int findUser(String user_nickname){
+         List<User> users = userRepository.validateNickname(user_nickname);
+         return users.get(0).getUser_no();
+    }
 }

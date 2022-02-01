@@ -35,7 +35,7 @@ public class UserRepository {
     public List<User> validateNickname(String user_nickname){
         return em.createQuery("select u from User u where u.user_nickname = :user_nickname", User.class)
                 .setParameter("user_nickname", user_nickname)
-                .getResultList();
+                .getResultList(); // getSingleResult 쓰면 안되나?
     }
 
     public void delete(int user_no){

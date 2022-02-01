@@ -1,11 +1,11 @@
 package com.ssafy.challympic.domain;
 
+import com.ssafy.challympic.domain.defaults.UserActive;
+import com.ssafy.challympic.domain.defaults.UserAuth;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 생성 전략. AUTO_INCREMENT
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 생성 전략. AUTO_INCREMENT0
     private int user_no;
 
     @Column(nullable = false)
