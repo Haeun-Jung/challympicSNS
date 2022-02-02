@@ -58,7 +58,7 @@ public class UserService {
      * 정보 수정
      */
     @Transactional
-    public void updateNickname(int user_no, String user_nickname){
+    public void updateUser(int user_no, String user_nickname){
         User user = userRepository.findOne(user_no);
         user.setUser_nickname(user_nickname);
     }
@@ -69,7 +69,7 @@ public class UserService {
         user.setUser_pwd(user_pwd);
     }
 
-    public User userInfo(int user_no){
+    public User findUser(int user_no){
         return userRepository.findOne(user_no);
     }
 
@@ -77,5 +77,5 @@ public class UserService {
         userRepository.delete(user_no);
     }
 
-    public void findUser(String user_nickname){ userRepository.validateNickname(user_nickname); }
+    public void findByNickname(String user_nickname){ userRepository.validateNickname(user_nickname); }
 }
