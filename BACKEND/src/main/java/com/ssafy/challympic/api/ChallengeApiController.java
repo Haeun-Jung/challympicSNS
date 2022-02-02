@@ -1,7 +1,6 @@
 package com.ssafy.challympic.api;
 
 import com.ssafy.challympic.domain.Challenge;
-import com.ssafy.challympic.domain.Challenger;
 import com.ssafy.challympic.domain.Subscription;
 import com.ssafy.challympic.service.ChallengeService;
 import com.ssafy.challympic.service.SubscriptionService;
@@ -11,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -91,7 +88,7 @@ public class ChallengeApiController {
     static class CreateChallengeRequest {
         private int user_no;
         private List<String> challengers;
-        private Date challenge_start;
+        private LocalDateTime challenge_start;
         private LocalDateTime challenge_end;
 //        private String challenge_access; // 잠시 대기
         private String challenge_type;
@@ -140,7 +137,7 @@ public class ChallengeApiController {
     static class ChallengeDto {
         private int challenge_no;
         private int user_no;
-        private Date challenge_start;
+        private LocalDateTime challenge_start;
         private LocalDateTime challenge_end;
         private String challenge_access;
         private String challenge_type;
