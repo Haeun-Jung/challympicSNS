@@ -21,16 +21,16 @@ public class FollowApiController {
 
     @PostMapping("/user/{userNo}/follow")
     public Result follow(@PathVariable("userNo") int user_no, @RequestBody FollowRequest request){
-        followService.follow(user_no, request.getFollow_follower_no());
-        return new Result(true, HttpStatus.OK.value());
+        boolean follow = followService.follow(user_no, request.getFollow_follower_no());
+        return new Result(true, HttpStatus.OK.value(), null,follow);
     }
 
     @GetMapping("/user/{userNo}/follower")
     public Result follower(@PathVariable("userNo") int user_no){
         List<User> follower = followService.following(user_no);
-        List<UserResponse> collect = follower.stream()
+        List<FollowResponse> collect = follower.stream()
                 .map(m ->
-                    new UserResponse(m.getUser_no(), m.getUser_nickname())
+                    new FollowResponse(m)
                 ).collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), collect);
     }
@@ -38,9 +38,9 @@ public class FollowApiController {
     @GetMapping("/user/{userNo}/following")
     public Result following(@PathVariable("userNo") int user_no){
         List<User> following = followService.follower(user_no);
-        List<UserResponse> collect = following.stream()
+        List<FollowResponse> collect = following.stream()
                 .map(m ->
-                        new UserResponse(m.getUser_no(), m.getUser_nickname())
+                        new FollowResponse(m)
                 ).collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), collect);
     }
@@ -52,9 +52,14 @@ public class FollowApiController {
 
     @Data
     @AllArgsConstructor
-    static class UserResponse{
+    static class FollowResponse{
         private int user_no;
         private String user_nickname;
+
+        public FollowResponse(User user) {
+            this.user_no = user.getUser_no();
+            this.user_nickname = user.getUser_nickname();
+        }
     }
 
     @Data
@@ -63,10 +68,17 @@ public class FollowApiController {
         private boolean isSuccess;
         private int code;
         private T data;
+        private boolean isFollowing;
 
         public Result(boolean isSuccess, int code) {
             this.isSuccess = isSuccess;
             this.code = code;
+        }
+
+        public Result(boolean isSuccess, int code, T data) {
+            this.isSuccess = isSuccess;
+            this.code = code;
+            this.data = data;
         }
     }
 }
