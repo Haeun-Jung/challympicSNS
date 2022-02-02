@@ -27,7 +27,7 @@ public class InterestApiController {
     public Result interestList(@PathVariable("userNo") int user_no){
         List<Interest> interestList = interestService.findByUser(user_no);
         List<InterestDto> collect = interestList.stream()
-                .map(m -> new InterestDto(m.getInterest_no(), m.getTag().getTag_no(), m.getTag().getTag_content()))
+                .map(m -> new InterestDto(m))
                 .collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), collect);
     }
@@ -49,6 +49,12 @@ public class InterestApiController {
         private int interest_no;
         private int tag_no;
         private String tag_content;
+
+        public InterestDto(Interest interest) {
+            this.interest_no = interest.getInterest_no();
+            this.tag_no = interest.getTag().getTag_no();
+            this.tag_content = interest.getTag().getTag_content();
+        }
     }
 
     @Data
