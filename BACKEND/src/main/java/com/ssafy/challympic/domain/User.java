@@ -2,10 +2,8 @@ package com.ssafy.challympic.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +35,7 @@ public class User {
 
     @OneToOne
     @JoinColumn(name = "file_no")
-    private File file;
+    private Media media;
 
     private String user_title;
 
