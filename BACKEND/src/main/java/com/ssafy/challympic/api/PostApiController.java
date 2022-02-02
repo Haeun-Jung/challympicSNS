@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -186,7 +185,7 @@ public class PostApiController {
             postLikeService.delete(postNo, userNo);
         } else {
             // insert
-            PostLike _postLike = new PostLike(postService.getPost(postNo), userService.userInfo(userNo));
+            PostLike _postLike = new PostLike(postService.getPost(postNo), userService.findUser(userNo));
             postLikeService.save(_postLike);
         }
 

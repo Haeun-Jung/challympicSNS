@@ -56,9 +56,6 @@ public class User {
     private List<Follow> follower;
 
     @OneToMany(mappedBy = "user")
-    private List<Alert> alert;
-
-    @OneToMany(mappedBy = "user")
     private List<QnA> qna;
 
     @OneToMany(mappedBy = "user")
