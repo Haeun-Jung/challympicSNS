@@ -21,15 +21,19 @@ public class FollowService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void follow(int following_no, int follower_no){
-        User following = userRepository.findOne(following_no);
-        User follower = userRepository.findOne(follower_no);
-        System.out.println("service");
-        System.out.println(following.getUser_no()+" "+follower.getUser_no());
-        Follow follow = new Follow();
-        follow.setFollow_following_no(following);
-        follow.setFollow_follower_no(follower);
-        followRepository.save(follow);
+    public boolean follow(int following_no, int follower_no){
+        Follow follow = followRepository.findOne(following_no, follower_no);
+        if(follow == null ){
+            User following = userRepository.findOne(following_no);
+            User follower = userRepository.findOne(follower_no);
+            follow.setFollow_following_no(following);
+            follow.setFollow_follower_no(follower);
+            followRepository.save(follow);
+            return true;
+        }else{
+            followRepository.delete(follow);
+            return false;
+        }
     }
 
     /**
