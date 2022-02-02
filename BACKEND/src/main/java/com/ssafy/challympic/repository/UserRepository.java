@@ -39,8 +39,7 @@ public class UserRepository {
                 .getResultList();
     }
 
-    public void delete(int user_no){
-        User user = em.find(User.class, user_no);
+    public void delete(User user){
         em.remove(user);
         em.flush();
     }
