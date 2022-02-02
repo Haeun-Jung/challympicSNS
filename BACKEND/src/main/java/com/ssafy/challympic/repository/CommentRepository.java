@@ -17,17 +17,17 @@ public class CommentRepository {
         em.persist(comment);
     }
 
-//    public List<Comment> findByPost(int post_no){
-//        return em.createQuery("select c from Comment c where c.post.get")
-//    }
-
-    public void update(int comment_no, String comment_content){
-        Comment comment = em.find(Comment.class, comment_no);
-        comment.setComment_content(comment_content);
+    public List<Comment> findByPost(int post_no){
+        return em.createQuery("select c from Comment c where c.post.post_no = :post_no", Comment.class)
+                .setParameter("post_no", post_no)
+                .getResultList();
     }
 
-    public void delete(int comment_no){
-        Comment comment = em.find(Comment.class, comment_no);
+    public Comment findOne(int comment_no){
+        return em.find(Comment.class, comment_no);
+    }
+
+    public void delete(Comment comment){
         em.remove(comment);
         em.flush();
     }
