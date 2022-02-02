@@ -37,7 +37,7 @@ public class QnAApiController {
         List<QnA> qnaList = qnAService.findByUser(user_no);
         List<QnADto> collect = qnaList.stream()
                 .map(q ->
-                        new QnADto(q.getQna_no(), q.getQna_title(), q.getQna_question(), q.getQna_answer(), q.getQna_question_regdate(), q.getQna_answer_regdate()))
+                        new QnADto(q))
                 .collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), collect);
     }
@@ -57,6 +57,15 @@ public class QnAApiController {
         private String qna_answer;
         private Date qna_question_regdate;
         private Date qna_answer_regdate;
+
+        public QnADto(QnA qna) {
+            this.qna_no = qna.getQna_no();
+            this.qna_title = qna.getQna_title();
+            this.qna_question = qna.getQna_question();
+            this.qna_answer = qna.getQna_answer();
+            this.qna_question_regdate = qna.getQna_question_regdate();
+            this.qna_answer_regdate = qna.getQna_answer_regdate();
+        }
     }
 
     @Data
