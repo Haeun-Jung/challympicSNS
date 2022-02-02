@@ -16,7 +16,8 @@ public class UserRepository {
 
     public void save(User user){ em.persist(user); }
 
-    public User login(String user_email, String user_pwd){ return em.createQuery("select u from User u where u.user_email = :user_email and u.user_pwd = :user_pwd", User.class)
+    public User login(String user_email, String user_pwd){
+        return em.createQuery("select u from User u where u.user_email = :user_email and u.user_pwd = :user_pwd", User.class)
             .setParameter("user_email", user_email)
             .setParameter("user_pwd", user_pwd)
             .getSingleResult(); }
