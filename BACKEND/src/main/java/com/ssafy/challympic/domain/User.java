@@ -33,17 +33,17 @@ public class User {
 
     @Column(columnDefinition = "varchar(100) default 'USER'")
     @Enumerated(EnumType.STRING)
-    private UserAuth user_auth;
+    private UserAuth user_auth = UserAuth.USER;
 
-    @OneToOne
-    @JoinColumn(name = "file_no")
-    private File file;
+//    @OneToOne
+//    @JoinColumn(name = "file_no")
+//    private File file;
 
     private String user_title;
 
     @Column(columnDefinition = "varchar(100) default 'ACTIVE'")
     @Enumerated(EnumType.STRING)
-    private UserActive user_active;
+    private UserActive user_active = UserActive.ACTIVE;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date user_inactivedate;
@@ -51,4 +51,21 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Interest> interest;
 
+    @OneToMany(mappedBy = "follow_following_no")
+    private List<Follow> following;
+
+    @OneToMany(mappedBy = "follow_follower_no")
+    private List<Follow> follower;
+
+    @OneToMany(mappedBy = "user")
+    private List<Alert> alert;
+
+    @OneToMany(mappedBy = "user")
+    private List<QnA> qna;
+
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comment;
+
+    @OneToMany(mappedBy = "user")
+    private List<CommentLike> commentLike;
 }
