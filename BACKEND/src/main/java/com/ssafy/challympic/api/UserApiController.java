@@ -18,8 +18,8 @@ public class UserApiController {
     private final UserService userService;
 
     @GetMapping("/user/account/{userNo}")
-    public Result userInfo(@PathVariable("userNo") int user_no){
-        User user = userService.userInfo(user_no);
+    public Result findUser(@PathVariable("userNo") int user_no){
+        User user = userService.findUser(user_no);
         if(user != null) {
             return new Result(true, HttpStatus.OK.value(), new UserDto(user.getUser_no(), user.getUser_email(), user.getUser_nickname(), user.getUser_title()));
         }else{
@@ -49,8 +49,8 @@ public class UserApiController {
 
     @PutMapping("/user/account/{userNo}/nickname")
     public Result updateNickname(@PathVariable("userNo") int user_no, @RequestBody updateUserRequest request){
-        userService.updateNickname(user_no, request.getUser_nickname());
-        User user = userService.userInfo(user_no);
+        userService.findByNickname(request.getUser_nickname());
+        User user = userService.findUser(user_no);
         if(user != null) {
             return new Result(true, HttpStatus.OK.value(), new UserDto(user.getUser_no(), user.getUser_email(), user.getUser_nickname(), user.getUser_title()));
         }else{
@@ -60,12 +60,12 @@ public class UserApiController {
 
     @PutMapping("/user/account/{userNo}/pwd")
     public Result updatePwd(@PathVariable("userNo") int user_no, @RequestBody updateUserRequest request){
-        User findUser = userService.userInfo(user_no);
+        User findUser = userService.findUser(user_no);
         if(!findUser.getUser_pwd().equals(request.getUser_pwd())){
             return new Result(false, HttpStatus.BAD_REQUEST.value(), new UserDto());
         }
         userService.updatePwd(user_no, request.getUser_newpwd());
-        User user = userService.userInfo(user_no);
+        User user = userService.findUser(user_no);
         if(user != null) {
             return new Result(true, HttpStatus.OK.value(), new UserDto(user.getUser_no(), user.getUser_email(), user.getUser_nickname(), user.getUser_title()));
         }else{
@@ -77,7 +77,7 @@ public class UserApiController {
     @DeleteMapping("/user/account/{userNo}")
     public Result deleteUser(@PathVariable("userNo") int user_no){
         userService.deleteUser(user_no);
-        User user = userService.userInfo(user_no);
+        User user = userService.findUser(user_no);
         if(user == null) {
             return new Result(true, HttpStatus.OK.value());
         }else{
