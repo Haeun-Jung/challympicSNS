@@ -1,29 +1,37 @@
 package com.ssafy.challympic.api;
 
+import com.ssafy.challympic.domain.Media;
 import com.ssafy.challympic.domain.User;
+import com.ssafy.challympic.service.MediaService;
 import com.ssafy.challympic.service.UserService;
+import com.ssafy.challympic.util.MD5Generator;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.net.http.HttpRequest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @RestController
 @RequiredArgsConstructor
 public class UserApiController {
 
     private final UserService userService;
+    private final MediaService mediaService;
 
     @GetMapping("/user/account/{userNo}")
     public Result findUser(@PathVariable("userNo") int user_no){
-        User user = userService.findUser(user_no);
-        if(user != null) {
-            return new Result(true, HttpStatus.OK.value(), new UserDto(user.getUser_no(), user.getUser_email(), user.getUser_nickname(), user.getUser_title()));
+        User findUser = userService.findUser(user_no);
+        if(findUser != null) {
+            return new Result(true, HttpStatus.OK.value(), new UserDto(findUser.getUser_no(), findUser.getUser_email(), findUser.getUser_nickname(), findUser.getUser_title()));
         }else{
-            return new Result(false, HttpStatus.NO_CONTENT.value(), new UserDto());
+            return new Result(false, HttpStatus.BAD_REQUEST.value(), new UserDto());
         }
     }
 
@@ -33,13 +41,17 @@ public class UserApiController {
         if(user != null){
             return new Result(true, HttpStatus.OK.value(), new UserDto(user.getUser_no(), user.getUser_email(), user.getUser_nickname(), user.getUser_title()));
         }else{
-            return new Result(false, HttpStatus.NO_CONTENT.value(), new UserDto());
+            return new Result(false, HttpStatus.BAD_REQUEST.value(), new UserDto());
         }
     }
 
     @PostMapping("/user/account/join")
-    public Result join(@RequestBody User user){
-        int join_no = userService.join(user);
+    public Result join(@RequestBody joinUserRequest request){
+        User newUser = new User();
+        newUser.setUser_email(request.getUser_email());
+        newUser.setUser_nickname(request.getUser_nickname());
+        newUser.setUser_pwd(request.getUser_pwd());
+        int join_no = userService.join(newUser);
         if(join_no > 0){
             return new Result(true, HttpStatus.OK.value());
         }else{
@@ -47,15 +59,99 @@ public class UserApiController {
         }
     }
 
-    @PutMapping("/user/account/{userNo}/nickname")
-    public Result updateNickname(@PathVariable("userNo") int user_no, @RequestBody updateUserRequest request){
-        userService.findByNickname(request.getUser_nickname());
+    /**
+     * 파일 수정 추가 필요
+     */
+    @PutMapping("/user/account/{userNo}")
+    public Result updateUser(@PathVariable("userNo") int user_no, @RequestBody updateUserRequest request, @RequestParam("file") MultipartFile files){
+
+        // 확장자 체크
+        String fileType = getFileType(files);
+
+        Media media = fileToMedia(files);
+        if(media == null)
+            return new Result(false, HttpStatus.OK.value());
+
+        Long file_no = mediaService.saveMedia(media);
+
+//        Media findMedia = mediaService.
+
+        userService.updateUser(user_no, request.getUser_nickname());
         User user = userService.findUser(user_no);
         if(user != null) {
-            return new Result(true, HttpStatus.OK.value(), new UserDto(user.getUser_no(), user.getUser_email(), user.getUser_nickname(), user.getUser_title()));
+            return new Result(true, HttpStatus.OK.value(), new UserDto(user));
         }else{
-            return new Result(false, HttpStatus.NO_CONTENT.value(), new UserDto());
+            return new Result(false, HttpStatus.BAD_REQUEST.value(), new UserDto());
         }
+    }
+
+    /**
+     *  프론트 단에서 파일을 받아 확장자에 따라 파일 타입을 결정
+     *      - String으로 할지 Enum으로 할지 결정 필요
+     * */
+    private String getFileType(MultipartFile files){
+        String fileName = files.getOriginalFilename();
+        String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+
+        if(extension.equals("mp4") || extension.equals("MP4"))
+            return "VIDEO";
+
+        extension = extension.toLowerCase();
+        if(extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png"))
+            return "IMAGE";
+
+        if(extension.equals("AVI"))
+            return "VIDEO";
+
+        return null;
+    }
+
+    /**
+     *  프론트에서 전달 받은 파일을 로컬 서버에 저장하고 Media 엔티티로 변환
+     * */
+    private Media fileToMedia(MultipartFile files){
+
+        try {
+            // 파일 저장 시작
+            // 실제 파일명
+            String originFileName = files.getOriginalFilename();
+            // 저장 파일명
+            String savedFileName = new MD5Generator(originFileName).toString();
+            // 실제 저장 경로
+            SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd");
+
+//            String path = System.getProperty("user.dir") + "\\files\\" + date.format(new Date());
+            String path = System.getProperty("user.dir") + "\\files";
+
+            // 저장 경로에 해당하는 폴더가 없으면 폴더 생성(files)
+            if (!new File(path).exists()) {
+                try {
+                    new File(path).mkdir();
+                } catch (Exception e) {
+                    e.getStackTrace();
+                }
+            }
+
+            // 업로드일에 해당하는 날짜
+            path += "\\" + date.format(new Date());
+
+            if (!new File(path).exists()) {
+                try {
+                    new File(path).mkdir();
+                } catch (Exception e) {
+                    e.getStackTrace();
+                }
+            }
+
+            String savedPath = path + "\\" + savedFileName;
+            files.transferTo(new File(savedPath));
+
+            return new Media(originFileName, savedFileName, path);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     @PutMapping("/user/account/{userNo}/pwd")
@@ -67,10 +163,9 @@ public class UserApiController {
         userService.updatePwd(user_no, request.getUser_newpwd());
         User user = userService.findUser(user_no);
         if(user != null) {
-            return new Result(true, HttpStatus.OK.value(), new UserDto(user.getUser_no(), user.getUser_email(), user.getUser_nickname(), user.getUser_title()));
+            return new Result(true, HttpStatus.OK.value(), new UserDto(user));
         }else{
-            System.out.println("엥..?");
-            return new Result(false, HttpStatus.NO_CONTENT.value(), new UserDto());
+            return new Result(false, HttpStatus.BAD_REQUEST.value(), new UserDto());
         }
     }
 
@@ -81,28 +176,35 @@ public class UserApiController {
         if(user == null) {
             return new Result(true, HttpStatus.OK.value());
         }else{
-            return new Result(false, HttpStatus.NO_CONTENT.value());
+            return new Result(false, HttpStatus.BAD_REQUEST.value());
         }
     }
 
-    @GetMapping("/user/account/confirm/email")
+    @PostMapping("/user/account/confirm/email")
     public Result confirmEmail(@RequestBody confirmUserRequest request){
         boolean result = userService.validateDuplicateEmail(request.getUser_email());
         if(result) {
-            return new Result(true, HttpStatus.OK.value());
+            return new Result(true, HttpStatus.OK.value(), true);
         }else{
-            return new Result(false, HttpStatus.NO_CONTENT.value());
+            return new Result(true, HttpStatus.OK.value(), false);
         }
     }
 
-    @GetMapping("/user/account/confirm/nickname")
+    @PostMapping("/user/account/confirm/nickname")
     public Result confirmNickname(@RequestBody confirmUserRequest request){
         boolean result = userService.validateDuplicateNickname(request.getUser_nickname());
         if(result) {
-            return new Result(true, HttpStatus.OK.value());
+            return new Result(true, HttpStatus.OK.value(), true);
         }else{
-            return new Result(false, HttpStatus.NO_CONTENT.value());
+            return new Result(true, HttpStatus.OK.value(), false);
         }
+    }
+
+    @Data
+    static class joinUserRequest{
+        private String user_email;
+        private String user_pwd;
+        private String user_nickname;
     }
 
     @Data
@@ -132,6 +234,13 @@ public class UserApiController {
         private String user_email;
         private String user_nickname;
         private String user_title;
+
+        public UserDto(User user) {
+            this.user_no = user.getUser_no();
+            this.user_email = user.getUser_email();
+            this.user_nickname = user.getUser_nickname();
+            this.user_title = user.getUser_title();
+        }
     }
 
     @Data
