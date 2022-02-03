@@ -22,7 +22,7 @@ public class MediaService {
     }
 
     @Transactional
-    public Long update(int fileNo, Media media){
+    public Long update(Long fileNo, Media media){
         Media orgMedia = mediaRepository.findByFileNo(fileNo);
         orgMedia.setFile_name(media.getFile_name());
         orgMedia.setFile_savedname(media.getFile_savedname());
@@ -31,7 +31,7 @@ public class MediaService {
     }
 
     @Transactional
-    public int delete(int fileNo){
+    public int delete(Long fileNo){
         mediaRepository.deleteMedia(fileNo);
         return 1;
     }
