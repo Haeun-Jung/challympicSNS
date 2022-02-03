@@ -6,14 +6,22 @@ import com.ssafy.challympic.util.MD5Generator;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -55,11 +63,10 @@ public class PostApiController {
      *  챌린지 번호로 포스트 가져오기
      *
      * */
+    /*
     @GetMapping("/challenge/{challengeNo}/post")
     public Result list(@PathVariable("challengeNo") int challengeNo){
         Result result = null;
-
-        System.out.println("list %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 
         List<Post> postList = postService.getPostList(challengeNo);
 
@@ -71,6 +78,7 @@ public class PostApiController {
 
         return result;
     }
+     */
     
     /** 
      *  포스트 등록하기
@@ -81,9 +89,19 @@ public class PostApiController {
      *      - File 도메인 변경 및 테이블 명 변경 -> Media, File이라는 io의 객체와 이름이 겹침
      * */
     @PostMapping("/challenge/{challengeNo}/post")
-    public Result create(@PathVariable("challengeNo") int challengeNo, @RequestParam("file") MultipartFile files){
+    public Result create(@PathVariable("challengeNo") int challengeNo, @RequestParam("file") MultipartFile files, @RequestBody PostForm postForm) throws IOException {
+//    public ResponseEntity<InputStreamResource> create(@PathVariable("challengeNo") int challengeNo) throws IOException {
 
-        System.out.println("******************************* test **********************************");
+//        // 파일 스트리밍 테스트
+//        File file = new File("C:\\SSAFY\\WorkSpace_for_Git\\01_Common_Sub_2\\BACKEND\\public\\work\\Tomcat\\localhost\\challympic\\2022.02.03\\seoul.mp4");
+//        InputStream inputStream = new FileInputStream("C:\\SSAFY\\WorkSpace_for_Git\\01_Common_Sub_2\\BACKEND\\public\\work\\Tomcat\\localhost\\challympic\\2022.02.03\\seoul.mp4");
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.set("Accept-Ranges", "bytes");
+//        headers.set("Content-Type", "video/mp4");
+//        headers.set("Content-Range", "bytes 50-1025/17839845");
+//        headers.set("Content-Length", String.valueOf(file.length()));
+//
+//        return new ResponseEntity<>(new InputStreamResource(inputStream), headers, HttpStatus.OK);
 
         // 확장자 체크
         String fileType = getFileType(files);
@@ -99,12 +117,12 @@ public class PostApiController {
         // 파일 저장 끝
 
         // 본문 텍스트 파싱
-//        String content = postForm.getPost_content();
-//        String[] splitSharp = content.split("#");
-//        List<String> list = new ArrayList<>();
-//        for(String str : splitSharp){
-//            list.add(str.split(" ")[0]);
-//        }
+        String content = postForm.getPost_content();
+        String[] splitSharp = content.split("#");
+        List<String> list = new ArrayList<>();
+        for(String str : splitSharp){
+            list.add(str.split(" ")[0]);
+        }
 
 //            for(String str : list){
 //                tag.save(str);
@@ -112,17 +130,21 @@ public class PostApiController {
 
         // 포스트 등록
         Post post = new Post();
-        post.setChallenge_no(challengeNo);
+//        post.setChallenge(challengeService.findChallenges().get(challengeNo));
 //        post.setUser_no(postForm.getUser_no());
 //        post.setPost_content(content);
         post.setPost_report(0);
 
         int postId = postService.save(post);
 
+
+        // ---------------------------------------------------------------------------------
+
         if(postId != -1)
-            return new Result(true, HttpStatus.OK.value());
+            return new Result(true, HttpStatus.OK.value(), media);
         else
             return new Result(false, HttpStatus.OK.value());
+
     }
     
     
@@ -139,7 +161,7 @@ public class PostApiController {
         Post post = postService.getPost(postNo);
 
         // 파일 업데이트, 파일 저장도 여기서 이루어짐
-        Long fileId = mediaService.update(post.getFile_no(), fileToMedia(files));
+        Long fileId = mediaService.update(post.getMedia().getFile_no(), fileToMedia(files));
 
         Post _post = new Post();
         _post.setPost_content(postForm.getPost_content());
@@ -162,7 +184,7 @@ public class PostApiController {
 
         Post post = postService.getPost(postNo);
 
-        mediaService.delete(post.getFile_no());
+        mediaService.delete(post.getMedia().getFile_no());
 
         postService.delete(postNo);
 
@@ -176,7 +198,7 @@ public class PostApiController {
     public Result like(@PathVariable("postNo") int postNo, @PathVariable("userNo") int userNo){
 
         Post post = postService.getPost(postNo);
-        int likeNo = post.getLike_no();
+        Long likeNo = post.getPostLike().getLike_no();
 
         // 포스트 라이크 테이블에서 해당 유저번호와 해당 게시글에 해당하는 엔티티가 있는지 검색
         PostLike postLike = postLikeService.getPostLikeByUserNoPostNo(postNo, userNo);
@@ -256,16 +278,17 @@ public class PostApiController {
             SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd");
 
 //            String path = System.getProperty("user.dir") + "\\files\\" + date.format(new Date());
-            String path = System.getProperty("user.dir") + "\\files";
+//            String path = System.getProperty("user.dir") + "\\files";
+            String path = System.getProperty("user.dir") + "\\public\\work\\Tomcat\\localhost\\challympic";
 
-            // 저장 경로에 해당하는 폴더가 없으면 폴더 생성(files)
-            if (!new File(path).exists()) {
-                try {
-                    new File(path).mkdir();
-                } catch (Exception e) {
-                    e.getStackTrace();
-                }
-            }
+//            // 저장 경로에 해당하는 폴더가 없으면 폴더 생성(files)
+//            if (!new File(path).exists()) {
+//                try {
+//                    new File(path).mkdir();
+//                } catch (Exception e) {
+//                    e.getStackTrace();
+//                }
+//            }
 
             // 업로드일에 해당하는 날짜
             path += "\\" + date.format(new Date());
