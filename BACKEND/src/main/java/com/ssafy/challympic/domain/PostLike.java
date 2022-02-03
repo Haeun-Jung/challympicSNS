@@ -20,10 +20,10 @@ public class PostLike {
     @JoinColumn(name = "user_no")
     private User user_no;
 
-    private PostLike(){}
-
     public PostLike(Post post_no, User user_no){
         this.post_no = post_no;
         this.user_no = user_no;
     }
+
+    public PostLike() {}
 }
