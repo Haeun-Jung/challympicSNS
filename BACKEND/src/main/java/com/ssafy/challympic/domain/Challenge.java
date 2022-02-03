@@ -7,7 +7,6 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import static javax.persistence.FetchType.LAZY;
@@ -20,9 +19,9 @@ public class Challenge {
     @Column(name = "challenge_no")
     private int challenge_no;
 
-//    @ManyToOne(fetch = LAZY)
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "user_no")
-    private int user_no;
+    private User user;
 
     /**
      * temporal 오류
@@ -58,9 +57,9 @@ public class Challenge {
     private int title_no;
 
     // 생성 메소드
-    public static Challenge createChallenge(int user_no, Date challenge_end, ChallengeAccess challenge_access, ChallengeType challenge_type, String challenge_title, String challenge_content, int title_no) {
+    public static Challenge createChallenge(User user, Date challenge_end, ChallengeAccess challenge_access, ChallengeType challenge_type, String challenge_title, String challenge_content, int title_no) {
         Challenge challenge = new Challenge();
-        challenge.setUser_no(user_no);
+        challenge.setUser(user);
         challenge.setChallenge_start(new Date());
         challenge.setChallenge_end(challenge_end);
         challenge.setChallenge_access(challenge_access);

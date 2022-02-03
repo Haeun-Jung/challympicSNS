@@ -31,7 +31,7 @@ public class SubscriptionRepository {
     }
 
     public List<Challenge> findChallengeByUserNoFromSubs(int userNo) {
-        return em.createQuery("select s.challenge_no from Subscription s where s.user_no = :user_no", Challenge.class)
+        return em.createQuery("select c from Challenge c where c.challenge_no = (select s.challenge_no from Subscription s where s.user_no = :user_no)", Challenge.class)
             .setParameter("user_no", userNo)
             .getResultList();
     }

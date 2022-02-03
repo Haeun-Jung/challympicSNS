@@ -30,13 +30,12 @@ public class ChallengeApiController {
 
     /**
      * 챌린지 목록
-     * @return
      */
     @GetMapping("/challenge")
     public Result challenges() {
         List<Challenge> findChallenges = challengeService.findChallenges();
         List<ChallengeDto> collect = findChallenges.stream()
-                .map(c -> new ChallengeDto(c.getChallenge_no(), c.getUser_no(), c.getChallenge_start(), c.getChallenge_end(), c.getChallenge_access(), c.getChallenge_type(), c.getChallenge_title(), c.getChallenge_content(), c.isChallenge_official(), c.getChallenge_report(), c.getTitle_no()))
+                .map(c -> new ChallengeDto(c.getChallenge_no(), c.getUser(), c.getChallenge_start(), c.getChallenge_end(), c.getChallenge_access(), c.getChallenge_type(), c.getChallenge_title(), c.getChallenge_content(), c.isChallenge_official(), c.getChallenge_report(), c.getTitle_no()))
                 .collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), collect);
     }
@@ -44,8 +43,6 @@ public class ChallengeApiController {
 
     /**
      * 챌린지 등록
-     * @param request
-     * @return
      */
     @PostMapping("/challenge")
     public Result createChallenge(@RequestBody CreateChallengeRequest request) {
@@ -65,6 +62,7 @@ public class ChallengeApiController {
             }
         }
 
+        User user = userService.userInfo(request.user_no);
 
         Title title = new Title();
         title.setTitle_name(request.getTitle_name());
@@ -72,7 +70,7 @@ public class ChallengeApiController {
         if(title_no == -1) return new Result(false, HttpStatus.FORBIDDEN.value());
 
         Challenge challenge = Challenge.createChallenge(
-                request.getUser_no(),
+                user,
                 request.getChallenge_end(),
                 challenge_access,
                 request.getChallenge_type(),
@@ -98,9 +96,7 @@ public class ChallengeApiController {
     static class CreateChallengeRequest {
         private int user_no;
         private List<String> challengers;
-//        private Date challenge_start;
         private Date challenge_end;
-//        private String challenge_access; // 잠시 대기
         private ChallengeType challenge_type;
         private String challenge_title;
         private String challenge_content;
@@ -138,9 +134,6 @@ public class ChallengeApiController {
 
     /**
      * 구독 취소
-     * @param challengeNo
-     * @param userNo
-     * @return
      */
     @DeleteMapping("/challenge/{challengeNo}/subscribe/{userNo}")
     public Result removeSubscription(@PathVariable int challengeNo, @PathVariable int userNo) {
@@ -152,7 +145,7 @@ public class ChallengeApiController {
     @AllArgsConstructor
     static class ChallengeDto {
         private int challenge_no;
-        private int user_no;
+        private User user;
         private Date challenge_start;
         private Date challenge_end;
         private ChallengeAccess challenge_access;
