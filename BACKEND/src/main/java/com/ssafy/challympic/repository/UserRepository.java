@@ -16,7 +16,8 @@ public class UserRepository {
 
     public void save(User user){ em.persist(user); }
 
-    public User login(String user_email, String user_pwd){ return em.createQuery("select u from User u where u.user_email = :user_email and u.user_pwd = :user_pwd", User.class)
+    public User login(String user_email, String user_pwd){
+        return em.createQuery("select u from User u where u.user_email = :user_email and u.user_pwd = :user_pwd", User.class)
             .setParameter("user_email", user_email)
             .setParameter("user_pwd", user_pwd)
             .getSingleResult(); }
@@ -32,14 +33,13 @@ public class UserRepository {
                 .getResultList();
     }
 
-    public List<User> validateNickname(String user_nickname){
+    public User validateNickname(String user_nickname){
         return em.createQuery("select u from User u where u.user_nickname = :user_nickname", User.class)
                 .setParameter("user_nickname", user_nickname)
-                .getResultList(); // getSingleResult 쓰면 안되나?
+                .getSingleResult();
     }
 
-    public void delete(int user_no){
-        User user = em.find(User.class, user_no);
+    public void delete(User user){
         em.remove(user);
         em.flush();
     }

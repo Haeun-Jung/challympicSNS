@@ -30,8 +30,8 @@ public class UserService {
      * 닉네임 중복 감지
      */
     public boolean validateDuplicateNickname(String user_nickname){
-        List<User> findUser = userRepository.validateNickname(user_nickname);
-        if(findUser.isEmpty()){
+        User findUser = userRepository.validateNickname(user_nickname);
+        if(findUser == null){
             return false;
         }
         return true;
@@ -58,7 +58,7 @@ public class UserService {
      * 정보 수정
      */
     @Transactional
-    public void updateNickname(int user_no, String user_nickname){
+    public void updateUser(int user_no, String user_nickname){
         User user = userRepository.findOne(user_no);
         user.setUser_nickname(user_nickname);
     }
@@ -69,16 +69,16 @@ public class UserService {
         user.setUser_pwd(user_pwd);
     }
 
-    public User userInfo(int user_no){
+    public User findUser(int user_no){
         return userRepository.findOne(user_no);
     }
 
     public void deleteUser(int user_no) {
-        userRepository.delete(user_no);
+        User user = userRepository.findOne(user_no);
+        userRepository.delete(user);
     }
 
-    public int findUser(String user_nickname){
-         List<User> users = userRepository.validateNickname(user_nickname);
-         return users.get(0).getUser_no();
+    public User findByNickname(String user_nickname){
+        return userRepository.validateNickname(user_nickname);
     }
 }

@@ -57,12 +57,12 @@ public class ChallengeApiController {
         else{
             challenge_access = ChallengeAccess.PRIVATE;
             for(String user_nickname : request.getChallengers()) {
-                int challengerUserNo = userService.findUser(user_nickname);
-                challengers.add(challengerUserNo);
+                User challengerUser = userService.findByNickname(user_nickname);
+                challengers.add(challengerUser.getUser_no());
             }
         }
 
-        User user = userService.userInfo(request.user_no);
+        User user = userService.findUser(request.user_no);
 
         Title title = new Title();
         title.setTitle_name(request.getTitle_name());
