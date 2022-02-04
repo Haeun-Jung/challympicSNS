@@ -19,6 +19,7 @@ import QnAUserMobile from "../components/account/profile/mobile/QnA.vue";
 
 import Join from "../views/user/Join.vue";
 import Login from "../views/user/Login.vue";
+import ChallengeDetail from "../views/ChallengeDetail.vue";
 
 
 Vue.use(VueRouter);
@@ -33,19 +34,19 @@ const routes = [
     path: "/user/account/",
     name: "Account",
     component: Account,
-    redirect : "/user/account/:userNo/",
+    redirect: "/user/account/:userNo/",
     children: [
       {
         path: "/user/account/:userNo/",
         name: "UpdateUserInfo",
-        component : UpdateUserInfo,
+        component: UpdateUserInfo,
       },
       {
         path: "/mobile/user/account/:userNo/",
         name: "UpdateUserInfoMobile",
-        component : UpdateUserInfoMobile,
+        component: UpdateUserInfoMobile,
       },
-     
+
       {
         path: "/user/account/:userNo/pwd",
         name: "UpdateUserPasasword",
@@ -97,6 +98,12 @@ const routes = [
     path: "/login",
     name: "Login",
     component: Login,
+  },
+  {
+    // path: "/challenge/:challengeNo",
+    path: "/challenge",
+    name: "ChallengeDetail",
+    component: ChallengeDetail,
   },
 ];
 
