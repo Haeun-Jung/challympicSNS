@@ -154,7 +154,7 @@ export default {
         (v) =>
           /^[가-힣a-zA-Z0-9].{1,10}$/.test(v) ||
           "한글/영문/숫자를 이용하여 2~10자로 입력해주세요.",
-        this.duplicatenickNameCheck || "중복 여부를 확인해주세요.",
+        this.duplicateNicknameCheck || "중복 여부를 확인해주세요.",
         this.possibleNickname || "사용할 수 없는 닉네임입니다.",
       ];
     },
