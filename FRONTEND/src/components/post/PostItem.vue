@@ -37,12 +37,12 @@
     </v-card-text>
     <v-card-text class="d-flex justify-space-between pt-0 pl-0 pb-0">
       <span>
-        <v-btn @click="like(post)" class="ml-2" icon>
+        <v-btn @click="like(post)" class="icon-margin" icon>
           <v-icon :class="{ 'active-like-btn': post.postInfo.isLiked }" large>
             mdi-heart-outline
           </v-icon>
         </v-btn>
-        <v-btn @click="toggleCommentShow" icon>
+        <v-btn @click="toggleCommentShow" class="icon-margin" icon>
           <v-icon :class="{ 'active-comment-btn': showComment }" large>
             mdi-comment-outline
           </v-icon>
@@ -175,6 +175,9 @@ export default {
   width: 40px;
   height: 40px;
   border-radius: 50%;
+}
+.icon-margin {
+  margin: 0 0.5rem;
 }
 .comment-profile {
   width: 30px;
