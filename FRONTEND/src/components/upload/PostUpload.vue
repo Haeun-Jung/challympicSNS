@@ -99,43 +99,7 @@
             ></v-textarea>
           </v-col>
         </v-row>
-        <v-row>
-          <v-spacer></v-spacer>
-          <span class="error-text" v-if="error">{{ error }}</span>
-          <v-btn class="ma-2" color="#3396F4">
-            <label
-              v-if="this.type === 'register'"
-              class="upload-btn"
-              @click="uploadStart()"
-              >챌린지 등록하기</label
-            >
-              <v-select
-                v-model="challenge"
-                :items="challenges"
-                dense
-                outlined
-              ></v-select>
-            </v-col>
-          </v-row>
-          <v-row class="row-area">
-            <v-col class="input-title"># 참여파일형식</v-col>
-            <v-col v-model="form" class="media-form">사진/동영상</v-col>
-          </v-row>
-          <v-row>
-            <v-col class="input-title"># 내용(최대 255자)</v-col>
-          </v-row>
-          <v-row class="row-area">
-            <v-col
-                >
-              <v-textarea
-                v-model="description"
-                outlined
-                name="input-7-4"
-                placeholder="운동하니까 힘들다 #운동 @김싸피"
-              ></v-textarea>
-            </v-col>
-          </v-row>
-          <div class="error-text" v-if="error">{{ error }}</div>
+        <div class="error-text" v-if="error">{{ error }}</div>
           <v-row>
             <v-spacer></v-spacer>
             <v-btn
@@ -146,7 +110,6 @@
                 <label v-else class="upload-btn" @click="uploadStart()">참여하기</label>
               </v-btn>
           </v-row>
-          
         </v-card-text>
       </v-card>
     </v-dialog>
