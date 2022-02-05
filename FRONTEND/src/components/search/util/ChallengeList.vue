@@ -215,7 +215,7 @@
 </script>
 
 <style>
-	#app iframe {
+	/*	#app iframe {
 		padding-right: 50%;
 		position: relative;
 	}
@@ -226,10 +226,10 @@
 		position: relative;
 	}
 	.play-box {
-		position: absolute; /* or absolute */
+		position: absolute; 
 		top: 43%;
 		left: 48%;
-	}
+	}*/
 	.bar {
 		position: absolute;
 		top: 1%;
@@ -240,14 +240,14 @@
 		top: 7%;
 		right: 5%;
 	}
-	#hello:not(.on-hover) {
+	/*	#hello:not(.on-hover) {
 		opacity: 0.5;
 	}
 
 	.show-btns {
-		/*
+	
 		color: rgba(255, 255, 255, 1) !important;
-			color: pink !important;*/
+			color: pink !important;
 		color: rgb(0, 4, 255) !important;
-	}
+	}*/
 </style>
