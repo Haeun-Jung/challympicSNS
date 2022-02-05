@@ -61,9 +61,10 @@
 					<div class="bar-heart">
 						<v-btn @click="pushLike(item.id, idx)" icon>
 							<!-- <v-icon :class="{ 'show-btns': hover }" :color="transparent">
-								v-if 문 추가해서 이미 하트 눌렀으면 빨갛게 표시-->
-							<v-icon
+								v-if 문 추가해서 이미 하트 눌렀으면 빨갛게 표시
 								:class="{ 'show-btns': hover }"
+								-->
+							<v-icon
 								:color="item.post_like ? 'red' : 'grey lighten-3'"
 								size="32"
 							>
