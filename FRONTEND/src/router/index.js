@@ -17,6 +17,14 @@ import DeleteUserMobile from "../components/account/profile/mobile/DeleteUser.vu
 import UpdateUserPasswordMobile from "../components/account/profile/mobile/PasswordUpdate.vue";
 import UpdatePushAlertSettingMobile from "../components/account/profile/mobile/PushAlert.vue";
 import QnAUserMobile from "../components/account/profile/mobile/QnA.vue";
+
+/*피드*/
+import UserFeed from "../components/feed/layout/UserFeed.vue";
+import Participated from "../components/feed/Participated.vue";
+import Created from "../components/feed/Created.vue";
+import Like from "../components/feed/Like.vue";
+import Subscribe from "../components/feed/Subscribe.vue";
+
 /*로그인 및 회원가입*/
 import Join from "../views/user/Join.vue";
 import Login from "../views/user/Login.vue";
@@ -96,6 +104,34 @@ const routes = [
         component: QnAUserMobile,
       },
     ],
+  },
+  {
+    path: "/feed/:userNo/",
+    name: "UserFeed",
+    component: UserFeed,
+    redirect : "/feed/:userNo/post",
+    children: [
+      {
+        path: "/feed/:userNo/post",
+        name: "Participated",
+        component : Participated,
+      },
+      {
+        path: "/feed/:userNo/challenge",
+        name: "Created",
+        component : Created,
+      },
+      {
+        path: "/feed/:userNo/like",
+        name: "Like",
+        component : Like,
+      },
+      {
+        path: "/feed/:userNo/subscription",
+        name: "Subscribe",
+        component : Subscribe,
+      },
+    ]
   },
   {
     path: "/join",
