@@ -1,12 +1,10 @@
 <template>
   <v-card class="pa-1">
-    <v-container>
-      <v-card-title class="text-h5 title-text">비밀번호 찾기</v-card-title>
-      <v-spacer></v-spacer>
-      <v-btn icon absolute top right @click="closeDialog">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-    </v-container>
+    <v-card-title class="text-h5 title-text">비밀번호 찾기</v-card-title>
+    <v-spacer></v-spacer>
+    <v-btn icon absolute top right @click="closeDialog">
+      <v-icon>mdi-close</v-icon>
+    </v-btn>
     <v-card-text>
       <v-container>
         <v-row>

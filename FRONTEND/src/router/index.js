@@ -1,9 +1,10 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Main from "../views/Main.vue";
-
-import Account from "../components/account/Account.vue";
+/*검색 화면 */
+import Search from "../components/search/Search.vue";
 /*프로필 */
+import Account from "../components/account/Account.vue";
 /* Desktop */
 import UpdateUserInfo from "../components/account/profile/desktop/ProfileUpdate.vue";
 import UpdateUserPassword from "../components/account/profile/desktop/PasswordUpdate.vue";
@@ -24,8 +25,10 @@ import Created from "../components/feed/Created.vue";
 import Like from "../components/feed/Like.vue";
 import Subscribe from "../components/feed/Subscribe.vue";
 
+/*로그인 및 회원가입*/
 import Join from "../views/user/Join.vue";
 import Login from "../views/user/Login.vue";
+import ChallengeDetail from "../views/ChallengeDetail.vue";
 
 
 Vue.use(VueRouter);
@@ -35,24 +38,31 @@ const routes = [
     path: "/",
     name: "Main",
     component: Main,
+    children: [
+      {
+        path: "/search/:keyword/",
+        name: "Search",
+        component:Search,
+      }
+    ]
   },
   {
     path: "/user/account/",
     name: "Account",
     component: Account,
-    redirect : "/user/account/:userNo/",
+    redirect: "/user/account/:userNo/",
     children: [
       {
         path: "/user/account/:userNo/",
         name: "UpdateUserInfo",
-        component : UpdateUserInfo,
+        component: UpdateUserInfo,
       },
       {
         path: "/mobile/user/account/:userNo/",
         name: "UpdateUserInfoMobile",
-        component : UpdateUserInfoMobile,
+        component: UpdateUserInfoMobile,
       },
-     
+
       {
         path: "/user/account/:userNo/pwd",
         name: "UpdateUserPasasword",
@@ -132,6 +142,12 @@ const routes = [
     path: "/login",
     name: "Login",
     component: Login,
+  },
+  {
+     path: "/challenge/:challengeNo",
+   // path: "/challenge",
+    name: "ChallengeDetail",
+    component: ChallengeDetail,
   },
 ];
 

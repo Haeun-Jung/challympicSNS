@@ -1,19 +1,11 @@
 <template>
-	<v-card
-		elevation="0"
-		height="100vh"
-		width="100%"
-		hide-overlay
-		absolute
-		clipped-left
-	>
+	<v-card width="100%" app>
 		<!--
 		<v-card-title class="text-h5 d-flex justify-center">
 	 -->
-		<v-card-title class="text-h6 d-flex justify-center">
-			설 정
-
-			<v-menu bottom left>
+		<v-card-title class="mt-2 text-h6 d-flex justify-center">
+			설정
+			<v-menu bottom origin="center center" transition="scale-transition">
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn dark icon v-bind="attrs" v-on="on">
 						<v-icon color="#424242">mdi-cog</v-icon>
