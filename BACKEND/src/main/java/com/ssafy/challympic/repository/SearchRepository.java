@@ -60,9 +60,18 @@ public class SearchRepository {
     }
 
     public List<Challenge> findChallengeByTrend() {
-        return null;
-//        return em.createQuery("select c from Challenge c where c.challenge_no = " +
-//                    "(select sc.challenge.challenge_no from SearchChallenge sc)", Challenge.class)
-//                .getResultList();
+        return em.createQuery("select c from Challenge c where c.challenge_no = " +
+                    "(select sc.challenge.challenge_no from SearchChallenge sc)", Challenge.class) //TODO: 시간 설정 어떡함????????
+                .getResultList();
+    }
+
+    /**
+     * 타이틀 수 내림차순으로 정렬 후 해당 유저
+     * TODO : jpql 너무 어렵습니다...... 수정 필요합니다...
+     * @return
+     */
+    public List<User> findRank() {
+        return em.createQuery("select t.user from Title t where t.user.user_no = (select count(t) from Title t group by t.user.user_no)", User.class)
+                .getResultList();
     }
 }

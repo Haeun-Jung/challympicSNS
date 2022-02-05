@@ -54,14 +54,16 @@ public class SearchApiController {
         return new Result(true, HttpStatus.OK.value(), searchList);
     }
 
-    /**
-     * challenge 클릭 시 보낼 api 필요함.
-     */
     @GetMapping("/search/trending")
     public Result searchTrending() {
         List<Challenge> challengeList = searchService.getTrendChallenge();
         return new Result(true, HttpStatus.OK.value(), challengeList);
     }
 
+    @GetMapping("/search/rank")
+    public Result getRank() {
+        List<User> userList = searchService.getRank();
+        return new Result(true, HttpStatus.OK.value(), userList)
+    }
 
 }

@@ -48,4 +48,8 @@ public class SearchService {
     public List<Challenge> getTrendChallenge() {
         return searchRepository.findChallengeByTrend();
     }
+
+    public List<User> getRank() {
+        return searchRepository.findRank();
+    }
 }

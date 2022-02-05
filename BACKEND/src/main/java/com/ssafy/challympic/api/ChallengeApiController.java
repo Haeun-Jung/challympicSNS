@@ -3,10 +3,7 @@ package com.ssafy.challympic.api;
 import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.domain.defaults.ChallengeAccess;
 import com.ssafy.challympic.domain.defaults.ChallengeType;
-import com.ssafy.challympic.service.ChallengeService;
-import com.ssafy.challympic.service.SubscriptionService;
-import com.ssafy.challympic.service.TitleService;
-import com.ssafy.challympic.service.UserService;
+import com.ssafy.challympic.service.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +23,7 @@ public class ChallengeApiController {
     private final UserService userService;
     private final SubscriptionService subscriptionService;
     private final TitleService titleService;
+    private final TagService tagService;
 
     /**
      * 챌린지 목록
@@ -85,6 +83,22 @@ public class ChallengeApiController {
         }
 
         title.setChallenge(challenge);
+
+        // 내용 파싱해서 태그 저장
+        String content = request.challenge_content;
+        StringBuilder sb = null;
+        for(char c : content.toCharArray()) {
+            if(c == '#') {
+                if(sb != null) {
+                    tagService.saveTag(sb.toString());
+                }
+                sb = new StringBuilder();
+            }
+            if(c == ' ' && sb != null) {
+                tagService.saveTag(sb.toString());
+                sb = null;
+            }
+        }
 
         return new Result(true, HttpStatus.OK.value());
     }
