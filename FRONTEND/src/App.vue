@@ -15,4 +15,11 @@
 	};
 </script>
 
-<style scoped></style>
+<style scoped>
+/* font */
+@import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@300&display=swap');
+
+* {
+	font-family: 'Gothic A1', sans-serif;
+}
+</style>
