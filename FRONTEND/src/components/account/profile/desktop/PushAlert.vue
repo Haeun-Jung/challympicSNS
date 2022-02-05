@@ -5,14 +5,13 @@
 		<v-container>
 			<v-row md="1">
 				<v-col md="1"> </v-col>
-				<v-col md="3">
+				<v-col md="8">
 					<v-list-item-title class="pt-5">알림 허용</v-list-item-title>
 				</v-col>
 				<v-spacer />
 				<v-col>
 					<v-switch v-model="switch1" inset></v-switch>
 				</v-col>
-				<v-col md="1"></v-col>
 			</v-row>
 		</v-container>
 	</v-card>
