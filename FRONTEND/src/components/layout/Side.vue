@@ -1,5 +1,5 @@
 <template>
-	<v-card class="hidden-sm-and-down" elevation="0" height="100vh">
+	<v-card class="hidden-sm-and-down" flat elevation="100">
 		<side-contents />
 	</v-card>
 </template>
@@ -19,9 +19,8 @@
 	};
 </script>
 
-<style lang="scss" scoped>
-	//@import '~vuetify/src/components/VStepper/_variables.scss';
-	//$navigation-drawer-border-width {
-	//	20px;
-	//	}
+<style scoped>
+	.sticky-card {
+		position: fixed;
+	}
 </style>
