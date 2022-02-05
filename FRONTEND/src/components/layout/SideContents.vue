@@ -1,62 +1,51 @@
 <template>
-  <v-list dense nav>
-    <v-list-item>
-      <popular-search></popular-search>
-    </v-list-item>
-    <v-divider />
-    <v-list-item>
-      <my-interest></my-interest>
-    </v-list-item>
-    <v-divider />
-    <v-list-item>
-      <my-subscription></my-subscription>
-    </v-list-item>
-    <v-divider />
-    <v-list-item>
-      <ranking></ranking>
-    </v-list-item>
-    <v-divider />
-    <div class="main-side-switch-container">
-      <v-list-item>
-        <v-card-subtitle>
-          <h3>다크모드</h3>
-        </v-card-subtitle>
-        <v-switch
-          v-model="dark"
-          color="#3396F4"
-          class="dark-theme-switch"
-          @click="$vuetify.theme.dark = !$vuetify.theme.dark"
-        ></v-switch>
-      </v-list-item>
-    </div>
-  </v-list>
+	<v-list dense nav>
+		<v-list-item>
+			<popular-search></popular-search>
+		</v-list-item>
+		<v-divider />
+		<v-list-item>
+			<my-interest></my-interest>
+		</v-list-item>
+		<v-divider />
+		<v-list-item>
+			<my-subscription></my-subscription>
+		</v-list-item>
+		<v-divider />
+		<v-list-item>
+			<ranking></ranking>
+		</v-list-item>
+		<v-divider />
+		<v-list-item>
+			<dark-theme />
+		</v-list-item>
+		<!-- 여백 용 -> 후에 광고라던가.. -->
+		<v-list-item class="side-empty-container"></v-list-item>
+	</v-list>
 </template>
 
 <script>
-import PopularSearch from './PopularSearch.vue'
-import MyInterest from './MyInterest.vue'
-import MySubscription from './MySubscription.vue'
-import Ranking from './Ranking.vue'
+	import PopularSearch from "./PopularSearch.vue";
+	import MyInterest from "./MyInterest.vue";
+	import MySubscription from "./MySubscription.vue";
+	import Ranking from "./Ranking.vue";
+	import DarkTheme from "./DarkTheme.vue";
 
-export default {
-  name: "SideContents",
-  components: {
-    PopularSearch,
-    MyInterest,
-    MySubscription,
-    Ranking
-  },
-  data() {
-    return {
-      dark: false,
-    };
-  },
-};
+	export default {
+		name: "SideContents",
+		components: {
+			PopularSearch,
+			MyInterest,
+			MySubscription,
+			Ranking,
+			DarkTheme,
+		},
+	};
 </script>
-
 <style scoped>
-.main-side-switch-container {
-  display: flex;
-  justify-content: space-between;
-}
+	.side-empty-container {
+		height: 300px; /**side를 sticky로 만드는게 나을지..만약 그러면 앱바도 sticky -> 스크롤할때 별로 안이쁨 */
+		overflow: hidden;
+		/*background-color: pink;*/
+	}
 </style>
