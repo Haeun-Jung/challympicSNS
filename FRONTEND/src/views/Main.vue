@@ -2,13 +2,48 @@
 	<v-main>
 		<tag-bar />
 		<fab-button />
-		<v-row>
-			<v-col cols="2">
-				<side />
-			</v-col>
-		</v-row>
-		<!-- 리스트 공간
-  -->
+		<v-container fluid>
+			<v-layout row>
+				<!-- 패딩pr-16 16준게 최선..사이드바 어디에놔도이상함..-->
+				<!--데스크탑-->
+				<v-flex xs3 class="hidden-md-and-down">
+					<v-container fluid>
+						<v-layout row>
+							<v-flex xs2>
+								<v-layout column>
+									<v-flex> </v-flex>
+								</v-layout>
+							</v-flex>
+							<v-flex xs8>
+								<v-layout column>
+									<v-flex>
+										<side />
+									</v-flex>
+								</v-layout>
+							</v-flex>
+						</v-layout>
+					</v-container>
+				</v-flex>
+				<!-- 데스크탑 사이드 완료-->
+				<!--모바일 화면에서 적용 x before : cols="2"-->
+				<!--데스크탑-->
+				<v-flex xs7 class="hidden-md-and-down">
+					<v-layout column>
+						<v-flex>
+							<router-view />
+						</v-flex>
+						<!--데스크탑-->
+					</v-layout>
+				</v-flex>
+				<v-flex class="hidden-sm-and-up">
+					<v-layout column>
+						<v-flex>
+							<router-view />
+						</v-flex>
+					</v-layout>
+				</v-flex>
+			</v-layout>
+		</v-container>
 	</v-main>
 </template>
 
@@ -20,5 +55,3 @@
 		components: { TagBar, Side, FabButton },
 	};
 </script>
-
-<style></style>
