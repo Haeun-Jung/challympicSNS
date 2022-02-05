@@ -1,12 +1,5 @@
 <template>
-	<v-card
-		elevation="0"
-		height="100vh"
-		width="100%"
-		hide-overlay
-		absolute
-		clipped-left
-	>
+	<v-card width="100%" app>
 		<!--
 		<v-card-title class="text-h5 d-flex justify-center">
 	 -->
