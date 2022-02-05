@@ -5,12 +5,14 @@
 		</v-row>
 		<v-card class="hidden-sm-and-down">
 			<v-row>
-				<v-col md="3">
+				<v-col md="1" />
+				<v-col md="2">
 					<side />
 				</v-col>
-				<v-col md="8">
+				<v-col>
 					<router-view />
 				</v-col>
+				<v-col md="2" />
 			</v-row>
 		</v-card>
 	</v-main>
