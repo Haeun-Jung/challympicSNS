@@ -10,7 +10,7 @@
           관심사를 등록하고 관련 영상을 찾아보세요!
         </h4>
         <div class="main-side-menu-btn-container">
-          <v-btn @click="clickLoginBtn" color="primary" class="main-side-menu-btn"> 로그인 </v-btn>
+          <v-btn color="primary" class="main-side-menu-btn"> 로그인 </v-btn>
         </div>
       </v-else>
     </v-list-item-content>
@@ -24,11 +24,6 @@ export default {
     return {
       isLoggedIn: false
     }
-  },
-  methods: {
-    clickLoginBtn() {
-      this.$router.push("/login");
-    },
   }
 }
 </script>
