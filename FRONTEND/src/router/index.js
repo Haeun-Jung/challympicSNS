@@ -108,8 +108,8 @@ const routes = [
     component: Login,
   },
   {
-    // path: "/challenge/:challengeNo",
-    path: "/challenge",
+     path: "/challenge/:challengeNo",
+   // path: "/challenge",
     name: "ChallengeDetail",
     component: ChallengeDetail,
   },
