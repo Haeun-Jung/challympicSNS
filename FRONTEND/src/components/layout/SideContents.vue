@@ -1,27 +1,57 @@
 <template>
-	<v-list dense nav :color="$vuetify.theme.dark ? '#121212' : 'white'">
-		<v-list-item>
-			<popular-search></popular-search>
-		</v-list-item>
-		<v-divider />
-		<v-list-item>
-			<my-interest></my-interest>
-		</v-list-item>
-		<v-divider />
-		<v-list-item>
-			<my-subscription></my-subscription>
-		</v-list-item>
-		<v-divider />
-		<v-list-item>
-			<ranking></ranking>
-		</v-list-item>
-		<v-divider />
-		<v-list-item>
-			<dark-theme />
-		</v-list-item>
-		<!-- 여백 용 -> 후에 광고라던가.. -->
-		<v-list-item class="side-empty-container"></v-list-item>
-	</v-list>
+	<div>
+		<v-list dense nav class="hidden-sm-and-up">
+			<v-list-item>
+				<popular-search></popular-search>
+			</v-list-item>
+			<v-divider />
+			<v-list-item>
+				<my-interest></my-interest>
+			</v-list-item>
+			<v-divider />
+			<v-list-item>
+				<my-subscription></my-subscription>
+			</v-list-item>
+			<v-divider />
+			<v-list-item>
+				<ranking></ranking>
+			</v-list-item>
+			<v-divider />
+			<v-list-item>
+				<dark-theme />
+			</v-list-item>
+			<!-- 여백 용 -> 후에 광고라던가.. -->
+			<v-list-item class="side-empty-container"></v-list-item>
+		</v-list>
+		<v-list
+			dense
+			nav
+			class="hidden-md-and-down"
+			:color="$vuetify.theme.dark ? '#121212' : 'white'"
+		>
+			<v-list-item>
+				<popular-search></popular-search>
+			</v-list-item>
+			<v-divider />
+			<v-list-item>
+				<my-interest></my-interest>
+			</v-list-item>
+			<v-divider />
+			<v-list-item>
+				<my-subscription></my-subscription>
+			</v-list-item>
+			<v-divider />
+			<v-list-item>
+				<ranking></ranking>
+			</v-list-item>
+			<v-divider />
+			<v-list-item>
+				<dark-theme />
+			</v-list-item>
+			<!-- 여백 용 -> 후에 광고라던가.. -->
+			<v-list-item class="side-empty-container"></v-list-item>
+		</v-list>
+	</div>
 </template>
 
 <script>
