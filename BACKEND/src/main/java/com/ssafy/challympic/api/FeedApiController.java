@@ -39,7 +39,7 @@ public class FeedApiController {
      */
     @GetMapping("/feed/{userNo}/subscription")
     public FeedChallengeResponse getSubscriptionChallengeList(@PathVariable int userNo) {
-        List<Challenge> challenges = challengeService.getChallengeBySubscription(userNo);
+        List<Challenge> challenges = challengeService.findChallengeBySubscription(userNo);
         return new FeedChallengeResponse(true, 200, challenges);
     }
 

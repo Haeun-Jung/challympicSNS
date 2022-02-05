@@ -19,9 +19,9 @@ public class SubscriptionRepository {
     }
 
     public Subscription findSubscription(Subscription subscription) {
-        return (Subscription) em.createQuery("select s from Subscription s where s.challenge_no = :challenge_no and s.user_no = :user_no")
-                .setParameter("challenge_no", subscription.getChallenge_no())
-                .setParameter("user_no", subscription.getUser_no())
+        return (Subscription) em.createQuery("select s from Subscription s where s.challenge = :challenge_no and s.user = :user_no")
+                .setParameter("challenge_no", subscription.getChallenge())
+                .setParameter("user_no", subscription.getUser())
                 .getSingleResult();
 
     }
@@ -31,7 +31,7 @@ public class SubscriptionRepository {
     }
 
     public List<Challenge> findChallengeByUserNoFromSubs(int userNo) {
-        return em.createQuery("select c from Challenge c where c.challenge_no = (select s.challenge_no from Subscription s where s.user_no = :user_no)", Challenge.class)
+        return em.createQuery("select c from Challenge c where c.challenge_no = (select s.challenge.challenge_no from Subscription s where s.user = :user_no)", Challenge.class)
             .setParameter("user_no", userNo)
             .getResultList();
     }

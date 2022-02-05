@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +34,7 @@ public class ChallengeApiController {
     public Result challenges() {
         List<Challenge> findChallenges = challengeService.findChallenges();
         List<ChallengeDto> collect = findChallenges.stream()
-                .map(c -> new ChallengeDto(c.getChallenge_no(), c.getUser(), c.getChallenge_start(), c.getChallenge_end(), c.getChallenge_access(), c.getChallenge_type(), c.getChallenge_title(), c.getChallenge_content(), c.isChallenge_official(), c.getChallenge_report(), c.getTitle_no()))
+                .map(c -> new ChallengeDto(c.getChallenge_no(), c.getUser(), c.getChallenge_start(), c.getChallenge_end(), c.getChallenge_access(), c.getChallenge_type(), c.getChallenge_title(), c.getChallenge_content(), c.isChallenge_official(), c.getChallenge_report(), c.getTitle()))
                 .collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), collect);
     }
@@ -66,8 +65,7 @@ public class ChallengeApiController {
 
         Title title = new Title();
         title.setTitle_name(request.getTitle_name());
-        int title_no = titleService.saveTitles(title);
-        if(title_no == -1) return new Result(false, HttpStatus.FORBIDDEN.value());
+        if(title == null) return new Result(false, HttpStatus.FORBIDDEN.value());
 
         Challenge challenge = Challenge.createChallenge(
                 user,
@@ -76,14 +74,13 @@ public class ChallengeApiController {
                 request.getChallenge_type(),
                 request.getChallenge_title(),
                 request.getChallenge_content(),
-                title_no
+                title
         );
-        int challengeNo = challengeService.saveChallenge(challenge);
 
         for(int cr : challengers) {
             Challenger challenger = new Challenger();
-            challenger.setChallenge_no(challengeNo);
-            challenger.setUser_no(cr);
+            challenger.setChallenge(challenge);
+            challenger.setUser(user);
             challengeService.saveChallengers(challenger);
         }
 
@@ -128,7 +125,10 @@ public class ChallengeApiController {
      */
     @PostMapping("/challenge/{challengeNo}/subscribe/{userNo}")
     public Result addSubscription(@PathVariable int challengeNo, @PathVariable int userNo) {
-        subscriptionService.saveSubscription(Subscription.setSubscription(challengeNo, userNo));
+        Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
+        User user = userService.findUser(userNo);
+
+        subscriptionService.saveSubscription(Subscription.setSubscription(challenge, user));
         return new Result(true, HttpStatus.OK.value());
     }
 
@@ -137,7 +137,10 @@ public class ChallengeApiController {
      */
     @DeleteMapping("/challenge/{challengeNo}/subscribe/{userNo}")
     public Result removeSubscription(@PathVariable int challengeNo, @PathVariable int userNo) {
-        subscriptionService.deleteSubscription(Subscription.setSubscription(challengeNo, userNo));
+        Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
+        User user = userService.findUser(userNo);
+
+        subscriptionService.deleteSubscription(Subscription.setSubscription(challenge, user));
         return new Result(true, HttpStatus.OK.value());
     }
 
@@ -154,6 +157,6 @@ public class ChallengeApiController {
         private String challenge_content;
         private boolean challenge_official;
         private int challenge_report;
-        private int title_no;
+        private Title title;
     }
 }
