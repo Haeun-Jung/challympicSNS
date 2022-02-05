@@ -1,203 +1,89 @@
 <template>
-	<v-main>
-		<tag-bar />
-		<fab-button />
+	<div class="detail-page">
+		???s
 		<v-alert v-model="alert" class="alert-position" :value="alert" type="info">
 			신고가 접수되었습니다.
 		</v-alert>
-		<v-container fluid>
-			<v-layout row>
-				<!-- 패딩pr-16 16준게 최선..사이드바 어디에놔도이상함..-->
-				<!--데스크탑-->
-				<v-flex xs3 class="hidden-md-and-down">
-					<v-container fluid>
-						<v-layout row>
-							<v-flex xs2>
-								<v-layout column>
-									<v-flex> </v-flex>
-								</v-layout>
-							</v-flex>
-							<v-flex xs8>
-								<v-layout column>
-									<v-flex>
-										<side />
-									</v-flex>
-								</v-layout>
-							</v-flex>
-						</v-layout>
-					</v-container>
-				</v-flex>
-				<!--데스크탑-->
-				<v-flex
-					:class="{
-						'pa-4': $vuetify.breakpoint.smAndDown,
-						'ma-3': $vuetify.breakpoint.mdAndUp,
-					}"
-					xs12
-					sm6
-					md7
-				>
-					<v-layout column>
-						<v-flex>
-							<!-- 라우터뷰 자리에 들어가잇음 -->
-							<v-layout row>
-								<v-main>
-									<!--데스크탑 환경일 경우 : -->
-									<div v-if="!isMobile()">
-										<v-card-title>
-											<h2>#{{ challenge.name }}</h2>
-											<span v-if="challenge.official">✅</span>
-											<share-button size="x-large" />
-											<v-btn
-												v-if="isSubscribed"
-												@click="subscribe"
-												class="icon-margin"
-												icon
-											>
-												<v-icon large>mdi-bookmark</v-icon>
-											</v-btn>
-											<v-btn v-else @click="subscribe" class="icon-margin" icon>
-												<v-icon large>mdi-bookmark-outline</v-icon>
-											</v-btn>
-											<v-spacer />
-											<v-btn
-												@click="confirmReportDialog = true"
-												class="icon-margin"
-												icon
-											>
-												<v-icon large>mdi-alarm-light-outline</v-icon>
-											</v-btn>
-											<v-btn
-												@click="postDialog = true"
-												outlined
-												color="#3396F4"
-											>
-												참여하기
-											</v-btn>
-										</v-card-title>
-
-										<v-list-item-subtitle class="ml-5">
-											기간: 00.00.00 ~ 00.00.00
-										</v-list-item-subtitle>
-									</div>
-									<!-- 모바일 환경일 경우-->
-									<div v-else>
-										<v-row>
-											<v-col xs="2" />
-											<v-card-title>
-												<h2>#{{ challenge.name }}</h2>
-												<span v-if="challenge.official">✅</span>
-											</v-card-title>
-											<v-col xs2 />
-										</v-row>
-										<p style="text-align: center">기간: 00.00.00 ~ 00.00.00</p>
-										<v-row class="text-center">
-											<v-card width="100%" elevation="0">
-												<share-button />
-												<v-btn
-													v-if="isSubscribed"
-													@click="subscribe"
-													class="icon-margin"
-													icon
-												>
-													<v-icon>mdi-bookmark</v-icon>
-												</v-btn>
-												<v-btn
-													v-else
-													@click="subscribe"
-													class="icon-margin"
-													icon
-												>
-													<v-icon>mdi-bookmark-outline</v-icon>
-												</v-btn>
-												<v-btn
-													@click="confirmReportDialog = true"
-													class="icon-margin"
-													icon
-												>
-													<v-icon>mdi-alarm-light-outline</v-icon>
-												</v-btn>
-												<v-btn
-													@click="postDialog = true"
-													outlined
-													color="#3396F4"
-												>
-													참여하기
-												</v-btn>
-											</v-card>
-										</v-row>
-									</div>
-									<v-list-item-subtitle>
-										<v-chip
-											class="mt-6 ml-4 challenge-chip"
-											color="#3396F4"
-											text-color="white"
-										>
-											요리
-										</v-chip>
-									</v-list-item-subtitle>
-
-									<v-card-subtitle>
-										{{ challenge.content }}
-									</v-card-subtitle>
-								</v-main>
-							</v-layout>
-							<div>
-								<!-- End of Mobile -->
-								<!--Data Iterator -->
-								<v-data-iterator
-									:items="postList"
-									:items-per-page.sync="itemsPerPage"
-									:sort-by="sortBy"
-									:sort-desc="sortDesc"
-									hide-default-footer
-								>
-									<template v-slot:header>
-										<v-row class="justify-end">
-											<v-col class="col-5 col-sm-3 col-lg-2">
-												<v-select
-													v-model="sortBy"
-													:items="sortKeys"
-													:sort-desc="sortDesc"
-													class="align-end"
-													flat
-													solo-inverted
-													hide-details
-													label="정렬"
-												></v-select>
-											</v-col>
-										</v-row>
-									</template>
-									<!-- props로 포스트 목록 내려주기 -->
-									<template v-slot:default="props">
-										<post-item
-											v-for="post in props.items"
-											:post="post"
-											:type="challenge.type"
-											:key="post.postInfo.postNo"
-										></post-item>
-									</template>
-								</v-data-iterator>
-							</div>
-							<confirm-report
-								:confirm-report-dialog="confirmReportDialog"
-								@close-dialog="confirmReportDialog = false"
-								@reported="showReportedAlert"
-							/>
-							<post-upload
-								v-if="postDialog"
-								:challengeName="challenge.name"
-								@close-modal="postDialog = false"
-							/>
-						</v-flex>
-					</v-layout>
-				</v-flex>
-			</v-layout>
-
-			<!--
-      -->
-		</v-container>
-	</v-main>
+		<v-row class="side-and-main">
+			<side />
+			<v-col class="col-10 col-md-6">
+				<div class="d-flex justify-space-between">
+					<div class="d-flex align-center">
+						<h1>#{{ challenge.name }}</h1>
+						<span v-if="challenge.official">✅</span>
+						<share-button />
+						<v-btn
+							v-if="isSubscribed"
+							@click="subscribe"
+							class="icon-margin"
+							icon
+						>
+							<v-icon large>mdi-bookmark</v-icon>
+						</v-btn>
+						<v-btn v-else @click="subscribe" class="icon-margin" icon>
+							<v-icon large>mdi-bookmark-outline</v-icon>
+						</v-btn>
+					</div>
+					<div>
+						<v-btn @click="confirmReportDialog = true" class="icon-margin" icon>
+							<v-icon large>mdi-alarm-light-outline</v-icon>
+						</v-btn>
+						<v-btn @click="postDialog = true" outlined color="#3396F4">
+							참여하기
+						</v-btn>
+					</div>
+				</div>
+				<p>기간: 00.00.00 ~ 00.00.00</p>
+				<v-chip class="mb-2 challenge-chip" color="#3396F4"> 요리 </v-chip>
+				<p>{{ challenge.content }}</p>
+				<div>
+					<v-data-iterator
+						:items="postList"
+						:items-per-page.sync="itemsPerPage"
+						:sort-by="sortBy"
+						:sort-desc="sortDesc"
+						hide-default-footer
+					>
+						<template v-slot:header>
+							<v-row class="justify-end">
+								<v-col class="col-5 col-sm-3 col-lg-2">
+									<v-select
+										v-model="sortBy"
+										:items="sortKeys"
+										:sort-desc="sortDesc"
+										class="align-end"
+										flat
+										solo-inverted
+										hide-details
+										label="정렬"
+									></v-select>
+								</v-col>
+							</v-row>
+						</template>
+						<!-- props로 포스트 목록 내려주기 -->
+						<template v-slot:default="props">
+							<post-item
+								v-for="post in props.items"
+								:post="post"
+								:type="challenge.type"
+								:key="post.postInfo.postNo"
+							></post-item>
+						</template>
+					</v-data-iterator>
+				</div>
+			</v-col>
+		</v-row>
+		<confirm-report
+			:confirm-report-dialog="confirmReportDialog"
+			@close-dialog="confirmReportDialog = false"
+			@reported="showReportedAlert"
+		/>
+		<post-upload
+			v-if="postDialog"
+			:challengeName="challenge.name"
+			@close-modal="postDialog = false"
+		/>
+	</div>
 </template>
 
 <script>
@@ -382,17 +268,6 @@
 				}
 				this.isSubscribed = !this.isSubscribed;
 			},
-			isMobile() {
-				if (
-					/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-						navigator.userAgent
-					)
-				) {
-					return true;
-				} else {
-					return false;
-				}
-			},
 		},
 		computed: {
 			sortDesc() {
@@ -414,9 +289,9 @@
 <style scoped>
 	.alert-position {
 		position: absolute;
+		top: 3.3rem;
 		width: 100%;
 		z-index: 1;
-		/*top: 3.3rem;*/
 	}
 	.detail-page {
 		margin-top: 5rem;
@@ -427,11 +302,9 @@
 	.side-and-main {
 		justify-content: space-evenly;
 	}
-	/*
-  (수정)v-chip에 직접 주었습니다.
 	.challenge-chip {
 		color: white;
-	}*/
+	}
 	.select {
 		width: 120px;
 	}

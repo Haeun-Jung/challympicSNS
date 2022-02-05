@@ -7,6 +7,22 @@
     
      -->
 	<v-card elevation="2" max-width="444" class="mx-auto">
+		<v-system-bar lights-out>
+			<!--누르면 챌린지 상세 페이지로 이동-->
+			<v-row class="justify-end">
+				<v-btn
+					color="blue lighten-2"
+					depressed
+					plain
+					tile
+					:ripple="false"
+					dense
+					@click="goChallenge"
+				>
+					<v-list-item-subtitle>챌린지 바로가기</v-list-item-subtitle>
+				</v-btn>
+			</v-row>
+		</v-system-bar>
 		<v-carousel
 			hide-delimiter-background
 			delimiter-icon="mdi-minus"
@@ -26,7 +42,14 @@
 					<!-- 포스트 정보 -->
 					<div class="bar">
 						<v-card-title>
-							<h3>{{ item.challenger }}</h3>
+							<router-link
+								:to="{ path: `/feed/${item.challenger_no}` }"
+								style="text-decoration: none; color: inherit"
+							>
+								<h3>
+									{{ item.challenger }}
+								</h3>
+							</router-link>
 							<v-spacer />
 						</v-card-title>
 
@@ -48,35 +71,6 @@
 							</v-icon>
 						</v-btn>
 					</div>
-
-					<!-- 동영상 재생 컨트롤러 -->
-					<!--시간나면 나중에 다시하기
-					<div class="play-box align-self-center fill-height flex-column">
-						<v-btn
-							:class="{ 'show-btns': hover }"
-							:color="transparent"
-							@click="play(idx)"
-							icon
-						>
-							<v-icon
-								v-if="playing"
-								x-large
-								:class="{ 'show-btns': hover }"
-								:color="transparent"
-							>
-								mdi-pause
-							</v-icon>
-							<v-icon
-								v-else-if="!playing"
-								x-large
-								:class="{ 'show-btns': hover }"
-								:color="transparent"
-							>
-								mdi-play
-							</v-icon>
-						</v-btn>
-					</div>
-					-->
 				</v-carousel-item>
 			</div>
 		</v-carousel>
@@ -107,12 +101,7 @@
 							>
 						</v-btn>
 					</span>
-					<v-btn @click="goChallenge">
-						<!--누르면 챌린지 상세 페이지로 이동-->
-						<v-list-item-subtitle>포스트 더보기</v-list-item-subtitle>
-					</v-btn>
 				</v-list-item-action>
-				<v-list-item-contnet> </v-list-item-contnet>
 			</v-list-item>
 		</v-list>
 	</v-card>
@@ -137,6 +126,7 @@
 						post_likes: 300,
 						post_comments: 3,
 						challenger: "김싸피",
+						challenger_no: 3, //challenger no ? 넘어오는거에 따라서 수정
 						content:
 							/*확장자로 받는 경우 : controls 썸네일은 0.8초로 하자..*/
 							"https://caiogondim.github.io/vertical-video-with-side-blur/example/vertical-video.mov",
@@ -146,6 +136,7 @@
 						post_like: false,
 						challenge_title: "아이스버킷챌린지",
 						post_content: "저도..참여해봤어요..#차가움#공익#공식",
+						challenger_no: 3, //challenger no ? 넘어오는거에 따라서 수정
 						post_likes: 0,
 						post_comments: 3,
 						challenger: "이싸피",
@@ -160,6 +151,7 @@
 						post_likes: 15,
 						post_comments: 30,
 						challenger: "박싸피",
+						challenger_no: 3, //challenger no ? 넘어오는거에 따라서 수정
 						content:
 							/*확장자로 받는 경우 : controls 썸네일은 0.8초로 하자..*/
 							"https://caiogondim.github.io/vertical-video-with-side-blur/example/vertical-video.mov",
@@ -169,6 +161,7 @@
 						post_like: false,
 						challenge_title: "김싸피덤벼",
 						post_content: "얍얍#1대1",
+						challenger_no: 3, //challenger no ? 넘어오는거에 따라서 수정
 						post_likes: 3521565,
 						post_comments: 345465,
 						challenger: "오싸피",
@@ -192,13 +185,15 @@
 				}
 			},
 			goChallenge() {
-				alert(
+				/*alert(
 					"챌린지 상세 페이지로 이동 where challenge_no:" +
 						this.challenge.challenge_no
-				);
+				);*/
+				const path = "/challenge/" + this.challenge.challenge_no;
+				this.$router.push(path);
 			},
 			pushSubscribe() {
-				alert(this.challenge.challenge_subscribe);
+				/*alert(this.challenge.challenge_subscribe);*/
 				//해당 챌린지 challenge.challenge_no로 구독 취소나 좋아요 ㅇ ㅛ청 보내기
 				this.challenge.challenge_subscribe =
 					!this.challenge.challenge_subscribe;

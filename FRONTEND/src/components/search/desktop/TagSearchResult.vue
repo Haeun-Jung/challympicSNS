@@ -83,8 +83,8 @@
 					{
 						post_no: 3,
 						post_like: false,
-						challenge_title: "미라클모닝#미이라크을",
-						post_content: "#아침#ㅜㅜ",
+						challenge_title: "미라클모닝",
+						post_content: "#미이라크을#아침#ㅜㅜ",
 						post_likes: 15,
 						post_comments: 30,
 						challenger: "박싸피",
