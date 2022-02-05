@@ -1,9 +1,10 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Main from "../views/Main.vue";
-
-import Account from "../components/account/Account.vue";
+/*검색 화면 */
+import Search from "../components/search/Search.vue";
 /*프로필 */
+import Account from "../components/account/Account.vue";
 /* Desktop */
 import UpdateUserInfo from "../components/account/profile/desktop/ProfileUpdate.vue";
 import UpdateUserPassword from "../components/account/profile/desktop/PasswordUpdate.vue";
@@ -16,7 +17,7 @@ import DeleteUserMobile from "../components/account/profile/mobile/DeleteUser.vu
 import UpdateUserPasswordMobile from "../components/account/profile/mobile/PasswordUpdate.vue";
 import UpdatePushAlertSettingMobile from "../components/account/profile/mobile/PushAlert.vue";
 import QnAUserMobile from "../components/account/profile/mobile/QnA.vue";
-
+/*로그인 및 회원가입*/
 import Join from "../views/user/Join.vue";
 import Login from "../views/user/Login.vue";
 import ChallengeDetail from "../views/ChallengeDetail.vue";
@@ -29,6 +30,13 @@ const routes = [
     path: "/",
     name: "Main",
     component: Main,
+    children: [
+      {
+        path: "/search/:keyword/",
+        name: "Search",
+        component:Search,
+      }
+    ]
   },
   {
     path: "/user/account/",
