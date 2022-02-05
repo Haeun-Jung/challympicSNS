@@ -1,5 +1,5 @@
 <template>
-	<v-list dense nav>
+	<v-list dense nav :color="$vuetify.theme.dark ? '#121212' : 'white'">
 		<v-list-item>
 			<popular-search></popular-search>
 		</v-list-item>
