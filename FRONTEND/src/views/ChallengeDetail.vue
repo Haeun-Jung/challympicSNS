@@ -1,7 +1,9 @@
 <template>
 	<v-main>
+		<!--
 		<tag-bar />
 		<fab-button />
+		-->
 		<v-alert v-model="alert" class="alert-position" :value="alert" type="info">
 			신고가 접수되었습니다.
 		</v-alert>
