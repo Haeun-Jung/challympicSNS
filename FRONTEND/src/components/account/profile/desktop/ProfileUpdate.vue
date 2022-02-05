@@ -85,7 +85,10 @@
 										</template>
 
 										<v-card>
-											<v-card-title class="text-h6 grey lighten-2">
+											<v-card-title
+												class="text-h6"
+												:color="$vuetify.theme.dark ? '#424242' : '#FAFAFA'"
+											>
 												관심사 추가
 											</v-card-title>
 
@@ -182,7 +185,6 @@
 			return {
 				profileUrl: "https://cdn.vuetifyjs.com/images/john.jpg", //후에 유저테이블에서 가져오기
 				titles: ["밥 잘먹는", "타이틀2"],
-
 				nickname: "nickname",
 				dialog: false,
 				disabledTrue: true,
