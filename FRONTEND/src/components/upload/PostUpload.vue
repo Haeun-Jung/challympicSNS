@@ -2,7 +2,7 @@
   <!-- POST 등록 모달 -->
     <v-dialog v-model="dialog" persistent max-width="600px">
       <v-card>
-        <v-card-title class="card-header"> 
+        <v-card-title class="card-header" > 
           <v-spacer></v-spacer>
           <v-btn class="cancel-btn" icon @click="$emit('close-modal')"> 
             <img class="cancel-icon" src="https://img.icons8.com/external-becris-lineal-becris/64/000000/external-cancel-mintab-for-ios-becris-lineal-becris.png"/>
@@ -91,9 +91,9 @@
               ></v-textarea>
             </v-col>
           </v-row>
+          <div class="error-text" v-if="error">{{ error }}</div>
           <v-row>
             <v-spacer></v-spacer>
-            <span class="error-text" v-if="error">{{ error }}</span>
             <v-btn
                 class="ma-2"
                 color="#3396F4"
@@ -157,7 +157,6 @@ export default {
 .card-header {
   position: sticky;
   top: 0;
-  background-color: #fff;
   z-index: 1;
 }
 .example-drag .drop-active {
@@ -191,6 +190,8 @@ export default {
 }
 .cancel-icon {
     width: 16px;
+    -webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */
+    filter: grayscale(100%);
 }
 .upload-area {
   position: relative;
@@ -217,9 +218,8 @@ export default {
   text-align: right;
 }
 .error-text {
-    display: flex;
     color: rgb(235, 38, 38);
-    align-items: center;
-    margin-right: 14px;
+    text-align: right;
+    margin-bottom: 10px;
 }
 </style>
