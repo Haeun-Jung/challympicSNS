@@ -16,7 +16,7 @@
 			></v-app-bar-nav-icon>
 		</v-toolbar-items>
 		<!--logo-->
-		<v-toolbar-title class="v-toolbar-title" @click="goMain"
+		<v-toolbar-title class="v-toolbar-title font-weight" @click="goMain"
 			>Challympic</v-toolbar-title
 		>
 		<v-spacer />
@@ -76,6 +76,7 @@
 					small-chips
 					flat
 					solo
+          			rounded
 					hide-details="true"
 					clearable
 					append-icon="mdi-magnify"
@@ -188,7 +189,11 @@
 						link1: "/user/account/:userNo/",
 						link2: "/mobile/user/account/:userNo/",
 					},
-					{ title: "Click Me" },
+					{ 
+						title: "내 피드",
+						link1: "/feed/:userNo/",
+						link2: "/feed/:userNo/"
+					},
 					{ title: "Click Me" },
 					{ title: "Click Me 2" },
 				],
@@ -287,5 +292,8 @@
 	.v-toolbar__content,
 	.v-toolbar__extension {
 		padding: 0;
+	}
+	.font-weight {
+		font-weight: bold;
 	}
 </style>

@@ -37,7 +37,7 @@
 								<v-list-item-title>ssafy@gmail.com</v-list-item-title>
 							</v-col>
 						</v-row>
-						<v-row>
+						<v-row class="row-bottom">
 							<!-- 타이틀 -->
 							<v-col md="4">
 								<v-list-item-title>대표 타이틀</v-list-item-title>
@@ -54,7 +54,7 @@
 							</v-col>
 						</v-row>
 						<!-- 닉네임 -->
-						<v-row>
+						<v-row class="row-bottom">
 							<v-col md="4">
 								<v-list-item-title>닉네임</v-list-item-title>
 							</v-col>
@@ -274,5 +274,9 @@
 		flex-direction: row !important;
 		text-align: center !important;
 		align-items: center !important;
+	}
+
+	.row-bottom {
+		margin-bottom: -40px;
 	}
 </style>
