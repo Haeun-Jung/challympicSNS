@@ -24,18 +24,16 @@
 						</v-layout>
 					</v-container>
 				</v-flex>
-				<!-- 데스크탑 사이드 완료-->
-				<!--모바일 화면에서 적용 x before : cols="2"-->
-				<!--데스크탑-->
-				<v-flex xs7 class="hidden-md-and-down">
-					<v-layout column>
-						<v-flex>
-							<router-view />
-						</v-flex>
-						<!--데스크탑-->
-					</v-layout>
-				</v-flex>
-				<v-flex class="hidden-sm-and-up">
+				<!-- 반응형 처리 -->
+				<v-flex
+					:class="{
+						'pa-4': $vuetify.breakpoint.smAndDown,
+						'ma-3': $vuetify.breakpoint.mdAndUp,
+					}"
+					xs12
+					sm6
+					md7
+				>
 					<v-layout column>
 						<v-flex>
 							<router-view />
