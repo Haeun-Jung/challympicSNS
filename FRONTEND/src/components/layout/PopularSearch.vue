@@ -3,7 +3,7 @@
     <v-card-subtitle>
         <h2>인기 급상승</h2>
     </v-card-subtitle>
-    <v-list-item-content>
+    <v-list-item-content class = "side-contents-trend-container">
       <div v-for="keyword in keywords" class="search-item" :key="keyword.id">
         <span>{{ keywords.indexOf(keyword) + 1 }}</span>
         <span>{{ keyword }}</span>
@@ -32,8 +32,12 @@ export default {
   justify-content: space-between;
   border: solid 0.5px;
   border-radius: 20px;
-  margin: 0.5rem;
+  margin: 0.5rem 0rem;
   padding: 0.5rem;
+}
+.side-contents-trend-container{
+  margin: 0 auto;
+  width: 90%;
 }
 
 </style>
