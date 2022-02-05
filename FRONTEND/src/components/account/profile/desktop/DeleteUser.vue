@@ -44,7 +44,6 @@
 				<v-col md="2">
 					<v-btn
 						class="text-none"
-						round
 						depressed
 						color="error"
 						@click="onSubmit"
