@@ -6,7 +6,7 @@
     <v-list-item-content>
       <div v-for="champion in champions" class="rank-item" :key="champion.id">
         <span class="number">{{ champions.indexOf(champion) + 1 }}</span>
-        <span class="nickname">{{ champion }}</span>
+        <span class="nickname" @click="moveToFeed">{{ champion }}</span>
       </div>
     </v-list-item-content>
   </div>
@@ -18,6 +18,11 @@ export default {
   data() {
     return {
       champions: ["ox_zung", "official_kep1er", "enhypen"]
+    }
+  },
+  methods: {
+    moveToFeed() {
+      this.$router.push("/feed/:userNo");
     }
   }
 }
@@ -37,6 +42,9 @@ export default {
   height: 20px;
   border-radius: 50%;
   margin: 0 0.5rem;
+}
+.nickname {
+  cursor: pointer;
 }
 .main-side-menu-contents {
   margin: 1%;
