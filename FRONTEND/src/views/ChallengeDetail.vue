@@ -27,10 +27,10 @@
 						</v-layout>
 					</v-container>
 				</v-flex>
-				<!--데스크탑-->
+				<!--모바일은 pa5이하로 내려가면, 영역이 깨집니다 !-->
 				<v-flex
 					:class="{
-						'pa-4': $vuetify.breakpoint.smAndDown,
+						'pa-6': $vuetify.breakpoint.smAndDown,
 						'ma-3': $vuetify.breakpoint.mdAndUp,
 					}"
 					xs12
