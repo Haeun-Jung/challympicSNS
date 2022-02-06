@@ -92,7 +92,7 @@
 										</v-row>
 										<p style="text-align: center">기간: 00.00.00 ~ 00.00.00</p>
 										<v-row class="text-center">
-											<v-card width="100%" elevation="0">
+											<v-card width="100%" elevation="0" color="transparent">
 												<share-button />
 												<v-btn
 													v-if="isSubscribed"
@@ -412,6 +412,9 @@
 </script>
 
 <style scoped>
+	.challenge-detail-button-container {
+		padding: 0;
+	}
 	.alert-position {
 		position: absolute;
 		width: 100%;
