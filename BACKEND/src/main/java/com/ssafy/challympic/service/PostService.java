@@ -23,8 +23,8 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<Post> getPostList(int challengNo){
-        return postRepository.findByChallengNo(challengNo);
+    public List<Post> getPostList(Integer challengeNo){
+        return postRepository.findByChallengNo(challengeNo);
     }
 
     @Transactional
@@ -36,7 +36,14 @@ public class PostService {
     @Transactional
     public int update(int postNo, Post newPost){
         Post post = postRepository.findByPostNo(postNo);
-        post.setPost_content(newPost.getPost_content());
+        if(newPost.getPost_content() != null){
+            post.setPost_content(newPost.getPost_content());
+        }
+
+        if(newPost.getMedia() != null){
+            post.setMedia(newPost.getMedia());
+        }
+
         return post.getPost_no();
     }
 
