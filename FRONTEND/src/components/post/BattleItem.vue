@@ -1,13 +1,13 @@
 <template>
   <div>
     <!-- 게이지바 -->
-    <div class="gauge-items">
+    <div class="gauge-items my-3">
       <strong class="ml-auto nickname">{{ postList[0].postInfo.nickname }}</strong>
       <v-progress-linear
         background-color="#3396F4"
         color="pink lighten-1"
         :value="value"
-        height="20px"
+        height="17px"
       >
         <strong>{{ Math.ceil(value) }}</strong>
         <strong>{{ 100 - Math.ceil(value) }}</strong>
@@ -54,13 +54,13 @@ export default {
 }
 .v-progress-linear {
   display: block;
-  width: 400px;
+  width: 30%;
   margin: 0 auto;
   border-radius: 10px;
 }
 ::v-deep .v-progress-linear__content {
   justify-content: space-between;
-  padding: 0 1rem;
+  padding: 0 0.5rem;
   color: white;
 }
 </style>
