@@ -17,15 +17,16 @@
                                 <div class="user-name font-weight">박싸피</div>
                             </v-list-item-title>
                         </v-col>
+                        <!-- 팔로잉, 팔로우 명단 props로 잡기(post/FollowLikeModal) -->
                         <v-col md="2" class="follow-wrapper" align-self="center">
                             <div class="font-weight">팔로워</div>
-                            <div class="show-folllow-modal" @click="openFollowerDialog">100</div>
-                            <follow-modal v-if="follower" @close-modal="follower=false"  type="follower"></follow-modal>
+                            <div class="show-folllow-modal" @click="openFollowerDialog">3</div>
+                            <follow-like-modal v-if="follower" @close-modal="follower=false" type="follower" :users="follows"></follow-like-modal>
                         </v-col>
                         <v-col md="2" class="follow-wrapper" align-self="center">
                             <div class="font-weight">팔로잉</div>
-                            <div class="show-folllow-modal" @click="openFollowingDialog">5</div>
-                            <follow-modal v-if="following" @close-modal="following=false"  type="following"></follow-modal>
+                            <div class="show-folllow-modal" @click="openFollowingDialog">3</div>
+                            <follow-like-modal v-if="following" @close-modal="following=false" type="following" :users="follows"></follow-like-modal>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -62,18 +63,18 @@
                                 -->
 							</v-col>
 						</v-row>
-                        <!-- 팔로워 -->
+                        <!-- 팔로잉, 팔로우 명단 props로 잡기(post/FollowLikeModal) -->
                         <v-row>
-                            <v-col md="2" class="follow-wrapper">
-								<div class="font-weight">팔로워</div>
-                                <div class="show-folllow-modal" @click="openFollowerDialog">100</div>
-                                <follow-modal v-if="follower" @close-modal="follower=false"  type="follower"></follow-modal>
-							</v-col>
-                            <v-col md="2" class="follow-wrapper">
-								<div class="font-weight">팔로잉</div>
-                                <div class="show-folllow-modal" @click="openFollowingDialog">5</div>
-                                <follow-modal v-if="following" @close-modal="following=false"  type="following"></follow-modal>
-							</v-col>
+                            <v-col md="2" class="follow-wrapper" align-self="center">
+                            <div class="font-weight">팔로워</div>
+                            <div class="show-folllow-modal" @click="openFollowerDialog">3</div>
+                            <follow-like-modal v-if="follower" @close-modal="follower=false" type="follower" :users="follows"></follow-like-modal>
+                        </v-col>
+                        <v-col md="2" class="follow-wrapper" align-self="center">
+                            <div class="font-weight">팔로잉</div>
+                            <div class="show-folllow-modal" @click="openFollowingDialog">3</div>
+                            <follow-like-modal v-if="following" @close-modal="following=false" type="following" :users="follows"></follow-like-modal>
+                        </v-col>
                         </v-row>
 					</v-container>
 				</v-col>
@@ -83,17 +84,39 @@
 </template>
 
 <script>
-import FollowModal from '../FollowModal.vue'
+import FollowLikeModal from "@/components/post/FollowLikeModal.vue";
 export default {
      name: "UserProfile",
     components: {
-        FollowModal,
+        FollowLikeModal,
+    },
+    props: {
+        type: String,
     },
     data() {
         return {
             profileUrl: "https://cdn.vuetifyjs.com/images/john.jpg",
             follower: false,
             following: false,
+            follows: [
+                {
+                follow: false,
+                avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
+                name: 'Jason Oner',
+                title: '밥 잘먹는'
+                },
+                {
+                follow: false,
+                avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+                name: 'Mike Carlson',
+                title: '스쿼트 장인'
+                },
+                {
+                follow: false,
+                avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
+                name: 'Cindy Baker',
+                },
+            ],
         }
     },
     methods: {
