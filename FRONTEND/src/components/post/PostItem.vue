@@ -9,7 +9,7 @@
           alt="profile img"
         />
         <a
-          href="#"
+          :href="`/feed/${post.postInfo.userNo}`"
           :class="[
             'text-decoration-none',
             'font-weight-bold',
@@ -71,7 +71,7 @@
     <v-card-text class="py-1">
       <span class="mr-3">
         <a
-          href="#"
+          :href="`/feed/${post.postInfo.userNo}`"
           :class="[
             'text-decoration-none',
             'font-weight-bold',
