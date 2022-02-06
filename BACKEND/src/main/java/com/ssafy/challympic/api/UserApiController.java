@@ -47,6 +47,7 @@ public class UserApiController {
 
     @PostMapping("/user/account/join")
     public Result join(@RequestBody joinUserRequest request){
+        System.out.println("test");
         User newUser = new User();
         newUser.setUser_email(request.getUser_email());
         newUser.setUser_nickname(request.getUser_nickname());
