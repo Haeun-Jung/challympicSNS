@@ -3,17 +3,13 @@ package com.ssafy.challympic.api;
 import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.domain.defaults.ChallengeAccess;
 import com.ssafy.challympic.domain.defaults.ChallengeType;
-import com.ssafy.challympic.service.ChallengeService;
-import com.ssafy.challympic.service.SubscriptionService;
-import com.ssafy.challympic.service.TitleService;
-import com.ssafy.challympic.service.UserService;
+import com.ssafy.challympic.service.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +23,7 @@ public class ChallengeApiController {
     private final UserService userService;
     private final SubscriptionService subscriptionService;
     private final TitleService titleService;
+    private final TagService tagService;
 
     /**
      * 챌린지 목록
@@ -35,7 +32,7 @@ public class ChallengeApiController {
     public Result challenges() {
         List<Challenge> findChallenges = challengeService.findChallenges();
         List<ChallengeDto> collect = findChallenges.stream()
-                .map(c -> new ChallengeDto(c.getChallenge_no(), c.getUser(), c.getChallenge_start(), c.getChallenge_end(), c.getChallenge_access(), c.getChallenge_type(), c.getChallenge_title(), c.getChallenge_content(), c.isChallenge_official(), c.getChallenge_report(), c.getTitle_no()))
+                .map(c -> new ChallengeDto(c.getChallenge_no(), c.getUser(), c.getChallenge_start(), c.getChallenge_end(), c.getChallenge_access(), c.getChallenge_type(), c.getChallenge_title(), c.getChallenge_content(), c.isChallenge_official(), c.getChallenge_report()))
                 .collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), collect);
     }
@@ -66,8 +63,7 @@ public class ChallengeApiController {
 
         Title title = new Title();
         title.setTitle_name(request.getTitle_name());
-        int title_no = titleService.saveTitles(title);
-        if(title_no == -1) return new Result(false, HttpStatus.FORBIDDEN.value());
+        if(title == null) return new Result(false, HttpStatus.FORBIDDEN.value());
 
         Challenge challenge = Challenge.createChallenge(
                 user,
@@ -75,19 +71,37 @@ public class ChallengeApiController {
                 challenge_access,
                 request.getChallenge_type(),
                 request.getChallenge_title(),
-                request.getChallenge_content(),
-                title_no
+                request.getChallenge_content()
         );
-        int challengeNo = challengeService.saveChallenge(challenge);
 
         for(int cr : challengers) {
             Challenger challenger = new Challenger();
-            challenger.setChallenge_no(challengeNo);
-            challenger.setUser_no(cr);
+            challenger.setChallenge(challenge);
+            challenger.setUser(user);
             challengeService.saveChallengers(challenger);
         }
 
         title.setChallenge(challenge);
+
+        challengeService.saveChallenge(challenge);
+
+        // 내용 파싱해서 태그 저장
+        String content = request.challenge_content;
+        StringBuilder sb = null;
+        for(char c : content.toCharArray()) {
+            if(c == '#') {
+                if(sb != null) {
+                    tagService.saveTag(sb.toString());
+                }
+                sb = new StringBuilder();
+            }
+            if(c == ' ' && sb != null) {
+                tagService.saveTag(sb.toString());
+                sb = null;
+            }
+            if(sb == null) continue;
+            sb.append(c);
+        }
 
         return new Result(true, HttpStatus.OK.value());
     }
@@ -128,7 +142,10 @@ public class ChallengeApiController {
      */
     @PostMapping("/challenge/{challengeNo}/subscribe/{userNo}")
     public Result addSubscription(@PathVariable int challengeNo, @PathVariable int userNo) {
-        subscriptionService.saveSubscription(Subscription.setSubscription(challengeNo, userNo));
+        Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
+        User user = userService.findUser(userNo);
+
+        subscriptionService.saveSubscription(Subscription.setSubscription(challenge, user));
         return new Result(true, HttpStatus.OK.value());
     }
 
@@ -137,7 +154,10 @@ public class ChallengeApiController {
      */
     @DeleteMapping("/challenge/{challengeNo}/subscribe/{userNo}")
     public Result removeSubscription(@PathVariable int challengeNo, @PathVariable int userNo) {
-        subscriptionService.deleteSubscription(Subscription.setSubscription(challengeNo, userNo));
+        Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
+        User user = userService.findUser(userNo);
+
+        subscriptionService.deleteSubscription(Subscription.setSubscription(challenge, user));
         return new Result(true, HttpStatus.OK.value());
     }
 
@@ -154,6 +174,5 @@ public class ChallengeApiController {
         private String challenge_content;
         private boolean challenge_official;
         private int challenge_report;
-        private int title_no;
     }
 }

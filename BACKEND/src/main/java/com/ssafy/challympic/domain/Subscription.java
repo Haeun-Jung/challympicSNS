@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter @Setter
@@ -17,14 +14,18 @@ public class Subscription {
     @Column(name = "subscription_no")
     private int subscription_no;
 
-    private int challenge_no;
+    @ManyToOne
+    @JoinColumn(name = "challenge_no")
+    private Challenge challenge;
 
-    private int user_no;
+    @ManyToOne
+    @JoinColumn(name = "user_no")
+    private User user;
 
-    public static Subscription setSubscription(int challenge_no, int user_no) {
+    public static Subscription setSubscription(Challenge challenge, User user) {
         Subscription subscription = new Subscription();
-        subscription.setChallenge_no(challenge_no);
-        subscription.setUser_no(user_no);
+        subscription.setChallenge(challenge);
+        subscription.setUser(user);
         return subscription;
     }
 

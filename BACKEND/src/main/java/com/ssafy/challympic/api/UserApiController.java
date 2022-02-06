@@ -1,6 +1,7 @@
 package com.ssafy.challympic.api;
 
 import com.ssafy.challympic.domain.Media;
+import com.ssafy.challympic.domain.Result;
 import com.ssafy.challympic.domain.User;
 import com.ssafy.challympic.service.MediaService;
 import com.ssafy.challympic.service.UserService;
@@ -10,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +26,7 @@ public class UserApiController {
 
     private final UserService userService;
     private final MediaService mediaService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @GetMapping("/user/account/{userNo}")
     public Result findUser(@PathVariable("userNo") int user_no){
@@ -35,23 +38,15 @@ public class UserApiController {
         }
     }
 
-    @PostMapping("/user/account")
-    public Result login(@RequestBody loginUserRequest request){
-        User user = userService.login(request.getUser_email(), request.getUser_pwd());
-        if(user != null){
-            return new Result(true, HttpStatus.OK.value(), new UserDto(user.getUser_no(), user.getUser_email(), user.getUser_nickname(), user.getUser_title()));
-        }else{
-            return new Result(false, HttpStatus.BAD_REQUEST.value(), new UserDto());
-        }
-    }
-
-    @PostMapping("/user/account/join")
+    @PostMapping("/join")
     public Result join(@RequestBody joinUserRequest request){
         System.out.println("test");
         User newUser = new User();
         newUser.setUser_email(request.getUser_email());
         newUser.setUser_nickname(request.getUser_nickname());
-        newUser.setUser_pwd(request.getUser_pwd());
+        String rawPwd = request.getUser_pwd();
+        String encPwd = bCryptPasswordEncoder.encode(rawPwd);
+        newUser.setUser_pwd(encPwd);
         int join_no = userService.join(newUser);
         if(join_no > 0){
             return new Result(true, HttpStatus.OK.value());
@@ -158,10 +153,14 @@ public class UserApiController {
     @PutMapping("/user/account/{userNo}/pwd")
     public Result updatePwd(@PathVariable("userNo") int user_no, @RequestBody updateUserRequest request){
         User findUser = userService.findUser(user_no);
-        if(!findUser.getUser_pwd().equals(request.getUser_pwd())){
+        System.out.println(bCryptPasswordEncoder.matches(request.getUser_pwd(), findUser.getUser_pwd()));
+        if(!bCryptPasswordEncoder.matches(request.getUser_pwd(), findUser.getUser_pwd())){
             return new Result(false, HttpStatus.BAD_REQUEST.value(), new UserDto());
         }
-        userService.updatePwd(user_no, request.getUser_newpwd());
+
+        String newpwd = bCryptPasswordEncoder.encode(request.getUser_newpwd());
+        System.out.println(newpwd);
+        userService.updatePwd(user_no, newpwd);
         User user = userService.findUser(user_no);
         if(user != null) {
             return new Result(true, HttpStatus.OK.value(), new UserDto(user));
@@ -181,7 +180,7 @@ public class UserApiController {
         }
     }
 
-    @PostMapping("/user/account/confirm/email")
+    @PostMapping("/confirm/email")
     public Result confirmEmail(@RequestBody confirmUserRequest request){
         boolean result = userService.validateDuplicateEmail(request.getUser_email());
         if(result) {
@@ -191,7 +190,7 @@ public class UserApiController {
         }
     }
 
-    @PostMapping("/user/account/confirm/nickname")
+    @PostMapping("/confirm/nickname")
     public Result confirmNickname(@RequestBody confirmUserRequest request){
         boolean result = userService.validateDuplicateNickname(request.getUser_nickname());
         if(result) {
@@ -241,19 +240,6 @@ public class UserApiController {
             this.user_email = user.getUser_email();
             this.user_nickname = user.getUser_nickname();
             this.user_title = user.getUser_title();
-        }
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class Result<T>{
-        private boolean isSuccess;
-        private int code;
-        private T data;
-
-        public Result(boolean isSuccess, int code) {
-            this.isSuccess = isSuccess;
-            this.code = code;
         }
     }
 }

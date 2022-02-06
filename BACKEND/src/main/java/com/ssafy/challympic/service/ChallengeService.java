@@ -2,14 +2,12 @@ package com.ssafy.challympic.service;
 
 import com.ssafy.challympic.domain.Challenge;
 import com.ssafy.challympic.domain.Challenger;
-import com.ssafy.challympic.domain.Subscription;
 import com.ssafy.challympic.repository.ChallengeRepository;
 import com.ssafy.challympic.repository.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -56,7 +54,12 @@ public class ChallengeService {
         return challengeRepository.findByTitle(title);
     }
 
-    public List<Challenge> getChallengeBySubscription(int userNo) {
+    public List<Challenge> findChallengeBySubscription(int userNo) {
         return subscriptionRepository.findChallengeByUserNoFromSubs(userNo);
     }
+
+    public Challenge findChallengeByChallengeNo(int challengeNo) {
+        return challengeRepository.findByChallengeNo(challengeNo);
+    }
+
 }

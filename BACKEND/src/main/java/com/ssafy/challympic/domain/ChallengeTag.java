@@ -9,17 +9,17 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter @Setter
-public class Challenger {
+public class ChallengeTag {
 
     @Id @GeneratedValue
-    @Column(name = "challenger_no")
-    private int challenger_no;
-
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_no")
-    private User user;
+    @Column(name = "challenge_tag_no")
+    private int challenge_tag_no;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "challenge_no")
     private Challenge challenge;
+
+    @ManyToOne
+    @JoinColumn(name = "tag_no")
+    private Tag tag;
 }

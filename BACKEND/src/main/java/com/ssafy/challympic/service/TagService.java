@@ -19,7 +19,7 @@ public class TagService {
      * 태그 저장
      */
     @Transactional
-    public void save(String tag_content){
+    public void saveTag(String tag_content){
         Tag tag = new Tag();
         tag.setTag_content(tag_content);
         tagRepository.save(tag);
