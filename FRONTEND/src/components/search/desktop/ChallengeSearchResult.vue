@@ -6,10 +6,10 @@
 		리스트 이름이 들어오는 껍데기 -> api(/challenge/{challengeNo}/post) 로
 		포스트정보만 또 가져옴. 그 가져온 리스트는 child component로 껍데기 안에
 		동영상으로 넣는다
+			:pagination.sync="pagination"
 		-->
 		<v-data-iterator
 			:items="challenges"
-			:pagination.sync="pagination"
 			:footer-props="{
 				'items-per-page-options': [5, 10, 15, 20],
 			}"
@@ -54,6 +54,7 @@
 				itemsPerPageArray: [3, 6, 9],
 				searchProp: "",
 				filter: {},
+
 				sortDesc: false,
 				page: 1,
 

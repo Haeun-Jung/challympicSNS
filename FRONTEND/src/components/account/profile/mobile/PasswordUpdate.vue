@@ -60,7 +60,6 @@
 
 				<v-btn
 					class="text-none"
-					round
 					depressed
 					color="primary"
 					@click="onSubmit"
@@ -84,6 +83,7 @@
 				originalPassword: "",
 				newPassword: "",
 				show1: false,
+				disabledTrue: true, //이후에 처리
 				rules1: {
 					required: (value) => !!value || "기존 비밀번호를 입력해주세요.",
 					originMatch: (v) =>

@@ -162,7 +162,6 @@
 
 				<v-btn
 					class="text-none"
-					round
 					depressed
 					color="primary"
 					@click="onSubmit"
@@ -187,6 +186,7 @@
 				titles: ["밥 잘먹는", "타이틀2"],
 				nickname: "nickname",
 				dialog: false,
+				search: "",
 				disabledTrue: true,
 				AllTags: ["#Gaming", "#Programming", "#Vue", "#Vuetify"], //전체 태그
 				model: [],

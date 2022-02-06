@@ -61,9 +61,10 @@
 					<div class="bar-heart">
 						<v-btn @click="pushLike(item.id, idx)" icon>
 							<!-- <v-icon :class="{ 'show-btns': hover }" :color="transparent">
-								v-if 문 추가해서 이미 하트 눌렀으면 빨갛게 표시-->
-							<v-icon
+								v-if 문 추가해서 이미 하트 눌렀으면 빨갛게 표시
 								:class="{ 'show-btns': hover }"
+								-->
+							<v-icon
 								:color="item.post_like ? 'red' : 'grey lighten-3'"
 								size="32"
 							>
@@ -214,7 +215,7 @@
 </script>
 
 <style>
-	#app iframe {
+	/*	#app iframe {
 		padding-right: 50%;
 		position: relative;
 	}
@@ -225,10 +226,10 @@
 		position: relative;
 	}
 	.play-box {
-		position: absolute; /* or absolute */
+		position: absolute; 
 		top: 43%;
 		left: 48%;
-	}
+	}*/
 	.bar {
 		position: absolute;
 		top: 1%;
@@ -239,14 +240,14 @@
 		top: 7%;
 		right: 5%;
 	}
-	#hello:not(.on-hover) {
+	/*	#hello:not(.on-hover) {
 		opacity: 0.5;
 	}
 
 	.show-btns {
-		/*
+	
 		color: rgba(255, 255, 255, 1) !important;
-			color: pink !important;*/
+			color: pink !important;
 		color: rgb(0, 4, 255) !important;
-	}
+	}*/
 </style>
