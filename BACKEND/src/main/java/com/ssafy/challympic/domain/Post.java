@@ -19,7 +19,7 @@ public class Post {
     @JoinColumn(name = "user_no")
     private User user;
 
-    private Integer challenge_no;
+    private int challenge_no;
 
     @OneToOne
     @JoinColumn(name = "file_no")

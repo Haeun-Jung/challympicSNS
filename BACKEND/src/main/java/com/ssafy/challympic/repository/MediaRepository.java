@@ -18,11 +18,11 @@ public class MediaRepository {
         em.persist(media);
     }
 
-    public Media findByFileNo(Long file_no){
+    public Media findByFileNo(int file_no){
         return em.find(Media.class, file_no);
     }
 
-    public void deleteMedia(Long file_no){
+    public void deleteMedia(int file_no){
         Media media = findByFileNo(file_no);
         em.remove(media);
     }

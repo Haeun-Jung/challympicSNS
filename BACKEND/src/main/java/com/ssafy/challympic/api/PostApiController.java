@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @CrossOrigin("*")
@@ -78,6 +79,38 @@ public class PostApiController {
         private String userName;
     }
 
+    @Data
+    @AllArgsConstructor
+    static class PostDto{
+        private int post_no;
+        private int user_no;
+        private String user_nickname;
+        private String user_title;
+        private int challenge_no;
+        private int file_no;
+        private String file_path;
+        private String file_savedname;
+        private String post_content;
+        private int post_report;
+        private Date post_regdate;
+        private Date post_update;
+
+        public PostDto(Post post) {
+            this.post_no = post.getPost_no();
+            this.user_no = post.getUser().getUser_no();
+            this.user_nickname = post.getUser().getUser_nickname();
+            this.user_title = post.getUser().getUser_title();
+            this.challenge_no = post.getChallenge_no();
+            this.file_no = post.getMedia().getFile_no();
+            this.file_path = post.getMedia().getFile_path();
+            this.file_savedname = post.getMedia().getFile_savedname();
+            this.post_content = post.getPost_content();
+            this.post_report = post.getPost_report();
+            this.post_regdate = post.getPost_regdate();
+            this.post_update = post.getPost_update();
+        }
+    }
+
     /**
      *  챌린지 번호로 포스트 가져오기(챌린지로 확인 예정
      *
@@ -89,6 +122,9 @@ public class PostApiController {
         log.info("1.test!!!!!!!!!");
         // 포스트 리스트 뽑고
         List<Post> postList = postService.getPostList(challengeNo);
+        List<PostDto> collect = postList.stream()
+                .map(p -> new PostDto(p))
+                .collect(Collectors.toList());
         log.info("2. test!!!!!!!!!");
 
 
@@ -101,7 +137,7 @@ public class PostApiController {
 //        }
 
         if(postList != null){
-            result = new Result(true, HttpStatus.OK.value(), postList);
+            result = new Result(true, HttpStatus.OK.value(), collect);
         } else {
             result = new Result(false, HttpStatus.OK.value());
         }
@@ -168,14 +204,16 @@ public class PostApiController {
                 // 지원하지 않는 확장자
                 return new Result(false, HttpStatus.OK.value());
 
+            // png/jpg, mp4 <- 확장자 
+//            media = s3Uploader.upload(files, 'image', 'profil');
             media = s3Uploader.upload(files, fileType.toLowerCase());
-            
+
             if(media == null){
                 // AWS S3 업로드 실패
                 return new Result(false, HttpStatus.OK.value());
             }
 
-            Long file_no = mediaService.saveMedia(media);
+            int file_no = mediaService.saveMedia(media);
 
 //            // 본문 텍스트 파싱
 //            String content = postForm.getPost_content();

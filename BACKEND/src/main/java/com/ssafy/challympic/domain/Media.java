@@ -15,7 +15,7 @@ import javax.persistence.Id;
 public class Media {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long file_no;
+    private int file_no;
     
     // 원래 파일명
     private String file_name;

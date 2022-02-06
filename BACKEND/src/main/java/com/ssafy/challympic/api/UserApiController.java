@@ -68,7 +68,7 @@ public class UserApiController {
         if(media == null)
             return new Result(false, HttpStatus.OK.value());
 
-        Long file_no = mediaService.saveMedia(media);
+        int file_no = mediaService.saveMedia(media);
 
 //        Media findMedia = mediaService.
 
