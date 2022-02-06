@@ -32,7 +32,7 @@ public class ChallengeApiController {
     public Result challenges() {
         List<Challenge> findChallenges = challengeService.findChallenges();
         List<ChallengeDto> collect = findChallenges.stream()
-                .map(c -> new ChallengeDto(c.getChallenge_no(), c.getUser(), c.getChallenge_start(), c.getChallenge_end(), c.getChallenge_access(), c.getChallenge_type(), c.getChallenge_title(), c.getChallenge_content(), c.isChallenge_official(), c.getChallenge_report()))
+                .map(c -> new ChallengeDto(c))
                 .collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), collect);
     }
@@ -165,7 +165,7 @@ public class ChallengeApiController {
     @AllArgsConstructor
     static class ChallengeDto {
         private int challenge_no;
-        private User user;
+        private int user_no;
         private Date challenge_start;
         private Date challenge_end;
         private ChallengeAccess challenge_access;
@@ -174,5 +174,18 @@ public class ChallengeApiController {
         private String challenge_content;
         private boolean challenge_official;
         private int challenge_report;
+
+        public ChallengeDto(Challenge challenge) {
+            this.challenge_no = challenge.getChallenge_no();
+            this.user_no = challenge.getUser().getUser_no();
+            this.challenge_start = challenge.getChallenge_start();
+            this.challenge_end = challenge.getChallenge_end();
+            this.challenge_access = challenge.getChallenge_access();
+            this.challenge_type = challenge.getChallenge_type();
+            this.challenge_title = challenge.getChallenge_title();
+            this.challenge_content = challenge.getChallenge_content();
+            this.challenge_official = challenge.isChallenge_official();
+            this.challenge_report = challenge.getChallenge_report();
+        }
     }
 }

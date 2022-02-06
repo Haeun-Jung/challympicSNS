@@ -11,7 +11,7 @@ import java.util.List;
 @Getter @Setter
 public class Post {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_no")
     private int post_no;
 

@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter @Setter
 public class Subscription {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "subscription_no")
     private int subscription_no;
 

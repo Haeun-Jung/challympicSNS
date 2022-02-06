@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter @Setter
 public class PostLike {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long like_no;
 
     private Integer post_no;

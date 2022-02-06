@@ -11,7 +11,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter @Setter
 public class Challenger {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "challenger_no")
     private int challenger_no;
 

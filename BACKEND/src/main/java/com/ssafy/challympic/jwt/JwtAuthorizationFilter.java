@@ -34,15 +34,15 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     // 인증이나 권한이 필요한 주소 요청이 있을 경우 => /user
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        System.out.println("인증이나 권한이 필요한 주소 요청이 있을 경우");
         String jwtHeader = request.getHeader("Authorization");
-//        System.out.println("jwtHeader: " +jwtHeader);
 
         // header가 있는지 확인
         if(jwtHeader == null || !jwtHeader.startsWith("Bearer")){
             chain.doFilter(request, response);
             return ;
         }
+
+        System.out.println("인증이나 권한이 필요한 주소 요청이 있을 경우");
         // JWT 토큰을 검증해서 정상적인 사용자인지 확인
         String jwtToken = request.getHeader("Authorization").replace("Bearer ","");
         int user_no = JWT.require(Algorithm.HMAC512("challympic")).build().verify(jwtToken).getClaim("user_no").asInt();

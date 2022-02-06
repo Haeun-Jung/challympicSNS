@@ -11,7 +11,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter @Setter
 public class Title {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "title_no")
     private int title_no;
 
