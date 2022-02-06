@@ -1,6 +1,5 @@
 package com.ssafy.challympic.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.challympic.domain.defaults.ChallengeAccess;
 import com.ssafy.challympic.domain.defaults.ChallengeType;
 import lombok.Getter;
@@ -9,8 +8,6 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.Date;
-
-import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter @Setter

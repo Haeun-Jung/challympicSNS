@@ -3,11 +3,10 @@ package com.ssafy.challympic.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.challympic.api.UserApiController;
 import com.ssafy.challympic.config.auth.PrincipalDetails;
 import com.ssafy.challympic.domain.Result;
 import com.ssafy.challympic.domain.User;
-import io.jsonwebtoken.Jwt;
+import com.ssafy.challympic.domain.UserAuth;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +21,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Date;
 
@@ -44,7 +42,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Authentication authentication = null;
         try {
             ObjectMapper om = new ObjectMapper();
-            User user = om.readValue(request.getInputStream(), User.class);
+            UserAuth user = om.readValue(request.getInputStream(), UserAuth.class);
 
             // 로그인 시도시 토큰 생성
             UsernamePasswordAuthenticationToken authenticationToken =
@@ -82,18 +80,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 
-        // RSA 방신이 아닌 Hash 암호방식
+        // RSA 방식이 아닌 Hash 암호방식
         String jwtToken = JWT.create()
                 .withSubject(principalDetails.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPORATION_TIME))
-                .withClaim("user_no", principalDetails.getUser().getUser_no()) // 넣고 싶은 key value 값
-                .withClaim("user_name", principalDetails.getUser().getUser_email())
+                .withClaim("user_no", principalDetails.getUserAuth().getUser_no()) // 넣고 싶은 key value 값
+                .withClaim("user_name", principalDetails.getUserAuth().getUser_email())
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET)); // secrete 값
 
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX +jwtToken); // 헤더에 담겨 사용자에게 응답
 //        System.out.println(principalDetails.getUser().getUser_email());
 //        System.out.println(principalDetails.getUser().getUser_pwd());
-        Result result = new Result(true, 200, new UserDto(principalDetails.getUser()));
+        Result result = new Result(true, 200, new UserDto(principalDetails.getUserAuth().getUser_no(), principalDetails.getUserAuth().getUser_email()));
         String json = new ObjectMapper().writeValueAsString(result);
 //        System.out.println(json);
         response.setContentType("application/json");
@@ -115,14 +113,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     static class UserDto{
         private int user_no;
         private String user_email;
-        private String user_nickname;
-        private String user_title;
 
         public UserDto(User user) {
             this.user_no = user.getUser_no();
             this.user_email = user.getUser_email();
-            this.user_nickname = user.getUser_nickname();
-            this.user_title = user.getUser_title();
         }
     }
 }

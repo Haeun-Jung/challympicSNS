@@ -63,11 +63,7 @@ public class UserService {
         user.setUser_nickname(user_nickname);
     }
 
-    @Transactional
-    public void updatePwd(int user_no, String user_pwd){
-        User user = userRepository.findOne(user_no);
-        user.setUser_pwd(user_pwd);
-    }
+
 
     public User findUser(int user_no){
         return userRepository.findOne(user_no);

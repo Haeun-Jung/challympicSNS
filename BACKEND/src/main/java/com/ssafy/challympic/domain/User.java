@@ -1,7 +1,5 @@
 package com.ssafy.challympic.domain;
 
-import com.ssafy.challympic.domain.defaults.UserActive;
-import com.ssafy.challympic.domain.defaults.UserAuthEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +18,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 생성 전략. AUTO_INCREMENT0
     @Column(name = "user_no")
     private int user_no;
+
+    @Column(nullable = false)
+    private String user_email;
 
     @Column(nullable = false)
     private String user_nickname;

@@ -1,6 +1,7 @@
 package com.ssafy.challympic.service;
 
 import com.ssafy.challympic.domain.User;
+import com.ssafy.challympic.domain.UserAuth;
 import com.ssafy.challympic.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,7 +11,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -26,9 +27,11 @@ public class UserServiceTest {
     public void 회원가입() throws Exception{
         //given
         User user = new User();
+        UserAuth userAuth = new UserAuth();
         user.setUser_nickname("member01");
         user.setUser_email("member01@ssafy.com");
-        user.setUser_pwd("123");
+        userAuth.setUser_email("member01@ssafy.com");
+        userAuth.setUser_pwd("123");
 
         //when
         int joinId = userService.join(user);
