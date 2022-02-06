@@ -24,7 +24,7 @@
                   >
                   <div class="info-wrapper">
                     <div class="challenge-info"><i class='fas fa-hashtag icon'></i>{{ post.challenge }}</div>
-                    <div class="participated-info"><i class='fas fa-user-plus icon'></i>{{ post.participated }}</div>
+                    <div class="participated-info"><i class='fas fa-user-plus icon'></i>{{ post.participated }}<v-icon icon class="icon bookmark-icon">mdi-bookmark</v-icon>{{ post.subscribe }}</div>
                   </div>
                   </v-overlay>
                 </v-fade-transition>
@@ -45,12 +45,14 @@ export default {
         challenge: '운동_챌린지',
         isVideo: true,
         participated: 20,
+        subscribe: 10,
         src: 'https://randomuser.me/api/portraits/men/1.jpg'
       },
       {
         challenge: '코딩_챌린지',
         isVideo: true,
         participated: 25,
+        subscribe: 13,
         src: 'https://randomuser.me/api/portraits/men/2.jpg'
       }
     ],
@@ -79,6 +81,11 @@ export default {
   font-size: 18px;
 }
 .icon {
-  margin-right: 8px;
+  margin-top: 8px;
+  margin-left: 6px;
+  margin-right: 4px;
+}
+.bookmark-icon {
+  margin-top: -2px;
 }
 </style>
