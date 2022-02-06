@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -60,8 +62,10 @@ public class SearchRepository {
     }
 
     public List<Challenge> findChallengeByTrend() {
-        return em.createQuery("select c from Challenge c where c.challenge_no = " +
-                    "(select sc.challenge.challenge_no from SearchChallenge sc)", Challenge.class) //TODO: 시간 설정 어떡함????????
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR, -1);
+        return em.createQuery("select sc.challenge from SearchChallenge sc where sc.search_regdate < :cur", Challenge.class) //TODO: 시간 설정 어떡함????????
+                .setParameter("cur", calendar)
                 .getResultList();
     }
 

@@ -32,7 +32,7 @@ public class ChallengeApiController {
     public Result challenges() {
         List<Challenge> findChallenges = challengeService.findChallenges();
         List<ChallengeDto> collect = findChallenges.stream()
-                .map(c -> new ChallengeDto(c.getChallenge_no(), c.getUser(), c.getChallenge_start(), c.getChallenge_end(), c.getChallenge_access(), c.getChallenge_type(), c.getChallenge_title(), c.getChallenge_content(), c.isChallenge_official(), c.getChallenge_report(), c.getTitle()))
+                .map(c -> new ChallengeDto(c.getChallenge_no(), c.getUser(), c.getChallenge_start(), c.getChallenge_end(), c.getChallenge_access(), c.getChallenge_type(), c.getChallenge_title(), c.getChallenge_content(), c.isChallenge_official(), c.getChallenge_report()))
                 .collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), collect);
     }
@@ -71,8 +71,7 @@ public class ChallengeApiController {
                 challenge_access,
                 request.getChallenge_type(),
                 request.getChallenge_title(),
-                request.getChallenge_content(),
-                title
+                request.getChallenge_content()
         );
 
         for(int cr : challengers) {
@@ -83,6 +82,8 @@ public class ChallengeApiController {
         }
 
         title.setChallenge(challenge);
+
+        challengeService.saveChallenge(challenge);
 
         // 내용 파싱해서 태그 저장
         String content = request.challenge_content;
@@ -98,6 +99,8 @@ public class ChallengeApiController {
                 tagService.saveTag(sb.toString());
                 sb = null;
             }
+            if(sb == null) continue;
+            sb.append(c);
         }
 
         return new Result(true, HttpStatus.OK.value());
@@ -171,6 +174,5 @@ public class ChallengeApiController {
         private String challenge_content;
         private boolean challenge_official;
         private int challenge_report;
-        private Title title;
     }
 }

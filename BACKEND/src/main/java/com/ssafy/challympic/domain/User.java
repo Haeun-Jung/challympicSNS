@@ -35,9 +35,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserAuth user_auth = UserAuth.USER;
 
-//    @OneToOne
-//    @JoinColumn(name = "file_no")
-//    private Media media;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "file_no")
+    private Media media;
 
     private String user_title;
 

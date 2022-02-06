@@ -52,12 +52,8 @@ public class Challenge {
     @ColumnDefault("0")
     private int challenge_report;
 
-    @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "title_no")
-    private Title title;
-
     // 생성 메소드
-    public static Challenge createChallenge(User user, Date challenge_end, ChallengeAccess challenge_access, ChallengeType challenge_type, String challenge_title, String challenge_content, Title title) {
+    public static Challenge createChallenge(User user, Date challenge_end, ChallengeAccess challenge_access, ChallengeType challenge_type, String challenge_title, String challenge_content) {
         Challenge challenge = new Challenge();
         challenge.setUser(user);
         challenge.setChallenge_start(new Date());
@@ -66,7 +62,6 @@ public class Challenge {
         challenge.setChallenge_type(challenge_type);
         challenge.setChallenge_title(challenge_title);
         challenge.setChallenge_content(challenge_content);
-        challenge.setTitle(title);
         return challenge;
     }
 }
