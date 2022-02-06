@@ -189,7 +189,6 @@
 				search: "",
 				searchInput: "",
 				active: false,
-				search: "",
 				menu: false,
 				profileMenu: [
 					{
