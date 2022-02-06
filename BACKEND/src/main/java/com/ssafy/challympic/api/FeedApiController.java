@@ -32,6 +32,10 @@ public class FeedApiController {
         return new FeedChallengeResponse(true, 200, challenges);
     }
 
+    private class FeedChallengeResponseDto{
+        
+    }
+
     /**
      * 구독한 챌린지 목록
      * @param userNo

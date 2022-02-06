@@ -9,6 +9,8 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.util.Date;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Entity
 @Getter @Setter
 public class Challenge {
@@ -17,7 +19,7 @@ public class Challenge {
     @Column(name = "challenge_no")
     private int challenge_no;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "user_no")
     private User user;
 
@@ -38,6 +40,8 @@ public class Challenge {
 
     private ChallengeType challenge_type;
 
+//    @OneToOne(fetch = LAZY)
+//    @JoinColumn(name = "title_no")
     @Column(nullable = false)
     private String challenge_title;
 

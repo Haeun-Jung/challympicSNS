@@ -66,8 +66,10 @@ public class ChallengeApiController {
         title.setTitle_name(request.getTitle_name());
         if(title == null) return new Result(false, HttpStatus.FORBIDDEN.value());
 
+        User user = userService.findUser(request.user_no);
+
         Challenge challenge = Challenge.createChallenge(
-                request.user,
+                user,
                 request.getChallenge_end(),
                 challenge_access,
                 request.getChallenge_type(),
@@ -78,14 +80,14 @@ public class ChallengeApiController {
         for(int cr : challengers) {
             Challenger challenger = new Challenger();
             challenger.setChallenge(challenge);
-            challenger.setUser(request.user);
+            challenger.setUser(userService.findUser(cr));
             challengeService.saveChallengers(challenger);
         }
+        challengeService.saveChallenge(challenge);
 
         title.setChallenge(challenge);
-        titleService.saveTitles(title);
 
-        challengeService.saveChallenge(challenge);
+        titleService.saveTitles(title);
 
         // 내용 파싱해서 태그 저장
         String content = request.challenge_content;
@@ -110,7 +112,7 @@ public class ChallengeApiController {
 
     @Data
     static class CreateChallengeRequest {
-        private User user;
+        private int user_no;
         private List<String> challengers;
         private Date challenge_end;
         private ChallengeType challenge_type;
