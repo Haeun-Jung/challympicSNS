@@ -3,7 +3,7 @@
 		<v-card-title>비밀번호 수정</v-card-title>
 		<v-divider />
 		<v-container>
-			<v-row md="2">
+			<v-row md="2" class="row-bottom">
 				<!-- 사진 이상해서 뺐어요.. 우측 정렬도 이상해요.. class="text-right align-self-start"-->
 				<v-col md="1"> </v-col>
 				<v-col md="3">
@@ -26,7 +26,7 @@
 				</v-col>
 				<v-col md="3"></v-col>
 			</v-row>
-			<v-row md="2">
+			<v-row md="2" class="row-bottom">
 				<!-- 새 비번.. -->
 				<v-col md="1"> </v-col>
 				<v-col md="3">
