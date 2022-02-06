@@ -10,18 +10,23 @@
         />
         <a
           href="#"
-          class="text-decoration-none black--text font-weight-bold text-h6"
+          :class="[
+            'text-decoration-none',
+            'font-weight-bold',
+            'text-h6',
+            [$vuetify.theme.dark ? 'dark-mode-text' : 'black-text'],
+          ]"
         >
-          {{ post.postInfo.nickname }}
+          <span>{{ post.postInfo.nickname }}</span>
         </a>
       </div>
       <!-- 'nickname'을 현재 로그인한 유저의 닉네임으로 수정 -->
       <div v-if="post.postInfo.nickname == 'nickname'">
         <v-btn @click="editPost" icon>
-          <v-icon small>mdi-pencil-outline</v-icon>
+          <v-icon>mdi-pencil-outline</v-icon>
         </v-btn>
         <v-btn @click="deletePost" icon>
-          <v-icon small>mdi-close</v-icon>
+          <v-icon>mdi-close</v-icon>
         </v-btn>
       </div>
     </v-card-title>
@@ -53,21 +58,34 @@
       </span>
     </v-card-text>
     <v-card-text class="py-2">
-      <span class="like-cnt" @click="toggleLikeDialog">
+      <span
+        :class="[
+          'like-cnt',
+          [$vuetify.theme.dark ? 'dark-mode-text' : 'black-text'],
+        ]"
+        @click="toggleLikeDialog"
+      >
         좋아요 {{ post.postInfo.likeCnt }}개
       </span>
     </v-card-text>
     <v-card-text class="py-1">
-      <span class="font-weight-bold mr-3">
-        <a href="#" class="text-decoration-none post-info-text">
+      <span class="mr-3">
+        <a
+          href="#"
+          :class="[
+            'text-decoration-none',
+            'font-weight-bold',
+            [$vuetify.theme.dark ? 'dark-mode-text' : 'black-text'],
+          ]"
+        >
           {{ post.postInfo.nickname }}
         </a>
       </span>
       <span
-        class="post-info-text"
+        :class="[$vuetify.theme.dark ? 'dark-mode-text' : 'black-text']"
         v-html="$options.filters.hashAnchor(post.postInfo.content)"
       ></span>
-      <p class="post-info-text">{{ post.postInfo.regDate }}</p>
+      <p>{{ post.postInfo.regDate }}</p>
     </v-card-text>
     <v-divider />
     <v-expand-transition>
@@ -167,10 +185,19 @@ export default {
       );
     },
   },
+  created() {
+      console.log(this.type);
+  }
 };
 </script>
 
 <style scoped>
+.dark-mode-text {
+  color: #424242;
+}
+.black-text {
+  color: black;
+}
 .profile {
   width: 40px;
   height: 40px;
@@ -192,10 +219,6 @@ export default {
 }
 .like-cnt {
   cursor: pointer;
-  color: black;
-}
-.post-info-text {
-  color: black;
 }
 .profile-img-and-comment-input {
   display: flex;
