@@ -30,6 +30,7 @@
 				hide-details="true"
 				label=""
 				persistent-hint
+				rounded
 				small-chips
 				@change="keywordSearch"
 				class="ml-5"
@@ -60,6 +61,8 @@
 				open-on-hover
 				offset-y
 				v-model="menu"
+				v-click-outside="onClickOutside"
+				:close="onClickOutside"
 				:close-on-content-click="false"
 				min-width="220px"
 			>
@@ -68,6 +71,7 @@
 						<v-icon>mdi-magnify</v-icon>
 					</v-btn>
 				</template>
+
 				<v-autocomplete
 					v-model="searchInput"
 					:items="AllTags"
@@ -76,12 +80,10 @@
 					small-chips
 					flat
 					solo
-          			rounded
 					hide-details="true"
 					clearable
 					append-icon="mdi-magnify"
 					@change="keywordSearch"
-					@click="keywordSearch"
 				>
 					<template v-slot:no-data>
 						<v-list-item>
@@ -95,12 +97,14 @@
 							</v-list-item-content>
 						</v-list-item>
 					</template>
+					<!--
+							@click="data.select"
+							-->
 					<template v-slot:selection="data">
 						<v-chip
 							v-bind="data.attrs"
 							:search="data.selected"
 							@click="data.select"
-							@change="keywordSearch"
 						>
 							{{ data.item }}
 						</v-chip>
@@ -180,8 +184,11 @@
 		data() {
 			return {
 				drawer: false,
+				onSelect: false,
 				loading: false,
 				searchInput: "",
+				active: false,
+				search: "",
 				menu: false,
 				profileMenu: [
 					{
@@ -189,10 +196,10 @@
 						link1: "/user/account/:userNo/",
 						link2: "/mobile/user/account/:userNo/",
 					},
-					{ 
+					{
 						title: "내 피드",
 						link1: "/feed/:userNo/",
-						link2: "/feed/:userNo/"
+						link2: "/feed/:userNo/",
 					},
 					{ title: "Click Me" },
 					{ title: "Click Me 2" },
@@ -239,6 +246,12 @@
 			menuItems() {
 				return this.menu;
 			},
+			onClickOutside() {
+				this.active = false;
+			},
+			closeBox() {
+				this.onSelect = true;
+			},
 			goMain() {
 				this.$router.push("/");
 			},
@@ -256,16 +269,31 @@
 			keywordSearch() {
 				if (this.searchInput) {
 					console.log(this.searchInput);
+					alert(this.searchInput);
 					//이쪽에서 start with @인지 #인지 확인
 					let searchCategory = this.searchInput.charAt(0);
+					var to = this.searchInput.substring(1);
 					//	alert(searchCategory);
 					if (searchCategory === "@") {
-						alert("유저 피드 페이지로 라우팅");
+						this.$router.push("/feed/" + to);
 					} else if (searchCategory === "#") {
-						var to = this.searchInput.substring(1);
 						//	this.$emit("search", this.searchInput);
 						this.$router.push("/search/" + to);
 					}
+				}
+			},
+
+			selectSearch(val) {
+				alert("selected" + this.search);
+
+				var to = val.substring(1);
+				let searchCategory = this.searchInput.charAt(0);
+				//	alert(searchCategory);
+				if (searchCategory === "@") {
+					this.$router.push("/feed/" + to);
+				} else if (searchCategory === "#") {
+					//	this.$emit("search", this.searchInput);
+					this.$router.push("/search/" + to);
 				}
 			},
 			isMobile() {
