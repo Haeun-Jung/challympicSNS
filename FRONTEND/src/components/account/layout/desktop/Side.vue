@@ -2,12 +2,6 @@
 	<v-card height="100vh" hide-overlay absolute clipped app>
 		<v-card-title class="text-h5 d-flex justify-center">설 정</v-card-title>
 		<v-divider />
-		<v-list-item>
-			<v-list-item-content>
-				<v-list-item-title class="text-h5 d-flex justify-center">
-				</v-list-item-title>
-			</v-list-item-content>
-		</v-list-item>
 
 		<v-list dense nav>
 			<v-list-item v-for="item in items" :key="item.title" :to="item.link">

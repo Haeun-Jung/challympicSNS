@@ -37,7 +37,7 @@
 								<v-list-item-title>ssafy@gmail.com</v-list-item-title>
 							</v-col>
 						</v-row>
-						<v-row>
+						<v-row class="row-bottom">
 							<!-- 타이틀 -->
 							<v-col md="4">
 								<v-list-item-title>대표 타이틀</v-list-item-title>
@@ -54,7 +54,7 @@
 							</v-col>
 						</v-row>
 						<!-- 닉네임 -->
-						<v-row>
+						<v-row class="row-bottom">
 							<v-col md="4">
 								<v-list-item-title>닉네임</v-list-item-title>
 							</v-col>
@@ -89,7 +89,10 @@
 										</template>
 
 										<v-card>
-											<v-card-title class="text-h6 grey lighten-2">
+											<v-card-title
+												class="text-h6"
+												:color="$vuetify.theme.dark ? '#424242' : '#FAFAFA'"
+											>
 												관심사 추가
 											</v-card-title>
 
@@ -186,7 +189,6 @@
 			return {
 				profileUrl: "https://cdn.vuetifyjs.com/images/john.jpg", //후에 유저테이블에서 가져오기
 				titles: ["밥 잘먹는", "타이틀2"],
-
 				nickname: "nickname",
 				dialog: false,
 				disabledTrue: true,
@@ -272,5 +274,9 @@
 		flex-direction: row !important;
 		text-align: center !important;
 		align-items: center !important;
+	}
+
+	.row-bottom {
+		margin-bottom: -40px;
 	}
 </style>

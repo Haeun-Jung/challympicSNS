@@ -14,14 +14,20 @@
           </v-row>
           <v-row>
               <v-col>
-                <input class="input-box challenge-input" type="text" placeholder="챌린지"/>
+                <input v-if="$vuetify.theme.dark" class="dark-mode input-box challenge-input" type="text" placeholder="챌린지"/>
+                <input v-else class="light-mode input-box challenge-input" type="text" placeholder="챌린지"/>
                 <v-btn color="#3396F4" class="overlap-check">
                   <label class="btn">중복확인</label>
                 </v-btn>
               </v-col>
           </v-row>
           <v-row class="row-area">
-            <v-col class="input-title"># 챌린지 참여자 <input id="selectChallengers" @click="inputChallenger" type="checkbox" /><label for="selectChallengers">지목</label></v-col>
+            <v-col class="input-title"># 챌린지 참여자 
+              <input id="selectChallengers" @click="inputChallenger" type="checkbox" />
+              <label for="selectChallengers">
+                지목
+              </label>
+            </v-col>
                          <!--
                 <v-checkbox
                     v-model="checkbox"
@@ -30,22 +36,29 @@
                 -->
           </v-row>
           <v-row>
-              <v-col><input class="input-box challenger-input" type="text" :disabled="!selectChallenger" :class="{disabled : !selectChallenger}" placeholder="@박싸피"/></v-col>
+              <v-col>
+                <input v-if="$vuetify.theme.dark" class="dark-mode input-box challenger-input" type="text" :disabled="!selectChallenger" :class="{disabled : !selectChallenger}" placeholder="@박싸피"/>
+                <input v-else class="light-mode input-box challenger-input" type="text" :disabled="!selectChallenger" :class="{disabled : !selectChallenger}" placeholder="@박싸피"/>
+              </v-col>
           </v-row>
           <v-row class="row-area">
             <v-col class="input-title"># 타이틀</v-col>
           </v-row>
           <v-row>
-              <v-col><input class="input-box" type="text" placeholder="ex) 밥 잘먹는, 스쿼트 왕, ..."/></v-col>
+              <v-col>
+                <input v-if="$vuetify.theme.dark" class="dark-mode input-box" type="text" placeholder="ex) 밥 잘먹는, 스쿼트 왕, ..."/>
+                <input v-else class="light-mode input-box" type="text" placeholder="ex) 밥 잘먹는, 스쿼트 왕, ..."/>
+              </v-col>
           </v-row>
           <v-row class="row-area">
             <v-col class="input-title"># 기간</v-col>
           </v-row>
             <v-radio-group v-model="row" row>
-              <v-radio label="하루" value="1day"></v-radio>
-              <v-radio label="일주일" value="1week"></v-radio>
-              <v-radio label="한달" value="1month"></v-radio>
-              <v-radio label="종료일" value="radio-2"></v-radio>
+              <v-radio label="하루" value="1day" @click="DatePickCancel"></v-radio>
+              <v-radio label="일주일" value="1week" @click="DatePickCancel"></v-radio>
+              <v-radio label="한달" value="1month" @click="DatePickCancel"></v-radio>
+              <v-radio label="종료일" :value="date" @click="DatePickMenu"></v-radio>
+                <end-date-picker @endDate="saveDate" v-if="EndDateMenu"/>
             </v-radio-group>
           <v-row class="row-area">
             <v-col class="input-title"># 참여파일형식</v-col>
@@ -66,10 +79,10 @@
               ></v-textarea>
             </v-col>
           </v-row>
+          <div class="error-text" v-if="error">{{ error }}</div>
           <v-row>
               <v-spacer></v-spacer>
-            <div class="error-text" v-if="error">{{ error }}</div>
-            <v-btn class="ma-2" color="#3396F4">
+              <v-btn class="ma-2" color="#3396F4">
                 <label class="btn" @click="uploadPost">다음으로</label>
               </v-btn>
           </v-row>
@@ -81,15 +94,20 @@
 
 <script>
 import PostUpload from "./PostUpload.vue";
+import EndDatePicker from "./EndDatePicker.vue"
 export default {
   name: "ChallengeUpload",
   components: {
-    PostUpload
+    PostUpload,
+    EndDatePicker,
   },
   data: ()=> ({
     dialog: true, //true : Dialog열림, false : Dialog닫힘
     selectChallenger: false, //true : 챌린저 지정, false : 챌린저 미지정
     postDialog: false, //true: PostDialog열림, false: PostDialog닫힘
+    EndDateMenu: false,
+    endDate: '',
+    error: false,
   }),
   methods: {
     inputChallenger() { // 챌린저 지목 체크 로직
@@ -106,6 +124,39 @@ export default {
     },
     uploadPost() {
       this.postDialog = true;
+    },
+    DatePickMenu() {
+      this.EndDateMenu = true;
+    },
+    DatePickCancel() {
+      this.EndDateMenu = false;
+    },
+    /* 종료일 받아오기 */
+    saveDate(endDate) {
+      /* 오늘 날짜 */
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = ('0' + (today.getMonth() + 1)).slice(-2);
+      const day = parseInt(('0' + today.getDate()).slice(-2));
+
+      /* 사용자가 선택한 종료날짜 */
+      const endYear = endDate.slice(0, 4);
+      const endMonth = endDate.slice(5, 7);
+      const endDay = parseInt(endDate.slice(8, 10));
+      
+      /* 종료일을 오늘보다 이른 날짜에 했다면 오류 메세지 출력 */
+      if (endYear < year) {
+        this.error = '이전 날짜는 선택이 불가능합니다.';
+      } else if (endMonth < month) {
+        this.error = '이전 날짜는 선택이 불가능합니다.';
+      } else if (endDay <= day) {
+        this.error = '이전 날짜는 선택이 불가능합니다.';
+      } else {
+        /* 유효한 종료일일 때, 값 저장 */
+        this.endDate = endDate;
+        this.error = false;
+        console.log(this.endDate);
+      }
     }
   }
 }
@@ -115,7 +166,6 @@ export default {
 .card-header {
   position: sticky;
   top: 0;
-  background-color: #fff;
   z-index: 1;
 }
 .cancel-btn {
@@ -153,7 +203,7 @@ export default {
   margin-right: 4px;
 }
 .challenger-input:disabled {
-  background-color: #dfdede;
+  background-color: #a5a5a5;
 }
 .row-area {
   margin-top: -16px;
@@ -167,9 +217,16 @@ export default {
   cursor: pointer;
 }
 .error-text {
-    display: flex;
     color: rgb(235, 38, 38);
-    align-items: center;
-    margin-right: 14px;
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+/* 다크모드, 라이트모드 input색 변경 */
+.light-mode {
+  color: #121212;
+}
+.dark-mode {
+  color: #fff;
 }
 </style>

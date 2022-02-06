@@ -1,9 +1,10 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Main from "../views/Main.vue";
-
-import Account from "../components/account/Account.vue";
+/*검색 화면 */
+import Search from "../components/search/Search.vue";
 /*프로필 */
+import Account from "../components/account/Account.vue";
 /* Desktop */
 import UpdateUserInfo from "../components/account/profile/desktop/ProfileUpdate.vue";
 import UpdateUserPassword from "../components/account/profile/desktop/PasswordUpdate.vue";
@@ -17,6 +18,14 @@ import UpdateUserPasswordMobile from "../components/account/profile/mobile/Passw
 import UpdatePushAlertSettingMobile from "../components/account/profile/mobile/PushAlert.vue";
 import QnAUserMobile from "../components/account/profile/mobile/QnA.vue";
 
+/*피드*/
+import UserFeed from "../components/feed/layout/UserFeed.vue";
+import Participated from "../components/feed/Participated.vue";
+import Created from "../components/feed/Created.vue";
+import Like from "../components/feed/Like.vue";
+import Subscribe from "../components/feed/Subscribe.vue";
+
+/*로그인 및 회원가입*/
 import Join from "../views/user/Join.vue";
 import Login from "../views/user/Login.vue";
 import ChallengeDetail from "../views/ChallengeDetail.vue";
@@ -29,6 +38,13 @@ const routes = [
     path: "/",
     name: "Main",
     component: Main,
+    children: [
+      {
+        path: "/search/:keyword/",
+        name: "Search",
+        component:Search,
+      }
+    ]
   },
   {
     path: "/user/account/",
@@ -90,6 +106,34 @@ const routes = [
     ],
   },
   {
+    path: "/feed/:userNo/",
+    name: "UserFeed",
+    component: UserFeed,
+    redirect : "/feed/:userNo/post",
+    children: [
+      {
+        path: "/feed/:userNo/post",
+        name: "Participated",
+        component : Participated,
+      },
+      {
+        path: "/feed/:userNo/challenge",
+        name: "Created",
+        component : Created,
+      },
+      {
+        path: "/feed/:userNo/like",
+        name: "Like",
+        component : Like,
+      },
+      {
+        path: "/feed/:userNo/subscription",
+        name: "Subscribe",
+        component : Subscribe,
+      },
+    ]
+  },
+  {
     path: "/join",
     name: "Join",
     component: Join,
@@ -100,8 +144,8 @@ const routes = [
     component: Login,
   },
   {
-    // path: "/challenge/:challengeNo",
-    path: "/challenge",
+     path: "/challenge/:challengeNo",
+   // path: "/challenge",
     name: "ChallengeDetail",
     component: ChallengeDetail,
   },
