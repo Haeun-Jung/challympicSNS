@@ -13,6 +13,7 @@
       <div>
         <v-list class="overflow-y-auto">
           <v-list-item v-for="user in users" :key="user.name">
+              <img v-if="user.title" class="medal-icon" src="https://cdn-icons-png.flaticon.com/512/744/744922.png"/>
             <v-list-item-avatar>
               <v-img :alt="`${user.name} avatar`" :src="user.avatar"></v-img>
             </v-list-item-avatar>
@@ -96,6 +97,11 @@ export default {
   color: #fff;
 }
 .medal-icon {
-  display: inline;
+  position: absolute;
+  top: 0.5rem;
+  left: 2.3rem;
+  width: 20px;
+  height: 20px;
+  z-index: 1;
 }
 </style>

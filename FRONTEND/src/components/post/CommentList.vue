@@ -21,7 +21,10 @@
         <span>
           <div>
             <span class="font-weight-bold">
-              <a href="#" class="text-decoration-none black--text mr-2">
+              <a
+                :href="`/feed/${comment.userNo}`"
+                class="text-decoration-none black--text mr-2"
+              >
                 {{ comment.nickname }}
               </a>
             </span>
