@@ -4,9 +4,7 @@
       <v-card>
         <v-card-title class="card-header" > 
           <v-spacer></v-spacer>
-          <v-btn class="cancel-btn" icon @click="$emit('close-modal')"> 
-            <img class="cancel-icon" src="https://img.icons8.com/external-becris-lineal-becris/64/000000/external-cancel-mintab-for-ios-becris-lineal-becris.png"/>
-          </v-btn>
+          <v-btn class="cancel-btn" icon @click="$emit('close-modal')"> <v-icon>mdi-close</v-icon> </v-btn>
         </v-card-title>
         <v-card-text>
           <v-row>
@@ -197,13 +195,7 @@ export default {
   padding: 0;
 }
 .cancel-btn {
-  margin-top: -10px;
-  margin-right: -20px;
-}
-.cancel-icon {
-    width: 16px;
-    -webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */
-    filter: grayscale(100%);
+  margin-right: -10px;
 }
 .upload-area {
   position: relative;
@@ -233,5 +225,8 @@ export default {
     color: rgb(235, 38, 38);
     text-align: right;
     margin-bottom: 10px;
+}
+.ma-2 {
+  margin-right: 12px !important;
 }
 </style>

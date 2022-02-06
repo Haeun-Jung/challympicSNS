@@ -4,9 +4,7 @@
       <v-card>
         <v-card-title class="card-header">
           <v-spacer></v-spacer>
-          <v-btn class="cancel-btn" icon @click="$emit('close-modal')"> 
-            <img class="cancel-icon" src="https://img.icons8.com/external-becris-lineal-becris/64/000000/external-cancel-mintab-for-ios-becris-lineal-becris.png"/>
-          </v-btn>
+          <v-btn class="cancel-btn" icon @click="$emit('close-modal')"> <v-icon>mdi-close</v-icon> </v-btn>
         </v-card-title>
         <v-card-text>
           <v-row class="row-area">
@@ -130,6 +128,7 @@ export default {
     },
     DatePickCancel() {
       this.EndDateMenu = false;
+      this.error = false;
     },
     /* 종료일 받아오기 */
     saveDate(endDate) {
@@ -169,11 +168,7 @@ export default {
   z-index: 1;
 }
 .cancel-btn {
-    margin-top: -10px;
-    margin-right: -20px;
-}
-.cancel-icon {
-    width: 16px;
+  margin-right: -10px;
 }
 .input-title {
   color: #3396F4;
@@ -211,6 +206,9 @@ export default {
 }
 .media-form {
   text-align: right;
+}
+.ma-2 {
+  margin-right: 12px !important;
 }
 .btn {
   color: #fff;
