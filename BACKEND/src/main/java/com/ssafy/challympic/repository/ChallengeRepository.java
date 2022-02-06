@@ -2,6 +2,7 @@ package com.ssafy.challympic.repository;
 
 import com.ssafy.challympic.domain.Challenge;
 import com.ssafy.challympic.domain.Challenger;
+import com.ssafy.challympic.domain.defaults.ChallengeAccess;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

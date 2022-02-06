@@ -14,7 +14,7 @@ import static javax.persistence.FetchType.LAZY;
 public class Search {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "search_no")
     private int search_no;
 

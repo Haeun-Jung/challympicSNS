@@ -16,6 +16,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 생성 전략. AUTO_INCREMENT0
+    @Column(name = "user_no")
     private int user_no;
 
     @Column(nullable = false)

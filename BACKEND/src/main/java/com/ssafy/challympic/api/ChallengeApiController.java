@@ -31,8 +31,11 @@ public class ChallengeApiController {
     @GetMapping("/challenge")
     public Result challenges() {
         List<Challenge> findChallenges = challengeService.findChallenges();
+        for(Challenge c : findChallenges) {
+            System.out.println(c);
+        }
         List<ChallengeDto> collect = findChallenges.stream()
-                .map(c -> new ChallengeDto(c.getChallenge_no(), c.getUser(), c.getChallenge_start(), c.getChallenge_end(), c.getChallenge_access(), c.getChallenge_type(), c.getChallenge_title(), c.getChallenge_content(), c.isChallenge_official(), c.getChallenge_report()))
+                .map(c -> new ChallengeDto(c.getChallenge_no(), c.getUser_no(), c.getChallenge_start(), c.getChallenge_end(), c.getChallenge_access(), c.getChallenge_type(), c.getChallenge_title(), c.getChallenge_content(), c.isChallenge_official(), c.getChallenge_report()))
                 .collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), collect);
     }
@@ -59,14 +62,12 @@ public class ChallengeApiController {
             }
         }
 
-        User user = userService.findUser(request.user_no);
-
         Title title = new Title();
         title.setTitle_name(request.getTitle_name());
         if(title == null) return new Result(false, HttpStatus.FORBIDDEN.value());
 
         Challenge challenge = Challenge.createChallenge(
-                user,
+                request.user_no,
                 request.getChallenge_end(),
                 challenge_access,
                 request.getChallenge_type(),
@@ -77,11 +78,12 @@ public class ChallengeApiController {
         for(int cr : challengers) {
             Challenger challenger = new Challenger();
             challenger.setChallenge(challenge);
-            challenger.setUser(user);
+            challenger.setUser(userService.findUser(request.user_no));
             challengeService.saveChallengers(challenger);
         }
 
         title.setChallenge(challenge);
+        titleService.saveTitles(title);
 
         challengeService.saveChallenge(challenge);
 
@@ -119,6 +121,7 @@ public class ChallengeApiController {
 
     /**
      * 한글 pathVariable 인코딩 관련 이슈
+     * 해결 방법 : https://velog.io/@aszxvcb/Spring-PathVariable-%ED%95%9C%EA%B8%80-%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0-%EC%A0%84%EB%8B%AC
      * @param challengeTitle
      * @return
      */
@@ -165,7 +168,7 @@ public class ChallengeApiController {
     @AllArgsConstructor
     static class ChallengeDto {
         private int challenge_no;
-        private User user;
+        private int user_no;
         private Date challenge_start;
         private Date challenge_end;
         private ChallengeAccess challenge_access;

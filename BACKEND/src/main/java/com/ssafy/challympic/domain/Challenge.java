@@ -1,5 +1,6 @@
 package com.ssafy.challympic.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.challympic.domain.defaults.ChallengeAccess;
 import com.ssafy.challympic.domain.defaults.ChallengeType;
 import lombok.Getter;
@@ -19,9 +20,11 @@ public class Challenge {
     @Column(name = "challenge_no")
     private int challenge_no;
 
-    @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "user_no")
-    private User user;
+//    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "user_no")
+//    private User user;
+
+    private int user_no;
 
     /**
      * temporal 오류
@@ -53,9 +56,9 @@ public class Challenge {
     private int challenge_report;
 
     // 생성 메소드
-    public static Challenge createChallenge(User user, Date challenge_end, ChallengeAccess challenge_access, ChallengeType challenge_type, String challenge_title, String challenge_content) {
+    public static Challenge createChallenge(int userNo, Date challenge_end, ChallengeAccess challenge_access, ChallengeType challenge_type, String challenge_title, String challenge_content) {
         Challenge challenge = new Challenge();
-        challenge.setUser(user);
+        challenge.setUser_no(userNo);
         challenge.setChallenge_start(new Date());
         challenge.setChallenge_end(challenge_end);
         challenge.setChallenge_access(challenge_access);
@@ -64,4 +67,5 @@ public class Challenge {
         challenge.setChallenge_content(challenge_content);
         return challenge;
     }
+
 }

@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter @Setter
 public class PostTag {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_tag_no")
     private int post_tag_no;
 
