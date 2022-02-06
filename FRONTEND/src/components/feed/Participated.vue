@@ -24,8 +24,7 @@
                   >
                   <div class="info-wrapper">
                     <div class="challenge-info"><i class='fas fa-hashtag icon'></i>{{ post.challenge }}</div>
-                    <div><i class='fas fa-heart icon'></i>&nbsp;{{ post.like }}</div>
-                    <div><i class='fas fa-comment-alt icon'></i> {{ post.comment }}</div>
+                    <div><i class='fas fa-heart icon'></i>&nbsp;{{ post.like }} <i class='fas fa-comment-alt icon'></i> {{ post.comment }}</div>
                   </div>
                   </v-overlay>
                 </v-fade-transition>
@@ -100,6 +99,7 @@ export default {
 }
 .icon {
   margin-top: 8px;
+  margin-left: 6px;
   margin-right: 4px;
 }
 </style>
