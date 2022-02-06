@@ -72,7 +72,6 @@
 				<v-spacer />
 				<v-btn
 					class="text-none"
-					round
 					depressed
 					color="primary"
 					@click="onSubmit"
@@ -96,6 +95,7 @@
 				passwordCheck: "",
 				originalPassword: "",
 				newPassword: "",
+				disabledTrue: false,
 				show1: false,
 				rules1: {
 					required: (value) => !!value || "기존 비밀번호를 입력해주세요.",

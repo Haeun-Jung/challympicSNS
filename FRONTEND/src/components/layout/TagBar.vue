@@ -10,7 +10,6 @@
 		dense
 		fixed
 		elevation="0"
-		app
 	>
 		<!-- 추천 태그 리스트 뿌리기ㅣ 이부분 어차피 나중에 template써서 다시 해야하니 지금은 관상용으로만 냅두기 -->
 

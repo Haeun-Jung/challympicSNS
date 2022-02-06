@@ -28,7 +28,6 @@
 				<v-spacer />
 				<v-btn
 					class="text-none"
-					round
 					depressed
 					color="error"
 					@click="onSubmit"

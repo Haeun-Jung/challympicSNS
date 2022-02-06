@@ -186,6 +186,7 @@
 				drawer: false,
 				onSelect: false,
 				loading: false,
+				search: "",
 				searchInput: "",
 				active: false,
 				search: "",
@@ -232,6 +233,7 @@
 			group() {
 				this.drawer = false;
 			},
+			/* chore for warning msg : 이후에 autocomplete 처음 눌렀을 때 제한하고 싶어서 만든 메서드
 			search(val) {
 				val && val !== this.searchInput && this.querySelections(val);
 				if (val.length > 2) {
@@ -240,7 +242,7 @@
 				} else {
 					this.minimumCharacter = "null";
 				}
-			},
+			},*/
 		},
 		methods: {
 			menuItems() {
@@ -258,6 +260,7 @@
 			clickLoginBtn() {
 				this.$router.push("/login");
 			},
+			/*	autocomplete 처리
 			handleInput() {
 				if (this.search.length < 2) {
 					return [];
@@ -265,7 +268,7 @@
 					//alert("?");
 					//watch나 이쪽 로직에서 처리하면 될 것 같은데..
 				}
-			},
+			},*/
 			keywordSearch() {
 				if (this.searchInput) {
 					console.log(this.searchInput);
