@@ -19,16 +19,7 @@ public class Post {
     @JoinColumn(name = "user_no")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "challenge_no")
-    private Challenge challenge;
-
-//    @OneToMany(mappedBy = "post")
-//    private List<Comment> comment_no;
-
-    @OneToOne
-    @JoinColumn(name = "like_no")
-    private PostLike postLike;
+    private Integer challenge_no;
 
     @OneToOne
     @JoinColumn(name = "file_no")

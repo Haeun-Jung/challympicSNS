@@ -1,5 +1,6 @@
 package com.ssafy.challympic.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,15 +13,17 @@ public class PostLike {
     @Id @GeneratedValue
     private Long like_no;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_no")
-    private Post post_no;
+    private Integer post_no;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_no")
-    private User user_no;
+    private Integer user_no;
 
-    public PostLike(Post post_no, User user_no){
+    public PostLike(Long like_no, Integer post_no, Integer user_no){
+        this.like_no = like_no;
+        this.post_no = post_no;
+        this.user_no = user_no;
+    }
+
+    public PostLike(Integer post_no, Integer user_no){
         this.post_no = post_no;
         this.user_no = user_no;
     }

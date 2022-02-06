@@ -3,32 +3,31 @@ package com.ssafy.challympic.api;
 import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.service.*;
 import com.ssafy.challympic.util.MD5Generator;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
+import com.ssafy.challympic.util.S3Uploader;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import net.bramp.ffmpeg.FFmpeg;
+import net.bramp.ffmpeg.FFmpegExecutor;
+import net.bramp.ffmpeg.FFprobe;
+import net.bramp.ffmpeg.builder.FFmpegBuilder;
+import net.bramp.ffmpeg.probe.FFmpegProbeResult;
+import org.apache.tools.ant.taskdefs.condition.Http;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.core.parameters.P;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @CrossOrigin("*")
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 public class PostApiController {
 
@@ -37,7 +36,9 @@ public class PostApiController {
     private final ChallengeService challengeService;
     private final PostLikeService postLikeService;
     private final UserService userService;
-//    private final TagService tagService;
+    private final TagService tagService;
+
+    private final S3Uploader s3Uploader;
 
     @Data
     @AllArgsConstructor
@@ -52,24 +53,52 @@ public class PostApiController {
         }
     }
 
-    // 프론트 단에서 전달받을 포스트 정보
+
+    // 프론트 단에서 전달받은 파일과 포스트 정보
     @Data
+    @Getter @Setter
     @AllArgsConstructor
-    static class PostForm{
+    static class PostRequest{
         private int user_no;
         private String post_content;
+        private MultipartFile file;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class PostMediaDto{
+        private Post post;
+        private Media media;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class PostLikeUserDto{
+        private int userNo;
+        private String userName;
     }
 
     /**
-     *  챌린지 번호로 포스트 가져오기
+     *  챌린지 번호로 포스트 가져오기(챌린지로 확인 예정
      *
      * */
-    /*
     @GetMapping("/challenge/{challengeNo}/post")
     public Result list(@PathVariable("challengeNo") int challengeNo){
         Result result = null;
 
+        log.info("1.test!!!!!!!!!");
+        // 포스트 리스트 뽑고
         List<Post> postList = postService.getPostList(challengeNo);
+        log.info("2. test!!!!!!!!!");
+
+
+        List<PostMediaDto> postMediaDtoList = new ArrayList<>();
+        log.info("3.test!!!!!!!!!");
+
+//        // Media 정보와 post 정보를 같이 담아 보냄
+//        for(Post post : postList){
+//            postMediaDtoList.add(new PostMediaDto(post, post.getMedia()));
+//        }
 
         if(postList != null){
             result = new Result(true, HttpStatus.OK.value(), postList);
@@ -79,10 +108,38 @@ public class PostApiController {
 
         return result;
     }
-     */
+
+    /** 
+     *  해당 게시글을 좋아요한 유저의 목록(Complete)
+     *      - 유저의 정보를 모두 가져올 수도 있음
+     *      - 유저 번호와 유저 닉네임만 전달받을 수도 있음
+     *      - 현재 번호만 가져옴
+     * */
+    @GetMapping("/post/{postNo}/like")
+    public Result likeList(@PathVariable("postNo") int postNo){
+
+        // PostLike에서 게시글이 post인 것 추출
+
+        // 받는 쪽에서 길이 구해서 좋아요 수 출력
+        List<PostLike> postLikeList = postLikeService.getPostLikeListByPostNo(postNo);
+
+        log.info("size : " + postLikeList.size());
+        // 좋아요 누른 유저 정보만 가져오기
+        /*
+        List<PostLikeUserDto> userList = new ArrayList<>();
+        for(PostLike postLike : postLikeList){
+            User user = postLike.getUser();
+            userList.add(new PostLikeUserDto(user.getUser_no(), user.getUser_nickname()));
+        }
+         */
+
+        return new Result(true, HttpStatus.OK.value(), postLikeList);
+    }
     
     /** 
-     *  포스트 등록하기
+     *  포스트 등록하기(Complete)
+     *          alter table post
+     *          convert to char set utf8;
      *      - Chaalenge : 챌린지 이름으로 검색
      *      - Challenge : 해당 챌린지 사진/영상 포맷 가져오기
      *      - File명 프론트 단에서 거르기
@@ -90,92 +147,105 @@ public class PostApiController {
      *      - File 도메인 변경 및 테이블 명 변경 -> Media, File이라는 io의 객체와 이름이 겹침
      * */
     @PostMapping("/challenge/{challengeNo}/post")
-    public Result create(@PathVariable("challengeNo") int challengeNo, @RequestParam("file") MultipartFile files, @RequestBody PostForm postForm) throws IOException {
-//    public ResponseEntity<InputStreamResource> create(@PathVariable("challengeNo") int challengeNo) throws IOException {
+    public Result create(@PathVariable("challengeNo") int challengeNo, PostRequest postRequest) throws IOException {
 
-//        // 파일 스트리밍 테스트
-//        File file = new File("C:\\SSAFY\\WorkSpace_for_Git\\01_Common_Sub_2\\BACKEND\\public\\work\\Tomcat\\localhost\\challympic\\2022.02.03\\seoul.mp4");
-//        InputStream inputStream = new FileInputStream("C:\\SSAFY\\WorkSpace_for_Git\\01_Common_Sub_2\\BACKEND\\public\\work\\Tomcat\\localhost\\challympic\\2022.02.03\\seoul.mp4");
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.set("Accept-Ranges", "bytes");
-//        headers.set("Content-Type", "video/mp4");
-//        headers.set("Content-Range", "bytes 50-1025/17839845");
-//        headers.set("Content-Length", String.valueOf(file.length()));
+        log.info("Create Post");
+
+        // 1. 플로우 시작
+        Media media = null;
+        MultipartFile files = null;
+
+        try {
+
+            files = postRequest.getFile();
+
+            log.info(postRequest.getPost_content());
+
+            // 확장자 체크
+            String fileType = getFileType(files);
+
+            if(fileType == null)
+                // 지원하지 않는 확장자
+                return new Result(false, HttpStatus.OK.value());
+
+            media = s3Uploader.upload(files, fileType.toLowerCase());
+            
+            if(media == null){
+                // AWS S3 업로드 실패
+                return new Result(false, HttpStatus.OK.value());
+            }
+
+            Long file_no = mediaService.saveMedia(media);
+
+//            // 본문 텍스트 파싱
+//            String content = postForm.getPost_content();
+//            String[] splitSharp = content.split("#");
+//            List<String> list = new ArrayList<>();
 //
-//        return new ResponseEntity<>(new InputStreamResource(inputStream), headers, HttpStatus.OK);
-
-        // 확장자 체크
-        String fileType = getFileType(files);
-
-//        if(fileType == null || !fileTypeValidate(challengeNo, fileType))
-//            return new Result(false, HttpStatus.OK.value());
-
-        Media media = fileToMedia(files);
-        if(media == null)
-            return new Result(false, HttpStatus.OK.value());
-
-        Long file_no = mediaService.saveMedia(media);
-        // 파일 저장 끝
-
-        // 본문 텍스트 파싱
-        String content = postForm.getPost_content();
-        String[] splitSharp = content.split("#");
-        List<String> list = new ArrayList<>();
-        for(String str : splitSharp){
-            list.add(str.split(" ")[0]);
-        }
-
+//            for(String str : splitSharp){
+//                // #을 분리하고 태그명만 추출
+//                list.add(str.split(" ")[0]);
+//            }
+//
 //            for(String str : list){
-//                tag.save(str);
+//                // 태그명 저장
+//                tagService.save(str);
 //            }
 
-        // 포스트 등록
-        Post post = new Post();
-//        post.setChallenge(challengeService.findChallenges().get(challengeNo));
-//        post.setUser_no(postForm.getUser_no());
-//        post.setPost_content(content);
-        post.setPost_report(0);
+            // 포스트 등록
+            Post post = new Post();
 
-        int postId = postService.save(post);
+            // 수정 필요
+            post.setChallenge_no(challengeNo);  // 포스트가 속한 챌린지 정보
 
+            post.setUser(userService.findUser(postRequest.getUser_no()));  // 포스트 작성 유저 정보
+            post.setPost_content(postRequest.getPost_content());  // 포스트 본문
+            post.setPost_report(0); // 신고횟수 초기값 0
+            post.setMedia(media);
 
-        // ---------------------------------------------------------------------------------
+            int postId = postService.save(post);
 
-        if(postId != -1)
-            return new Result(true, HttpStatus.OK.value(), media);
-        else
-            return new Result(false, HttpStatus.OK.value());
+            if(postId != -1)
+                return new Result(true, HttpStatus.OK.value(), media);
 
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new Result(false, HttpStatus.OK.value());
     }
     
-    
-    /** 
+    /**
      *  기존 포스트를  수정하는 함수
      *      - Post를 postNo로 가져온다.
      *      - 파일 번호를 가져와서 파일을 업데이트
      *      - 포스트 업데이트
      * */
     @PutMapping("/challenge/{challengeNo}/post/{postNo}")
-    public Result update(@PathVariable("challengeNo") int challengNo, @PathVariable("postNo") int postNo, @RequestParam("file") MultipartFile files
-            , @RequestBody PostForm postForm){
-
-        Post post = postService.getPost(postNo);
-
-        // 파일 업데이트, 파일 저장도 여기서 이루어짐
-        Long fileId = mediaService.update(post.getMedia().getFile_no(), fileToMedia(files));
+    public Result update(@PathVariable("challengeNo") int challengNo, @PathVariable("postNo") int postNo, PostRequest postRequest) throws Exception {
 
         Post _post = new Post();
-        _post.setPost_content(postForm.getPost_content());
+
+        // 새로 저장
+
+        if(postRequest.getFile() != null){
+            String type = getFileType(postRequest.getFile());
+            Media media = s3Uploader.upload(postRequest.getFile(), type.toLowerCase());
+            _post.setMedia(media);
+        }
+
+        if(postRequest.getPost_content() != null)
+            _post.setPost_content(postRequest.getPost_content());
 
         // 포스트 업데이트
         int postId = postService.update(postNo, _post);
-        
-        if(fileId == null || postId != 0)
+
+        if(postId != 0)
             return new Result(true, HttpStatus.OK.value());
-        
+
         return new Result(false, HttpStatus.OK.value());
     }
-    
+
     
     /** 
      *  저장된 포스트를 삭제하는 함수
@@ -193,29 +263,31 @@ public class PostApiController {
     }
 
     /**
-     *  좋아요 클릭 처리
+     *  좋아요 클릭 처리(Complete)
      * */
     @PostMapping("/post/{postNo}/like/{userNo}")
     public Result like(@PathVariable("postNo") int postNo, @PathVariable("userNo") int userNo){
 
-        Post post = postService.getPost(postNo);
-        Long likeNo = post.getPostLike().getLike_no();
-
         // 포스트 라이크 테이블에서 해당 유저번호와 해당 게시글에 해당하는 엔티티가 있는지 검색
-        PostLike postLike = postLikeService.getPostLikeByUserNoPostNo(postNo, userNo);
+        List<PostLike> postLike = postLikeService.getPostLikeByUserNoPostNo(postNo, userNo);
 
-        if(postLike != null){
+        if(!postLike.isEmpty()){
+            // 좋아요 누른 정보가 있으면
             // delete
             postLikeService.delete(postNo, userNo);
         } else {
             // insert
-            PostLike _postLike = new PostLike(postService.getPost(postNo), userService.findUser(userNo));
+            PostLike _postLike = new PostLike(postNo, userNo);
             postLikeService.save(_postLike);
         }
 
         return new Result(true, HttpStatus.OK.value());
     }
 
+    /**
+     * @param postNo 
+     *   게시글 번호 받아서 해당 게시글의 신고 횟수 추가(Complete)
+     */
     @PostMapping("/report/post/{postNo}")
     public Result report(@PathVariable("postNo") int postNo){
 
@@ -239,7 +311,7 @@ public class PostApiController {
         if(extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png"))
             return "IMAGE";
 
-        if(extension.equals("AVI"))
+        if(extension.equals("avi"))
             return "VIDEO";
 
         return null;
@@ -250,67 +322,15 @@ public class PostApiController {
      *      - 유효하면 true
      *      - 잘못된 타입이면 false
      * */
-//    private boolean fileTypeValidate(int challengeNo, String fileType){
-//        // 챌린지 번호로 챌린지 정보 가져오기
-////        Challenge challenge = challengeService.
-//
-//        // 임시 코드
-//        Challenge challenge = new Challenge();
-//
-          // 입력받은 파일의 타입과 챌린지 타입 비교
-//        if(fileType.equals(challenge.getChallenge_type())){
-//            return true;
-//        }
-//        return false;
-//    }
+    private boolean fileTypeValidate(int challengeNo, String fileType){
+        // 챌린지 번호로 챌린지 정보 가져오기
+        Challenge challenge = challengeService.findChallenges().get(challengeNo);
 
-    /** 
-     *  프론트에서 전달 받은 파일을 로컬 서버에 저장하고 Media 엔티티로 변환
-     * */
-    private Media fileToMedia(MultipartFile files){
-
-        try {
-            // 파일 저장 시작
-            // 실제 파일명
-            String originFileName = files.getOriginalFilename();
-            // 저장 파일명
-            String savedFileName = new MD5Generator(originFileName).toString();
-            // 실제 저장 경로
-            SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd");
-
-//            String path = System.getProperty("user.dir") + "\\files\\" + date.format(new Date());
-//            String path = System.getProperty("user.dir") + "\\files";
-            String path = System.getProperty("user.dir") + "\\public\\work\\Tomcat\\localhost\\challympic";
-
-//            // 저장 경로에 해당하는 폴더가 없으면 폴더 생성(files)
-//            if (!new File(path).exists()) {
-//                try {
-//                    new File(path).mkdir();
-//                } catch (Exception e) {
-//                    e.getStackTrace();
-//                }
-//            }
-
-            // 업로드일에 해당하는 날짜
-            path += "\\" + date.format(new Date());
-            
-            if (!new File(path).exists()) {
-                try {
-                    new File(path).mkdir();
-                } catch (Exception e) {
-                    e.getStackTrace();
-                }
-            }
-
-            String savedPath = path + "\\" + savedFileName;
-            files.transferTo(new File(savedPath));
-
-            return new Media(originFileName, savedFileName, path);
-        } catch(Exception e){
-            e.printStackTrace();
+        //입력받은 파일의 타입과 챌린지 타입 비교
+        if(fileType.equals(challenge.getChallenge_type())){
+            return true;
         }
-
-        return null;
+        return false;
     }
 
 }
