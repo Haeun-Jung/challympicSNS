@@ -43,4 +43,10 @@ public class UserRepository {
         em.remove(user);
         em.flush();
     }
+
+    public User findByEmail(String user_email){
+        return em.createQuery("select u from User u where u.user_email = :user_email", User.class)
+                .setParameter("user_email", user_email)
+                .getSingleResult();
+    }
 }

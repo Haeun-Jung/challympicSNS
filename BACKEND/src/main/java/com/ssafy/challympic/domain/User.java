@@ -35,7 +35,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserAuth user_auth = UserAuth.USER;
 
-    @OneToOne
+    @OneToOne( fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "file_no")
     private Media media;
 
@@ -48,21 +48,21 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Date user_inactivedate;
 
-    @OneToMany(mappedBy = "user")
-    private List<Interest> interest;
-
-    @OneToMany(mappedBy = "follow_following_no")
-    private List<Follow> following;
-
-    @OneToMany(mappedBy = "follow_follower_no")
-    private List<Follow> follower;
-
-    @OneToMany(mappedBy = "user")
-    private List<QnA> qna;
-
-    @OneToMany(mappedBy = "user")
-    private List<Comment> comment;
-
-    @OneToMany(mappedBy = "user")
-    private List<CommentLike> commentLike;
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//    private List<Interest> interest;
+//
+//    @OneToMany(mappedBy = "follow_following_no", cascade = CascadeType.ALL)
+//    private List<Follow> following;
+//
+//    @OneToMany(mappedBy = "follow_follower_no", cascade = CascadeType.ALL)
+//    private List<Follow> follower;
+//
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//    private List<QnA> qna;
+//
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//    private List<Comment> comment;
+//
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//    private List<CommentLike> commentLike;
 }

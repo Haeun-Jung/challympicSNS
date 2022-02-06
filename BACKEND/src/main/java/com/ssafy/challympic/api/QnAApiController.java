@@ -1,6 +1,7 @@
 package com.ssafy.challympic.api;
 
 import com.ssafy.challympic.domain.QnA;
+import com.ssafy.challympic.domain.Result;
 import com.ssafy.challympic.domain.User;
 import com.ssafy.challympic.service.QnAService;
 import com.ssafy.challympic.service.UserService;
@@ -68,16 +69,4 @@ public class QnAApiController {
         }
     }
 
-    @Data
-    @AllArgsConstructor
-    static class Result<T>{
-        private boolean isSuccess;
-        private int code;
-        private T data;
-
-        public Result(boolean isSuccess, int code) {
-            this.isSuccess = isSuccess;
-            this.code = code;
-        }
-    }
 }
