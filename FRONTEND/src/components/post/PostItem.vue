@@ -193,7 +193,7 @@ export default {
 
 <style scoped>
 .dark-mode-text {
-  color: #424242;
+  color: rgb(255, 255, 255, 0.6);;
 }
 .black-text {
   color: black;
