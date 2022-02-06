@@ -89,11 +89,6 @@ export default {
       // 해당 유저에 대한 isFollowing 값 변경
     },
   },
-  watch: {
-    dialog() {
-      return this.likeDialog || this.followDialog;
-    },
-  },
 };
 </script>
 

@@ -22,7 +22,7 @@ export default {
     return {
       playerOptions: {
         preload: "auto",
-        // autoplay: true,
+        autoplay: true,
         muted: true,
         loop: true,
         aspectRatio: "4:3",

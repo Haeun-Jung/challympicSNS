@@ -146,38 +146,40 @@
 								<!-- End of Mobile -->
 								<!--Data Iterator -->
 								<v-data-iterator
-									:items="postList"
-									:items-per-page.sync="itemsPerPage"
-									:sort-by="sortBy"
-									:sort-desc="sortDesc"
-									hide-default-footer
-								>
-									<template v-slot:header>
-										<v-row class="justify-end">
-											<v-col class="col-5 col-sm-3 col-lg-2">
-												<v-select
-													v-model="sortBy"
-													:items="sortKeys"
-													:sort-desc="sortDesc"
-													class="align-end"
-													flat
-													solo-inverted
-													hide-details
-													label="정렬"
-												></v-select>
-											</v-col>
-										</v-row>
-									</template>
-									<!-- props로 포스트 목록 내려주기 -->
-									<template v-slot:default="props">
-										<post-item
-											v-for="post in props.items"
-											:post="post"
-											:type="challenge.type"
-											:key="post.postInfo.postNo"
-										></post-item>
-									</template>
-								</v-data-iterator>
+                  v-if="postList.length > 2"
+                  :items="postList"
+                  :items-per-page.sync="itemsPerPage"
+                  :sort-by="sortBy"
+                  :sort-desc="sortDesc"
+                  hide-default-footer
+                >
+                  <template v-slot:header>
+                    <v-row class="justify-end">
+                      <v-col class="col-5 col-sm-3 col-lg-2">
+                        <v-select
+                          v-model="sortBy"
+                          :items="sortKeys"
+                          :sort-desc="sortDesc"
+                          class="align-end"
+                          flat
+                          solo-inverted
+                          hide-details
+                          label="정렬"
+                        ></v-select>
+                      </v-col>
+                    </v-row>
+                  </template>
+                  <!-- props로 포스트 목록 내려주기 -->
+                  <template v-slot:default="props">
+                    <post-item
+                      v-for="post in props.items"
+                      :post="post"
+                      :type="challenge.type"
+                      :key="post.postInfo.postNo"
+                    ></post-item>
+                  </template>
+                </v-data-iterator>
+                <battle-item v-else :postList="postList" :type="challenge.type" />
 							</div>
 							<confirm-report
 								:confirm-report-dialog="confirmReportDialog"
@@ -203,13 +205,14 @@
 <script>
 	import Side from "@/components/layout/Side.vue";
 	import PostItem from "@/components/post/PostItem.vue";
+  import BattleItem from "@/components/post/BattleItem.vue";
 	import ShareButton from "@/components/button/ShareButton.vue";
 	import ConfirmReport from "@/components/report/ConfirmReport.vue";
 	import PostUpload from "@/components/upload/PostUpload.vue";
 
 	export default {
 		name: "ChallengeDetail",
-		components: { Side, PostItem, ShareButton, ConfirmReport, PostUpload },
+		components: { Side, PostItem, BattleItem, ShareButton, ConfirmReport, PostUpload },
 		data() {
 			return {
 				confirmReportDialog: false,
