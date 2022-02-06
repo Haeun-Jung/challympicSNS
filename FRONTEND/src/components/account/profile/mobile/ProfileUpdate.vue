@@ -167,7 +167,6 @@
 				<v-spacer />
 				<v-btn
 					class="text-none"
-					round
 					depressed
 					color="primary"
 					@click="onSubmit"
@@ -194,6 +193,7 @@
 				disabledTrue: true,
 				AllTags: ["#Gaming", "#Programming", "#Vue", "#Vuetify"], //전체 태그
 				model: [],
+				search: "",
 				interests: [
 					//사용자 태그
 					{

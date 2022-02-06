@@ -7,7 +7,6 @@
 		-->
 		<v-data-iterator
 			:items="posts"
-			:pagination.sync="pagination"
 			:footer-props="{
 				'items-per-page-options': [5, 10, 15, 20],
 			}"
@@ -63,6 +62,7 @@
 						challenge_title: "챌린지 제목 1",
 						post_content: "내용에 태그가 포함??#프론트에서#분리해서뿌리나요?",
 						post_likes: 300,
+						challenge_no: 3,
 						post_comments: 3,
 						challenger: "김싸피",
 						content:
@@ -74,6 +74,7 @@
 						post_like: false,
 						challenge_title: "아이스버킷챌린지",
 						post_content: "저도..참여해봤어요..#차가움#공익#공식",
+						challenge_no: 3,
 						post_likes: 0,
 						post_comments: 3,
 						challenger: "이싸피",
@@ -88,6 +89,7 @@
 						post_likes: 15,
 						post_comments: 30,
 						challenger: "박싸피",
+						challenge_no: 3,
 						content:
 							/*확장자로 받는 경우 : controls 썸네일은 0.8초로 하자..*/
 							"https://caiogondim.github.io/vertical-video-with-side-blur/example/vertical-video.mov",
@@ -100,6 +102,7 @@
 						post_likes: 3521565,
 						post_comments: 345465,
 						challenger: "오싸피",
+						challenge_no: 3,
 						content:
 							/*확장자로 받는 경우 : controls 썸네일은 0.8초로 하자..*/
 							"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",

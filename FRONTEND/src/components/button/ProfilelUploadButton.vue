@@ -3,7 +3,6 @@
 		<v-btn
 			color="primary"
 			class="text-none"
-			round
 			depressed
 			:loading="isSelecting"
 			@click="onButtonClick"
