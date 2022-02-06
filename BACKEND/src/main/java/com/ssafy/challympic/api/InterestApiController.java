@@ -1,6 +1,7 @@
 package com.ssafy.challympic.api;
 
 import com.ssafy.challympic.domain.Interest;
+import com.ssafy.challympic.domain.Result;
 import com.ssafy.challympic.service.InterestService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -57,16 +58,4 @@ public class InterestApiController {
         }
     }
 
-    @Data
-    @AllArgsConstructor
-    static class Result<T>{
-        private boolean isSuccess;
-        private int code;
-        private T data;
-
-        public Result(boolean isSuccess, int code) {
-            this.isSuccess = isSuccess;
-            this.code = code;
-        }
-    }
 }
