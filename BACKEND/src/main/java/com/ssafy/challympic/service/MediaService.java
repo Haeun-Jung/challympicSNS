@@ -15,6 +15,12 @@ public class MediaService {
     private final MediaRepository mediaRepository;
 
     @Transactional
+    public Media getMedia(Long fileNo){
+        Media media = mediaRepository.findByFileNo(fileNo);
+        return media;
+    }
+
+    @Transactional
     public Long saveMedia(Media media) {
         // 중복 확인
         mediaRepository.save(media);

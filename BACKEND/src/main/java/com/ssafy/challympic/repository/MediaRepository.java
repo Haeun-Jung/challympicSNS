@@ -23,6 +23,7 @@ public class MediaRepository {
     }
 
     public void deleteMedia(Long file_no){
-        em.remove(findByFileNo(file_no));
+        Media media = findByFileNo(file_no);
+        em.remove(media);
     }
 }

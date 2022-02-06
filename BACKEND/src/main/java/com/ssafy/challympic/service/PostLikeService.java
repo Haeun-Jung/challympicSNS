@@ -1,9 +1,14 @@
 package com.ssafy.challympic.service;
 
+import com.ssafy.challympic.domain.Post;
 import com.ssafy.challympic.domain.PostLike;
+import com.ssafy.challympic.domain.User;
 import com.ssafy.challympic.repository.PostLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -11,17 +16,19 @@ public class PostLikeService {
 
     private final PostLikeRepository postLikeRepository;
 
-    public PostLike getPostLikeByUserNoPostNo(int postNo, int userNo){
+    public List<PostLike> getPostLikeListByPostNo(Integer postNo){
+        return postLikeRepository.findByPostNo(postNo);
+    }
+
+    public List<PostLike> getPostLikeByUserNoPostNo(Integer postNo, Integer userNo){
         return postLikeRepository.findPostLikeByUserNoPostNo(postNo, userNo);
     }
 
-    public void delete(int postNo, int userNo){
-        postLikeRepository.deleteByPostNoUserNo(postNo, userNo);
+    public void delete(Integer postNo, Integer userNo){
+        postLikeRepository.deleteByPostUser(postNo, userNo);
     }
 
-    public Long save(PostLike postLike){
+    public void save(PostLike postLike){
         postLikeRepository.save(postLike);
-        PostLike _postLike = getPostLikeByUserNoPostNo(postLike.getPost_no().getPost_no(), postLike.getUser_no().getUser_no());
-        return _postLike.getLike_no();
     }
 }
