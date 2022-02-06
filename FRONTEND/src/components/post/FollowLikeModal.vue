@@ -5,19 +5,7 @@
         <span v-if="this.type === 'follower'">팔로워</span>
         <span v-else-if="this.type === 'following'">팔로잉</span>
         <span v-else>좋아요</span>
-        <v-btn
-          class="cancel-btn"
-          absolute
-          top
-          right
-          icon
-          @click="dialog = false"
-        >
-          <img
-            class="cancel-icon"
-            src="https://img.icons8.com/external-becris-lineal-becris/64/000000/external-cancel-mintab-for-ios-becris-lineal-becris.png"
-          />
-        </v-btn>
+        <v-btn class="cancel-btn" absolute top right icon @click="dialog = false"> <v-icon>mdi-close</v-icon> </v-btn>
       </v-card-title>
 
       <v-divider />
