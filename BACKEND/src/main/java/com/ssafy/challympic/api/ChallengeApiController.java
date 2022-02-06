@@ -35,7 +35,7 @@ public class ChallengeApiController {
             System.out.println(c);
         }
         List<ChallengeDto> collect = findChallenges.stream()
-                .map(c -> new ChallengeDto(c.getChallenge_no(), c.getUser_no(), c.getChallenge_start(), c.getChallenge_end(), c.getChallenge_access(), c.getChallenge_type(), c.getChallenge_title(), c.getChallenge_content(), c.isChallenge_official(), c.getChallenge_report()))
+                .map(c -> new ChallengeDto(c))
                 .collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), collect);
     }
@@ -67,7 +67,7 @@ public class ChallengeApiController {
         if(title == null) return new Result(false, HttpStatus.FORBIDDEN.value());
 
         Challenge challenge = Challenge.createChallenge(
-                request.user_no,
+                request.user,
                 request.getChallenge_end(),
                 challenge_access,
                 request.getChallenge_type(),
@@ -78,7 +78,7 @@ public class ChallengeApiController {
         for(int cr : challengers) {
             Challenger challenger = new Challenger();
             challenger.setChallenge(challenge);
-            challenger.setUser(userService.findUser(request.user_no));
+            challenger.setUser(request.user);
             challengeService.saveChallengers(challenger);
         }
 
@@ -110,7 +110,7 @@ public class ChallengeApiController {
 
     @Data
     static class CreateChallengeRequest {
-        private int user_no;
+        private User user;
         private List<String> challengers;
         private Date challenge_end;
         private ChallengeType challenge_type;
@@ -177,5 +177,18 @@ public class ChallengeApiController {
         private String challenge_content;
         private boolean challenge_official;
         private int challenge_report;
+
+        public ChallengeDto(Challenge challenge) {
+            this.challenge_no = challenge.getChallenge_no();
+            this.user_no = challenge.getUser().getUser_no();
+            this.challenge_start = challenge.getChallenge_start();
+            this.challenge_end = challenge.getChallenge_end();
+            this.challenge_access = challenge.getChallenge_access();
+            this.challenge_type = challenge.getChallenge_type();
+            this.challenge_title = challenge.getChallenge_title();
+            this.challenge_content = challenge.getChallenge_content();
+            this.challenge_official = challenge.isChallenge_official();
+            this.challenge_report = challenge.getChallenge_report();
+        }
     }
 }

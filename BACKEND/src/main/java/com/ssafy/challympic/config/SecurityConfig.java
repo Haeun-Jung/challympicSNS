@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthenticationFilter(authenticationManager())) // AuthenticationManager 파라미터를 넘겨야한다.
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository))
                 .authorizeRequests()
-                .antMatchers("/user/*")
+                .antMatchers("/challympic/user/*")
                 .access("hasRole('USER')")
                 .anyRequest().permitAll();
     }

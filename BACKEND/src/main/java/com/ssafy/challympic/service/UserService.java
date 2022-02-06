@@ -30,8 +30,8 @@ public class UserService {
      * 닉네임 중복 감지
      */
     public boolean validateDuplicateNickname(String user_nickname){
-        User findUser = userRepository.validateNickname(user_nickname);
-        if(findUser == null){
+        List<User> findUser = userRepository.validateNickname(user_nickname);
+        if(findUser.isEmpty()){
             return false;
         }
         return true;
@@ -79,6 +79,6 @@ public class UserService {
     }
 
     public User findByNickname(String user_nickname){
-        return userRepository.validateNickname(user_nickname);
+        return userRepository.findByNickname(user_nickname);
     }
 }

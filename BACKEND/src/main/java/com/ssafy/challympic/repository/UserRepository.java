@@ -33,10 +33,10 @@ public class UserRepository {
                 .getResultList();
     }
 
-    public User validateNickname(String user_nickname){
+    public List<User> validateNickname(String user_nickname){
         return em.createQuery("select u from User u where u.user_nickname = :user_nickname", User.class)
                 .setParameter("user_nickname", user_nickname)
-                .getSingleResult();
+                .getResultList();
     }
 
     public void delete(User user){
@@ -47,6 +47,12 @@ public class UserRepository {
     public User findByEmail(String user_email){
         return em.createQuery("select u from User u where u.user_email = :user_email", User.class)
                 .setParameter("user_email", user_email)
+                .getSingleResult();
+    }
+
+    public User findByNickname(String user_nickname) {
+        return em.createQuery("select u from User u where u.user_nickname = :user_nickname", User.class)
+                .setParameter("user_nickname", user_nickname)
                 .getSingleResult();
     }
 }
