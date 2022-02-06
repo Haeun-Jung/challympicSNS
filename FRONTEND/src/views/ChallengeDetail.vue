@@ -243,6 +243,7 @@
 					{
 						postInfo: {
 							postNo: 1,
+              userNo: 1,
 							nickname: "nickname",
 							content: "다음 타깃 @nickname1",
 							regDate: "2022.01.02",
@@ -271,6 +272,7 @@
 						comments: [
 							{
 								commentNo: 1,
+                userNo: 4,
 								nickname: "박싸피",
 								content: "댓글입니다.",
 								regDate: "2021.11.11",
@@ -279,6 +281,7 @@
 							},
 							{
 								commentNo: 2,
+                userNo: 5,
 								nickname: "김싸피",
 								content: "댓글입니다!",
 								regDate: "2021.11.11",
@@ -287,6 +290,7 @@
 							},
 							{
 								commentNo: 3,
+                userNo: 6,
 								nickname: "최싸피",
 								content: "댓글입니다!",
 								regDate: "2021.11.12",
@@ -298,6 +302,7 @@
 					{
 						postInfo: {
 							postNo: 2,
+              userNo: 2,
 							nickname: "nickname2",
 							content:
 								"그러나, 이에 #의하여 #민사상이나 #형사상의 책임이 면제되지는 아니한다. 모든 국민은 신체의 자유를 가진다. 누구든지 법률에 의하지 아니하고는 체포·구속·압수·수색 또는 심문을 받지 아니하며, 법률과 적법한 절차에 의하지 아니하고는 처벌·보안처분 또는 강제노역을 받지 아니한다.",
@@ -319,6 +324,7 @@
 						comments: [
 							{
 								commentNo: 1,
+                userNo: 4,
 								nickname: "박싸피",
 								content: "댓글입니다.",
 								regDate: "2021.11.11",
@@ -327,6 +333,7 @@
 							},
 							{
 								commentNo: 2,
+                userNo: 5,
 								nickname: "김싸피",
 								content: "댓글입니다!",
 								regDate: "2021.11.11",
@@ -338,6 +345,7 @@
 					{
 						postInfo: {
 							postNo: 3,
+              userNo: 3,
 							nickname: "nickname3",
 							content:
 								"그러나, 이에 의하여 민사상이나 형사상의 책임이 면제되지는 아니한다. 모든 국민은 신체의 자유를 가진다. 누구든지 법률에 의하지 아니하고는 체포·구속·압수·수색 또는 심문을 받지 아니하며, 법률과 적법한 절차에 의하지 아니하고는 처벌·보안처분 또는 강제노역을 받지 아니한다.",
@@ -359,6 +367,7 @@
 						comments: [
 							{
 								commentNo: 1,
+                userNo: 4,
 								nickname: "박싸피",
 								content: "댓글입니다.",
 								regDate: "2021.11.11",
