@@ -37,6 +37,7 @@
         <p>{{ challenge.content }}</p>
         <div>
           <v-data-iterator
+            v-if="postList.length > 2"
             :items="postList"
             :items-per-page.sync="itemsPerPage"
             :sort-by="sortBy"
@@ -69,6 +70,7 @@
               ></post-item>
             </template>
           </v-data-iterator>
+          <battle-item v-else :postList="postList" :type="challenge.type" />
         </div>
       </v-col>
     </v-row>
@@ -88,13 +90,21 @@
 <script>
 import Side from "@/components/layout/Side.vue";
 import PostItem from "@/components/post/PostItem.vue";
+import BattleItem from "@/components/post/BattleItem.vue";
 import ShareButton from "@/components/button/ShareButton.vue";
 import ConfirmReport from "@/components/report/ConfirmReport.vue";
 import PostUpload from "@/components/upload/PostUpload.vue";
 
 export default {
   name: "ChallengeDetail",
-  components: { Side, PostItem, ShareButton, ConfirmReport, PostUpload },
+  components: {
+    Side,
+    PostItem,
+    BattleItem,
+    ShareButton,
+    ConfirmReport,
+    PostUpload,
+  },
   data() {
     return {
       confirmReportDialog: false,
@@ -106,7 +116,7 @@ export default {
         name: "아이스버킷챌린지",
         content:
           "풍부하게 있는 그들은 밝은 않는 끓는 철환하였는가? 타오르고 날카로우나 뜨고, 구할 봄바람이다. 열매를 살 영원히 우는 힘차게 듣는다. 보내는 품고 쓸쓸한 굳세게 위하여 귀는 능히 사막이다. 그림자는 우리의 대고, 보이는 이상이 인생에 말이다. 인간은 지혜는 피고, 날카로우나 같이, 그들에게 것은 물방아 피다.",
-        type: "image",
+        type: "video",
         official: true,
       },
       itemsPerPage: -1,
@@ -209,38 +219,6 @@ export default {
               commentNo: 2,
               nickname: "김싸피",
               content: "댓글입니다!",
-              regDate: "2021.11.11",
-              likeCnt: 0,
-              isLiked: false,
-            },
-          ],
-        },
-        {
-          postInfo: {
-            postNo: 3,
-            nickname: "nickname3",
-            content:
-              "그러나, 이에 의하여 민사상이나 형사상의 책임이 면제되지는 아니한다. 모든 국민은 신체의 자유를 가진다. 누구든지 법률에 의하지 아니하고는 체포·구속·압수·수색 또는 심문을 받지 아니하며, 법률과 적법한 절차에 의하지 아니하고는 처벌·보안처분 또는 강제노역을 받지 아니한다.",
-            regDate: "2022.01.30",
-            likeCnt: 1,
-            isLiked: false,
-            fileName: "img2.png",
-          },
-          likedUsers: [
-            {
-              likeNo: 1,
-              userNo: 3,
-              avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-              name: "Jason Oner",
-              title: "밥 잘먹는",
-              isFollowing: true,
-            },
-          ],
-          comments: [
-            {
-              commentNo: 1,
-              nickname: "박싸피",
-              content: "댓글입니다.",
               regDate: "2021.11.11",
               likeCnt: 0,
               isLiked: false,
