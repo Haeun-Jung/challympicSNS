@@ -61,9 +61,9 @@ public class UserService {
     @Transactional
     public void updateUser(int user_no, String user_nickname, Media file, String user_title){
         User user = userRepository.findOne(user_no);
-        user.setUser_nickname(user_nickname);
-        user.setMedia(file);
-        user.setUser_title(user_title);
+        if(user_nickname != null) user.setUser_nickname(user_nickname);
+        if(file != null) user.setMedia(file);
+        if(user_title != null) user.setUser_title(user_title);
     }
 
 

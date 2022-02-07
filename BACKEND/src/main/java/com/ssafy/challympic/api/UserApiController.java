@@ -90,29 +90,34 @@ public class UserApiController {
         MultipartFile files = null;
 
         try {
+            if(request.getFile() != null){
+                files = request.getFile();
 
-            files = request.getFile();
+                // 확장자 체크
+                String fileType = getFileType(files);
 
-            // 확장자 체크
-            String fileType = getFileType(files);
-
-            if(fileType == null)
+                if(fileType == null)
                 // 지원하지 않는 확장자
-                return new Result(false, HttpStatus.OK.value());
+                {
+                    return new Result(false, HttpStatus.OK.value());
+                }
 
 //            png/jpg, mp4 <- 확장자
 //            media = s3Uploader.upload(files, 'image', 'profile');
-            media = s3Uploader.upload(files, "image", "profile");
+                media = s3Uploader.upload(files, "image", "profile");
 
-            if(media == null){
-                // AWS S3 업로드 실패
-                return new Result(false, HttpStatus.OK.value());
+                if(media == null){
+                    // AWS S3 업로드 실패
+                    return new Result(false, HttpStatus.OK.value());
+                }
+
+                int file_no = mediaService.saveMedia(media);
+
+                Media file = mediaService.getMedia(file_no);
+                userService.updateUser(user_no, request.getUser_nickname(), file, request.getUser_title());
+            }else{
+                userService.updateUser(user_no, request.getUser_nickname(), null, request.getUser_title());
             }
-
-            int file_no = mediaService.saveMedia(media);
-
-            Media file = mediaService.getMedia(file_no);
-            userService.updateUser(user_no, request.getUser_nickname(), file, request.getUser_title());
             User user = userService.findUser(user_no);
             if(user != null) {
                 return new Result(true, HttpStatus.OK.value(), new UserDto(user));
