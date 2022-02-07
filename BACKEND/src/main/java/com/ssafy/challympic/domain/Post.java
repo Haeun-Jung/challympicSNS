@@ -20,7 +20,7 @@ public class Post {
 
     private int challenge_no;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "file_no")
     private Media media;
 

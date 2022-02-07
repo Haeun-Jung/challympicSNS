@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 @Repository
@@ -21,7 +22,7 @@ public class UserRepository {
             .setParameter("user_pwd", user_pwd)
             .getSingleResult(); }
 
-    public User findOne(int user_no){ return em.find(User.class, user_no); }
+    public User findOne(int user_no){return em.find(User.class, user_no); }
 
     public List<User> findAll(){ return em.createQuery("select u from User u", User.class)
             .getResultList(); }
@@ -44,14 +45,25 @@ public class UserRepository {
     }
 
     public User findByEmail(String user_email){
-        return em.createQuery("select u from User u where u.user_email = :user_email", User.class)
-                .setParameter("user_email", user_email)
-                .getSingleResult();
+        try{
+            User user = em.createQuery("select u from User u where u.user_email = :user_email", User.class)
+                    .setParameter("user_email", user_email)
+                    .getSingleResult();
+            return user;
+        }catch (NoResultException e){
+            return null;
+        }
     }
 
     public User findByNickname(String user_nickname) {
-        return em.createQuery("select u from User u where u.user_nickname = :user_nickname", User.class)
-                .setParameter("user_nickname", user_nickname)
-                .getSingleResult();
+        try{
+            User user = em.createQuery("select u from User u where u.user_nickname = :user_nickname", User.class)
+                    .setParameter("user_nickname", user_nickname)
+                    .getSingleResult();
+            return user;
+        }catch (NoResultException e){
+            return null;
+        }
     }
+
 }

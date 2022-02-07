@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 @Repository
@@ -24,10 +25,15 @@ public class InterestRepository {
     }
 
     public Interest findOne(int user_no, int tag_no){
-        return em.createQuery("select i from Interest i where i.user.user_no = :user_no and i.tag.tag_no = :tag_no", Interest.class)
-                .setParameter("user_no", user_no)
-                .setParameter("tag_no", tag_no)
-                .getSingleResult();
+        try{
+            Interest interest = em.createQuery("select i from Interest i where i.user.user_no = :user_no and i.tag.tag_no = :tag_no", Interest.class)
+                    .setParameter("user_no", user_no)
+                    .setParameter("tag_no", tag_no)
+                    .getSingleResult();
+            return interest;
+        }catch (NoResultException e) {
+            return null;
+        }
     }
 
     public void delete(Interest interest){

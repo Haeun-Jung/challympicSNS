@@ -2,26 +2,15 @@ package com.ssafy.challympic.api;
 
 import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.service.*;
-import com.ssafy.challympic.util.MD5Generator;
 import com.ssafy.challympic.util.S3Uploader;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import net.bramp.ffmpeg.FFmpeg;
-import net.bramp.ffmpeg.FFmpegExecutor;
-import net.bramp.ffmpeg.FFprobe;
-import net.bramp.ffmpeg.builder.FFmpegBuilder;
-import net.bramp.ffmpeg.probe.FFmpegProbeResult;
-import org.apache.tools.ant.taskdefs.condition.Http;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -60,17 +49,11 @@ public class PostApiController {
     @Getter @Setter
     @AllArgsConstructor
     static class PostRequest{
-        private int user_no;
+        private Integer user_no;
         private String post_content;
         private MultipartFile file;
     }
 
-    @Data
-    @AllArgsConstructor
-    static class PostMediaDto{
-        private Post post;
-        private Media media;
-    }
 
     @Data
     @AllArgsConstructor
@@ -119,22 +102,11 @@ public class PostApiController {
     public Result list(@PathVariable("challengeNo") int challengeNo){
         Result result = null;
 
-        log.info("1.test!!!!!!!!!");
         // 포스트 리스트 뽑고
         List<Post> postList = postService.getPostList(challengeNo);
         List<PostDto> collect = postList.stream()
                 .map(p -> new PostDto(p))
                 .collect(Collectors.toList());
-        log.info("2. test!!!!!!!!!");
-
-
-        List<PostMediaDto> postMediaDtoList = new ArrayList<>();
-        log.info("3.test!!!!!!!!!");
-
-//        // Media 정보와 post 정보를 같이 담아 보냄
-//        for(Post post : postList){
-//            postMediaDtoList.add(new PostMediaDto(post, post.getMedia()));
-//        }
 
         if(postList != null){
             result = new Result(true, HttpStatus.OK.value(), collect);
@@ -160,16 +132,15 @@ public class PostApiController {
         List<PostLike> postLikeList = postLikeService.getPostLikeListByPostNo(postNo);
 
         log.info("size : " + postLikeList.size());
+
         // 좋아요 누른 유저 정보만 가져오기
-        /*
         List<PostLikeUserDto> userList = new ArrayList<>();
         for(PostLike postLike : postLikeList){
-            User user = postLike.getUser();
+            User user = userService.findUser(postLike.getUser_no());
             userList.add(new PostLikeUserDto(user.getUser_no(), user.getUser_nickname()));
         }
-         */
 
-        return new Result(true, HttpStatus.OK.value(), postLikeList);
+        return new Result(true, HttpStatus.OK.value(), userList);
     }
     
     /** 
@@ -204,31 +175,27 @@ public class PostApiController {
                 // 지원하지 않는 확장자
                 return new Result(false, HttpStatus.OK.value());
 
-            // png/jpg, mp4 <- 확장자 
-//            media = s3Uploader.upload(files, 'image', 'profile');
-            media = s3Uploader.upload(files, "image", "profile");
+            // png/jpg, mp4 <- 확장자
+            media = s3Uploader.upload(files, fileType.toLowerCase(), "media");
 
-            if(media == null){
+            if(media == null) {
                 // AWS S3 업로드 실패
                 return new Result(false, HttpStatus.OK.value());
             }
 
             int file_no = mediaService.saveMedia(media);
 
-//            // 본문 텍스트 파싱
-//            String content = postForm.getPost_content();
-//            String[] splitSharp = content.split("#");
-//            List<String> list = new ArrayList<>();
-//
-//            for(String str : splitSharp){
-//                // #을 분리하고 태그명만 추출
-//                list.add(str.split(" ")[0]);
-//            }
-//
-//            for(String str : list){
-//                // 태그명 저장
-//                tagService.save(str);
-//            }
+
+            // 본문 텍스트 파싱
+            String content = postRequest.getPost_content().replaceAll("\"", "");
+            String[] splitSharp = content.split(" ");
+
+            for(String str : splitSharp){
+                if(str.startsWith("#")){
+                    // #을 분리하고 태그명만 추출
+                    tagService.saveTag(str.substring(1));
+                }
+            }
 
             // 포스트 등록
             Post post = new Post();
@@ -263,18 +230,34 @@ public class PostApiController {
     public Result update(@PathVariable("challengeNo") int challengNo, @PathVariable("postNo") int postNo, PostRequest postRequest) throws Exception {
 
         Post _post = new Post();
+        log.info("postNo : " + postNo);
 
         // 새로 저장
-
         if(postRequest.getFile() != null){
+
+            // 기존 가지고 있던 데이터 삭제
+            Post post = postService.getPost(postNo);
+            mediaService.delete(post.getMedia().getFile_no());
+
             String type = getFileType(postRequest.getFile());
             Media media = s3Uploader.upload(postRequest.getFile(), type.toLowerCase(), "media");
             _post.setMedia(media);
         }
 
-        if(postRequest.getPost_content() != null)
+        if(postRequest.getPost_content() != null) {
             _post.setPost_content(postRequest.getPost_content());
 
+            // 본문 텍스트 파싱
+            String content = postRequest.getPost_content().replaceAll("\"", "");
+            String[] splitSharp = content.split(" ");
+
+            for(String str : splitSharp){
+                if(str.startsWith("#")){
+                    // #을 분리하고 태그명만 추출
+                    tagService.saveTag(str.substring(1));
+                }
+            }
+        }
         // 포스트 업데이트
         int postId = postService.update(postNo, _post);
 

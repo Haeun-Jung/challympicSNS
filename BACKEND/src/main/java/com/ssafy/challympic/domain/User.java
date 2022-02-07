@@ -1,6 +1,8 @@
 package com.ssafy.challympic.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ssafy.challympic.domain.defaults.UserActive;
+import com.ssafy.challympic.domain.defaults.UserAuthEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,6 +26,24 @@ public class User {
     private String user_email;
 
     @Column(nullable = false)
+    private String user_pwd;
+
+    @Column(columnDefinition = "varchar(100) default 'USER'")
+    @Enumerated(EnumType.STRING)
+    private UserAuthEnum user_auth = UserAuthEnum.USER;
+
+    @Column(columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date user_regdate;
+
+    @Column(columnDefinition = "varchar(100) default 'ACTIVE'")
+    @Enumerated(EnumType.STRING)
+    private UserActive user_active = UserActive.ACTIVE;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date user_inactivedate;
+
+    @Column(nullable = false)
     private String user_nickname;
 
     @OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
@@ -32,17 +52,17 @@ public class User {
 
     private String user_title;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//    private List<Interest> interest;
-//
-//    @OneToMany(mappedBy = "follow_following_no", cascade = CascadeType.ALL)
-//    private List<Follow> following;
-//
-//    @OneToMany(mappedBy = "follow_follower_no", cascade = CascadeType.ALL)
-//    private List<Follow> follower;
-//
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//    private List<QnA> qna;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Interest> interest;
+
+    @OneToMany(mappedBy = "follow_following_no", cascade = CascadeType.ALL)
+    private List<Follow> following;
+
+    @OneToMany(mappedBy = "follow_follower_no", cascade = CascadeType.ALL)
+    private List<Follow> follower;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<QnA> qna;
 //
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 //    private List<Comment> comment;

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 @Repository
@@ -16,10 +17,15 @@ public class FollowRepository {
     public void save(Follow follow){ em.persist(follow); }
 
     public Follow findOne(int follow_following_no, int follow_follower_no){
-        return em.createQuery("select f from Follow f where f.follow_following_no.user_no = :follow_following_no and f.follow_follower_no.user_no = :follow_follower_no", Follow.class)
-                .setParameter("follow_following_no", follow_following_no)
-                .setParameter("follow_follower_no", follow_follower_no)
-                .getSingleResult();
+        try{
+            Follow follow = em.createQuery("select f from Follow f where f.follow_following_no.user_no = :follow_following_no and f.follow_follower_no.user_no = :follow_follower_no", Follow.class)
+                    .setParameter("follow_following_no", follow_following_no)
+                    .setParameter("follow_follower_no", follow_follower_no)
+                    .getSingleResult();
+            return follow;
+        }catch (NoResultException e){
+            return null;
+        }
     }
 
     /**
