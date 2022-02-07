@@ -130,11 +130,12 @@
 					{
 						text: "등록일",
 						value: "comment_regdate",
+						align: "center",
 					},
 					{
 						text: "삭제",
 						value: "delete",
-						align: "center",
+
 						sortable: false,
 					},
 				],
