@@ -112,7 +112,7 @@ public class UserApiController {
             int file_no = mediaService.saveMedia(media);
 
             Media file = mediaService.getMedia(file_no);
-            userService.updateUser(user_no, request.getUser_nickname(), file);
+            userService.updateUser(user_no, request.getUser_nickname(), file, request.getUser_title());
             User user = userService.findUser(user_no);
             if(user != null) {
                 return new Result(true, HttpStatus.OK.value(), new UserDto(user));
@@ -218,6 +218,7 @@ public class UserApiController {
         private String user_pwd;
         private String user_newpwd;
         private MultipartFile file;
+        private String user_title;
     }
 
     @Data

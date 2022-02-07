@@ -59,10 +59,11 @@ public class UserService {
      * 정보 수정
      */
     @Transactional
-    public void updateUser(int user_no, String user_nickname, Media file){
+    public void updateUser(int user_no, String user_nickname, Media file, String user_title){
         User user = userRepository.findOne(user_no);
         user.setUser_nickname(user_nickname);
         user.setMedia(file);
+        user.setUser_title(user_title);
     }
 
 
