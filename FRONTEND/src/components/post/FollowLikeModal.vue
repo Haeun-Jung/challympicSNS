@@ -14,7 +14,7 @@
         <v-list class="overflow-y-auto">
           <v-list-item v-for="user in users" :key="user.name">
               <img v-if="user.title" class="medal-icon" src="https://cdn-icons-png.flaticon.com/512/744/744922.png"/>
-            <v-list-item-avatar>
+            <v-list-item-avatar class="user-image">
               <v-img :alt="`${user.name} avatar`" :src="user.avatar"></v-img>
             </v-list-item-avatar>
 
@@ -95,6 +95,9 @@ export default {
 }
 .follow-btn {
   color: #fff;
+}
+.user-image {
+  margin-right: 16px;
 }
 .medal-icon {
   position: absolute;
