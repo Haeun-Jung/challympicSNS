@@ -63,35 +63,30 @@ public class PostApiController {
     }
 
     @Data
-    @AllArgsConstructor
+    @Setter @Getter
     static class PostDto{
+        // 포스트 정보
         private int post_no;
-        private int user_no;
-        private String user_nickname;
-        private String user_title;
-        private int challenge_no;
-        private int file_no;
-        private String file_path;
-        private String file_savedname;
         private String post_content;
         private int post_report;
         private Date post_regdate;
         private Date post_update;
 
-        public PostDto(Post post) {
-            this.post_no = post.getPost_no();
-            this.user_no = post.getUser().getUser_no();
-            this.user_nickname = post.getUser().getUser_nickname();
-            this.user_title = post.getUser().getUser_title();
-            this.challenge_no = post.getChallenge_no();
-            this.file_no = post.getMedia().getFile_no();
-            this.file_path = post.getMedia().getFile_path();
-            this.file_savedname = post.getMedia().getFile_savedname();
-            this.post_content = post.getPost_content();
-            this.post_report = post.getPost_report();
-            this.post_regdate = post.getPost_regdate();
-            this.post_update = post.getPost_update();
-        }
+        // 유저 타입
+        private int user_no;
+        private String user_nickname;
+        private String user_title;
+
+        // 챌린지 타입
+        private String challenge_type;
+
+        // 미디어 정보
+        private int file_no;
+        private String file_path;
+        private String file_savedname;
+
+        // 좋아요 수
+        private Integer LikeCnt;
     }
 
     /**
@@ -102,11 +97,46 @@ public class PostApiController {
     public Result list(@PathVariable("challengeNo") int challengeNo){
         Result result = null;
 
-        // 포스트 리스트 뽑고
+        // 챌린지 정보
+        Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
+        String type = challenge.getChallenge_type().name().toLowerCase();
+        // 포스트 리스트
         List<Post> postList = postService.getPostList(challengeNo);
-        List<PostDto> collect = postList.stream()
-                .map(p -> new PostDto(p))
-                .collect(Collectors.toList());
+
+        List<PostDto> collect = new ArrayList<>();
+
+        for(Post post : postList){
+            List<PostLike> postLikeList = postLikeService.getPostLikeListByPostNo(post.getPost_no());
+            User user = post.getUser();
+
+            PostDto postDto = new PostDto();
+            postDto.setPost_no(post.getPost_no());
+            postDto.setPost_content(post.getPost_content());
+            postDto.setPost_report(post.getPost_report());
+            postDto.setPost_regdate(post.getPost_regdate());
+
+            // 유저 타입
+            postDto.setUser_no(user.getUser_no());
+            postDto.setUser_nickname(user.getUser_nickname());
+            postDto.setUser_title(user.getUser_title());
+
+            // 챌린지 타입
+            postDto.setChallenge_type(type);
+
+            // 미디어 정보
+            postDto.setFile_no(post.getMedia().getFile_no());
+            postDto.setFile_path(post.getMedia().getFile_path());
+            postDto.setFile_savedname(post.getMedia().getFile_savedname());
+
+            // 좋아요 수
+            if(postLikeList == null){
+                postDto.setLikeCnt(0);
+            } else{
+                postDto.setLikeCnt(postLikeList.size());
+            }
+
+            collect.add(postDto);
+        }
 
         if(postList != null){
             result = new Result(true, HttpStatus.OK.value(), collect);
@@ -130,8 +160,6 @@ public class PostApiController {
 
         // 받는 쪽에서 길이 구해서 좋아요 수 출력
         List<PostLike> postLikeList = postLikeService.getPostLikeListByPostNo(postNo);
-
-        log.info("size : " + postLikeList.size());
 
         // 좋아요 누른 유저 정보만 가져오기
         List<PostLikeUserDto> userList = new ArrayList<>();
@@ -184,7 +212,6 @@ public class PostApiController {
             }
 
             int file_no = mediaService.saveMedia(media);
-
 
             // 본문 텍스트 파싱
             String content = postRequest.getPost_content().replaceAll("\"", "");
@@ -258,6 +285,7 @@ public class PostApiController {
                 }
             }
         }
+
         // 포스트 업데이트
         int postId = postService.update(postNo, _post);
 
