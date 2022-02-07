@@ -1,5 +1,5 @@
 <template>
-	<v-card height="100vh">
+	<v-card height="85vh" elevation="0">
 		<v-card-title>회원 탈퇴</v-card-title>
 		<v-divider />
 		<v-container>
