@@ -20,16 +20,24 @@ public class TagService {
      */
     @Transactional
     public void saveTag(String tag_content){
+        List<Tag> isTag = tagRepository.validateTagContent(tag_content);
+        if(!isTag.isEmpty()) return;
         Tag tag = new Tag();
         tag.setTag_content(tag_content);
         tagRepository.save(tag);
     }
 
     /**
-     * 태그 자동 검색
+     * 챌린지 제목 태그로 저장
      */
-    public List<Tag> autocomplete(String tag_content){
-        return tagRepository.autocomplete(tag_content);
+    @Transactional
+    public void saveTag(String challenge_title, boolean isTitle){
+        List<Tag> isTag = tagRepository.validateTagContent(challenge_title);
+        if(!isTag.isEmpty()) return;
+        Tag tag = new Tag();
+        tag.setTag_content(challenge_title);
+        if(isTitle) tag.setIsChallenge("challenge");
+        tagRepository.save(tag);
     }
 
     /**
@@ -40,6 +48,8 @@ public class TagService {
     }
 
     public Tag findTagByTagContent(String tagContent) {
-        return tagRepository.findByTagContent(tagContent);
+        List<Tag> tagList = tagRepository.findByTagContent(tagContent);
+        if(tagList.isEmpty()) return null;
+        return tagList.get(0);
     }
 }

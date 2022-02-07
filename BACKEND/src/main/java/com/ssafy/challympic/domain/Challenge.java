@@ -19,7 +19,7 @@ public class Challenge {
     @Column(name = "challenge_no")
     private int challenge_no;
 
-    @OneToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_no")
     private User user;
 
@@ -37,8 +37,6 @@ public class Challenge {
 
     private ChallengeType challenge_type;
 
-//    @OneToOne(fetch = LAZY)
-//    @JoinColumn(name = "title_no")
     @Column(nullable = false)
     private String challenge_title;
 

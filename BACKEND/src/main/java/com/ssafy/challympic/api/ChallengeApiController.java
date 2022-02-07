@@ -97,6 +97,10 @@ public class ChallengeApiController {
         String content = request.challenge_content;
         List<String> tagContentList = new ArrayList<>();
         StringBuilder sb = null;
+
+        // 챌린지 제목 저장
+        tagContentList.add(request.challenge_title);
+        tagService.saveTag(request.challenge_title, true);
         for(char c : content.toCharArray()) {
             if(c == '#') {
                 if(sb != null) {
@@ -114,11 +118,16 @@ public class ChallengeApiController {
             sb.append(c);
         }
 
-        // 챌린지태그 저장
+        if(sb != null) {
+            tagService.saveTag(sb.toString());
+            tagContentList.add(sb.toString());
+        }
+
+        // 챌린지 태그 저장
         for(String s : tagContentList) {
             ChallengeTag challengeTag = new ChallengeTag();
-            challengeTag.setChallenge(challenge);
             challengeTag.setTag(tagService.findTagByTagContent(s));
+            challengeTag.setChallenge(challenge);
             challengeService.saveChallengeTag(challengeTag);
         }
 
