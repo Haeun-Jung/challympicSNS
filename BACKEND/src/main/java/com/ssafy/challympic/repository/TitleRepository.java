@@ -13,22 +13,8 @@ public class TitleRepository {
 
     private final EntityManager em;
 
-    public int saveTitle(Title title) {
+    public void saveTitle(Title title) {
         em.persist(title);
-        em.flush();
-        return getTitleByName(title.getTitle_name());
-    }
-
-    private int getTitleByName(String title_name){
-        List<Title> titles = em.createQuery("select t from Title t where t.title_name = :title_name", Title.class)
-                .setParameter("title_name", title_name)
-                .getResultList();
-        for(Title title : titles) {
-            if(title.getUser().getUser_no() == 0) {
-                return title.getTitle_no();
-            }
-        }
-        return -1;
     }
 
     public List<Title> findTitleByUserNo(int user_no) {
