@@ -1,6 +1,7 @@
 package com.ssafy.challympic.service;
 
 import com.ssafy.challympic.domain.Challenge;
+import com.ssafy.challympic.domain.ChallengeTag;
 import com.ssafy.challympic.domain.Challenger;
 import com.ssafy.challympic.repository.ChallengeRepository;
 import com.ssafy.challympic.repository.SubscriptionRepository;
@@ -62,4 +63,8 @@ public class ChallengeService {
         return challengeRepository.findByChallengeNo(challengeNo);
     }
 
+    @Transactional
+    public void saveChallengeTag(ChallengeTag challengeTag) {
+        challengeRepository.saveChallengeTag(challengeTag);
+    }
 }

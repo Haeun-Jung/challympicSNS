@@ -1,6 +1,7 @@
 package com.ssafy.challympic.repository;
 
 import com.ssafy.challympic.domain.Challenge;
+import com.ssafy.challympic.domain.ChallengeTag;
 import com.ssafy.challympic.domain.Challenger;
 import com.ssafy.challympic.domain.defaults.ChallengeAccess;
 import lombok.RequiredArgsConstructor;
@@ -44,5 +45,9 @@ public class ChallengeRepository {
         return em.createQuery("select c from Challenge c where c.challenge_no = :challenge_no", Challenge.class)
                 .setParameter("challenge_no", challengeNo)
                 .getSingleResult();
+    }
+
+    public void saveChallengeTag(ChallengeTag challengeTag) {
+        em.persist(challengeTag);
     }
 }

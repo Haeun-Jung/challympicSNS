@@ -1,5 +1,6 @@
 package com.ssafy.challympic.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,10 +32,8 @@ public class User {
 
     @OneToMany(fetch = LAZY)
     @JoinColumn(name = "title_no")
+    @JsonIgnore
     private List<Title> user_title;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date user_inactivedate;
 
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 //    private List<Interest> interest;

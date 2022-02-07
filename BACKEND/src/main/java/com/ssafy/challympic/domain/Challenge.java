@@ -23,9 +23,6 @@ public class Challenge {
     @JoinColumn(name = "user_no")
     private User user;
 
-    /**
-     * temporal 오류
-     */
     @Column(columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
     private Date challenge_start;

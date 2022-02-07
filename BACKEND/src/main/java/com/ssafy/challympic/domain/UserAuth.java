@@ -35,4 +35,7 @@ public class UserAuth {
     @Enumerated(EnumType.STRING)
     private UserActive user_active = UserActive.ACTIVE;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date user_inactivedate;
+
 }
