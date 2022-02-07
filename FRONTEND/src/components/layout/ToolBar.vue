@@ -118,11 +118,15 @@
 		>
 
 		<div v-if="!isMobile() && isLoggedIn">
-			<v-menu bottom left offset-y max-height="260" min-width="450">
+			<v-menu bottom left offset-y max-height="260" max-width="400">
 				<template v-slot:activator="{ on, attrs }">
-					<v-btn icon v-bind="attrs" v-on="on">
-						<v-icon>mdi-bell-outline</v-icon>
-					</v-btn>
+          <v-btn icon v-bind="attrs" v-on="on">
+            <div v-if="activeAlert" id="alert-badge">
+            </div>
+            <v-icon>
+              mdi-bell-outline
+            </v-icon>
+          </v-btn>
 				</template>
 
         <v-card v-if="alertMenu.length > 1">
@@ -175,11 +179,15 @@
 			</v-menu>
 		</div>
 		<div v-if="isMobile() && isLoggedIn">
-      <v-menu bottom left offset-y max-height="260" max-width="310">
+      <v-menu bottom left offset-y max-height="260" max-width="270">
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn icon v-bind="attrs" v-on="on">
-						<v-icon>mdi-bell-outline</v-icon>
-					</v-btn>
+            <div v-if="activeAlert" id="alert-badge">
+            </div>
+            <v-icon>
+              mdi-bell-outline
+            </v-icon>
+          </v-btn>
 				</template>
 
         <v-card v-if="alertMenu.length > 1">
@@ -189,7 +197,7 @@
               :key="i"
               :to="item.link1"
             >
-              <v-list-item-title>
+              <v-list-item-title class="text-caption">
                 {{ item.title }}
                 <span class="date-text">{{ dayjsRegDate(item.regDate) }}</span>
               </v-list-item-title>
@@ -208,7 +216,7 @@
         <v-card v-else>
           <v-list>
             <v-list-item>
-              <v-list-item-title>새로운 알림이 없습니다.</v-list-item-title>
+              <v-list-item-title class="text-caption">새로운 알림이 없습니다.</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-card>
@@ -328,6 +336,14 @@
 				}
 			},*/
 		},
+    computed: {
+      activeAlert() {
+        if (this.alertMenu.length > 1) {
+          return true;
+        }
+        return false;
+      }
+    },
 		methods: {
       dayjsRegDate(regDate) {
         return fromNow(regDate);
@@ -427,6 +443,16 @@
 	.font-weight {
 		font-weight: bold;
 	}
+  #alert-badge {
+    position: absolute;
+    top: 2px;
+    right: 13px;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    z-index: 1;
+  }
   ::v-deep .v-list-item {
     padding: 2px 16px;
   }
@@ -434,3 +460,4 @@
     white-space: normal;
   }
 </style>
+
