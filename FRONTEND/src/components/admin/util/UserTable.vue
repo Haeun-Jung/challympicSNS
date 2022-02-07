@@ -21,8 +21,13 @@
 			<template #item.user_no="{ value }">
 				<div class="mr-4">{{ value }}</div>
 			</template>
-			<template #item.user_nickname="{ value }">
-				{{ value }}
+			<template #item.user_nickname="{ item }">
+				<router-link
+					:to="{ path: `/feed/${item.user_no}` }"
+					style="text-decoration: none; color: inherit; mr-2"
+				>
+					{{ item.user_nickname }}
+				</router-link>
 			</template>
 			<template #item.user_email="{ value }">
 				<a :href="`mailto:${value}`"> {{ value }} </a>
@@ -81,7 +86,7 @@
 						value: "user_email",
 					},
 					{
-						text: "신고 횟수",
+						text: "신고수",
 						sortable: true,
 						value: "user_reportCount",
 					},
@@ -146,6 +151,9 @@
 				}
 
 				//locaation.reload();
+			},
+			goFeed(item) {
+				alert(item);
 			},
 			enterSelect() {
 				this.checked = this.selected.map((e) => e.userid);
