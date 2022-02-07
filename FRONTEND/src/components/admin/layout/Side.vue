@@ -1,6 +1,6 @@
 <template>
 	<v-card
-		height="89vh"
+		height="100%"
 		width="100%"
 		elevation="0"
 		hide-overlay
