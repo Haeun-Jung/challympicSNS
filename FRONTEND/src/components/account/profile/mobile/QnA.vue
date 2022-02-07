@@ -58,6 +58,7 @@
 				:items="desserts"
 				item-key="name"
 				show-expand
+				single-expand="true"
 				:items-per-page="5"
 				class="elevation-1"
 				mobile-breakpoint="0"
