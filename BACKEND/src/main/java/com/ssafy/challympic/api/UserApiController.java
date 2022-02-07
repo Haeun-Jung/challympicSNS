@@ -2,6 +2,7 @@ package com.ssafy.challympic.api;
 
 import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.service.MediaService;
+import com.ssafy.challympic.service.TitleService;
 import com.ssafy.challympic.service.UserAuthService;
 import com.ssafy.challympic.service.UserService;
 import com.ssafy.challympic.util.MD5Generator;
@@ -17,8 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,13 +32,24 @@ public class UserApiController {
     private final MediaService mediaService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final S3Uploader s3Uploader;
+    private final TitleService titleService;
 
     @GetMapping("/user/account/{userNo}")
     public Result findUser(@PathVariable("userNo") int user_no){
         User findUser = userService.findUser(user_no);
-//        List<Title> titles = titleSevice.find(user_no);
+        List<Title> titles = titleService.findTitlesByUserNo(user_no);
+        List<titleDto> userTitles = new ArrayList<>();
+        if(!titles.isEmpty()){
+            userTitles = titles.stream()
+                    .map(t -> new titleDto(t))
+                    .collect(Collectors.toList());
+        }
         if(findUser != null) {
-            return new Result(true, HttpStatus.OK.value(), new UserDto(findUser));
+            if(!titles.isEmpty()){
+                return new Result(true, HttpStatus.OK.value(), new UserDto(findUser, userTitles));
+            }else{
+                return new Result(true, HttpStatus.OK.value(), new UserDto(findUser));
+            }
         }else{
             return new Result(false, HttpStatus.BAD_REQUEST.value(), new UserDto());
         }
@@ -213,6 +227,15 @@ public class UserApiController {
     }
 
     @Data
+    static class titleDto{
+        private String title_name;
+
+        public titleDto(Title title) {
+            this.title_name = title.getTitle_name();
+        }
+    }
+
+    @Data
     @AllArgsConstructor
     @NoArgsConstructor
     static class UserDto{
@@ -221,7 +244,7 @@ public class UserApiController {
         private String user_nickname;
         private String user_title;
         private int file_no;
-        private List<Title> titles;
+        private List<titleDto> titles;
 
         public UserDto(User user) {
             this.user_no = user.getUser_no();
@@ -235,7 +258,7 @@ public class UserApiController {
             }
         }
 
-        public UserDto(User user, List<Title> titles) {
+        public UserDto(User user, List<titleDto> titles) {
             this.user_no = user.getUser_no();
             this.user_email = user.getUser_email();
             this.user_nickname = user.getUser_nickname();
@@ -247,5 +270,19 @@ public class UserApiController {
                 this.file_no = user.getMedia().getFile_no();
             }
         }
+
+        @Data
+        @AllArgsConstructor
+        public class Result<T> {
+            private boolean isSuccess;
+            private int code;
+            private T data;
+
+            public Result(boolean isSuccess, int code) {
+                this.isSuccess = isSuccess;
+                this.code = code;
+            }
+        }
+
     }
 }

@@ -13,10 +13,8 @@ public class TitleRepository {
 
     private final EntityManager em;
 
-    public int saveTitle(Title title) {
+    public void saveTitle(Title title) {
         em.persist(title);
-        em.flush();
-        return getTitleByName(title.getTitle_name());
     }
 
     private int getTitleByName(String title_name){
