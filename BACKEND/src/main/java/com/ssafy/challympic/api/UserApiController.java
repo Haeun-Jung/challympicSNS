@@ -1,11 +1,13 @@
 package com.ssafy.challympic.api;
 
 import com.ssafy.challympic.domain.Media;
+import com.ssafy.challympic.domain.Post;
 import com.ssafy.challympic.domain.Result;
 import com.ssafy.challympic.domain.User;
 import com.ssafy.challympic.service.MediaService;
 import com.ssafy.challympic.service.UserService;
 import com.ssafy.challympic.util.MD5Generator;
+import com.ssafy.challympic.util.S3Uploader;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,12 +29,13 @@ public class UserApiController {
     private final UserService userService;
     private final MediaService mediaService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final S3Uploader s3Uploader;
 
     @GetMapping("/user/account/{userNo}")
     public Result findUser(@PathVariable("userNo") int user_no){
         User findUser = userService.findUser(user_no);
         if(findUser != null) {
-            return new Result(true, HttpStatus.OK.value(), new UserDto(findUser.getUser_no(), findUser.getUser_email(), findUser.getUser_nickname(), findUser.getUser_title()));
+            return new Result(true, HttpStatus.OK.value(), new UserDto(findUser));
         }else{
             return new Result(false, HttpStatus.BAD_REQUEST.value(), new UserDto());
         }
@@ -59,26 +62,48 @@ public class UserApiController {
      * 파일 수정 추가 필요
      */
     @PutMapping("/user/account/{userNo}")
-    public Result updateUser(@PathVariable("userNo") int user_no, @RequestBody updateUserRequest request, @RequestParam("file") MultipartFile files){
+    public Result updateUser(@PathVariable("userNo") int user_no, updateUserRequest request){
 
-        // 확장자 체크
-        String fileType = getFileType(files);
+        // 1. 플로우 시작
+        Media media = null;
+        MultipartFile files = null;
 
-        Media media = fileToMedia(files);
-        if(media == null)
-            return new Result(false, HttpStatus.OK.value());
+        try {
 
-        int file_no = mediaService.saveMedia(media);
+            files = request.getFile();
 
-//        Media findMedia = mediaService.
+            // 확장자 체크
+            String fileType = getFileType(files);
 
-        userService.updateUser(user_no, request.getUser_nickname());
-        User user = userService.findUser(user_no);
-        if(user != null) {
-            return new Result(true, HttpStatus.OK.value(), new UserDto(user));
-        }else{
-            return new Result(false, HttpStatus.BAD_REQUEST.value(), new UserDto());
+            if(fileType == null)
+                // 지원하지 않는 확장자
+                return new Result(false, HttpStatus.OK.value());
+
+//            png/jpg, mp4 <- 확장자
+//            media = s3Uploader.upload(files, 'image', 'profil');
+            media = s3Uploader.upload(files, fileType.toLowerCase());
+
+            if(media == null){
+                // AWS S3 업로드 실패
+                return new Result(false, HttpStatus.OK.value());
+            }
+
+            int file_no = mediaService.saveMedia(media);
+
+            Media file = mediaService.getMedia(file_no);
+            userService.updateUser(user_no, request.getUser_nickname(), file);
+            User user = userService.findUser(user_no);
+            if(user != null) {
+                return new Result(true, HttpStatus.OK.value(), new UserDto(user));
+            }else{
+                return new Result(false, HttpStatus.BAD_REQUEST.value(), new UserDto());
+            }
+
+        } catch(Exception e){
+            e.printStackTrace();
         }
+
+        return new Result(false, HttpStatus.BAD_REQUEST.value());
     }
 
     /**
@@ -98,54 +123,6 @@ public class UserApiController {
 
         if(extension.equals("AVI"))
             return "VIDEO";
-
-        return null;
-    }
-
-    /**
-     *  프론트에서 전달 받은 파일을 로컬 서버에 저장하고 Media 엔티티로 변환
-     * */
-    private Media fileToMedia(MultipartFile files){
-
-        try {
-            // 파일 저장 시작
-            // 실제 파일명
-            String originFileName = files.getOriginalFilename();
-            // 저장 파일명
-            String savedFileName = new MD5Generator(originFileName).toString();
-            // 실제 저장 경로
-            SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd");
-
-//            String path = System.getProperty("user.dir") + "\\files\\" + date.format(new Date());
-            String path = System.getProperty("user.dir") + "\\files";
-
-            // 저장 경로에 해당하는 폴더가 없으면 폴더 생성(files)
-            if (!new File(path).exists()) {
-                try {
-                    new File(path).mkdir();
-                } catch (Exception e) {
-                    e.getStackTrace();
-                }
-            }
-
-            // 업로드일에 해당하는 날짜
-            path += "\\" + date.format(new Date());
-
-            if (!new File(path).exists()) {
-                try {
-                    new File(path).mkdir();
-                } catch (Exception e) {
-                    e.getStackTrace();
-                }
-            }
-
-            String savedPath = path + "\\" + savedFileName;
-            files.transferTo(new File(savedPath));
-
-            return new Media(originFileName, savedFileName, path);
-        } catch(Exception e){
-            e.printStackTrace();
-        }
 
         return null;
     }
@@ -218,6 +195,7 @@ public class UserApiController {
         private String user_nickname;
         private String user_pwd;
         private String user_newpwd;
+        private MultipartFile file;
     }
 
     @Data
@@ -234,12 +212,18 @@ public class UserApiController {
         private String user_email;
         private String user_nickname;
         private String user_title;
+        private int file_no;
 
         public UserDto(User user) {
             this.user_no = user.getUser_no();
             this.user_email = user.getUser_email();
             this.user_nickname = user.getUser_nickname();
             this.user_title = user.getUser_title();
+            if(user.getMedia() == null){
+                this.file_no = 0;
+            }else{
+                this.file_no = user.getMedia().getFile_no();
+            }
         }
     }
 }

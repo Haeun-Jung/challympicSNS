@@ -48,17 +48,17 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Date user_inactivedate;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//    private List<Interest> interest;
-//
-//    @OneToMany(mappedBy = "follow_following_no", cascade = CascadeType.ALL)
-//    private List<Follow> following;
-//
-//    @OneToMany(mappedBy = "follow_follower_no", cascade = CascadeType.ALL)
-//    private List<Follow> follower;
-//
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//    private List<QnA> qna;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Interest> interest;
+
+    @OneToMany(mappedBy = "follow_following_no", cascade = CascadeType.ALL)
+    private List<Follow> following;
+
+    @OneToMany(mappedBy = "follow_follower_no", cascade = CascadeType.ALL)
+    private List<Follow> follower;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<QnA> qna;
 //
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 //    private List<Comment> comment;
