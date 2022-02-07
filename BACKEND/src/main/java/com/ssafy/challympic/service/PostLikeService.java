@@ -1,6 +1,5 @@
 package com.ssafy.challympic.service;
 
-import com.ssafy.challympic.domain.Post;
 import com.ssafy.challympic.domain.PostLike;
 import com.ssafy.challympic.domain.User;
 import com.ssafy.challympic.repository.PostLikeRepository;
@@ -8,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

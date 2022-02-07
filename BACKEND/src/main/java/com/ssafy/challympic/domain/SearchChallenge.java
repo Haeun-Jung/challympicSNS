@@ -21,7 +21,7 @@ public class SearchChallenge {
     @JoinColumn(name = "challenge_no")
     private Challenge challenge;
 
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
     private Date search_regdate;
 }

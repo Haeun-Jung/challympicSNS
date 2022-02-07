@@ -1,10 +1,8 @@
 package com.ssafy.challympic.api;
 
-import com.ssafy.challympic.domain.Media;
-import com.ssafy.challympic.domain.Post;
-import com.ssafy.challympic.domain.Result;
-import com.ssafy.challympic.domain.User;
+import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.service.MediaService;
+import com.ssafy.challympic.service.UserAuthService;
 import com.ssafy.challympic.service.UserService;
 import com.ssafy.challympic.util.MD5Generator;
 import com.ssafy.challympic.util.S3Uploader;
@@ -18,15 +16,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.net.http.HttpRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 public class UserApiController {
 
     private final UserService userService;
+    private final UserAuthService userAuthService;
     private final MediaService mediaService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final S3Uploader s3Uploader;
@@ -45,12 +44,19 @@ public class UserApiController {
     public Result join(@RequestBody joinUserRequest request){
         System.out.println("test");
         User newUser = new User();
+
         newUser.setUser_email(request.getUser_email());
         newUser.setUser_nickname(request.getUser_nickname());
         String rawPwd = request.getUser_pwd();
         String encPwd = bCryptPasswordEncoder.encode(rawPwd);
-        newUser.setUser_pwd(encPwd);
+
+        // userAuth에 저장
+        UserAuth newUserAuth = new UserAuth();
+        newUserAuth.setUser_email(request.getUser_email());
+        newUserAuth.setUser_pwd(encPwd);
+
         int join_no = userService.join(newUser);
+        userAuthService.join(newUserAuth);
         if(join_no > 0){
             return new Result(true, HttpStatus.OK.value());
         }else{
@@ -80,8 +86,8 @@ public class UserApiController {
                 return new Result(false, HttpStatus.OK.value());
 
 //            png/jpg, mp4 <- 확장자
-//            media = s3Uploader.upload(files, 'image', 'profil');
-            media = s3Uploader.upload(files, fileType.toLowerCase());
+//            media = s3Uploader.upload(files, 'image', 'profile');
+            media = s3Uploader.upload(files, "image", "profile");
 
             if(media == null){
                 // AWS S3 업로드 실패
@@ -129,7 +135,7 @@ public class UserApiController {
 
     @PutMapping("/user/account/{userNo}/pwd")
     public Result updatePwd(@PathVariable("userNo") int user_no, @RequestBody updateUserRequest request){
-        User findUser = userService.findUser(user_no);
+        UserAuth findUser = userAuthService.findUser(user_no);
         System.out.println(bCryptPasswordEncoder.matches(request.getUser_pwd(), findUser.getUser_pwd()));
         if(!bCryptPasswordEncoder.matches(request.getUser_pwd(), findUser.getUser_pwd())){
             return new Result(false, HttpStatus.BAD_REQUEST.value(), new UserDto());
@@ -137,7 +143,7 @@ public class UserApiController {
 
         String newpwd = bCryptPasswordEncoder.encode(request.getUser_newpwd());
         System.out.println(newpwd);
-        userService.updatePwd(user_no, newpwd);
+        userAuthService.updatePwd(user_no, newpwd);
         User user = userService.findUser(user_no);
         if(user != null) {
             return new Result(true, HttpStatus.OK.value(), new UserDto(user));
@@ -146,6 +152,7 @@ public class UserApiController {
         }
     }
 
+    //TODO : User, UserAuth 다 같이 지워줘야할지?
     @DeleteMapping("/user/account/{userNo}")
     public Result deleteUser(@PathVariable("userNo") int user_no){
         userService.deleteUser(user_no);

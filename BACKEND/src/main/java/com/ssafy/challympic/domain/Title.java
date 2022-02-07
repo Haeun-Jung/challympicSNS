@@ -17,10 +17,7 @@ public class Title {
 
     private String title_name;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_no")
-    private User user;
-
+    private int user_no;
 
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "challenge_no")

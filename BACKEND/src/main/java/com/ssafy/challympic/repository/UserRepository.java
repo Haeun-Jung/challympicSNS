@@ -3,7 +3,6 @@ package com.ssafy.challympic.repository;
 import com.ssafy.challympic.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;

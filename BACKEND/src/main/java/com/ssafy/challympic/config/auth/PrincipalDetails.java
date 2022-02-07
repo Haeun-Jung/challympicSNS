@@ -1,7 +1,7 @@
 package com.ssafy.challympic.config.auth;
 
 import com.ssafy.challympic.domain.User;
-import com.ssafy.challympic.domain.defaults.UserAuth;
+import com.ssafy.challympic.domain.UserAuth;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,28 +13,28 @@ import java.util.Collection;
 @Getter @Setter
 public class PrincipalDetails implements UserDetails {
 
-    private User user;
+    private UserAuth userAuth;
 
-    public PrincipalDetails(User user) {
-        this.user = user;
+    public PrincipalDetails(UserAuth userAuth) {
+        this.userAuth = userAuth;
     }
 
     // 해당 유저의 권한 리턴
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(() -> user.getUser_auth().toString());
+        authorities.add(() -> userAuth.getUser_auth().toString());
         return authorities;
     }
 
     @Override
     public String getPassword() {
-        return user.getUser_pwd();
+        return userAuth.getUser_pwd();
     }
 
     @Override
     public String getUsername() {
-        return user.getUser_email();
+        return userAuth.getUser_email();
     }
 
     @Override

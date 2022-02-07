@@ -65,11 +65,7 @@ public class UserService {
         user.setMedia(file);
     }
 
-    @Transactional
-    public void updatePwd(int user_no, String user_pwd){
-        User user = userRepository.findOne(user_no);
-        user.setUser_pwd(user_pwd);
-    }
+
 
     public User findUser(int user_no){
         return userRepository.findOne(user_no);

@@ -1,6 +1,5 @@
 package com.ssafy.challympic.repository;
 
-import com.ssafy.challympic.domain.Challenge;
 import com.ssafy.challympic.domain.Media;
 import com.ssafy.challympic.domain.User;
 import lombok.RequiredArgsConstructor;

@@ -2,15 +2,15 @@ package com.ssafy.challympic.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.ssafy.challympic.api.UserApiController;
 import com.ssafy.challympic.config.auth.PrincipalDetails;
 import com.ssafy.challympic.domain.User;
+import com.ssafy.challympic.domain.UserAuth;
+import com.ssafy.challympic.repository.UserAuthRepository;
 import com.ssafy.challympic.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -24,11 +24,11 @@ import java.io.IOException;
 // 만약 권한이 인증이 필요한 주소가 아니라면 필터 안탄다.
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
-    private UserRepository userRepository;
+    private UserAuthRepository userAuthRepository;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserAuthRepository userAuthRepository) {
         super(authenticationManager);
-        this.userRepository = userRepository;
+        this.userAuthRepository = userAuthRepository;
     }
 
     // 인증이나 권한이 필요한 주소 요청이 있을 경우 => /user
@@ -49,9 +49,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         // 서명이 정상적으로 됨
         if(user_no > 0){
-            User user = userRepository.findOne(user_no);
+            UserAuth userAuth = userAuthRepository.findOne(user_no);
 
-            PrincipalDetails principalDetails = new PrincipalDetails(user);
+            PrincipalDetails principalDetails = new PrincipalDetails(userAuth);
             // jwt 토큰 서명을 통해서 서명이 정상이면 Authentication 객체를 만들어준다.
             Authentication authentication =
                     new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());

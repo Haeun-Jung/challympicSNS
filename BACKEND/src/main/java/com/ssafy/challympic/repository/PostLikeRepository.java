@@ -1,6 +1,5 @@
 package com.ssafy.challympic.repository;
 
-import com.ssafy.challympic.domain.Post;
 import com.ssafy.challympic.domain.PostLike;
 import com.ssafy.challympic.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -8,9 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor

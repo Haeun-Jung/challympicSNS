@@ -1,9 +1,7 @@
 package com.ssafy.challympic.api;
 
-import com.ssafy.challympic.domain.Follow;
 import com.ssafy.challympic.domain.User;
 import com.ssafy.challympic.service.FollowService;
-import com.ssafy.challympic.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

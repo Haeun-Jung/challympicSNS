@@ -24,7 +24,7 @@ public class TitleRepository {
                 .setParameter("title_name", title_name)
                 .getResultList();
         for(Title title : titles) {
-            if(title.getUser() == null) {
+            if(title.getUser_no() == 0) {
                 return title.getTitle_no();
             }
         }
