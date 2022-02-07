@@ -18,7 +18,7 @@ public class Title {
     private String title_name;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "ussr_no")
+    @JoinColumn(name = "user_no")
     private User user;
 
     @OneToOne(fetch = LAZY)

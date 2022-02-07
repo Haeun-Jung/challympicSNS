@@ -205,8 +205,8 @@ public class PostApiController {
                 return new Result(false, HttpStatus.OK.value());
 
             // png/jpg, mp4 <- 확장자 
-//            media = s3Uploader.upload(files, 'image', 'profil');
-            media = s3Uploader.upload(files, fileType.toLowerCase());
+//            media = s3Uploader.upload(files, 'image', 'profile');
+            media = s3Uploader.upload(files, "image", "profile");
 
             if(media == null){
                 // AWS S3 업로드 실패
@@ -268,7 +268,7 @@ public class PostApiController {
 
         if(postRequest.getFile() != null){
             String type = getFileType(postRequest.getFile());
-            Media media = s3Uploader.upload(postRequest.getFile(), type.toLowerCase());
+            Media media = s3Uploader.upload(postRequest.getFile(), type.toLowerCase(), "media");
             _post.setMedia(media);
         }
 

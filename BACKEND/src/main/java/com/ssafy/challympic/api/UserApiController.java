@@ -2,6 +2,7 @@ package com.ssafy.challympic.api;
 
 import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.service.MediaService;
+import com.ssafy.challympic.service.TitleService;
 import com.ssafy.challympic.service.UserAuthService;
 import com.ssafy.challympic.service.UserService;
 import com.ssafy.challympic.util.MD5Generator;
@@ -17,7 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,12 +30,18 @@ public class UserApiController {
     private final UserAuthService userAuthService;
     private final MediaService mediaService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final TitleService titleService;
 
     @GetMapping("/user/account/{userNo}")
     public Result findUser(@PathVariable("userNo") int user_no){
         User findUser = userService.findUser(user_no);
+        List<Title> titles = titleService.findTitlesByUserNo(user_no);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("user", findUser);
+        data.put("titleList", titles);
         if(findUser != null) {
-            return new Result(true, HttpStatus.OK.value(), new UserDto(findUser.getUser_no(), findUser.getUser_email(), findUser.getUser_nickname(), findUser.getUser_title()));
+            return new Result(true, HttpStatus.OK.value(), data);
         }else{
             return new Result(false, HttpStatus.BAD_REQUEST.value(), new UserDto());
         }
@@ -241,7 +250,7 @@ public class UserApiController {
         private int user_no;
         private String user_email;
         private String user_nickname;
-        private List<Title> user_title;
+        private String user_title;
 
         public UserDto(User user) {
             this.user_no = user.getUser_no();
