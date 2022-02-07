@@ -33,6 +33,7 @@ public class UserApiController {
     @GetMapping("/user/account/{userNo}")
     public Result findUser(@PathVariable("userNo") int user_no){
         User findUser = userService.findUser(user_no);
+//        List<Title> titles = titleSevice.find(user_no);
         if(findUser != null) {
             return new Result(true, HttpStatus.OK.value(), new UserDto(findUser));
         }else{
@@ -220,12 +221,26 @@ public class UserApiController {
         private String user_nickname;
         private String user_title;
         private int file_no;
+        private List<Title> titles;
 
         public UserDto(User user) {
             this.user_no = user.getUser_no();
             this.user_email = user.getUser_email();
             this.user_nickname = user.getUser_nickname();
             this.user_title = user.getUser_title();
+            if(user.getMedia() == null){
+                this.file_no = 0;
+            }else{
+                this.file_no = user.getMedia().getFile_no();
+            }
+        }
+
+        public UserDto(User user, List<Title> titles) {
+            this.user_no = user.getUser_no();
+            this.user_email = user.getUser_email();
+            this.user_nickname = user.getUser_nickname();
+            this.user_title = user.getUser_title();
+            this.titles = titles;
             if(user.getMedia() == null){
                 this.file_no = 0;
             }else{

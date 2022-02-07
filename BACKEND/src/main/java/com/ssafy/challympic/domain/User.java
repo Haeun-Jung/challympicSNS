@@ -30,10 +30,7 @@ public class User {
     @JoinColumn(name = "file_no")
     private Media media;
 
-    @OneToMany(fetch = LAZY)
-    @JoinColumn(name = "title_no")
-    @JsonIgnore
-    private List<Title> user_title;
+    private String user_title;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Interest> interest;
