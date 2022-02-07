@@ -18,7 +18,7 @@ public class PostRepository {
         em.persist(post);
     }
 
-    public List<Post> findByChallengNo(Integer challengeNo){
+    public List<Post> findByChallengNo(int challengeNo){
         return em.createQuery("select p from Post p where p.challenge_no = :challengeNo", Post.class)
                 .setParameter("challengeNo", challengeNo)
                 .getResultList();

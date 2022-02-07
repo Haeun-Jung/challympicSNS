@@ -23,7 +23,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<Post> getPostList(Integer challengeNo){
+    public List<Post> getPostList(int challengeNo){
         return postRepository.findByChallengNo(challengeNo);
     }
 

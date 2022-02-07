@@ -15,20 +15,20 @@ public class MediaService {
     private final MediaRepository mediaRepository;
 
     @Transactional
-    public Media getMedia(Long fileNo){
+    public Media getMedia(int fileNo){
         Media media = mediaRepository.findByFileNo(fileNo);
         return media;
     }
 
     @Transactional
-    public Long saveMedia(Media media) {
+    public int saveMedia(Media media) {
         // 중복 확인
         mediaRepository.save(media);
         return media.getFile_no();
     }
 
     @Transactional
-    public Long update(Long fileNo, Media media){
+    public int update(int fileNo, Media media){
         Media orgMedia = mediaRepository.findByFileNo(fileNo);
         orgMedia.setFile_name(media.getFile_name());
         orgMedia.setFile_savedname(media.getFile_savedname());
@@ -37,7 +37,7 @@ public class MediaService {
     }
 
     @Transactional
-    public int delete(Long fileNo){
+    public int delete(int fileNo){
         mediaRepository.deleteMedia(fileNo);
         return 1;
     }
