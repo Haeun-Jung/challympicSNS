@@ -24,11 +24,17 @@ public class TitleRepository {
                 .setParameter("title_name", title_name)
                 .getResultList();
         for(Title title : titles) {
-            if(title.getUser_no() == 0) {
+            if(title.getUser().getUser_no() == 0) {
                 return title.getTitle_no();
             }
         }
         return -1;
+    }
+
+    public List<Title> findTitleByUserNo(int user_no) {
+        return em.createQuery("select t from Title t where t.user.user_no = :user_no", Title.class)
+                .setParameter("user_no", user_no)
+                .getResultList();
     }
 
     // TODO : user no로 타이틀 리스트 가져오기
