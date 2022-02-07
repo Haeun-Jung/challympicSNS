@@ -152,12 +152,6 @@
 
 				//locaation.reload();
 			},
-			goFeed(item) {
-				alert(item);
-			},
-			enterSelect() {
-				this.checked = this.selected.map((e) => e.userid);
-			},
 		},
 		/*	Api 통신 용
 		created() {
