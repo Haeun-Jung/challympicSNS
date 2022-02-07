@@ -34,7 +34,6 @@ import ChallengeDetail from "../views/ChallengeDetail.vue";
 import Admin from "../views/Admin.vue";
 import UserManagement from "@/components/admin/UserManagement.vue";
 import ChallengeManagement from "@/components/admin/ChallengeManagement.vue";
-import PostManagement from "@/components/admin/PostManagement.vue";
 import CommentManagement from "@/components/admin/CommentManagement.vue";
 
 Vue.use(VueRouter);
@@ -171,11 +170,6 @@ const routes = [
         path: "/admin/challenge",
         name: "ChallengeManagement",
         component:ChallengeManagement,
-      },
-      {
-        path: "/admin/post",
-        name: "PostManagement",
-        component:PostManagement,
       },
       {
         path: "/admin/comment",
