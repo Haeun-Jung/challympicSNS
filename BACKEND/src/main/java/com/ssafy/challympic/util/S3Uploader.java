@@ -33,40 +33,68 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
 
-    public Media upload(MultipartFile multipartFile, String type) throws Exception{
+    /**
+     *  d384sk7z91xokb.cloudfront.net/challympic/output
+     *      ㄴ /image
+     *          ㄴ /20xx.xx.xx
+     *              ㄴ /savedfilename
+     *                  ㄴ /profile
+     *                  ㄴ /media
+     *                      ㄴ /savedfilename.png
+     *      ㄴ /video
+     *          ㄴ /20xx.xx.xx
+     *              ㄴ /savedfilename
+     *                  ㄴ /thumbnail
+     *                      ㄴ /savedfilename.png
+     *                  ㄴ /video
+     *                      ㄴ /savedfilename.m3u8
+     * */
+    public Media upload(MultipartFile multipartFile, String type, String category) throws Exception{
         // 2. 프론트로부터 파일을 입력 받음
 
         // 2-1. MultipartFile을 File의 형태로 변환하여 로컬에 저장 완료
         File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러, 로컬에 파일 업로드
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
 
-        // image 업로드할 때 처리
+        SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd");
+        String savedFileName = new MD5Generator(uploadFile.getName()).toString();
 
-        // 해당 파일을 변환해서 저장
-        if(hlsConverter(uploadFile.getName())){
-            // 변환에 성공
-            SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd");
-            String savedFileName = new MD5Generator(uploadFile.getName()).toString();
+        // 3. 원본 파일 AWS S3의 input 폴더에 업로드
+        upload(uploadFile, "input" + "/" + category + "/" + type + "/" + date.format(new Date())  + "/"+ savedFileName);
 
-            // 3. 원본 파일 AWS S3의 input 폴더에 업로드
-            upload(uploadFile, "input" + "/" + type + "/" + date.format(new Date())  + "/"+ savedFileName);
+        // 타입에 따른 처리
+        if(type.equals("image")){
+            String ouputCommonPath = "output" + "/" + type + "/" + date.format(new Date()) + "/" + savedFileName;
 
-
-            // 4. HLS 파일 AWS S3의 ouput 폴더에 업로드
-            String convertPath = System.getProperty("user.dir") + "\\files\\" + date.format(new Date()) + "\\convert";
-            String ouputCommonPath = "output" + "/" + type + "/" + date.format(new Date());
-
-            // 4.1. 썸네일 업로드
-            File thumbnail = new File(convertPath + "/" +savedFileName + ".png");
-            upload(thumbnail, ouputCommonPath + "/" + savedFileName + "/thumbnail");
-
-            convertPath += "\\" + savedFileName;
-            uploadHLSFolder(convertPath, ouputCommonPath + "/" + savedFileName+ "/" + "video");
+            if(category.equals("profile")){
+                upload(uploadFile, ouputCommonPath + "/profile");
+            } else {
+                upload(uploadFile, ouputCommonPath + "/media");
+            }
 
             // 5. 원본 파일 제거
             removeFile();
+            return new Media(uploadFile.getName(), savedFileName+".png", "output" + "/" + type + "/" + date.format(new Date()) + "/" + savedFileName);
 
-            return new Media(uploadFile.getName(), savedFileName+".m3u8", "output" + "/" + type + "/" + date.format(new Date()));
+        } else {
+            // 해당 파일을 변환해서 저장
+            if(hlsConverter(uploadFile.getName())){
+                // 4. HLS 파일 AWS S3의 ouput 폴더에 업로드
+                String convertPath = System.getProperty("user.dir") + "\\files\\" + date.format(new Date()) + "\\convert";
+                String ouputCommonPath = "output" + "/" + type + "/" + date.format(new Date());
+
+                // 4.1. 썸네일 업로드
+                File thumbnail = new File(convertPath + "/" +savedFileName + ".png");
+                upload(thumbnail, ouputCommonPath + "/" + savedFileName + "/thumbnail");
+
+                convertPath += "\\" + savedFileName;
+                uploadHLSFolder(convertPath, ouputCommonPath + "/" + savedFileName+ "/" + "video");
+
+                // 5. 원본 파일 제거
+                removeFile();
+
+                return new Media(uploadFile.getName(), savedFileName+".m3u8", "output" + "/" + type + "/" + date.format(new Date()) + "/" + savedFileName);
+            }
         }
 
         return null;
