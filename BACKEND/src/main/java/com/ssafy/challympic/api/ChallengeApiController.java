@@ -1,5 +1,6 @@
 package com.ssafy.challympic.api;
 
+import com.ssafy.challympic.api.Dto.ChallengeDto;
 import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.domain.defaults.ChallengeAccess;
 import com.ssafy.challympic.domain.defaults.ChallengeType;
@@ -31,6 +32,9 @@ public class ChallengeApiController {
     @GetMapping("/challenge")
     public Result challenges() {
         List<Challenge> findChallenges = challengeService.findChallenges();
+        for(Challenge c : findChallenges) {
+            System.out.println(c);
+        }
         List<ChallengeDto> collect = findChallenges.stream()
                 .map(c -> new ChallengeDto(c))
                 .collect(Collectors.toList());
@@ -59,11 +63,12 @@ public class ChallengeApiController {
             }
         }
 
-        User user = userService.findUser(request.user_no);
-
+        // Title 저장
         Title title = new Title();
         title.setTitle_name(request.getTitle_name());
         if(title == null) return new Result(false, HttpStatus.FORBIDDEN.value());
+
+        User user = userService.findUser(request.user_no);
 
         Challenge challenge = Challenge.createChallenge(
                 user,
@@ -74,33 +79,48 @@ public class ChallengeApiController {
                 request.getChallenge_content()
         );
 
+        // 챌린저 저장
         for(int cr : challengers) {
             Challenger challenger = new Challenger();
             challenger.setChallenge(challenge);
-            challenger.setUser(user);
+            challenger.setUser(userService.findUser(cr));
             challengeService.saveChallengers(challenger);
         }
 
-        title.setChallenge(challenge);
-
+        // 챌린지 엔티티 등록
         challengeService.saveChallenge(challenge);
+
+        // title 등록
+        title.setChallenge(challenge);
+        titleService.saveTitles(title);
 
         // 내용 파싱해서 태그 저장
         String content = request.challenge_content;
+        List<String> tagContentList = new ArrayList<>();
         StringBuilder sb = null;
         for(char c : content.toCharArray()) {
             if(c == '#') {
                 if(sb != null) {
+                    tagContentList.add(sb.toString());
                     tagService.saveTag(sb.toString());
                 }
                 sb = new StringBuilder();
             }
             if(c == ' ' && sb != null) {
                 tagService.saveTag(sb.toString());
+                tagContentList.add(sb.toString());
                 sb = null;
             }
             if(sb == null) continue;
             sb.append(c);
+        }
+
+        // 챌린지태그 저장
+        for(String s : tagContentList) {
+            ChallengeTag challengeTag = new ChallengeTag();
+            challengeTag.setChallenge(challenge);
+            challengeTag.setTag(tagService.findTagByTagContent(s));
+            challengeService.saveChallengeTag(challengeTag);
         }
 
         return new Result(true, HttpStatus.OK.value());
@@ -119,6 +139,7 @@ public class ChallengeApiController {
 
     /**
      * 한글 pathVariable 인코딩 관련 이슈
+     * 해결 방법 : https://velog.io/@aszxvcb/Spring-PathVariable-%ED%95%9C%EA%B8%80-%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0-%EC%A0%84%EB%8B%AC
      * @param challengeTitle
      * @return
      */
@@ -161,31 +182,5 @@ public class ChallengeApiController {
         return new Result(true, HttpStatus.OK.value());
     }
 
-    @Data
-    @AllArgsConstructor
-    static class ChallengeDto {
-        private int challenge_no;
-        private int user_no;
-        private Date challenge_start;
-        private Date challenge_end;
-        private ChallengeAccess challenge_access;
-        private ChallengeType challenge_type;
-        private String challenge_title;
-        private String challenge_content;
-        private boolean challenge_official;
-        private int challenge_report;
 
-        public ChallengeDto(Challenge challenge) {
-            this.challenge_no = challenge.getChallenge_no();
-            this.user_no = challenge.getUser().getUser_no();
-            this.challenge_start = challenge.getChallenge_start();
-            this.challenge_end = challenge.getChallenge_end();
-            this.challenge_access = challenge.getChallenge_access();
-            this.challenge_type = challenge.getChallenge_type();
-            this.challenge_title = challenge.getChallenge_title();
-            this.challenge_content = challenge.getChallenge_content();
-            this.challenge_official = challenge.isChallenge_official();
-            this.challenge_report = challenge.getChallenge_report();
-        }
-    }
 }

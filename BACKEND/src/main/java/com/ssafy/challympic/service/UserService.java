@@ -1,5 +1,6 @@
 package com.ssafy.challympic.service;
 
+import com.ssafy.challympic.domain.Media;
 import com.ssafy.challympic.domain.User;
 import com.ssafy.challympic.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -58,16 +59,13 @@ public class UserService {
      * 정보 수정
      */
     @Transactional
-    public void updateUser(int user_no, String user_nickname){
+    public void updateUser(int user_no, String user_nickname, Media file){
         User user = userRepository.findOne(user_no);
         user.setUser_nickname(user_nickname);
+        user.setMedia(file);
     }
 
-    @Transactional
-    public void updatePwd(int user_no, String user_pwd){
-        User user = userRepository.findOne(user_no);
-        user.setUser_pwd(user_pwd);
-    }
+
 
     public User findUser(int user_no){
         return userRepository.findOne(user_no);

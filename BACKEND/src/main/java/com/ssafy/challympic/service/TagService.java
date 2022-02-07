@@ -38,4 +38,8 @@ public class TagService {
     public Tag findOne(int tag_no){
         return tagRepository.findOne(tag_no);
     }
+
+    public Tag findTagByTagContent(String tagContent) {
+        return tagRepository.findByTagContent(tagContent);
+    }
 }

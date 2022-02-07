@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 @Repository

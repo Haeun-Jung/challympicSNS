@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -13,8 +15,11 @@ public class TitleService {
 
     private final TitleRepository titleRepository;
 
-    public int saveTitles(Title title) {
-        return titleRepository.saveTitle(title);
+    @Transactional
+    public void saveTitles(Title title) {
+        titleRepository.saveTitle(title);
     }
+
+    public List<Title> findTitlesByUserNo(int user_no) {return titleRepository.findTitleByUserNo(user_no);}
 
 }

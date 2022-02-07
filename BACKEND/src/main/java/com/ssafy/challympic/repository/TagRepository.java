@@ -24,4 +24,10 @@ public class TagRepository {
                 .setParameter("search", "%"+search+"%")
                 .getResultList();
     }
+
+    public Tag findByTagContent(String tagContent) {
+        return em.createQuery("select t from Tag t where t.tag_content = :tagContent", Tag.class)
+                .setParameter("tagContent", tagContent)
+                .getSingleResult();
+    }
 }

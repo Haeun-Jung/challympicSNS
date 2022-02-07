@@ -21,7 +21,6 @@ public class Title {
     @JoinColumn(name = "user_no")
     private User user;
 
-
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "challenge_no")
     private Challenge challenge;

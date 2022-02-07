@@ -175,8 +175,7 @@ public class PostApiController {
                 // 지원하지 않는 확장자
                 return new Result(false, HttpStatus.OK.value());
 
-            // png/jpg, mp4 <- 확장자 
-//            media = s3Uploader.upload(files, 'image', 'profile');
+            // png/jpg, mp4 <- 확장자
             media = s3Uploader.upload(files, fileType.toLowerCase(), "media");
 
             if(media == null) {
