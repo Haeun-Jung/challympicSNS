@@ -10,14 +10,8 @@
 </template>
 
 <script>
-import "video.js/dist/video-js.css";
-import { videoPlayer } from "vue-video-player";
-
 export default {
   name: "Player",
-  components: {
-    videoPlayer,
-  },
   data() {
     return {
       playerOptions: {
@@ -25,11 +19,11 @@ export default {
         autoplay: true,
         muted: true,
         loop: true,
-        aspectRatio: "4:3",
+        aspectRatio: "16:9",
         sources: [
           {
-            type: "video/mp4",
-            src: "//vjs.zencdn.net/v/oceans.mp4",
+            type: "application/x-mpegURL",
+            src: "http://d384sk7z91xokb.cloudfront.net/output/video/2022.02.06/c88b277171a94d9c3ac7e32f82bb9d93/video/c88b277171a94d9c3ac7e32f82bb9d93.m3u8",
           },
         ],
       },
