@@ -31,9 +31,9 @@
 				items: [
 					{ title: "회원 관리", link: "/admin/user/" },
 					{ title: "챌린지 관리", link: "/admin/challenge/" },
-					{ title: "포스트 관리", link: "/admin/post/" },
 					{ title: "댓글 관리", link: "/admin/comment/" },
-					{ title: "문 의 ? ", link: "" },
+					{ title: "문 의  ", link: "/admin/qna/" },
+					{ title: "통 계 ", link: "" },
 				],
 				right: null,
 			};
