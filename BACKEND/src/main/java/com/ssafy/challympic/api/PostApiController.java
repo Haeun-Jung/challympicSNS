@@ -214,13 +214,13 @@ public class PostApiController {
             int file_no = mediaService.saveMedia(media);
 
             // 본문 텍스트 파싱
-            String content = postRequest.getPost_content().replaceAll("\"", "");
+            String content = postRequest.getPost_content();
             String[] splitSharp = content.split(" ");
 
             for(String str : splitSharp){
                 if(str.startsWith("#")){
                     // #을 분리하고 태그명만 추출
-                    tagService.saveTag(str.substring(1));
+                    tagService.saveTag(str);
                 }
             }
 
@@ -239,6 +239,22 @@ public class PostApiController {
 
             if(postId != -1)
                 return new Result(true, HttpStatus.OK.value(), media);
+
+            // 태그한 사람 알림
+            for(String str : splitSharp) {
+                if(str.startsWith("@")) {
+                    String user_nickname = str.substring(1);
+
+                    Alert alert = new Alert();
+                    User user = userService.findByNickname(user_nickname);
+                    if(user == null) {
+                        continue;
+                    }
+                    alert.setUser(user);
+                    alert.setAlert_content(user_nickname + "님이 태그했습니다.");
+                    alertService.saveAlert(alert);
+                }
+            }
 
         } catch(Exception e){
             e.printStackTrace();
@@ -275,7 +291,7 @@ public class PostApiController {
             _post.setPost_content(postRequest.getPost_content());
 
             // 본문 텍스트 파싱
-            String content = postRequest.getPost_content().replaceAll("\"", "");
+            String content = postRequest.getPost_content();
             String[] splitSharp = content.split(" ");
 
             for(String str : splitSharp){
