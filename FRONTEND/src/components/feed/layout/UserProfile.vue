@@ -52,7 +52,7 @@
                                     <img class="medal-icon" src="https://cdn-icons-png.flaticon.com/512/744/744922.png"/>
                                     <div class="header-title font-weight">스쿼트 왕</div>
                                 </v-list-item-title>
-                                <div class="bottom-blank font-weight">박싸피</div>
+                                <div class="user-name bottom-blank font-weight">박싸피</div>
                                 <!-- 상대 프로필일 때
                                 <v-btn v-if="user.isFollowing" @click="follow(user.userNo)" color="#3396F4"  class="white--text rounded-xl" small>
                                     팔로우
@@ -160,20 +160,20 @@ export default {
     margin-right: 6px;
 }
 .header-title {
-    font-size: 16px;
+    font-size: 18px;
     color: rgb(138, 138, 138);
-    justify-items: center;
-    margin: auto;
+    margin-top: 3px;
 }
 .name-wrapper {
     padding-left: 30px;
 }
 .user-name {
-    font-size: 18px;
+    font-size: 20px;
     margin-left: 8px;
 }
 .follow-wrapper {
     text-align: center;
+    font-size: 17px;
 }
 .font-weight {
     font-weight: bold;
