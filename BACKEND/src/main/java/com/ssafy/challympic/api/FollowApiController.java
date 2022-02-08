@@ -29,8 +29,9 @@ public class FollowApiController {
         // 팔로우했을때 알림
         Alert alert = new Alert();
         User writer = userService.findUser(request.follow_follower_no);
+        User follower = userService.findUser(user_no);
         alert.setUser(writer);
-        alert.setAlert_content(writer.getUser_nickname() + "님이 팔로우합니다.");
+        alert.setAlert_content(follower.getUser_nickname() + "님이 팔로우합니다.");
         alertService.saveAlert(alert);
 
         return new Result(true, HttpStatus.OK.value(), null, follow);

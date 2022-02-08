@@ -91,7 +91,7 @@ public class ChallengeApiController {
             // 태그된사람 알림
             Alert alert = new Alert();
             alert.setUser(_challenger);
-            alert.setAlert_content(_challenger + "님이 챌린지에 초대했습니다.");
+            alert.setAlert_content(user.getUser_nickname() + "님이 챌린지에 초대했습니다.");
             alertService.saveAlert(alert);
 
         }

@@ -251,7 +251,8 @@ public class PostApiController {
                         continue;
                     }
                     alert.setUser(user);
-                    alert.setAlert_content(user_nickname + "님이 태그했습니다.");
+                    User writer = userService.findUser(postRequest.getUser_no());
+                    alert.setAlert_content(writer + "님이 태그했습니다.");
                     alertService.saveAlert(alert);
                 }
             }
