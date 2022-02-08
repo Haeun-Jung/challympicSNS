@@ -34,66 +34,65 @@ public class S3Uploader {
     public String bucket;
 
     /**
-     *  d384sk7z91xokb.cloudfront.net/challympic/output
-     *      ㄴ /image
-     *          ㄴ /20xx.xx.xx
-     *              ㄴ /savedfilename
-     *                  ㄴ /profile
-     *                  ㄴ /media
-     *                      ㄴ /savedfilename.png
-     *      ㄴ /video
-     *          ㄴ /20xx.xx.xx
-     *              ㄴ /savedfilename
-     *                  ㄴ /thumbnail
-     *                      ㄴ /savedfilename.png
-     *                  ㄴ /video
-     *                      ㄴ /savedfilename.m3u8
+         input
+         => input/profile/20220207/140207/파일.png
+         => input/media/20220207/140207/파일.mp4
+
+         output
+         => output/profile/20220207/140207/saved파일명.png
+         => output/media/20220207/140207/saved파일명.png
+         => output/media/20220207/140207/video/saved파일명.m3u8
+         => output/media/20220207/140207/thumbnail/saved파일명.png
      * */
     public Media upload(MultipartFile multipartFile, String type, String category) throws Exception{
         // 2. 프론트로부터 파일을 입력 받음
 
         // 2-1. MultipartFile을 File의 형태로 변환하여 로컬에 저장 완료
         File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러, 로컬에 파일 업로드
-                .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
+                .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));  // 저장할 원본 파일
 
-        SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd");
+        // 시간 객체
+        Date date = new Date();
+        String dateStr = new SimpleDateFormat("yyyyMMdd").format(date);
+        String timeStr = new SimpleDateFormat("HHmmss").format(date);
+
         String savedFileName = new MD5Generator(uploadFile.getName()).toString();
 
         // 3. 원본 파일 AWS S3의 input 폴더에 업로드
-        upload(uploadFile, "input" + "/" + category + "/" + type + "/" + date.format(new Date())  + "/"+ savedFileName);
+        String inputPath = "input" + "/" + category + "/" + dateStr + "/" + timeStr;
+        upload(uploadFile, inputPath, uploadFile.getName());    // 원본 파일 저장
+
+        String outputPath = "output" + "/" + category + "/" + dateStr + "/" + timeStr;
+        String extension = uploadFile.getName().substring(uploadFile.getName().lastIndexOf(".") + 1);
 
         // 타입에 따른 처리
         if(type.equals("image")){
-            String ouputCommonPath = "output" + "/" + type + "/" + date.format(new Date()) + "/" + savedFileName;
+            // Output 경로에 저장
+            upload(uploadFile, outputPath, savedFileName+"."+extension);
 
-            if(category.equals("profile")){
-                upload(uploadFile, ouputCommonPath + "/profile");
-            } else {
-                upload(uploadFile, ouputCommonPath + "/media");
-            }
-
-            // 5. 원본 파일 제거
+            // 원본 파일 제거
             removeFile();
-            return new Media(uploadFile.getName(), savedFileName+".png", "output" + "/" + type + "/" + date.format(new Date()) + "/" + savedFileName);
+
+            return new Media(uploadFile.getName(), savedFileName+"."+extension, outputPath);
 
         } else {
             // 해당 파일을 변환해서 저장
             if(hlsConverter(uploadFile.getName())){
-                // 4. HLS 파일 AWS S3의 ouput 폴더에 업로드
-                String convertPath = System.getProperty("user.dir") + "\\files\\" + date.format(new Date()) + "\\convert";
-                String ouputCommonPath = "output" + "/" + type + "/" + date.format(new Date());
+                // HLS 파일로 변환한 파일들이 저장된 경로
+                String convertPath = System.getProperty("user.dir") + "\\files\\" + dateStr + "\\convert";
 
-                // 4.1. 썸네일 업로드
+                // 썸네일 업로드
                 File thumbnail = new File(convertPath + "/" +savedFileName + ".png");
-                upload(thumbnail, ouputCommonPath + "/" + savedFileName + "/thumbnail");
+                upload(thumbnail, outputPath+"/thumbnail", savedFileName+".png");
 
+                // 동영상 파일 업로드
                 convertPath += "\\" + savedFileName;
-                uploadHLSFolder(convertPath, ouputCommonPath + "/" + savedFileName+ "/" + "video");
+                uploadHLSFolder(convertPath, outputPath+"/video");
 
                 // 5. 원본 파일 제거
                 removeFile();
 
-                return new Media(uploadFile.getName(), savedFileName+".m3u8", "output" + "/" + type + "/" + date.format(new Date()) + "/" + savedFileName);
+                return new Media(uploadFile.getName(), savedFileName, outputPath);
             }
         }
 
@@ -101,9 +100,9 @@ public class S3Uploader {
     }
 
     // S3로 파일 업로드하기
-    private String upload(File uploadFile, String dirName) {
-        String fileName = dirName + "/" + uploadFile.getName();   // S3에 저장될 파일 이름
-        String uploadImageUrl = putS3(uploadFile, fileName); // s3로 업로드
+    private String upload(File uploadFile, String path, String fileName) {
+        // path 경로에 fileName으로 저장
+        String uploadImageUrl = putS3(uploadFile, path + "/" + fileName); // s3로 업로드
         return uploadImageUrl;
     }
 
@@ -125,7 +124,6 @@ public class S3Uploader {
 
     public boolean uploadHLSFolder(String path, String dirPath){
         File folder = new File(path);
-        System.out.println("test3");
         try {
             if(folder.exists()){
                 File[] folder_list = folder.listFiles(); // 파일리스트 얻어오기
@@ -134,7 +132,7 @@ public class S3Uploader {
                 for (int i = 0; i < folder_list.length; i++) {
                     System.out.println(folder_list[i].getName());
                     if(folder_list[i].isFile()) {
-                        upload(folder_list[i], dirPath);
+                        upload(folder_list[i], dirPath, folder_list[i].getName());
                         log.info("파일이 등록되었습니다.");
                     }
                 }
@@ -176,13 +174,13 @@ public class S3Uploader {
     // 로컬에 파일 업로드 하기
     private Optional<File> convert(MultipartFile file) throws Exception {
 
-        SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd");
-//        String savedFileName = new MD5Generator(file.getOriginalFilename()).toString();
+        Date date = new Date();
+        String dateStr = new SimpleDateFormat("yyyyMMdd").format(date);
 
         String FILE_PATH = System.getProperty("user.dir") + "\\files";
         makeDirectory(FILE_PATH);
 
-        FILE_PATH += "\\" + date.format(new Date());
+        FILE_PATH += "\\" + dateStr;
         makeDirectory(FILE_PATH);
 
         FILE_PATH += "\\origin";
@@ -207,7 +205,7 @@ public class S3Uploader {
 
     public boolean hlsConverter(String fileName){
         try{
-            SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd");
+            SimpleDateFormat date = new SimpleDateFormat("yyyyMMdd");
 
             final String ROOT_DIR = System.getProperty("user.dir") + "\\files\\" + date.format(new Date());
             final String UPLOAD_DIR = ROOT_DIR + "\\convert";

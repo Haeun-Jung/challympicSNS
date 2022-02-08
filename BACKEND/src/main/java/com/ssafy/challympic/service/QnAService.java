@@ -15,6 +15,8 @@ public class QnAService {
 
     private final QnARepository qnARepository;
 
+    public QnA findOne(int qna_no){ return qnARepository.findOne(qna_no); }
+
     @Transactional
     public void save(QnA qnA){
         qnARepository.save(qnA);

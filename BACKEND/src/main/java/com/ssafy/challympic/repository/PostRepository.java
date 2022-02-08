@@ -32,5 +32,9 @@ public class PostRepository {
         em.remove(findByPostNo(post_no));
     }
 
-
+    public List<Post> findByUser(int user_no){
+        return em.createQuery("select p from Post p where p.user.user_no = :user_no", Post.class)
+                .setParameter("user_no", user_no)
+                .getResultList();
+    }
 }
