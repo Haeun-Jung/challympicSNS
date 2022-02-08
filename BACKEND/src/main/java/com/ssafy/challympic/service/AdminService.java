@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -20,7 +21,7 @@ public class AdminService {
     private final TitleRepository titleRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-    private final QnARepository qnARepository;
+    private final QnARepository qnaRepository;
 
     public List<User> userList(){
         return adminRepository.findAllUser();
@@ -70,8 +71,21 @@ public class AdminService {
     }
 
     @Transactional
-    public void updateQnA(QnA qna, String qna_content){
-        qna.setQna_answer(qna_content);
-//        시간 update
+    public void deletePostByChallenge(int challenge_no) {
+        List<Post> postList = postRepository.findByChallengNo(challenge_no);
+        for (Post post : postList) {
+            postRepository.deleteByPostNo(post.getPost_no());
+        }
+    }
+
+    public List<QnA> qnaList() {
+        return adminRepository.findAllQnA();
+    }
+
+    @Transactional
+    public void updateQnA(int qna_no, String qna_answer){
+        QnA findQnA = qnaRepository.findOne(qna_no);
+        findQnA.setQna_answer(qna_answer);
+        findQnA.setQna_answer_regdate(new Date());
     }
 }
