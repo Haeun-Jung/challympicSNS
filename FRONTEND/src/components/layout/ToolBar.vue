@@ -22,7 +22,37 @@
 		<v-spacer />
 		<!--tag랑 사용자랑 join table 필요할 것 같다:아니 이거 처음[]리턴 왜 안되는데..-->
 		<div class="main-toolbar-search hidden-md-and-down">
-			<desktop-search-bar :AllTags="AllTags" @searchInput="childSearch" />
+			<v-autocomplete
+				v-model="searchInput"
+				:items="AllTags"
+				:search-input.sync="search"
+				hide-selected
+				hide-details="true"
+				label=""
+				persistent-hint
+				rounded
+				small-chips
+				@change="keywordSearch"
+				class="ml-5"
+				flat
+				solo
+				clearable
+				append-icon="mdi-magnify"
+				width="600px"
+			>
+				<template v-slot:no-data>
+					<v-list-item>
+						<v-list-item-content>
+							<v-list-item-title>
+								입력된
+								<kbd>
+									<strong>{{ search }}</strong> </kbd
+								>태그 또는 사용자가 존재하지 않습니다.
+							</v-list-item-title>
+						</v-list-item-content>
+					</v-list-item>
+				</template>
+			</v-autocomplete>
 		</div>
 		<v-spacer></v-spacer>
 		<!--search on small screen -->
@@ -224,10 +254,10 @@
 <script>
 	import SideContents from "@/components/layout/SideContents.vue";
 	import fromNow from "@/plugins/dayjs.js";
-	import DesktopSearchBar from "@/components/layout/util/desktop/SearchBar.vue";
+
 	export default {
 		name: "ToolBar",
-		components: { SideContents, DesktopSearchBar },
+		components: { SideContents },
 		data() {
 			return {
 				drawer: false,
@@ -378,18 +408,7 @@
 					}
 				}
 			},
-			childSearch(searchInput) {
-				this.searchInput = searchInput;
-				let searchCategory = this.searchInput.charAt(0);
-				var to = this.searchInput.substring(1);
-				//	alert(searchCategory);
-				if (searchCategory === "@") {
-					this.$router.push("/feed/" + to);
-				} else if (searchCategory === "#") {
-					//	this.$emit("search", this.searchInput);
-					this.$router.push("/search/" + to);
-				}
-			},
+
 			selectSearch(val) {
 				alert("selected" + this.search);
 
@@ -453,15 +472,5 @@
 	}
 	::v-deep .v-list-item__title {
 		white-space: normal;
-	}
-	html {
-		overflow: hidden !important;
-		scrollbar-width: none;
-		-ms-overflow-style: none;
-	}
-
-	html::-webkit-scrollbar {
-		width: 0;
-		height: 0;
 	}
 </style>

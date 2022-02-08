@@ -8,8 +8,7 @@
 	</v-card>
 	<v-card v-else height="100%">
 		<v-container fluid>
-			<v-layout> </v-layout>
-			<v-row>
+			<v-layout row class="mt-14">
 				<v-col md="1" />
 				<v-col md="2">
 					<side />
@@ -18,7 +17,7 @@
 					<router-view />
 				</v-col>
 				<v-col md="2" />
-			</v-row>
+			</v-layout>
 		</v-container>
 	</v-card>
 </template>
