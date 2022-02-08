@@ -21,11 +21,14 @@
 				></v-text-field>
 			</template>
 			<template v-slot:expanded-item="{ item }">
-				<td :colspan="headers.length">
+				<td :colspan="headers.length + 1">
 					<div>
-						<v-list-item-title class="ma-2 ml-2">
-							[댓글 상세 내용]
-						</v-list-item-title>
+						<v-list-item-subtitle class="ma-2 ml-2 grey--text">
+							<v-icon>mdi-calendar-month</v-icon>
+							{{ item.comment_regdate }}
+							<v-icon>mdi-clipboard-text-outline</v-icon>
+							{{ item.user_nickname }}
+						</v-list-item-subtitle>
 						<div class="admin-comment-expansion">
 							{{ item.comment_content }}
 						</div>
@@ -47,20 +50,7 @@
 				</router-link>
 			</template>
 			<template #item.user_nickname="{ item }">
-				<router-link
-					v-if="item.user_nickname != `챌림픽`"
-					:to="{ path: `/feed/${item.user_no}` }"
-					style="text-decoration: none; color: inherit; mr-2"
-				>
-					{{ item.user_nickname }}
-				</router-link>
-				<router-link
-					v-else
-					to=""
-					style="text-decoration: none; color: inherit; mr-2"
-				>
-					{{ item.user_nickname }}
-				</router-link>
+				<nick-name-module :item="item.user_nickname" :itemno="item.user_no" />
 			</template>
 
 			<template #item.comment_content="{ item }">
@@ -85,9 +75,13 @@
 </template>
 
 <script>
+	import NickNameModule from "./NickNameModule.vue";
 	//import {deleteUser, userList} from "@/api/member";
 	export default {
 		name: "UserList",
+		components: {
+			NickNameModule,
+		},
 		data() {
 			return {
 				search: "",

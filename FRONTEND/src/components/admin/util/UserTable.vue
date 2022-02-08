@@ -22,12 +22,7 @@
 				<div class="mr-4">{{ value }}</div>
 			</template>
 			<template #item.user_nickname="{ item }">
-				<router-link
-					:to="{ path: `/feed/${item.user_no}` }"
-					style="text-decoration: none; color: inherit; mr-2"
-				>
-					{{ item.user_nickname }}
-				</router-link>
+				<nick-name-module :item="item.user_nickname" :itemno="item.user_no" />
 			</template>
 			<template #item.user_email="{ value }">
 				<a :href="`mailto:${value}`"> {{ value }} </a>
@@ -57,9 +52,13 @@
 </template>
 
 <script>
+	import NickNameModule from "./NickNameModule.vue";
 	//import {deleteUser, userList} from "@/api/member";
 	export default {
 		name: "UserList",
+		components: {
+			NickNameModule,
+		},
 		data() {
 			return {
 				search: "",
