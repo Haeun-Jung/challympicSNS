@@ -41,6 +41,7 @@ public class ChallengeApiController {
         return new Result(true, HttpStatus.OK.value(), collect);
     }
 
+    private final AlertService alertService;
 
     /**
      * 챌린지 등록
@@ -83,8 +84,16 @@ public class ChallengeApiController {
         for(int cr : challengers) {
             Challenger challenger = new Challenger();
             challenger.setChallenge(challenge);
-            challenger.setUser(userService.findUser(cr));
+            User _challenger = userService.findUser(cr);
+            challenger.setUser(_challenger);
             challengeService.saveChallengers(challenger);
+
+            // 태그된사람 알림
+            Alert alert = new Alert();
+            alert.setUser(_challenger);
+            alert.setAlert_content(_challenger + "님이 챌린지에 초대했습니다.");
+            alertService.saveAlert(alert);
+
         }
 
         // 챌린지 엔티티 등록
