@@ -311,6 +311,8 @@ public class PostApiController {
         return new Result(true, HttpStatus.OK.value());
     }
 
+    private final AlertService alertService;
+
     /**
      *  좋아요 클릭 처리(Complete)
      * */
@@ -328,6 +330,13 @@ public class PostApiController {
             // insert
             PostLike _postLike = new PostLike(postNo, userNo);
             postLikeService.save(_postLike);
+
+            // 좋아요를 눌렀을때 알림 설정
+            Alert alert = new Alert();
+            User writer = postService.getPost(postNo).getUser();
+            alert.setUser(writer);
+            alert.setAlert_content(writer.getUser_nickname() + "님이 포스트에 좋아요를 눌렀습니다.");
+            alertService.saveAlert(alert);
         }
 
         return new Result(true, HttpStatus.OK.value());
