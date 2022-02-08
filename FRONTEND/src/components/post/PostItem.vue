@@ -122,7 +122,7 @@
 <script>
 import PostImage from "./PostImage.vue";
 import Player from "./Player.vue";
-import FollowLikeModal from "./FollowLikeModal.vue";
+import FollowLikeModal from "../common/FollowLikeModal.vue";
 import CommentList from "./CommentList.vue";
 import ShareButton from "../button/ShareButton.vue";
 

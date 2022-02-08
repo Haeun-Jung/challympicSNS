@@ -69,11 +69,11 @@
 </template>
 
 <script>
-import passwordFind from "../../components/passwordFind.vue";
+import PasswordFind from "@/components/login/PasswordFind.vue";
 
 export default {
   name: "Login",
-  components: { passwordFind },
+  components: { PasswordFind },
   data() {
     return {
       dialog: false,

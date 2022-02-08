@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.challympic.config.auth.PrincipalDetails;
 import com.ssafy.challympic.domain.Result;
 import com.ssafy.challympic.domain.User;
-import com.ssafy.challympic.domain.UserAuth;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,7 +41,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Authentication authentication = null;
         try {
             ObjectMapper om = new ObjectMapper();
-            UserAuth user = om.readValue(request.getInputStream(), UserAuth.class);
+            User user = om.readValue(request.getInputStream(), User.class);
 
             // 로그인 시도시 토큰 생성
             UsernamePasswordAuthenticationToken authenticationToken =
@@ -84,14 +83,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String jwtToken = JWT.create()
                 .withSubject(principalDetails.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPORATION_TIME))
-                .withClaim("user_no", principalDetails.getUserAuth().getUser_no()) // 넣고 싶은 key value 값
-                .withClaim("user_name", principalDetails.getUserAuth().getUser_email())
+                .withClaim("user_no", principalDetails.getUser().getUser_no()) // 넣고 싶은 key value 값
+                .withClaim("user_name", principalDetails.getUser().getUser_email())
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET)); // secrete 값
 
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX +jwtToken); // 헤더에 담겨 사용자에게 응답
 //        System.out.println(principalDetails.getUser().getUser_email());
 //        System.out.println(principalDetails.getUser().getUser_pwd());
-        Result result = new Result(true, 200, new UserDto(principalDetails.getUserAuth().getUser_no(), principalDetails.getUserAuth().getUser_email()));
+        Result result = new Result(true, 200, new UserDto(principalDetails.getUser().getUser_no(), principalDetails.getUser().getUser_email()));
         String json = new ObjectMapper().writeValueAsString(result);
 //        System.out.println(json);
         response.setContentType("application/json");

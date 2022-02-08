@@ -3,7 +3,6 @@ package com.ssafy.challympic.api;
 import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.service.MediaService;
 import com.ssafy.challympic.service.TitleService;
-import com.ssafy.challympic.service.UserAuthService;
 import com.ssafy.challympic.service.UserService;
 import com.ssafy.challympic.util.MD5Generator;
 import com.ssafy.challympic.util.S3Uploader;
@@ -20,6 +19,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 public class UserApiController {
 
     private final UserService userService;
-    private final UserAuthService userAuthService;
     private final MediaService mediaService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final S3Uploader s3Uploader;
@@ -66,12 +65,11 @@ public class UserApiController {
         String encPwd = bCryptPasswordEncoder.encode(rawPwd);
 
         // userAuth에 저장
-        UserAuth newUserAuth = new UserAuth();
-        newUserAuth.setUser_email(request.getUser_email());
-        newUserAuth.setUser_pwd(encPwd);
+        User newUserAuth = new User();
+        newUser.setUser_email(request.getUser_email());
+        newUser.setUser_pwd(encPwd);
 
         int join_no = userService.join(newUser);
-        userAuthService.join(newUserAuth);
         if(join_no > 0){
             return new Result(true, HttpStatus.OK.value());
         }else{
@@ -155,7 +153,7 @@ public class UserApiController {
 
     @PutMapping("/user/account/{userNo}/pwd")
     public Result updatePwd(@PathVariable("userNo") int user_no, @RequestBody updateUserRequest request){
-        UserAuth findUser = userAuthService.findUser(user_no);
+        User findUser = userService.findUser(user_no);
         System.out.println(bCryptPasswordEncoder.matches(request.getUser_pwd(), findUser.getUser_pwd()));
         if(!bCryptPasswordEncoder.matches(request.getUser_pwd(), findUser.getUser_pwd())){
             return new Result(false, HttpStatus.BAD_REQUEST.value(), new UserDto());
@@ -163,7 +161,7 @@ public class UserApiController {
 
         String newpwd = bCryptPasswordEncoder.encode(request.getUser_newpwd());
         System.out.println(newpwd);
-        userAuthService.updatePwd(user_no, newpwd);
+        userService.updatePwd(user_no, newpwd);
         User user = userService.findUser(user_no);
         if(user != null) {
             return new Result(true, HttpStatus.OK.value(), new UserDto(user));
