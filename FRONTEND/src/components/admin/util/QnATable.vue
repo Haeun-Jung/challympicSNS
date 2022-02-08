@@ -21,41 +21,8 @@
 				></v-text-field>
 			</template>
 			<template v-slot:expanded-item="{ item }">
-				<td :colspan="headers.length">
-					<div>
-						<v-list-item-title class="ma-2 ml-2 pr-2">
-							[제목] {{ item.qna_title }}
-						</v-list-item-title>
-						<v-list-item-subtitle class="ma-2 ml-2">
-							날짜 : {{ item.qna_question_regdate }}
-						</v-list-item-subtitle>
-						<v-list-item-subtitle class="ma-2 ml-2">
-							작성자 :
-							{{ item.user_nickname }}
-						</v-list-item-subtitle>
-						<v-list-item-subtitle class="ma-2 ml-2">
-							[내용] {{ item.qna_question }}
-						</v-list-item-subtitle>
-					</div>
-					<div v-if="item.qna_answer_regdate != ``">
-						<v-divider />
-						<div>
-							<v-list-item-subtitle class="ma-2 ml-2">
-								[답변] {{ item.qna_answer }}
-							</v-list-item-subtitle>
-						</div>
-						<v-list-item-subtitle class="ma-2 ml-2">
-							날짜 : {{ item.qna_answer_regdate }}
-						</v-list-item-subtitle>
-					</div>
-					<div v-else>
-						<v-divider />
-						<div>
-							<v-list-item-subtitle class="ma-2 ml-2">
-								아직 등록된 답변이 없습니다.
-							</v-list-item-subtitle>
-						</div>
-					</div>
+				<td :colspan="headers.length + 1">
+					<qn-a-expansion :item="item" />
 				</td>
 			</template>
 
@@ -65,20 +32,7 @@
 			</template>
 
 			<template #item.user_nickname="{ item }">
-				<router-link
-					v-if="item.user_nickname != `챌림픽`"
-					:to="{ path: `/feed/${item.user_no}` }"
-					style="text-decoration: none; color: inherit; mr-2"
-				>
-					{{ item.user_nickname }}
-				</router-link>
-				<router-link
-					v-else
-					to=""
-					style="text-decoration: none; color: inherit; mr-2"
-				>
-					{{ item.user_nickname }}
-				</router-link>
+				<nick-name-module :item="item.user_nickname" :itemno="item.user_no" />
 			</template>
 
 			<template #item.qna_title="{ item }">
@@ -103,9 +57,10 @@
 						color="primary"
 						ripple="false"
 						outlined
-						@click="answer(props.item)"
+						@click.stop="$set(dialogNote, props.item.qna_no, true)"
 						>답변하기</v-btn
 					>
+					<answer-modal :item="props.item" :dialogNote="dialogNote" />
 				</div>
 				<div v-else>
 					{{ props.item.qna_answer_regdate }}
@@ -116,13 +71,19 @@
 </template>
 
 <script>
+	import QnAExpansion from "./QnAExpansion.vue";
+	import NickNameModule from "./NickNameModule.vue";
+	import AnswerModal from "./AnswerModal.vue";
 	//import {deleteUser, userList} from "@/api/member";
 	export default {
+		//	components: { AnswerModal },
+		components: { QnAExpansion, NickNameModule, AnswerModal },
 		name: "UserList",
 		data() {
 			return {
 				search: "",
 				expanded: [],
+				dialogNote: [],
 				isExpanded: false,
 				page: "",
 				sortBy: "status",
@@ -191,7 +152,8 @@
 						qna_no: 24,
 						user_nickname: "청싸피",
 						qna_title: "질문!",
-						qna_question: "^^",
+						qna_question:
+							"Lorem Ipsum is simply dummy text of the printing<br/> and typesetting industry. Lorem Ipsum <br/>has been the industry's standard dummy text ever since<br/> the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.<br/> It has survived not only five centuries, but also <br/>the leap into electronic typesetting, remaining <br/>essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets <br/>containing Lorem Ipsum passages, and more recently with desktop publishing software<br/> like Aldus PageMaker including versions of Lorem Ipsum.",
 						qna_answer: "",
 						qna_question_regdate: "2022-01-31",
 						qna_answer_regdate: "",
@@ -211,8 +173,9 @@
 				}
 			},
 			answer(item) {
-				alert(item.qna_title + "에 대한 답변 등록하기");
+				//	alert(item.qna_title + "에 대한 답변 등록하기");
 				console.log(item);
+				this.show = !this.show;
 				//alert(item.qna_title + "애 대한 답변 하기 - 모달창으로 답변 등록 후 ");
 			},
 		},
