@@ -8,6 +8,7 @@
 		hide-details="true"
 		label=""
 		persistent-hint
+		rounded
 		small-chips
 		@change="keywordSearch"
 		class="ml-5"
@@ -41,37 +42,14 @@
 		data() {
 			return {
 				searchInput: "",
+				onSelect: false,
+				search: "",
 			};
-		},
-		watch: {
-			group() {
-				this.drawer = false;
-			},
-			search(val) {
-				val && val !== this.searchInput && this.querySelections(val);
-				if (val.length > 2) {
-					alert(this.val);
-					this.minimumCharacter = "show";
-				} else {
-					this.minimumCharacter = "null";
-				}
-			},
 		},
 		methods: {
 			keywordSearch() {
-				if (this.searchInput) {
-					console.log(this.searchInput);
-					//이쪽에서 start with @인지 #인지 확인
-					let searchCategory = this.searchInput.charAt(0);
-					//	alert(searchCategory);
-					if (searchCategory === "@") {
-						alert("유저 피드 페이지로 라우팅");
-					} else if (searchCategory === "#") {
-						var to = this.searchInput.substring(1);
-						//	this.$emit("search", this.searchInput);
-						this.$router.push("/search/" + to);
-					}
-				}
+				alert(this.searchInput);
+				this.$emit("searchInput", this.searchInput);
 			},
 		},
 	};
