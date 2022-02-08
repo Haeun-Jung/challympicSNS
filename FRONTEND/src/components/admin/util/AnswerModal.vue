@@ -41,7 +41,7 @@
 						shaped
 						rounded
 					>
-						{{ item.qna_question }}
+						<div v-html="item.qna_question"></div>
 					</v-sheet>
 					<v-list-item-title class="ma-2 ml-2 pr-2">
 						[답변 작성]
@@ -62,8 +62,8 @@
 						><v-html></v-html
 					></v-textarea>
 					<v-card-actions>
+						<v-spacer />
 						<v-btn
-							right
 							color="primary"
 							flat
 							@click="answer"
