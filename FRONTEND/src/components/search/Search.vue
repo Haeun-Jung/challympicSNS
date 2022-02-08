@@ -36,50 +36,59 @@ import ChallengeSearchResult from "./desktop/ChallengeSearchResult.vue";
 import TagSearchResult from "./desktop/TagSearchResult.vue";
 
 export default {
+	name: "Search",
 	components: {
 		ChallengeSearchResult,
 		TagSearchResult,
 	},
-	name: "Search",
 	props: { search: String },
 	data() {
 		return {
 			row: "challenge",
-			//keyword: "#오늘의요리",
-			keyword: "#" + this.$router.currentRoute.path.substring(8),
 			isChallenge: false,
 		};
 	},
 	watch: {
 		$route(to, from) {
-			if (to.path != from.path) {
-				/* router path가 변경될 때마다 텍스트 리프레쉬. */
-				this.keyword = "#" + this.$router.currentRoute.path.substring(8);
-			}
-		},
-		name: "Search",
-		props: { search: String },
-		data() {
-			return {
-				row: "challenge",
-			};
-		},
-		watch: {
-			$route(to, from) {
 				if (to.path != from.path) {
 					/* router path가 변경될 때마다 텍스트 리프레쉬. */
 					this.keyword = "#" + this.$router.currentRoute.path.substring(8);
 					this.$router.go();
 				}
 			},
+		keyword: function() {
+			this.onlyChallenge();
+			this.keyword = "#" + this.$router.currentRoute.path.substring(8);
+		}
+	},
+	computed: {
+		keyword() {
+			const temp = decodeURIComponent(this.$router.currentRoute.path);
+			return "#" + temp.substring(8);
 		},
-		computed: {
-			keyword() {
-				const temp = decodeURIComponent(this.$router.currentRoute.path);
-				return "#" + temp.substring(8);
-			},
-		},
-	};
+	},
+	/* 페이지가 로딩되자마자 keyword 확인하기 */
+	mounted() {
+		/* 챌린지는 포스트 목록만 보이기 */
+		if (this.keyword.substring(1).includes('챌린지')) {
+			this.isChallenge = true;
+			this.row = 'post';
+		} else {
+			this.isChallenge = false;
+		}
+	},
+	methods: {
+		/* 챌린지는 포스트 목록만 보이기 */
+		onlyChallenge() {
+			if (this.keyword.substring(1).includes('챌린지')) {
+				this.isChallenge = true;
+				this.row = 'post';
+			} else {
+				this.isChallenge = false;
+			}
+		}
+	}
+};
 </script>
 
 <style scoped>
