@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -25,6 +26,12 @@ public class CommentLikeRepository {
         }catch (NoResultException e){
             return null;
         }
+    }
+
+    public List<CommentLike> findLikeCntByComment(int comment_no){
+        return em.createQuery("select cl from CommentLike cl where cl.comment.comment_no = :comment_no")
+                .setParameter("comment_no", comment_no)
+                .getResultList();
     }
 
     public void delete(CommentLike commentLike){

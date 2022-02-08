@@ -48,14 +48,6 @@ public class UserService {
     }
 
     /**
-     * 로그인
-     */
-    public User login(String user_email, String user_pwd){
-        // no, nickname, title
-        return userRepository.login(user_email, user_pwd);
-    }
-
-    /**
      * 정보 수정
      */
     @Transactional

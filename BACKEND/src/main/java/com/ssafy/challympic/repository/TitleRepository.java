@@ -17,6 +17,17 @@ public class TitleRepository {
         em.persist(title);
     }
 
+    public Title findByChallenge(int challenge_no){
+        return em.createQuery("select t from Title t where t.challenge.challenge_no = :challenge_no", Title.class)
+                .setParameter("challenge_no", challenge_no)
+                .getSingleResult();
+    }
+
+    public void deleteTitle(Title title){
+        em.remove(title);
+//        em.flush();
+    }
+
     public List<Title> findTitleByUserNo(int user_no) {
         return em.createQuery("select t from Title t where t.user.user_no = :user_no", Title.class)
                 .setParameter("user_no", user_no)

@@ -5,6 +5,7 @@ import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.domain.defaults.ChallengeAccess;
 import com.ssafy.challympic.domain.defaults.ChallengeType;
 import com.ssafy.challympic.service.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -89,10 +90,6 @@ public class ChallengeApiController {
         // 챌린지 엔티티 등록
         challengeService.saveChallenge(challenge);
 
-        // title 등록
-        title.setChallenge(challenge);
-        titleService.saveTitles(title);
-
         // 내용 파싱해서 태그 저장
         String content = request.challenge_content;
         List<String> tagContentList = new ArrayList<>();
@@ -121,6 +118,10 @@ public class ChallengeApiController {
             challengeTag.setTag(tagService.findTagByTagContent(s));
             challengeService.saveChallengeTag(challengeTag);
         }
+
+        // title 등록
+        title.setChallenge(challenge);
+        titleService.saveTitles(title);
 
         return new Result(true, HttpStatus.OK.value());
     }

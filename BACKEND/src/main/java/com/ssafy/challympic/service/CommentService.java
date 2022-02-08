@@ -46,4 +46,13 @@ public class CommentService {
         Comment comment = commentRepository.findOne(comment_no);
         comment.setComment_report(comment.getComment_report()+1);
     }
+
+    public int commentReportCntByUser(int user_no){
+        List<Comment> findCommentList = commentRepository.findByUser(user_no);
+        int reportCnt = 0;
+        for (Comment comment : findCommentList) {
+            reportCnt += comment.getComment_report();
+        }
+        return reportCnt;
+    }
 }

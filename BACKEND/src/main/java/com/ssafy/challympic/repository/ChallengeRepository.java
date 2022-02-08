@@ -47,6 +47,10 @@ public class ChallengeRepository {
                 .getSingleResult();
     }
 
+    public Challenge findOne(int challengeNo){
+        return em.find(Challenge.class, challengeNo);
+    }
+
     public void saveChallengeTag(ChallengeTag challengeTag) {
         em.persist(challengeTag);
     }
