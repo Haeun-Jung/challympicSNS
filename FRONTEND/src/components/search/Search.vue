@@ -6,7 +6,7 @@
 				{{ keyword }}
 			</v-list-item-title>
 			<v-radio-group v-model="row" row>
-				<v-radio label="챌린지" value="challenge"></v-radio>
+				<v-radio label="챌린지" value="challenge" :disabled="isChallenge"></v-radio>
 				<v-radio label="포스트" value="post"></v-radio>
 			</v-radio-group>
 		</v-container>
@@ -18,7 +18,7 @@
 						{{ keyword }}
 					</v-list-item-title>
 				</span>
-				<v-radio label="챌린지" value="challenge"></v-radio>
+				<v-radio label="챌린지" value="challenge" :disabled="isChallenge"></v-radio>
 				<v-radio label="포스트" value="post"></v-radio>
 			</v-radio-group>
 		</v-container>
@@ -32,13 +32,30 @@
 </template>
 
 <script>
-	import ChallengeSearchResult from "./desktop/ChallengeSearchResult.vue";
-	import TagSearchResult from "./desktop/TagSearchResult.vue";
+import ChallengeSearchResult from "./desktop/ChallengeSearchResult.vue";
+import TagSearchResult from "./desktop/TagSearchResult.vue";
 
-	export default {
-		components: {
-			ChallengeSearchResult,
-			TagSearchResult,
+export default {
+	components: {
+		ChallengeSearchResult,
+		TagSearchResult,
+	},
+	name: "Search",
+	props: { search: String },
+	data() {
+		return {
+			row: "challenge",
+			//keyword: "#오늘의요리",
+			keyword: "#" + this.$router.currentRoute.path.substring(8),
+			isChallenge: false,
+		};
+	},
+	watch: {
+		$route(to, from) {
+			if (to.path != from.path) {
+				/* router path가 변경될 때마다 텍스트 리프레쉬. */
+				this.keyword = "#" + this.$router.currentRoute.path.substring(8);
+			}
 		},
 		name: "Search",
 		props: { search: String },
@@ -65,24 +82,24 @@
 	};
 </script>
 
-<style scope>
-	.search-result-container {
-		padding-left: 0%;
-	}
-	.search-control-box-mobile {
-		font-weight: bold;
-	}
-	.search-control-box-desktop {
-		font-weight: bold;
-	}
-	.search-control-box-mobile #search-keyword {
-		color: #3396f4;
-		margin-right: 1.25em;
-		font-size: 1.5rem !important;
-	}
-	.search-control-box-desktop #search-keyword {
-		color: #3396f4;
-		margin-right: 1.25em;
-		font-size: 1.5rem !important;
-	}
+<style scoped>
+.search-result-container {
+	padding-left: 0%;
+}
+.search-control-box-mobile {
+	font-weight: bold;
+}
+.search-control-box-desktop {
+	font-weight: bold;
+}
+.search-control-box-mobile #search-keyword {
+	color: #3396f4;
+	margin-right: 1.25em;
+	font-size: 1.5rem !important;
+}
+.search-control-box-desktop #search-keyword {
+	color: #3396f4;
+	margin-right: 1.25em;
+	font-size: 1.5rem !important;
+}
 </style>
