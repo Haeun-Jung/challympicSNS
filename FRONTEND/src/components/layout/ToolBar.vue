@@ -288,6 +288,9 @@
 						link2: "/feed/:userNo/",
 					},
 					{ title: "관리자 페이지", link1: "/admin/" },
+					{ 
+						title: "로그아웃"
+					},
 					{ title: "Click Me 2" },
 				],
         alertMenu: [
