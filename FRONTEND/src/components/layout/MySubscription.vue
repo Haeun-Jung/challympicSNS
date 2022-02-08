@@ -14,7 +14,8 @@
         <v-list-group>
           <template v-slot:activator class="title-background">
             <v-card-subtitle class="title-width">
-				<h2>구독</h2>
+				<h2 v-if="!isMobile()">구독</h2>
+				<h4 v-else>구독</h4>
 			</v-card-subtitle>
           </template>
 		  <!-- 로그인 O -->
@@ -69,6 +70,17 @@ export default {
 			alert(id - 1);
 			this.subscriptions = [...this.subscriptions];
 		},
+		isMobile() {
+            if (
+                /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+                    navigator.userAgent
+                )
+            ) {
+                return true;
+            } else {
+                return false;
+            }
+        },
 	},
 }
 </script>

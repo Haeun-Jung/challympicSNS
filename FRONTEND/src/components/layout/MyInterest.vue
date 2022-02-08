@@ -24,7 +24,8 @@
         <v-list-group>
           <template v-slot:activator>
             <v-card-subtitle class="title-width">
-				<h2>내 관심사</h2>
+				<h2 v-if="!isMobile()">내 관심사</h2>
+				<h4 v-else>내 관심사</h4>
 			</v-card-subtitle>
           </template>
           <v-chip
@@ -84,6 +85,17 @@ export default {
 			alert(id - 1);
 			this.interests = [...this.interests];
 		},
+		isMobile() {
+            if (
+                /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+                    navigator.userAgent
+                )
+            ) {
+                return true;
+            } else {
+                return false;
+            }
+        },
 	},
 };
 </script>
@@ -104,6 +116,7 @@ export default {
 }
 .title-width {
 	width: 100%;
+	justify-content: space-between;
 	background: transparent;
 }
 </style>

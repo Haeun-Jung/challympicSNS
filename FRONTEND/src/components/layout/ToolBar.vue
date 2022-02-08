@@ -287,7 +287,10 @@
 						link1: "/feed/:userNo/",
 						link2: "/feed/:userNo/",
 					},
-					{ title: "관리자 페이지", link1: "/admin/" },
+					{ 
+						title: "관리자 페이지",
+						link1: "/admin/"
+					},
 					{ 
 						title: "로그아웃"
 					},
