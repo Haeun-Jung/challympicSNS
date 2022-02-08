@@ -166,8 +166,13 @@ public class ChallengeApiController {
         Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
         User user = userService.findUser(userNo);
 
-        subscriptionService.saveSubscription(Subscription.setSubscription(challenge, user));
-        return new Result(true, HttpStatus.OK.value());
+        Subscription findSubscription = subscriptionService.findSubscriptionByChallengeAndUser(challengeNo, userNo);
+        if(findSubscription == null){
+            subscriptionService.saveSubscription(Subscription.setSubscription(challenge, user));
+            return new Result(true, HttpStatus.OK.value());
+        }else{
+            return new Result(false, HttpStatus.BAD_REQUEST.value());
+        }
     }
 
     /**

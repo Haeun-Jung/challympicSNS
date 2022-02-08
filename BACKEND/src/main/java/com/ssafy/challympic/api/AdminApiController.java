@@ -1,9 +1,6 @@
 package com.ssafy.challympic.api;
 
-import com.ssafy.challympic.domain.Challenge;
-import com.ssafy.challympic.domain.Comment;
-import com.ssafy.challympic.domain.Result;
-import com.ssafy.challympic.domain.User;
+import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.domain.defaults.UserActive;
 import com.ssafy.challympic.service.*;
 import lombok.Data;
@@ -24,6 +21,8 @@ public class AdminApiController {
     private final CommentService commentService;
     private final PostService postService;
     private final ChallengeService challengeService;
+    private final QnAService qnaService;
+    private final SubscriptionService subscriptionService;
 
     @GetMapping("/admin/users")
     public Result userList(){
@@ -61,7 +60,8 @@ public class AdminApiController {
                     ChallengeDto challengeDto = new ChallengeDto(c);
                     int post_cnt = postService.postCntByChallenge(c.getChallenge_no());
                     challengeDto.setPost_cnt(post_cnt);
-                    challengeDto.setInterest_cnt(0);
+                    int subscription_cnt = subscriptionService.findSubscriptionByChallenge(c.getChallenge_no());
+                    challengeDto.setSubscription_cnt(subscription_cnt);
                     return challengeDto;
                 }).collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), collect);
@@ -69,6 +69,7 @@ public class AdminApiController {
 
     @DeleteMapping("/admin/challenges")
     public Result deleteChallenge(@RequestBody ChallengeRequest challengeRequest){
+        adminService.deletePostByChallenge(challengeRequest.challenge_no);
         adminService.deleteChallenge(challengeRequest.challenge_no);
         // 하위 포스트 삭제
         return new Result(true, HttpStatus.OK.value());
@@ -93,6 +94,33 @@ public class AdminApiController {
         return new Result(true, HttpStatus.OK.value());
     }
 
+    @GetMapping("/admin/qna")
+    public Result qnaList(){
+        List<QnA> qnaList = adminService.qnaList();
+        List<QnADto> collect = qnaList.stream()
+                .map(q -> {
+                    QnADto qnaDto = new QnADto(q);
+                    if(q.getQna_answer() == null) qnaDto.setAnswer(false);
+                    else qnaDto.setAnswer(true);
+                    return qnaDto;
+                }).collect(Collectors.toList());
+        return new Result(true, HttpStatus.OK.value(), collect);
+    }
+
+    @PutMapping("/admin/qna")
+    public Result answer(@RequestBody QnARequest qnaRequest){
+        adminService.updateQnA(qnaRequest.qna_no, qnaRequest.qna_answer);
+        QnA findOne = qnaService.findOne(qnaRequest.qna_no);
+        if(findOne.getQna_answer() == null) return new Result(false, HttpStatus.BAD_REQUEST.value());
+        else return new Result(true, HttpStatus.OK.value());
+    }
+
+    @Data
+    static class QnARequest{
+        private int qna_no;
+        private String qna_answer;
+    }
+
     @Data
     static class CommentRequest{
         private int comment_no;
@@ -106,6 +134,28 @@ public class AdminApiController {
     @Data
     static class UserRequest{
         private int user_no;
+    }
+
+    @Data
+    static class QnADto{
+        private int qna_no;
+        private String user_email;
+        private String qna_title;
+        private String qna_question;
+        private String qna_answer;
+        private Date qna_question_regdate;
+        private Date qna_answer_regdate;
+        private boolean isAnswer;
+
+        public QnADto(QnA qna) {
+            this.qna_no = qna.getQna_no();
+            this.user_email = qna.getUser().getUser_email();
+            this.qna_title = qna.getQna_title();
+            this.qna_question = qna.getQna_question();
+            this.qna_answer = qna.getQna_answer();
+            this.qna_question_regdate = qna.getQna_question_regdate();
+            this.qna_answer_regdate = qna.getQna_answer_regdate();
+        }
     }
 
     @Data
@@ -130,7 +180,7 @@ public class AdminApiController {
         private String challenge_title;
         private String user_email;
         private int post_cnt;
-        private int interest_cnt;
+        private int subscription_cnt;
         private Date challenge_start;
         private Date challenge_end;
         private boolean challenge_official;
