@@ -1,5 +1,5 @@
 <template>
-	<v-card height="100%" width="100%" class="justify-center">
+	<v-card height="100%" width="94%" class="justify-center">
 		<v-card-title class="justify-center">프로필 수정</v-card-title>
 		<v-divider />
 		<v-container class="mobile-profile-delete-user-container">

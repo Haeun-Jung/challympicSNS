@@ -15,7 +15,13 @@
 				</v-row>
 			</v-container>
 		</v-card>
-		<v-card height="100vh" max-width="97%" color="transparent" row v-else>
+		<v-card
+			height="90vh"
+			max-width="96%"
+			color="transparent"
+			row
+			v-else-if="isMobile()"
+		>
 			<admin-mobile />
 		</v-card>
 	</v-main>
