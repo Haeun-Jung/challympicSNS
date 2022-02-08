@@ -3,7 +3,6 @@ package com.ssafy.challympic.config;
 import com.ssafy.challympic.api.UserApiController;
 import com.ssafy.challympic.jwt.JwtAuthenticationFilter;
 import com.ssafy.challympic.jwt.JwtAuthorizationFilter;
-import com.ssafy.challympic.repository.UserAuthRepository;
 import com.ssafy.challympic.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
 
-    private final UserAuthRepository userAuthRepository;
+    private final UserRepository userRepository;
 
     @Bean // 해당 메서드의 리턴되는 오브젝트를 IoC로 등록
     public BCryptPasswordEncoder encoderPwd(){
@@ -43,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable() // form tag 만들어 로그인하지 않겠다.
                 .httpBasic().disable() // 기본인증 방식 -> 우리는 barear 사용
                 .addFilter(new JwtAuthenticationFilter(authenticationManager())) // AuthenticationManager 파라미터를 넘겨야한다.
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), userAuthRepository))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository))
                 .authorizeRequests()
                 .antMatchers("/challympic/user/*")
                 .access("hasRole('USER')")

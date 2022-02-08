@@ -23,7 +23,7 @@
 					:key="tag.id"
 					:value="tag"
 					text-color="#3396F4"
-					:to="{ path: '/search/' + tag.name }"
+					:to="{ path: '/search/' + `${encodeURIComponent(tag.name)}` }"
 				>
 					{{ tag.name }}
 				</v-chip>

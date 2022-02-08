@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import FollowLikeModal from "@/components/post/FollowLikeModal.vue";
+import FollowLikeModal from "@/components/common/FollowLikeModal.vue";
 export default {
      name: "UserProfile",
     components: {
