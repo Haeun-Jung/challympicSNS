@@ -8,7 +8,7 @@
         </v-card-title>
         <v-card-text>
           <v-row class="row-area">
-            <v-col class="input-title"># 챌린지 제목</v-col>
+            <v-col class="input-title"># 챌린지 제목(예: 미라클_모닝)</v-col>
           </v-row>
           <v-row>
               <v-col>
