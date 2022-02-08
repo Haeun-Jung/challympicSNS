@@ -21,8 +21,8 @@
 			<template #item.user_no="{ value }">
 				<div class="mr-4">{{ value }}</div>
 			</template>
-			<template #item.user_nickname="{ value }">
-				{{ value }}
+			<template #item.user_nickname="{ item }">
+				<nick-name-module :item="item.user_nickname" :itemno="item.user_no" />
 			</template>
 			<template #item.user_email="{ value }">
 				<a :href="`mailto:${value}`"> {{ value }} </a>
@@ -52,9 +52,13 @@
 </template>
 
 <script>
+	import NickNameModule from "./NickNameModule.vue";
 	//import {deleteUser, userList} from "@/api/member";
 	export default {
 		name: "UserList",
+		components: {
+			NickNameModule,
+		},
 		data() {
 			return {
 				search: "",
@@ -81,7 +85,7 @@
 						value: "user_email",
 					},
 					{
-						text: "신고 횟수",
+						text: "신고수",
 						sortable: true,
 						value: "user_reportCount",
 					},
@@ -146,9 +150,6 @@
 				}
 
 				//locaation.reload();
-			},
-			enterSelect() {
-				this.checked = this.selected.map((e) => e.userid);
 			},
 		},
 		/*	Api 통신 용

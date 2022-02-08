@@ -2,14 +2,15 @@
 	<v-card height="85vh" elevation="0">
 		<v-card-title>문 의</v-card-title>
 		<v-divider />
+		<qn-a-table />
 	</v-card>
 </template>
 
 <script>
-	//import UserTable from "@/components/admin/util/UserTable.vue";
+	import QnATable from "./util/QnATable.vue";
 	export default {
 		name: "QnAManagement",
-		//	components: { UserTable },
+		components: { QnATable },
 	};
 </script>
 
