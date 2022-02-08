@@ -113,54 +113,12 @@
 			</v-menu>
 		</div>
 
-		<v-btn v-if="!isLoggedIn" @click="clickLoginBtn" color="primary" outlined small x-small
+		<v-btn @click="clickLoginBtn" color="primary" outlined small x-small
 			>로그인</v-btn
 		>
 
-		<div v-if="!isMobile() && isLoggedIn">
-			<v-menu bottom left offset-y max-height="260" max-width="400">
-				<template v-slot:activator="{ on, attrs }">
-          <v-btn icon v-bind="attrs" v-on="on">
-            <div v-if="activeAlert" id="alert-badge">
-            </div>
-            <v-icon>
-              mdi-bell-outline
-            </v-icon>
-          </v-btn>
-				</template>
-
-        <v-card v-if="alertMenu.length > 1">
-          <v-list>
-            <v-list-item
-              v-for="(item, i) in alertMenu"
-              :key="i"
-              :to="item.link1"
-            >
-              <v-list-item-title>
-                {{ item.title }}
-                <span class="date-text">{{ dayjsRegDate(item.regDate) }}</span>
-              </v-list-item-title>
-            </v-list-item>
-          </v-list>
-          <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            text
-            @click="deleteAlert"
-          >
-            모두 읽음
-          </v-btn>
-          </v-card-actions>
-        </v-card>
-        <v-card v-else>
-          <v-list>
-            <v-list-item>
-              <v-list-item-title>새로운 알림이 없습니다.</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-card>
-			</v-menu>
-			<v-menu bottom left offset-y>
+		<div v-if="!isMobile()">
+			<v-menu bottom left>
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn icon v-bind="attrs" v-on="on">
 						<v-icon>mdi-account-circle</v-icon>
@@ -178,50 +136,8 @@
 				</v-list>
 			</v-menu>
 		</div>
-		<div v-if="isMobile() && isLoggedIn">
-      <v-menu bottom left offset-y max-height="260" max-width="270">
-				<template v-slot:activator="{ on, attrs }">
-					<v-btn icon v-bind="attrs" v-on="on">
-            <div v-if="activeAlert" id="alert-badge">
-            </div>
-            <v-icon>
-              mdi-bell-outline
-            </v-icon>
-          </v-btn>
-				</template>
-
-        <v-card v-if="alertMenu.length > 1">
-          <v-list>
-            <v-list-item
-              v-for="(item, i) in alertMenu"
-              :key="i"
-              :to="item.link1"
-            >
-              <v-list-item-title class="text-caption">
-                {{ item.title }}
-                <span class="date-text">{{ dayjsRegDate(item.regDate) }}</span>
-              </v-list-item-title>
-            </v-list-item>
-          </v-list>
-          <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            text
-            @click="deleteAlert"
-          >
-            모두 읽음
-          </v-btn>
-          </v-card-actions>
-        </v-card>
-        <v-card v-else>
-          <v-list>
-            <v-list-item>
-              <v-list-item-title class="text-caption">새로운 알림이 없습니다.</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-card>
-			</v-menu>
-			<v-menu bottom left offset-y>
+		<div v-else>
+			<v-menu bottom left>
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn icon v-bind="attrs" v-on="on">
 						<v-icon>mdi-account-circle</v-icon>
@@ -261,7 +177,6 @@
 
 <script>
 	import SideContents from "@/components/layout/SideContents.vue";
-  import fromNow from "@/plugins/dayjs.js";
 
 	export default {
 		name: "ToolBar",
@@ -274,7 +189,6 @@
 				search: "",
 				searchInput: "",
 				active: false,
-        isLoggedIn: true,
 				menu: false,
 				profileMenu: [
 					{
@@ -287,16 +201,9 @@
 						link1: "/feed/:userNo/",
 						link2: "/feed/:userNo/",
 					},
-					{ title: "관리자 페이지", link1: "/admin/" },
+					{ title: "Click Me" },
 					{ title: "Click Me 2" },
 				],
-        alertMenu: [
-          {title: 'nickname님이 회원님을 팔로우하기 시작했습니다.', regDate: '2022-02-07 15:30:25'},
-          {title: 'SSAFY님이 회원님의 게시글에 좋아요를 눌렀습니다.', regDate: '2022-02-06 20:13:25'},
-          {title: 'SSAFY님이 회원님의 게시글에 좋아요를 눌렀습니다.', regDate: '2022-02-06 20:10:25'},
-          {title: 'SSAFY님이 회원님의 게시글에 좋아요를 눌렀습니다.', regDate: '2022-02-05 20:20:25'},
-          {title: 'SSAFY님이 회원님의 게시글에 좋아요를 눌렀습니다.', regDate: '2022-02-05 20:20:25'},
-        ],
 				AllTags: [
 					//검색용 태그 : 태그 + 사용자
 					"#Gaming",
@@ -336,18 +243,7 @@
 				}
 			},*/
 		},
-    computed: {
-      activeAlert() {
-        if (this.alertMenu.length > 1) {
-          return true;
-        }
-        return false;
-      }
-    },
 		methods: {
-      dayjsRegDate(regDate) {
-        return fromNow(regDate);
-      },
 			menuItems() {
 				return this.menu;
 			},
@@ -363,12 +259,6 @@
 			clickLoginBtn() {
 				this.$router.push("/login");
 			},
-      deleteAlert() {
-        this.menu = false;
-        setTimeout(() => {
-          this.alertMenu = [];
-				}, 500);
-      },
 			/*	autocomplete 처리
 			handleInput() {
 				if (this.search.length < 2) {
@@ -420,9 +310,6 @@
 				}
 			},
 		},
-    created() {
-      // API 요청 - alert 목록 불러오기
-    }
 	};
 </script>
 <style scoped>
@@ -436,28 +323,7 @@
 	.v-toolbar__extension {
 		padding: 0;
 	}
-  .date-text {
-    font-size: 13px;
-    color: rgb(160, 160, 160);
-  }
 	.font-weight {
 		font-weight: bold;
 	}
-  #alert-badge {
-    position: absolute;
-    top: 2px;
-    right: 13px;
-    width: 10px;
-    height: 10px;
-    background-color: red;
-    border-radius: 50%;
-    z-index: 1;
-  }
-  ::v-deep .v-list-item {
-    padding: 2px 16px;
-  }
-  ::v-deep .v-list-item__title {
-    white-space: normal;
-  }
 </style>
-

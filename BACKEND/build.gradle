@@ -18,12 +18,8 @@ repositories {
 	mavenCentral()
 }
 
-
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'junit:junit:4.13.1'
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client' // MariaDB
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
@@ -31,16 +27,6 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-	// https://mvnrepository.com/artifact/net.bramp.ffmpeg/ffmpeg
-	implementation group: 'net.bramp.ffmpeg', name: 'ffmpeg', version: '0.6.2'
-//	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-aws
-//	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.1.RELEASE'
-	// https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3
-	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.122'
-	testImplementation 'org.springframework.security:spring-security-test'
-	implementation 'com.auth0:java-jwt:3.18.2'
-	implementation 'io.jsonwebtoken:jjwt:0.9.1'
-
 }
 
 tasks.named('test') {

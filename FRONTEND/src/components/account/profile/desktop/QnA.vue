@@ -1,5 +1,5 @@
 <template>
-	<v-card height="85vh" elevation="0">
+	<v-card height="100vh">
 		<v-card-title
 			>문의하기
 			<v-spacer />
@@ -54,7 +54,6 @@
 					:expanded.sync="expanded"
 					item-key="name"
 					show-expand
-					single-expand="true"
 					class="elevation-1"
 				>
 					<template v-slot:top> </template>

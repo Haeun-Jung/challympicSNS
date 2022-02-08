@@ -1,5 +1,5 @@
 <template>
-  <div class="container ma-auto">
+  <div class="my-sm-3 my-lg-auto">
     <v-form ref="form">
       <v-row justify="center">
         <v-col cols="10" sm="6" md="3" class="pa-0">

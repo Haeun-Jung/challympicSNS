@@ -1,5 +1,5 @@
 <template>
-	<v-card height="85vh" elevation="0">
+	<v-card height="100vh">
 		<v-card-title>개인 정보 수정</v-card-title>
 		<v-divider />
 		<v-container>

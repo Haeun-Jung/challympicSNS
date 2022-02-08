@@ -1,13 +1,5 @@
 <template>
-	<v-card
-		height="89vh"
-		width="100%"
-		elevation="0"
-		hide-overlay
-		absolute
-		clipped
-		app
-	>
+	<v-card height="100vh" hide-overlay absolute clipped app>
 		<v-card-title class="text-h5 d-flex justify-center">설 정</v-card-title>
 		<v-divider />
 
