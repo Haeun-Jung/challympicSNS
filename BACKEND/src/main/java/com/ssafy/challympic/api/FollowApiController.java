@@ -1,7 +1,10 @@
 package com.ssafy.challympic.api;
 
+import com.ssafy.challympic.domain.Alert;
 import com.ssafy.challympic.domain.User;
+import com.ssafy.challympic.service.AlertService;
 import com.ssafy.challympic.service.FollowService;
+import com.ssafy.challympic.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +19,21 @@ import java.util.stream.Collectors;
 public class FollowApiController {
 
     private final FollowService followService;
+    private final UserService userService;
+    private final AlertService alertService;
 
     @PostMapping("/user/{userNo}/follow")
     public Result follow(@PathVariable("userNo") int user_no, @RequestBody FollowRequest request){
         boolean follow = followService.follow(user_no, request.getFollow_follower_no());
-        return new Result(true, HttpStatus.OK.value(), null,follow);
+
+        // 팔로우했을때 알림
+        Alert alert = new Alert();
+        User writer = userService.findUser(request.follow_follower_no);
+        alert.setUser(writer);
+        alert.setAlert_content(writer.getUser_nickname() + "님이 팔로우합니다.");
+        alertService.saveAlert(alert);
+
+        return new Result(true, HttpStatus.OK.value(), null, follow);
     }
 
     @GetMapping("/user/{userNo}/follower")
