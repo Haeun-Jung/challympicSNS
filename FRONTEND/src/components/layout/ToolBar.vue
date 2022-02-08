@@ -201,7 +201,9 @@
 						link1: "/feed/:userNo/",
 						link2: "/feed/:userNo/",
 					},
-					{ title: "Click Me" },
+					{ 
+						title: "로그아웃"
+					},
 					{ title: "Click Me 2" },
 				],
 				AllTags: [
