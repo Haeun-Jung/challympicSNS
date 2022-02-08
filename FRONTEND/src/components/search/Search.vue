@@ -45,8 +45,6 @@
 		data() {
 			return {
 				row: "challenge",
-				//keyword: "#오늘의요리",
-				keyword: "#" + this.$router.currentRoute.path.substring(8),
 			};
 		},
 		watch: {
@@ -54,7 +52,14 @@
 				if (to.path != from.path) {
 					/* router path가 변경될 때마다 텍스트 리프레쉬. */
 					this.keyword = "#" + this.$router.currentRoute.path.substring(8);
+					this.$router.go();
 				}
+			},
+		},
+		computed: {
+			keyword() {
+				const temp = decodeURIComponent(this.$router.currentRoute.path);
+				return "#" + temp.substring(8);
 			},
 		},
 	};

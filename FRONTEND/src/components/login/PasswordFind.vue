@@ -38,7 +38,7 @@
 
 <script>
 export default {
-  name: "passwordFind",
+  name: "PasswordFind",
   data() {
     return {
       dialog: true,

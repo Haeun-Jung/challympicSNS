@@ -2,7 +2,7 @@
 	<v-card height="85vh" elevation="0">
 		<v-card-title
 			>문의하기
-			<v-spacer />
+			<!-- <v-spacer />-->
 			<v-dialog v-model="dialog" width="500">
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn icon v-bind="attrs" v-on="on"
@@ -23,13 +23,9 @@
 						></v-text-field>
 
 						<v-list-item-subtitle>내용</v-list-item-subtitle>
-						<v-textarea
-							value=""
-							solo
-							dense
-							outlined
-							v-model="questionContent"
-						></v-textarea>
+						<v-textarea value="" solo dense outlined v-model="questionContent">
+							<v-html></v-html>
+						</v-textarea>
 					</v-card-text>
 
 					<v-divider></v-divider>
@@ -78,6 +74,9 @@
 	export default {
 		methods: {
 			onAsk() {
+				alert(this.questionContent);
+				this.questionContent.replace(/(?:\r\n|\r|\n)/g, "<br />");
+				console.log(this.questionContent);
 				this.dialog = false;
 				//alert(this.questionContent);
 				//문의하기 api 연결
@@ -87,7 +86,7 @@
 			return {
 				expanded: [],
 				dialog: false,
-				questionContent: "",
+				questionContent: ``,
 				questionTitle: "",
 				singleExpand: true,
 				pagination: {

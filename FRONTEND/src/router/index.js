@@ -30,6 +30,12 @@ import Join from "../views/user/Join.vue";
 import Login from "../views/user/Login.vue";
 import ChallengeDetail from "../views/ChallengeDetail.vue";
 
+/*관리자 페이지 */
+import Admin from "../views/Admin.vue";
+import UserManagement from "@/components/admin/UserManagement.vue";
+import ChallengeManagement from "@/components/admin/ChallengeManagement.vue";
+import CommentManagement from "@/components/admin/CommentManagement.vue";
+import QnAManagement from "@/components/admin/QnAManagement.vue";
 
 Vue.use(VueRouter);
 
@@ -42,7 +48,7 @@ const routes = [
       {
         path: "/search/:keyword/",
         name: "Search",
-        component:Search,
+        component: Search,
       }
     ]
   },
@@ -109,27 +115,27 @@ const routes = [
     path: "/feed/:userNo/",
     name: "UserFeed",
     component: UserFeed,
-    redirect : "/feed/:userNo/post",
+    redirect: "/feed/:userNo/post",
     children: [
       {
         path: "/feed/:userNo/post",
         name: "Participated",
-        component : Participated,
+        component: Participated,
       },
       {
         path: "/feed/:userNo/challenge",
         name: "Created",
-        component : Created,
+        component: Created,
       },
       {
         path: "/feed/:userNo/like",
         name: "Like",
-        component : Like,
+        component: Like,
       },
       {
         path: "/feed/:userNo/subscription",
         name: "Subscribe",
-        component : Subscribe,
+        component: Subscribe,
       },
     ]
   },
@@ -144,11 +150,40 @@ const routes = [
     component: Login,
   },
   {
-     path: "/challenge/:challengeNo",
-   // path: "/challenge",
+    path: "/challenge/:challengeNo",
+    // path: "/challenge",
     name: "ChallengeDetail",
     component: ChallengeDetail,
   },
+  {
+    path: "/admin/",
+    name: "Admin",
+    component: Admin,
+    redirect:"/admin/user",
+    //redirect를 stat으로 하기
+    children: [
+      {
+        path: "/admin/user",
+        name: "UserManagement",
+        component:UserManagement,
+      },
+      {
+        path: "/admin/challenge",
+        name: "ChallengeManagement",
+        component:ChallengeManagement,
+      },
+      {
+        path: "/admin/comment",
+        name: "CommentManagement",
+        component:CommentManagement,
+      },
+      {
+        path: "/admin/qna",
+        name: "QnAManagement",
+        component:QnAManagement,
+      },
+    ]
+  }
 ];
 
 const router = new VueRouter({

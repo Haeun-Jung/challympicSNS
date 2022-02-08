@@ -28,7 +28,7 @@ public class Search {
 
     private String search_content;
 
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
     private Date search_regdate;
 }
