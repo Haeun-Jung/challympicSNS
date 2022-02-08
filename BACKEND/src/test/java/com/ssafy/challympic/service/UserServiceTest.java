@@ -1,7 +1,6 @@
 package com.ssafy.challympic.service;
 
 import com.ssafy.challympic.domain.User;
-import com.ssafy.challympic.domain.UserAuth;
 import com.ssafy.challympic.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;

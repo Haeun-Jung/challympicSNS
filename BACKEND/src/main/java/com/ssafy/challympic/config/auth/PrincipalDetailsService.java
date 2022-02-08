@@ -1,8 +1,6 @@
 package com.ssafy.challympic.config.auth;
 
 import com.ssafy.challympic.domain.User;
-import com.ssafy.challympic.domain.UserAuth;
-import com.ssafy.challympic.repository.UserAuthRepository;
 import com.ssafy.challympic.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,12 +14,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PrincipalDetailsService implements UserDetailsService {
 
-    private final UserAuthRepository userAuthRepository;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String user_email) throws UsernameNotFoundException {
 //        System.out.println("PrincipalDetailsService의 loadUserByUsername()");
-        UserAuth userEntity = userAuthRepository.findByEmail(user_email);
+        User userEntity = userRepository.findByEmail(user_email);
         return new PrincipalDetails(userEntity);
     }
 }
