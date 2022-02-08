@@ -166,7 +166,6 @@ public class UserApiController {
         }
     }
 
-    //TODO : User, UserAuth 다 같이 지워줘야할지?
     @DeleteMapping("/user/account/{userNo}")
     public Result deleteUser(@PathVariable("userNo") int user_no){
         userService.deleteUser(user_no);
