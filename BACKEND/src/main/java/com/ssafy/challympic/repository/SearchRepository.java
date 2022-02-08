@@ -39,9 +39,8 @@ public class SearchRepository {
 
     public List<Challenge> findChallengeByTagContent(String tag) {
         return em.createQuery(
-                "select c from Challenge c where c.challenge_no = " +
-                        "(select ct.challenge.challenge_no from ChallengeTag ct where ct.tag = " +
-                            "(select t from Tag t where t.tag_content = :tag))", Challenge.class)
+                "select ct.challenge from ChallengeTag ct where ct.tag.tag_no = " +
+                        "(select t.tag_no from Tag t where t.tag_content = :tag)", Challenge.class)
                 .setParameter("tag", tag)
                 .getResultList();
     }
@@ -76,5 +75,9 @@ public class SearchRepository {
     public List<User> findRank() {
         return em.createQuery("select t.user from Title t where t.user.user_no = (select count(t) from Title t group by t.user.user_no)", User.class)
                 .getResultList();
+    }
+
+    public void saveSearchRecord(Search search) {
+        em.persist(search);
     }
 }
