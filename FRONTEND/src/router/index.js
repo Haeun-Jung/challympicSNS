@@ -36,6 +36,7 @@ import UserManagement from "@/components/admin/UserManagement.vue";
 import ChallengeManagement from "@/components/admin/ChallengeManagement.vue";
 import CommentManagement from "@/components/admin/CommentManagement.vue";
 import QnAManagement from "@/components/admin/QnAManagement.vue";
+import StatManagement from "@/components/admin/StatManagement.vue";
 
 Vue.use(VueRouter);
 
@@ -181,6 +182,11 @@ const routes = [
         path: "/admin/qna",
         name: "QnAManagement",
         component:QnAManagement,
+      },
+      {
+        path: "/admin/stats",
+        name: "StatManagement",
+        component:StatManagement,
       },
     ]
   }
