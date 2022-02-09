@@ -98,6 +98,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(json);
+        response.setHeader("Access-Control-Allow-Headers", "Authorization");
         // 보통
         // 서버에서 세션 ID를 생성하고 클라이언트에게 응답해준다.
         // 요청할 때마다 쿠키값 세션 ID를 항상 들고 서버에게 요청하기 때문에

@@ -43,10 +43,16 @@ public class AdminService {
         return adminRepository.findAllChallenge();
     }
 
+    private final TagRepository tagRepository;
+
     @Transactional
     public void deleteChallenge(int challenge_no){
         Title findTitle = titleRepository.findByChallenge(challenge_no);
         Challenge findChallenge = challengeRepository.findOne(challenge_no);
+        List<ChallengeTag> challengeTags = tagRepository.findByChallengeNo(challenge_no);
+        for(ChallengeTag ct : challengeTags) {
+            tagRepository.deleteTags(ct);
+        }
         titleRepository.deleteTitle(findTitle);
         adminRepository.deleteChallenge(findChallenge);
     }
@@ -73,8 +79,10 @@ public class AdminService {
     @Transactional
     public void deletePostByChallenge(int challenge_no) {
         List<Post> postList = postRepository.findByChallengNo(challenge_no);
-        for (Post post : postList) {
-            postRepository.deleteByPostNo(post.getPost_no());
+        if(!postList.isEmpty()){
+            for (Post post : postList) {
+                postRepository.deleteByPostNo(post.getPost_no());
+            }
         }
     }
 
