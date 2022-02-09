@@ -237,9 +237,6 @@ public class PostApiController {
 
             int postId = postService.save(post);
 
-            if(postId != -1)
-                return new Result(true, HttpStatus.OK.value(), media);
-
             // 태그한 사람 알림
             for(String str : splitSharp) {
                 if(str.startsWith("@")) {
@@ -252,10 +249,13 @@ public class PostApiController {
                     }
                     alert.setUser(user);
                     User writer = userService.findUser(postRequest.getUser_no());
-                    alert.setAlert_content(writer + "님이 태그했습니다.");
+                    alert.setAlert_content(writer.getUser_nickname() + "님이 태그했습니다.");
                     alertService.saveAlert(alert);
                 }
             }
+
+            if(postId != -1)
+                return new Result(true, HttpStatus.OK.value(), media);
 
         } catch(Exception e){
             e.printStackTrace();
