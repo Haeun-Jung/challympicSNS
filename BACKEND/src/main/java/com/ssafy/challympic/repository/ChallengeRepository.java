@@ -42,9 +42,14 @@ public class ChallengeRepository {
     }
 
     public Challenge findByChallengeNo(int challengeNo) {
-        return em.createQuery("select c from Challenge c where c.challenge_no = :challenge_no", Challenge.class)
-                .setParameter("challenge_no", challengeNo)
-                .getSingleResult();
+        try{
+            return em.createQuery("select c from Challenge c where c.challenge_no = :challenge_no", Challenge.class)
+                    .setParameter("challenge_no", challengeNo)
+                    .getSingleResult();
+        }catch (NullPointerException e){
+            return null;
+        }
+
     }
 
     public Challenge findOne(int challengeNo){

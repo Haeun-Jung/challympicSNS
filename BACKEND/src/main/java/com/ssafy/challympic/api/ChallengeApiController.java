@@ -186,6 +186,9 @@ public class ChallengeApiController {
     @PostMapping("/challenge/{challengeNo}/subscribe/{userNo}")
     public Result addSubscription(@PathVariable int challengeNo, @PathVariable int userNo) {
         Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
+        if(challenge == null) {
+            return new Result(false, HttpStatus.BAD_REQUEST.value());
+        }
         User user = userService.findUser(userNo);
 
         Subscription findSubscription = subscriptionService.findSubscriptionByChallengeAndUser(challengeNo, userNo);
@@ -203,6 +206,9 @@ public class ChallengeApiController {
     @DeleteMapping("/challenge/{challengeNo}/subscribe/{userNo}")
     public Result removeSubscription(@PathVariable int challengeNo, @PathVariable int userNo) {
         Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
+        if(challenge == null) {
+            return new Result(false, HttpStatus.BAD_REQUEST.value());
+        }
         User user = userService.findUser(userNo);
 
         subscriptionService.deleteSubscription(Subscription.setSubscription(challenge, user));

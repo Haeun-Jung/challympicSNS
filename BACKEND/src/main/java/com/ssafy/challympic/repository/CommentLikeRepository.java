@@ -29,7 +29,7 @@ public class CommentLikeRepository {
     }
 
     public List<CommentLike> findLikeCntByComment(int comment_no){
-        return em.createQuery("select cl from CommentLike cl where cl.comment.comment_no = :comment_no")
+        return em.createQuery("select cl from CommentLike cl where cl.comment.comment_no = :comment_no", CommentLike.class)
                 .setParameter("comment_no", comment_no)
                 .getResultList();
     }

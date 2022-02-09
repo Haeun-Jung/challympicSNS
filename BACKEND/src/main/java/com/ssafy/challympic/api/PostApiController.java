@@ -99,6 +99,7 @@ public class PostApiController {
 
         // 챌린지 정보
         Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
+        if(challenge == null) return new Result(false, HttpStatus.BAD_REQUEST.value());
         String type = challenge.getChallenge_type().name().toLowerCase();
         // 포스트 리스트
         List<Post> postList = postService.getPostList(challengeNo);

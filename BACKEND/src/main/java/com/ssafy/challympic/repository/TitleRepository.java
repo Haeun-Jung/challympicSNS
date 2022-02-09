@@ -18,9 +18,13 @@ public class TitleRepository {
     }
 
     public Title findByChallenge(int challenge_no){
-        return em.createQuery("select t from Title t where t.challenge.challenge_no = :challenge_no", Title.class)
-                .setParameter("challenge_no", challenge_no)
-                .getSingleResult();
+        try {
+            return em.createQuery("select t from Title t where t.challenge.challenge_no = :challenge_no", Title.class)
+                    .setParameter("challenge_no", challenge_no)
+                    .getSingleResult();
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     public void deleteTitle(Title title){
