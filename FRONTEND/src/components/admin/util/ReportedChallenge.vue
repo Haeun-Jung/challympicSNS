@@ -1,37 +1,49 @@
 <template>
-	<v-container class="official-table">
+	<v-container>
 		<v-data-table
 			:headers="headers"
 			:items="challengeList"
 			item-key="challenge_no"
-			class="elevation-1 official-table"
+			class="elevation-1"
+			dense
 			:search="search"
 			:sort-by.sync="sortBy"
-			items-per-page="10"
 			:sort-desc.sync="sortDesc"
 			:hide-default-footer="true"
 		>
+			<!--search ends here-->
+			<template #item.challenge_participants="{ item }">
+				<div v-if="item.challenge_report === 0" class="mr-8"></div>
+				<div v-else class="mr-8">{{ item.challenge_participants }}</div>
+			</template>
+
 			<template #item.challenge_title="{ item }">
-				<router-link
-					:to="{ path: `/challenge/${item.challenge_no}` }"
-					style="text-decoration: none; color: inherit; mr-2"
-				>
-					<div
-						style="
-							text-overflow: ellipsis;
-							overflow-x: hidden;
-							overflow: hidden;
-							white-space: nowrap;
-						"
+				<div v-if="item.challenge_report === 0"></div>
+				<div v-else>
+					<router-link
+						:to="{ path: `/challenge/${item.challenge_no}` }"
+						style="text-decoration: none; color: inherit; mr-2"
 					>
-						<div v-if="item.challenge_official == true">
-							{{ item.challenge_title }}✅
-						</div>
-						<div v-else>
-							{{ item.challenge_title }}
-						</div>
-					</div>
-				</router-link>
+						{{ item.challenge_title }}
+					</router-link>
+				</div>
+			</template>
+
+			<template #item.challenge_report="{ item }">
+				<div v-if="item.challenge_report === 0"></div>
+				<div v-else>
+					{{ item.challenge_report }}
+				</div>
+			</template>
+
+			<template v-slot:item.delete="props">
+				<v-icon
+					v-if="props.item.challenge_report > 0"
+					small
+					@click="goodbye(props.item)"
+				>
+					mdi-trash-can</v-icon
+				>
 			</template>
 		</v-data-table>
 	</v-container>
@@ -44,30 +56,31 @@
 		data() {
 			return {
 				search: "",
-				sortBy: "challenge_participants",
+				page: "",
+				sortBy: "challenge_report",
 				sortDesc: true,
-				spp: 5,
-				itemsPerPage: 5,
-				checkbox: true,
 				//api 통신전 dummy data
 				headers: [
 					{
-						text: "챌린지명",
-						width: "2%",
+						text: "챌린지",
 						sortable: false,
 						value: "challenge_title",
 					},
 					{
 						text: "참여",
-						width: "7px",
-						sortable: true /*디비 이름 확인하기 */,
+						sortable: false,
 						value: "challenge_participants",
 					},
 					{
-						text: "구독" /*db 이름 확인하기 */,
-						width: "7px",
-						sortable: true,
-						value: "challenge_subscribe_no",
+						text: "신고",
+						sortable: false,
+						value: "challenge_report",
+						//		value: "action",
+					},
+					{
+						value: "delete",
+						align: "center",
+						sortable: false,
 					},
 				],
 				challengeList: [
@@ -104,44 +117,22 @@
 						challenge_report: 0,
 						challenge_official: true,
 					},
-					{
-						challenge_no: 12,
-						challenge_title: "줍깅",
-						user_nickname: "챌림픽",
-						challenge_participants: 121231,
-						challenge_subscribe_no: 454,
-						challenge_start: "2022-01-26",
-						challenge_end: "2022-07-26",
-						challenge_report: 4,
-						challenge_official: true,
-					},
-					{
-						challenge_no: 7,
-						challenge_title: "종이학빨리접기",
-						user_nickname: "종이학",
-						challenge_participants: 2,
-						challenge_subscribe_no: 1,
-						challenge_start: "2021-12-5",
-						challenge_end: "2022-01-02",
-						challenge_report: 1,
-						challenge_official: false,
-					},
-					{
-						challenge_no: 6,
-						challenge_title: "팬세우기",
-						user_nickname: "팬팬팬",
-						challenge_participants: 1,
-						challenge_subscribe_no: 0,
-						challenge_start: "2022-02-05",
-						challenge_end: "2022-06-30",
-						challenge_report: 0,
-						challenge_official: false,
-					},
 				],
 			};
 		},
 
 		methods: {
+			goodbye(item) {
+				var message = "정말 " + item.challenge_title + "을 삭제하시겠습니까?";
+				if (confirm(message)) {
+					alert(item.challenge_title + "를 삭제하였습니다.");
+					//item.user_no로 회원 정지 api통신
+					//deleteUser(this.item);
+				} else {
+					alert("취소하였습니다.");
+				}
+				//locaation.reload();
+			},
 			makeOfficial(item) {
 				if (!item.challenge_official) {
 					alert("공식 챌린지를 해제했습니다.");
@@ -172,3 +163,5 @@
 		},*/
 	};
 </script>
+
+<style></style>

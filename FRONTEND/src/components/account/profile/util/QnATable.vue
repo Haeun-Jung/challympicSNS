@@ -3,16 +3,27 @@
 		<v-data-table
 			:headers="headers"
 			:items="qnaList"
-			item-key="qna_answer_regdate"
+			item-key="qna_no"
 			class="elevation-1"
-			:search="search"
 			:sort-by.sync="sortBy"
 			:sort-desc.sync="sortDesc"
-			:custom-filter="filter"
+			:expanded.sync="expanded"
+			@click:row="clicked"
+			show-expand
 		>
+			<template v-slot:expanded-item="{ item }" class="hidden-md-and-down">
+				<td :colspan="headers.length + 1">
+					<qn-a-expansion :item="item" />
+				</td>
+			</template>
+
+			<!--search ends here-->
+			<template #item.qna_no="{ value }">
+				<div class="mr-8">{{ value }}</div>
+			</template>
+
 			<template #item.qna_title="{ item }">
 				<div
-					v-if="item.qna_answer_regdate == ``"
 					style="
 						text-overflow: ellipsis;
 						overflow: hidden;
@@ -24,45 +35,31 @@
 					{{ item.qna_title }}
 				</div>
 			</template>
-			<template #item.user_nickname="{ item }">
-				<div v-if="item.qna_answer_regdate == ``">
-					{{ item.user_nickname }}
-				</div>
-			</template>
 
 			<template v-slot:item.actions="props">
-				<div v-if="props.item.qna_answer_regdate == ``">
-					<v-btn
-						dense
-						elevation="0"
-						color="primary"
-						ripple="false"
-						outlined
-						small
-						@click.stop="$set(dialogNote, props.item.qna_no, true)"
-						>답변</v-btn
-					>
-					<answer-modal :item="props.item" :dialogNote="dialogNote" />
-				</div>
-				<div v-else></div>
+				<div v-if="props.item.qna_answer_regdate == ``"></div>
+				<div v-else>{{ props.item.qna_answer_regdate }}</div>
 			</template>
 		</v-data-table>
 	</v-container>
 </template>
 
 <script>
-	import AnswerModal from "./AnswerModal.vue";
+	import QnAExpansion from "@/components/admin/util/QnAExpansion.vue";
+
 	//import {deleteUser, userList} from "@/api/member";
 	export default {
 		//	components: { AnswerModal },
-		components: { AnswerModal },
+		components: { QnAExpansion },
 		name: "UserList",
 		data() {
 			return {
-				dialogNote: [],
-				page: "",
 				search: "",
-				sortBy: "qna_report_regdate",
+				expanded: [],
+				dialogNote: [],
+				isExpanded: false,
+				page: "",
+				sortBy: "status",
 				sortDesc: false,
 				show: false,
 				value: "comment_content",
@@ -70,20 +67,18 @@
 				//api 통신전 dummy data
 				headers: [
 					{
-						text: "작성자",
-						value: "user_nickname",
-					},
-					{
 						text: "제목",
 						sortable: false,
-						width: "25%",
+						width: "40%",
 						value: "qna_title",
 					},
-
 					{
-						//	value: "qna_answer_regdate",
+						text: "등록일",
+						value: "qna_question_regdate",
+					},
+					{
+						text: "답변일",
 						value: "actions",
-						align: "center",
 					},
 				],
 				qnaList: [
@@ -120,10 +115,6 @@
 		},
 
 		methods: {
-			filter(qna_answer_regdate) {
-				//	alert("value");
-				return qna_answer_regdate == ``;
-			},
 			clicked(item, event) {
 				if (event.isExpanded) {
 					const index = this.expanded.findIndex((i) => i === item);
@@ -140,32 +131,31 @@
 				//alert(item.qna_title + "애 대한 답변 하기 - 모달창으로 답변 등록 후 ");
 			},
 		},
-
 		/*	computed: {
-					show: {
-						get() {
-							return this.value !== null;
-						},
-					},
-				},*/
+			show: {
+				get() {
+					return this.value !== null;
+				},
+			},
+		},*/
 		/*	Api 통신 용
-				created() {
-					let param = {
-						pg: 1,
-						spp: 20,
-						key: null,
-						word: null,
-					};
-					userList(
-						param,
-						(response) => {
-							this.userList = response.data;
-						},
-						(error) => {
-							console.log(error);
-						}
-					);
-				},*/
+		created() {
+			let param = {
+				pg: 1,
+				spp: 20,
+				key: null,
+				word: null,
+			};
+			userList(
+				param,
+				(response) => {
+					this.userList = response.data;
+				},
+				(error) => {
+					console.log(error);
+				}
+			);
+		},*/
 	};
 </script>
 
