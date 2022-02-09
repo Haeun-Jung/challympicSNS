@@ -37,6 +37,15 @@ public class InitDB {
             user.setUser_auth(UserAuthEnum.ADMIN);
 
             em.persist(user);
+
+            User testUser = new User();
+            testUser.setUser_email("test01@ssafy.com");
+            String testPwd = "123";
+            String encTestPwd = bCryptPasswordEncoder.encode(testPwd);
+            user.setUser_pwd(encTestPwd);
+            user.setUser_nickname("테스트");
+
+            em.persist(testUser);
         }
     }
 }
