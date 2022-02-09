@@ -18,11 +18,6 @@ public class AdminRepository {
             .getResultList();
     }
 
-    public void deleteUser(User user){
-        em.remove(user);
-        em.flush();
-    }
-
     public List<Challenge> findAllChallenge(){
         return em.createQuery("select c from Challenge c", Challenge.class)
                 .getResultList();
@@ -36,11 +31,6 @@ public class AdminRepository {
     public List<Post> findAllPost(){
         return em.createQuery("select p from Post p", Post.class)
                 .getResultList();
-    }
-
-    public void deletePost(Post post){
-        em.remove(post);
-        em.flush();
     }
 
     public List<Comment> findAllComment(){
