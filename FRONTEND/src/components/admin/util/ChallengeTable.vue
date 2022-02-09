@@ -24,6 +24,10 @@
 			<template #item.challenge_report="{ value }">
 				<div class="ml-2 justify-center">{{ value }}</div>
 			</template>
+			<template #item.challenge_participants="{ value }">
+				<!--	<div v-bind="sumField(value)">{{ value }}</div>-->
+				{{ value }}
+			</template>
 			<template #item.challenge_title="{ item }">
 				<router-link
 					:to="{ path: `/challenge/${item.challenge_no}` }"
@@ -83,9 +87,11 @@
 		data() {
 			return {
 				search: "",
+				sum: 0,
 				page: "",
 				sortBy: "status",
 				sortDesc: false,
+				index: 0,
 				checkbox: true,
 				//api 통신전 dummy data
 				headers: [

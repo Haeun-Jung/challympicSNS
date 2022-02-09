@@ -5,38 +5,41 @@
 
 		<v-conatiner fluid>
 			<v-layout row>
-				<v-flex xs5>
-					<!-- 왼쪽 콜륨 -->
+				<v-flex xs6>
 					<v-layout column>
-						<v-container fluid>
-							<v-list-item-title class="ma-2">
-								<v-icon color="#3396F4">mdi-trophy-variant</v-icon>인기 챌린지
-								목록
+						<v-container>
+							<v-list-item-title class="ma-2; mt-5">
+								<v-icon color="#3396F4">mdi-comment-question</v-icon>
+								현황
 							</v-list-item-title>
-							<v-layout row>
-								<popular-challenge-table />
-							</v-layout>
-							<v-layout row>
-								<v-list-item-title class="ma-2">
-									<v-icon color="#3396F4">mdi-comment-question</v-icon>
-									답변이 필요한 문의
+							<graph />
+						</v-container>
+						<v-container>
+							<v-list-item-title class="ma-2; mt-5">
+								<v-icon color="#3396F4">mdi-alert</v-icon>
+								신고 챌린지 목록
+							</v-list-item-title>
+							<reported-challenge />
+						</v-container>
+					</v-layout>
+				</v-flex>
+				<v-flex xs6>
+					<!-- 왼쪽 콜륨 -->
+
+					<v-layout column class="mt-5">
+						<v-container>
+							<v-flex>
+								<v-list-item-title class="ma-2;mt-5">
+									<v-icon color="#3396F4">mdi-trophy-variant</v-icon>인기 챌린지
+									목록
 								</v-list-item-title>
 								<popular-challenge-table />
-							</v-layout>
+							</v-flex>
 						</v-container>
 					</v-layout>
 				</v-flex>
 
-				<!-- 오른쪽 콜륨 -->
-				<v-flex xs6>
-					<v-layout column>
-						<v-list-item-title class="ma-2">
-							<v-icon color="#3396F4">mdi-comment-question</v-icon>
-							답변이 필요한 문의
-						</v-list-item-title>
-						<unanswered-table />
-					</v-layout>
-				</v-flex> </v-layout
+				<!-- 오른쪽 콜륨 --> </v-layout
 			><!-- end of row -->
 		</v-conatiner>
 	</v-card>
@@ -44,10 +47,12 @@
 
 <script>
 	import PopularChallengeTable from "./util/PopularChallengeTable.vue";
-	import UnansweredTable from "./util/UnansweredTable.vue";
+	//	import UnansweredTable from "./util/UnansweredTable.vue";
+	import Graph from "./util/Graph.vue";
+	import ReportedChallenge from "./util/ReportedChallenge.vue";
 	export default {
 		name: "StatManagement",
-		components: { PopularChallengeTable, UnansweredTable },
+		components: { PopularChallengeTable, Graph, ReportedChallenge },
 	};
 </script>
 
