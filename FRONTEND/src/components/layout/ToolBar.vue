@@ -170,6 +170,7 @@
 						v-for="(item, i) in profileMenu"
 						:key="i"
 						:to="item.link1"
+            @click="handleProfileMenuClick(i)"
 					>
 						<v-list-item-title>{{ item.title }}</v-list-item-title>
 					</v-list-item>
@@ -225,6 +226,7 @@
 						v-for="(item, i) in profileMenu"
 						:key="i"
 						:to="item.link2"
+            @click="handleProfileMenuClick(i)"
 					>
 						<v-list-item-title>{{ item.title }}</v-list-item-title>
 					</v-list-item>
@@ -266,7 +268,6 @@
 				search: "",
 				searchInput: "",
 				active: false,
-				isLoggedIn: true,
 				menu: false,
 				profileMenu: [
 					{
@@ -357,6 +358,9 @@
 				}
 				return false;
 			},
+      isLoggedIn() {
+        return this.$store.state.userStore.isLoggedIn;
+      }
 		},
 		methods: {
 			dayjsRegDate(regDate) {
@@ -377,6 +381,13 @@
 			clickLoginBtn() {
 				this.$router.push("/login");
 			},
+      handleProfileMenuClick(i) {
+        if (this.profileMenu[i].title === "로그아웃") {
+          console.log("로그아웃");
+          localStorage.removeItem('Authorization');
+          this.$store.commit('LOGOUT');
+        }
+      },
 			deleteAlert() {
 				this.menu = false;
 				setTimeout(() => {
