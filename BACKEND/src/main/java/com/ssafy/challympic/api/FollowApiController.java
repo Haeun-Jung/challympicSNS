@@ -20,7 +20,7 @@ public class FollowApiController {
     @PostMapping("/user/{userNo}/follow")
     public Result follow(@PathVariable("userNo") int user_no, @RequestBody FollowRequest request){
         boolean follow = followService.follow(user_no, request.getFollow_follower_no());
-        return new Result(true, HttpStatus.OK.value(), null,follow);
+        return new Result(true, HttpStatus.OK.value(), null, follow);
     }
 
     @GetMapping("/user/{userNo}/follower")
