@@ -43,35 +43,17 @@
 			<!-- properties : 
 				:single-expand="singleExpand"
                 -->
-			<v-col md="10">
-				<v-data-table
-					:headers="dessertHeaders"
-					:items="desserts"
-					:expanded.sync="expanded"
-					item-key="name"
-					show-expand
-					single-expand="true"
-					class="elevation-1"
-				>
-					<template v-slot:top> </template>
-					<template v-slot:expanded-item="{ headers }">
-						<!-- 
-                            
-					<template v-slot:expanded-item="{ headers, item }">
-                            여기에 item.answer로 갈아끼기 : A. {{item.answer}}-->
-						<td :colspan="headers.length">
-							여기에.. item.question도 마저 넣고.. A. challympic@ssafy.com으로
-							연락주세요
-						</td>
-					</template>
-				</v-data-table>
+			<v-col md="11">
+				<qn-a-table />
 			</v-col>
 		</v-row>
 	</v-card>
 </template>
 
 <script>
+	import QnATable from "../util/QnATable.vue";
 	export default {
+		components: { QnATable },
 		methods: {
 			onAsk() {
 				alert(this.questionContent);
@@ -103,30 +85,34 @@
 
 					{ text: "", value: "data-table-expand" },
 				],
-				desserts: [
+				qnaList: [
 					{
-						name: "Q. 챌린지가 등록이 안되요1",
-						answerStatus: 159,
+						qna_no: 1,
+						user_nickname: "김싸피",
+						qna_title: "🥕🥕🥕🥕🥕🥕🥕🥕",
+						qna_question: "도와주세여...",
+						qna_answer: "네...",
+						qna_question_regdate: "2022-01-28",
+						qna_answer_regdate: "2022-02-29",
 					},
 					{
-						name: "Q. 챌린지가 등록이 안되요2",
-						answerStatus: 237,
+						qna_no: 2,
+						user_nickname: "김싸피",
+						qna_title: "문의사항 있습니다",
+						qna_question: "문의내용ㅇ",
+						qna_answer: "",
+						qna_question_regdate: "2022-02-06",
+						qna_answer_regdate: "",
 					},
 					{
-						name: "Q. 챌린지가 등록이 안되요3",
-						answerStatus: 262,
-					},
-					{
-						name: "Q. 챌린지가 등록이 안되요4",
-						answerStatus: 305,
-					},
-					{
-						name: "Q. 챌린지가 등록이 안되요5",
-						answerStatus: 356,
-					},
-					{
-						name: "Q. 챌린지가 등록이 안되요6",
-						answerStatus: 375,
+						qna_no: 24,
+						user_nickname: "청싸피",
+						qna_title: "질문!",
+						qna_question:
+							"Lorem Ipsum is simply dummy text of the printing<br/> and typesetting industry. Lorem Ipsum <br/>has been the industry's standard dummy text ever since<br/> the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.<br/> It has survived not only five centuries, but also <br/>the leap into electronic typesetting, remaining <br/>essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets <br/>containing Lorem Ipsum passages, and more recently with desktop publishing software<br/> like Aldus PageMaker including versions of Lorem Ipsum.",
+						qna_answer: "",
+						qna_question_regdate: "2022-01-31",
+						qna_answer_regdate: "",
 					},
 				],
 			};
