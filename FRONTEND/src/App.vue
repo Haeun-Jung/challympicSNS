@@ -1,19 +1,19 @@
 <template>
-	<v-app class="app">
-		<tool-bar />
-		<router-view />
-	</v-app>
+  <v-app>
+      <router-view />
+  </v-app>
 </template>
 
 <script>
-	import ToolBar from "./components/layout/ToolBar.vue";
+export default {
+  name: "App",
 
-	export default {
-		name: "App",
-		components: { ToolBar },
-		data: () => ({}),
-	};
+  data: () => ({
+  
+  }),
+};
 </script>
+<<<<<<< HEAD
 
 <style scoped>
 /* font */
@@ -23,3 +23,5 @@
 	font-family: 'Gothic A1', sans-serif;
 }
 </style>
+=======
+>>>>>>> 59b10cbf8e03668b5e7e2f3b3eda90cb0aab7a68

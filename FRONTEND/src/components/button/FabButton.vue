@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
 	<div>
 		<!-- 오른쪽 하단 챌린지/POST 선택 모달 -->
 		<v-menu bottom offset-y>
@@ -72,3 +73,19 @@
 </script>
 
 <style scoped></style>
+=======
+  <v-fab-transition>
+    <v-btn v-show="!hidden" color="#3396F4" dark fixed bottom right fab>
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
+  </v-fab-transition>
+</template>
+
+<script>
+export default {
+  name: "FabButton",
+};
+</script>
+
+<style></style>
+>>>>>>> 59b10cbf8e03668b5e7e2f3b3eda90cb0aab7a68

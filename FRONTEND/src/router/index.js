@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Main from "../views/Main.vue";
+<<<<<<< HEAD
 /*검색 화면 */
 import Search from "../components/search/Search.vue";
 /*프로필 */
@@ -30,6 +31,8 @@ import Join from "../views/user/Join.vue";
 import Login from "../views/user/Login.vue";
 import ChallengeDetail from "../views/ChallengeDetail.vue";
 
+=======
+>>>>>>> 59b10cbf8e03668b5e7e2f3b3eda90cb0aab7a68
 
 Vue.use(VueRouter);
 
@@ -46,6 +49,7 @@ const routes = [
       }
     ]
   },
+<<<<<<< HEAD
   {
     path: "/user/account/",
     name: "Account",
@@ -149,6 +153,8 @@ const routes = [
     name: "ChallengeDetail",
     component: ChallengeDetail,
   },
+=======
+>>>>>>> 59b10cbf8e03668b5e7e2f3b3eda90cb0aab7a68
 ];
 
 const router = new VueRouter({
