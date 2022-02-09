@@ -64,11 +64,22 @@ public class FeedApiController {
      */
     @GetMapping("/feed/{userNo}/like")
     public Result getLikePostList(@PathVariable int userNo) {
-        List<Post> posts = postService.getPostListByUserNo(userNo);
+        List<Post> posts = postService.getLikePostListByUserNo(userNo);
         List<PostDto> postList = posts.stream()
                 .map(p -> new PostDto(p))
                 .collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), postList);
     }
 
+    /**
+     * 내가 만든 포스트 목록
+     */
+    @GetMapping("/feed/{userNo}/post")
+    public Result getPostLst(@PathVariable int userNo) {
+        List<Post> posts = postService.getPostListByUserNo(userNo);
+        List<PostDto> postList = posts.stream()
+                .map(p -> new PostDto(p))
+                .collect(Collectors.toList());
+        return new Result(true, HttpStatus.OK.value(), postList);
+    }
 }
