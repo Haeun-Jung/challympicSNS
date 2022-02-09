@@ -44,7 +44,7 @@ public class InitDB {
             String testPwd = "123";
             String encTestPwd = bCryptPasswordEncoder.encode(testPwd);
             testUser.setUser_pwd(encTestPwd);
-            testUser.setUser_nickname("테스트");
+            testUser.setUser_nickname("test");
 
             em.persist(testUser);
         }
