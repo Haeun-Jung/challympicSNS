@@ -9,23 +9,20 @@ spring:
     hibernate:
 #      ddl-auto: update
       ddl-auto: create
-
     properties:
       hibernate:
 #        show_sql: true
         format_sql: true
-
   servlet:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
+      #test
 
 server:
   port: 7777
   servlet:
     context-path: /challympic
-  tomcat:
-    basedir: C:\SSAFY\WorkSpace_for_Git\01_Common_Sub_2\BACKEND\public
 
 logging:
   level:
