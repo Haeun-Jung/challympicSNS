@@ -7,8 +7,8 @@ spring:
     password: ssafy
   jpa:
     hibernate:
-      ddl-auto: update
-#      ddl-auto: create
+#      ddl-auto: update
+      ddl-auto: create
 
     properties:
       hibernate:
