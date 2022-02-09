@@ -114,10 +114,8 @@ export default {
     return {
       email: "",
       duplicateEmailCheck: false,
-      possibleEmail: false,
       nickname: "",
       duplicateNicknameCheck: false,
-      possibleNickname: false,
       password: "",
       pwShow: false,
       pwConfirmation: "",
@@ -140,6 +138,12 @@ export default {
     };
   },
   computed: {
+    possibleEmail() {
+      return this.$store.state.userStore.possibleEmail;
+    },
+    possibleNickname() {
+      return this.$store.state.userStore.possibleNickname;
+    },
     emailRules() {
       return [
         (v) => !!v || "이메일을 입력해주세요.",
@@ -174,26 +178,24 @@ export default {
   methods: {
     checkEmail() {
       // 이메일 중복 확인 API 요청
+      this.$store.dispatch('confirmEmail', this.email);
       this.duplicateEmailCheck = true;
-      // 사용 가능한 이메일일 경우
-      // this.possibleEmail = true;
-      // 중복된 이메일일 경우
-      this.possibleEmail = false;
     },
     checkNickname() {
       // 닉네임 중복 확인 API 요청
+      this.$store.dispatch('confirmNickname', this.nickname);
       this.duplicateNicknameCheck = true;
-      // 사용 가능한 닉네임일 경우
-      // this.possibleNickname = true;
-      // 중복된 닉네임일 경우
-      this.possibleNickname = false;
     },
-    join() {
+    join(event) {
+      event.preventDefault();
+
       const validation = this.$refs.form.validate();
-      if (!validation) {
+      if (!validation || !this.possibleEmail || !this.possibleNickname) {
         return;
       }
       // 회원가입 API 요청
+      this.$store.dispatch('join', { user_email: this.email, user_nickname: this.nickname, user_pwd: this.password});
+      
     },
   },
 };
