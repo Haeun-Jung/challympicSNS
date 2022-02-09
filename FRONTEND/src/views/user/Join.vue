@@ -177,12 +177,10 @@ export default {
   },
   methods: {
     checkEmail() {
-      // 이메일 중복 확인 API 요청
       this.$store.dispatch('confirmEmail', this.email);
       this.duplicateEmailCheck = true;
     },
     checkNickname() {
-      // 닉네임 중복 확인 API 요청
       this.$store.dispatch('confirmNickname', this.nickname);
       this.duplicateNicknameCheck = true;
     },
@@ -193,7 +191,6 @@ export default {
       if (!validation || !this.possibleEmail || !this.possibleNickname) {
         return;
       }
-      // 회원가입 API 요청
       this.$store.dispatch('join', { user_email: this.email, user_nickname: this.nickname, user_pwd: this.password});
       
     },
