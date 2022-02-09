@@ -66,10 +66,22 @@ public class ChallengeRepository {
     }
 
     public Challenge findOne(int challengeNo){
-        return em.find(Challenge.class, challengeNo);
+        try{
+            return em.createQuery("select c from Challenge c where c.challenge_no = :challenge_no", Challenge.class)
+                    .setParameter("challenge_no", challengeNo)
+                    .getSingleResult();
+        }catch (NoResultException e) {
+            return null;
+        }
     }
 
     public void saveChallengeTag(ChallengeTag challengeTag) {
         em.persist(challengeTag);
+    }
+
+    public List<Challenger> findChallengerByChallengeNo(int challenge_no) {
+        return em.createQuery("select c from Challenger c where c.challenge.challenge_no = :challenge_no", Challenger.class)
+                .setParameter("challenge_no", challenge_no)
+                .getResultList();
     }
 }

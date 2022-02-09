@@ -30,7 +30,7 @@ public class TitleRepository {
 
     public void deleteTitle(Title title){
         em.remove(title);
-//        em.flush();
+        em.flush();
     }
 
     public List<Title> findTitleByUserNo(int user_no) {
@@ -39,6 +39,4 @@ public class TitleRepository {
                 .getResultList();
     }
 
-    // TODO : user no로 타이틀 리스트 가져오기
-//    private List<Title>
 }
