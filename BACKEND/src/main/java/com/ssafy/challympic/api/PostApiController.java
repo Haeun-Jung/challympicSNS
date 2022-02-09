@@ -299,7 +299,7 @@ public class PostApiController {
             for(String str : splitSharp){
                 if(str.startsWith("#")){
                     // #을 분리하고 태그명만 추출
-                    tagService.saveTag(str.substring(1));
+                    tagService.saveTag(str);
                 }
             }
         }
