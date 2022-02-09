@@ -70,4 +70,8 @@ public class PostService {
         }
         return reportCnt;
     }
+
+    public List<Post> getPostListByUserNo(int userNo) {
+        return postRepository.findByUser(userNo);
+    }
 }
