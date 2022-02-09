@@ -43,8 +43,8 @@ public class InitDB {
             testUser.setUser_email("test01@ssafy.com");
             String testPwd = "123";
             String encTestPwd = bCryptPasswordEncoder.encode(testPwd);
-            user.setUser_pwd(encTestPwd);
-            user.setUser_nickname("테스트");
+            testUser.setUser_pwd(encTestPwd);
+            testUser.setUser_nickname("테스트");
 
             em.persist(testUser);
         }
