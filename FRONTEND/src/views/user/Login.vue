@@ -102,8 +102,6 @@ export default {
       if (this.emailSave) {
         this.$cookies.set("emailCookie", this.email);
       }
-      // api 요청 코드 작성할 부분
-      
       this.$store.dispatch('login', { user_email: this.email, user_pwd: this.password });
     },
     clickJoinBtn() {
