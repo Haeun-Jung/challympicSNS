@@ -214,13 +214,13 @@ public class PostApiController {
             int file_no = mediaService.saveMedia(media);
 
             // 본문 텍스트 파싱
-            String content = postRequest.getPost_content().replaceAll("\"", "");
+            String content = postRequest.getPost_content();
             String[] splitSharp = content.split(" ");
 
             for(String str : splitSharp){
                 if(str.startsWith("#")){
                     // #을 분리하고 태그명만 추출
-                    tagService.saveTag(str.substring(1));
+                    tagService.saveTag(str);
                 }
             }
 
@@ -275,13 +275,13 @@ public class PostApiController {
             _post.setPost_content(postRequest.getPost_content());
 
             // 본문 텍스트 파싱
-            String content = postRequest.getPost_content().replaceAll("\"", "");
+            String content = postRequest.getPost_content();
             String[] splitSharp = content.split(" ");
 
             for(String str : splitSharp){
                 if(str.startsWith("#")){
                     // #을 분리하고 태그명만 추출
-                    tagService.saveTag(str.substring(1));
+                    tagService.saveTag(str);
                 }
             }
         }
