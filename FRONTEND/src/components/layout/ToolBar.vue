@@ -124,7 +124,7 @@
 		>
 
 		<div v-if="!isMobile() && isLoggedIn">
-			<v-menu bottom left offset-y max-height="260" max-width="400">
+			<v-menu bottom left offset-y max-height="260" width="300" display="block">
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn icon v-bind="attrs" v-on="on">
 						<div v-if="activeAlert" id="alert-badge"></div>
@@ -132,12 +132,13 @@
 					</v-btn>
 				</template>
 
-				<v-card v-if="alertMenu.length > 1">
-					<v-list>
+				<v-card v-if="alertMenu.length > 1" width="300">
+					<v-list class="overflow-y-auto">
 						<v-list-item
 							v-for="(item, i) in alertMenu"
 							:key="i"
 							:to="item.link1"
+							class="px-3; mx-1;,my-2"
 						>
 							<v-list-item-title>
 								{{ item.title }}
@@ -158,7 +159,7 @@
 					</v-list>
 				</v-card>
 			</v-menu>
-			<v-menu bottom left offset-y>
+			<v-menu bottom left offset-y display="block">
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn icon v-bind="attrs" v-on="on">
 						<v-icon>mdi-account-circle</v-icon>
@@ -178,7 +179,14 @@
 			</v-menu>
 		</div>
 		<div v-if="isMobile() && isLoggedIn">
-			<v-menu bottom left offset-y max-height="260" max-width="270">
+			<v-menu
+				bottom
+				center
+				offset-y
+				max-height="260"
+				width="210"
+				display="block"
+			>
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn icon v-bind="attrs" v-on="on">
 						<div v-if="activeAlert" id="alert-badge"></div>
@@ -186,8 +194,8 @@
 					</v-btn>
 				</template>
 
-				<v-card v-if="alertMenu.length > 1">
-					<v-list>
+				<v-card v-if="alertMenu.length > 1" width="210">
+					<v-list class="overflow-y-auto">
 						<v-list-item
 							v-for="(item, i) in alertMenu"
 							:key="i"
@@ -195,7 +203,9 @@
 						>
 							<v-list-item-title class="text-caption">
 								{{ item.title }}
-								<span class="date-text">{{ dayjsRegDate(item.regDate) }}</span>
+								<span class="date-text-mobile">{{
+									dayjsRegDate(item.regDate)
+								}}</span>
 							</v-list-item-title>
 						</v-list-item>
 					</v-list>
@@ -214,7 +224,7 @@
 					</v-list>
 				</v-card>
 			</v-menu>
-			<v-menu bottom left offset-y>
+			<v-menu bottom left offset-y width="300px">
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn icon v-bind="attrs" v-on="on">
 						<v-icon>mdi-account-circle</v-icon>
@@ -461,6 +471,10 @@
 	.v-toolbar__extension {
 		padding: 0;
 	}
+	.date-text-mobile {
+		font-size: 6px;
+		color: rgb(160, 160, 160);
+	}
 	.date-text {
 		font-size: 13px;
 		color: rgb(160, 160, 160);
@@ -483,5 +497,16 @@
 	}
 	::v-deep .v-list-item__title {
 		white-space: normal;
+	}
+	.v-menu__content::-webkit-scrollbar-track {
+		-webkit-box-shadow: inset 0 0 6px #5d5d5d;
+		background-color: #5d5d5d;
+	}
+	.v-menu__content::-webkit-scrollbar {
+		width: 0px;
+	}
+	.v-menu__content::-webkit-scrollbar-thumb {
+		-webkit-box-shadow: inset 0 0 6px #424242;
+		background-color: #424242;
 	}
 </style>
