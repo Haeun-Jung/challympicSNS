@@ -32,14 +32,14 @@ public class TagRepository {
                 .getResultList();
     }
 
-    public List<ChallengeTag> findByChallengeNo(int challenge_no) {
+    public List<ChallengeTag> findChallengeTagByChallengeNo(int challenge_no) {
         return em.createQuery("select ct from ChallengeTag ct where ct.challenge.challenge_no = :challenge_no", ChallengeTag.class)
                 .setParameter("challenge_no", challenge_no)
                 .getResultList();
     }
 
-    public void deleteTags(ChallengeTag ct) {
+    public void deleteChallengeTag(ChallengeTag ct) {
         em.remove(ct);
-        em.flush();
+//        em.flush();
     }
 }
