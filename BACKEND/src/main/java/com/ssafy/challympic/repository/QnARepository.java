@@ -20,4 +20,6 @@ public class QnARepository {
                 .setParameter("user_no", user_no)
                 .getResultList();
     }
+
+    public QnA findOne(int qna_no){ return em.find(QnA.class, qna_no); }
 }

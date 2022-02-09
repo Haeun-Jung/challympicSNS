@@ -34,8 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 //        http.addFilterBefore(new MyFilter1(), BasicAuthenticationFilter.class);
-        http
-                .csrf().disable();
+        http.cors().and();
+        http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // session 사용하지 않겠다.
                 .and()
                 .addFilter(corsFilter)
@@ -44,8 +44,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthenticationFilter(authenticationManager())) // AuthenticationManager 파라미터를 넘겨야한다.
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository))
                 .authorizeRequests()
-                .antMatchers("/challympic/user/*")
-                .access("hasRole('USER')")
+                .antMatchers("**/user/**")
+                .access("hasAnyRole('USER', 'ADMIN')")
+                .antMatchers("**/admin/**")
+                .access("hasAnyRole('ADMIN')")
                 .anyRequest().permitAll();
     }
 

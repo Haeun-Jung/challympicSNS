@@ -67,4 +67,13 @@ public class ChallengeService {
     public void saveChallengeTag(ChallengeTag challengeTag) {
         challengeRepository.saveChallengeTag(challengeTag);
     }
+
+    public int challengeReportCntByUser(int user_no){
+        List<Challenge> findChallengeList = challengeRepository.findByUserNo(user_no);
+        int reportCnt = 0;
+        for (Challenge challenge : findChallengeList) {
+            reportCnt += challenge.getChallenge_report();
+        }
+        return reportCnt;
+    }
 }

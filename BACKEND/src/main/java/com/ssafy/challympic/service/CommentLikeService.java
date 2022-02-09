@@ -26,6 +26,11 @@ public class CommentLikeService {
         CommentLike commentLike = commentLikeRepository.findOne(user_no, comment_no);
         commentLikeRepository.delete(commentLike);
     }
+
+    public int findLikeCntByComment(int comment_no){
+        int cnt = commentLikeRepository.findLikeCntByComment(comment_no).size();
+        return cnt;
+    }
 }
 
 

@@ -11,21 +11,22 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter @Setter
-public class SearchChallenge {
+public class Alert {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "search_challenge_no")
-    private int search_challenge_no;
-
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "challenge_no")
-    private Challenge challenge;
+    @Column(name = "alert_no")
+    private int alert_no;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_no")
     private User user;
 
+    private String alert_content;
+
+    private boolean alert_confirm;
+
     @Column(columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date search_regdate;
+    private Date alert_regDate;
+
 }

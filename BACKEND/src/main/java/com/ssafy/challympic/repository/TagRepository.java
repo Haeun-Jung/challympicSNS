@@ -1,5 +1,6 @@
 package com.ssafy.challympic.repository;
 
+import com.ssafy.challympic.domain.ChallengeTag;
 import com.ssafy.challympic.domain.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -19,15 +20,26 @@ public class TagRepository {
         return em.find(Tag.class, tag_no);
     }
 
-    public List<Tag> autocomplete(String search){
-        return em.createQuery("select t from Tag t where t.tag_content LIKE :search", Tag.class)
-                .setParameter("search", "%"+search+"%")
+    public List<Tag> findByTagContent(String tagContent) {
+        return em.createQuery("select t from Tag t where t.tag_content = :tagContent", Tag.class)
+                .setParameter("tagContent", tagContent)
                 .getResultList();
     }
 
-    public Tag findByTagContent(String tagContent) {
+    public List<Tag> validateTagContent(String tagContent) {
         return em.createQuery("select t from Tag t where t.tag_content = :tagContent", Tag.class)
                 .setParameter("tagContent", tagContent)
-                .getSingleResult();
+                .getResultList();
+    }
+
+    public List<ChallengeTag> findByChallengeNo(int challenge_no) {
+        return em.createQuery("select ct from ChallengeTag ct where ct.challenge.challenge_no = :challenge_no", ChallengeTag.class)
+                .setParameter("challenge_no", challenge_no)
+                .getResultList();
+    }
+
+    public void deleteTags(ChallengeTag ct) {
+        em.remove(ct);
+        em.flush();
     }
 }

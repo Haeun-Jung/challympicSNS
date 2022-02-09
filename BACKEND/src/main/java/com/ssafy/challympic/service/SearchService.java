@@ -19,41 +19,49 @@ public class SearchService {
     private final ChallengeRepository challengeRepository;
     private final TagRepository tagRepository;
 
-    public List<Tag> getTagList() {
+    public List<Tag> findTagList() {
         return searchRepository.findTagList();
     }
 
-    public List<User> getUserList(){
+    public List<User> findUserList(){
         return searchRepository.findUserList();
     }
 
-    public List<Search> getTagListByUserNo(int userNo) {
+    public List<Search> findTagListByUserNo(int userNo) {
         return searchRepository.findTagListByUserNo(userNo);
     }
 
-    public List<Challenge> getChallengeListByTagContent(String tag) {
+    public List<Challenge> findChallengeListByTagContent(String tag) {
         return searchRepository.findChallengeByTagContent(tag);
     }
 
-    public List<Post> getPostListByTagContent(String tag) {
+    public List<Post> findPostListByTagContent(String tag) {
         return searchRepository.findPostByTagContent(tag);
     }
 
-    public List<Challenge> getTrendChallenge() {
+    public List<Challenge> findTrendChallenge() {
         return searchRepository.findChallengeByTrend();
     }
 
-    public List<User> getRank() {
+    public List<User> findRank() {
         return searchRepository.findRank();
     }
 
     @Transactional
-    public void setSearchRecord(String search_content, User user) {
-        Tag tag = tagRepository.findByTagContent(search_content);
+    public void saveSearchRecord(String search_content, User user) {
+        Tag tag = tagRepository.findByTagContent(search_content).get(0);
         Search search = new Search();
         search.setSearch_content(search_content);
         search.setUser(user);
-        if(tag != null) search.setTag(tag);
+        if(tag != null) {
+            search.setTag_no(tag.getTag_no());
+            search.setTag_content(tag.getTag_content());
+        }
         searchRepository.saveSearchRecord(search);
+    }
+
+    @Transactional
+    public void saveSearchChallenge(SearchChallenge searchChallenge){
+        searchRepository.saveSearchChallenge(searchChallenge);
     }
 }

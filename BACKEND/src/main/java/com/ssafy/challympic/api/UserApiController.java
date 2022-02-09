@@ -63,10 +63,6 @@ public class UserApiController {
         newUser.setUser_nickname(request.getUser_nickname());
         String rawPwd = request.getUser_pwd();
         String encPwd = bCryptPasswordEncoder.encode(rawPwd);
-
-        // userAuth에 저장
-        User newUserAuth = new User();
-        newUser.setUser_email(request.getUser_email());
         newUser.setUser_pwd(encPwd);
 
         int join_no = userService.join(newUser);
@@ -170,7 +166,6 @@ public class UserApiController {
         }
     }
 
-    //TODO : User, UserAuth 다 같이 지워줘야할지?
     @DeleteMapping("/user/account/{userNo}")
     public Result deleteUser(@PathVariable("userNo") int user_no){
         userService.deleteUser(user_no);

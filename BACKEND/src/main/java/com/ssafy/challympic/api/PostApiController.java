@@ -99,6 +99,7 @@ public class PostApiController {
 
         // 챌린지 정보
         Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
+        if(challenge == null) return new Result(false, HttpStatus.BAD_REQUEST.value());
         String type = challenge.getChallenge_type().name().toLowerCase();
         // 포스트 리스트
         List<Post> postList = postService.getPostList(challengeNo);
@@ -214,13 +215,13 @@ public class PostApiController {
             int file_no = mediaService.saveMedia(media);
 
             // 본문 텍스트 파싱
-            String content = postRequest.getPost_content().replaceAll("\"", "");
+            String content = postRequest.getPost_content();
             String[] splitSharp = content.split(" ");
 
             for(String str : splitSharp){
                 if(str.startsWith("#")){
                     // #을 분리하고 태그명만 추출
-                    tagService.saveTag(str.substring(1));
+                    tagService.saveTag(str);
                 }
             }
 
@@ -236,6 +237,23 @@ public class PostApiController {
             post.setMedia(media);
 
             int postId = postService.save(post);
+
+            // 태그한 사람 알림
+            for(String str : splitSharp) {
+                if(str.startsWith("@")) {
+                    String user_nickname = str.substring(1);
+
+                    Alert alert = new Alert();
+                    User user = userService.findByNickname(user_nickname);
+                    if(user == null) {
+                        continue;
+                    }
+                    alert.setUser(user);
+                    User writer = userService.findUser(postRequest.getUser_no());
+                    alert.setAlert_content(writer.getUser_nickname() + "님이 태그했습니다.");
+                    alertService.saveAlert(alert);
+                }
+            }
 
             if(postId != -1)
                 return new Result(true, HttpStatus.OK.value(), media);
@@ -275,13 +293,13 @@ public class PostApiController {
             _post.setPost_content(postRequest.getPost_content());
 
             // 본문 텍스트 파싱
-            String content = postRequest.getPost_content().replaceAll("\"", "");
+            String content = postRequest.getPost_content();
             String[] splitSharp = content.split(" ");
 
             for(String str : splitSharp){
                 if(str.startsWith("#")){
                     // #을 분리하고 태그명만 추출
-                    tagService.saveTag(str.substring(1));
+                    tagService.saveTag(str);
                 }
             }
         }
@@ -311,6 +329,8 @@ public class PostApiController {
         return new Result(true, HttpStatus.OK.value());
     }
 
+    private final AlertService alertService;
+
     /**
      *  좋아요 클릭 처리(Complete)
      * */
@@ -328,6 +348,13 @@ public class PostApiController {
             // insert
             PostLike _postLike = new PostLike(postNo, userNo);
             postLikeService.save(_postLike);
+
+            // 좋아요를 눌렀을때 알림 설정
+            Alert alert = new Alert();
+            User writer = postService.getPost(postNo).getUser();
+            alert.setUser(writer);
+            alert.setAlert_content(writer.getUser_nickname() + "님이 포스트에 좋아요를 눌렀습니다.");
+            alertService.saveAlert(alert);
         }
 
         return new Result(true, HttpStatus.OK.value());

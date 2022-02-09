@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -77,6 +78,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     // JWT 토큰을 만들어서 request 요청한 사용자에게 JWT 토큰을 response 해야 한다.
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+        System.out.println("로그인 성공!");
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 
         // RSA 방식이 아닌 Hash 암호방식
@@ -90,12 +92,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX +jwtToken); // 헤더에 담겨 사용자에게 응답
 //        System.out.println(principalDetails.getUser().getUser_email());
 //        System.out.println(principalDetails.getUser().getUser_pwd());
-        Result result = new Result(true, 200, new UserDto(principalDetails.getUser().getUser_no(), principalDetails.getUser().getUser_email()));
+        Result result = new Result(true, HttpStatus.OK.value(), new UserDto(principalDetails.getUser().getUser_no(), principalDetails.getUser().getUser_email()));
         String json = new ObjectMapper().writeValueAsString(result);
 //        System.out.println(json);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(json);
+        response.setHeader("Access-Control-Allow-Headers", "Authorization");
         // 보통
         // 서버에서 세션 ID를 생성하고 클라이언트에게 응답해준다.
         // 요청할 때마다 쿠키값 세션 ID를 항상 들고 서버에게 요청하기 때문에
@@ -104,6 +107,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 여기서
         // email, pwd가 정상이라면 JWT 토큰을 생성해 유저에게 header에 담아 응답한다.
         // 클라이언트는 JWT 토큰을 가지고 요청하며 서버에서 JWT 토큰이 유효한지 판단 -> 필터
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        System.out.println("로그인 실패!");
+        Result result = new Result(false, HttpStatus.BAD_REQUEST.value());
+        String json = new ObjectMapper().writeValueAsString(result);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(json);
     }
 
     @Data
