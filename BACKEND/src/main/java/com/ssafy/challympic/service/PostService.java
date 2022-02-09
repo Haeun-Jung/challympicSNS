@@ -1,15 +1,14 @@
 package com.ssafy.challympic.service;
 
 
-import com.ssafy.challympic.domain.Challenge;
 import com.ssafy.challympic.domain.Post;
 import com.ssafy.challympic.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @RequiredArgsConstructor
@@ -57,5 +56,18 @@ public class PostService {
     public int delete(int postNo){
         postRepository.deleteByPostNo(postNo);
         return 1;
+    }
+
+    public int postCntByChallenge(int challenge_no){
+        return postRepository.findByChallengNo(challenge_no).size();
+    }
+
+    public int postReportCntByUser(int user_no){
+        List<Post> findPostList = postRepository.findByUser(user_no);
+        int reportCnt = 0;
+        for (Post post : findPostList) {
+            reportCnt += post.getPost_report();
+        }
+        return reportCnt;
     }
 }

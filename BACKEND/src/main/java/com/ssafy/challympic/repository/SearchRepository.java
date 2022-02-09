@@ -2,10 +2,14 @@ package com.ssafy.challympic.repository;
 
 import com.ssafy.challympic.domain.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -55,15 +59,13 @@ public class SearchRepository {
                 .getResultList();
     }
 
-    public void setSearchChallenge(SearchChallenge searchChallenge) {
+    public void saveSearchChallenge(SearchChallenge searchChallenge) {
         em.persist(searchChallenge);
     }
 
     public List<Challenge> findChallengeByTrend() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.HOUR, -1);
-        return em.createQuery("select sc.challenge from SearchChallenge sc where sc.search_regdate < :cur", Challenge.class) //TODO: 시간 설정 어떡함????????
-                .setParameter("cur", calendar)
+        return em.createQuery("select sc.challenge from SearchChallenge sc where sc.search_regdate > :minGap", Challenge.class)
+                .setParameter("minGap", new Date(System.currentTimeMillis() - 600000L))
                 .getResultList();
     }
 

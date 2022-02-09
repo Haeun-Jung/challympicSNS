@@ -15,11 +15,11 @@ public class ChallengeTag {
     @Column(name = "challenge_tag_no")
     private int challenge_tag_no;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "challenge_no")
     private Challenge challenge;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "tag_no")
     private Tag tag;
 }

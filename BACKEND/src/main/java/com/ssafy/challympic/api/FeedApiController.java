@@ -30,8 +30,6 @@ public class FeedApiController {
 
     /**
      * 내가 만든 챌린지 목록
-     * !!!TODO!!!
-     * 없는 사람이면 오류 출력해야함.
      * @param userNo
      * @return
      */
@@ -41,7 +39,7 @@ public class FeedApiController {
         List<ChallengeDto> collect = challenges.stream()
                 .map(c -> new ChallengeDto(c))
                 .collect(Collectors.toList());
-        return new Result(true, HttpStatus.OK.value()   , collect);
+        return new Result(true, HttpStatus.OK.value() , collect);
     }
 
     /**
