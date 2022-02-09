@@ -214,9 +214,11 @@ public class S3Uploader {
                 new File(UPLOAD_DIR).mkdir();
             }
 
+            log.info(System.getProperty("user.dir"));
+
             final String FFMPEG_PATH = "convert_exe\\bin";
-            final String FFMPEG = "ffmpeg";
-            final String FFPROBE = "ffprobe";
+            final String FFMPEG = "ffmpeg.exe";
+            final String FFPROBE = "ffprobe.exe";
 
             final String FILEPATH = ROOT_DIR + "\\origin\\" + fileName;    // 저장된 파일 경로
 //            final String ONLY_FILENAME = fileName.substring(0, fileName.lastIndexOf("."));  // 확장자를 제가함 파일명
