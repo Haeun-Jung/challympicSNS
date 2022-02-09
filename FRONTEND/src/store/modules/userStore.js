@@ -48,8 +48,7 @@ const userStore = {
             router.push({ name: 'Main'});
           }
         },
-        (err) => {
-          console.log(err);
+        () => {
           commit('LOGIN_FAILED');
         }
       )
@@ -85,7 +84,6 @@ const userStore = {
         (response) => {
           const { data } = response;
           commit('CONFIRM_NICKNAME', data.data);
-
         },
         () => {}
       )

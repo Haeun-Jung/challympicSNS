@@ -87,7 +87,7 @@ export default {
   },
   computed: {
     loginFailed() {
-      return this.$store.state.loginFailed;
+      return this.$store.state.userStore.loginFailed;
     }
   },
   methods: {
