@@ -36,6 +36,18 @@ public class ChallengeRepository {
         em.persist(challenger);
     }
 
+    public void deleteChallenger(Challenger challenger){
+        em.remove(challenger);
+        em.flush();
+    }
+
+    public List<Challenger> findChallengerList(int challenge_no){
+        return em.createQuery("select cr from Challenger cr where cr.challenge.challenge_no = :challenge_no", Challenger.class)
+                .setParameter("challenge_no", challenge_no)
+                .getResultList();
+    }
+
+
     public List<Challenge> findByUserNo(int userNo) {
         return em.createQuery("select c from Challenge c where c.user.user_no = :userNo", Challenge.class)
                 .setParameter("userNo", userNo)

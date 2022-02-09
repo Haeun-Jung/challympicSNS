@@ -53,6 +53,10 @@ public class AdminService {
         for(ChallengeTag ct : challengeTags) {
             tagRepository.deleteTags(ct);
         }
+        List<Challenger> challengerList = challengeRepository.findChallengerList(challenge_no);
+        for (Challenger challenger : challengerList) {
+            challengeRepository.deleteChallenger(challenger);
+        }
         titleRepository.deleteTitle(findTitle);
         adminRepository.deleteChallenge(findChallenge);
     }
