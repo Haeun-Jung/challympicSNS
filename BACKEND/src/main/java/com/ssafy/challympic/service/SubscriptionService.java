@@ -23,4 +23,12 @@ public class SubscriptionService {
         Subscription sub = subscriptionRepository.findSubscription(subscription);
         subscriptionRepository.deleteSubscription(sub);
     }
+
+    public int findSubscriptionByChallenge(int challenge_no){
+        return subscriptionRepository.findSubscriptionByChallenge(challenge_no).size();
+    }
+
+    public Subscription findSubscriptionByChallengeAndUser(int challengeNo, int userNo) {
+        return subscriptionRepository.findSubscriptionByChallengeAndUser(challengeNo, userNo);
+    }
 }

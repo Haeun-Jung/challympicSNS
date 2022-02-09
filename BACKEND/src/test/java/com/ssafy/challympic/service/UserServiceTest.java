@@ -26,11 +26,11 @@ public class UserServiceTest {
     public void 회원가입() throws Exception{
         //given
         User user = new User();
-        UserAuth userAuth = new UserAuth();
-        user.setUser_nickname("member01");
-        user.setUser_email("member01@ssafy.com");
-        userAuth.setUser_email("member01@ssafy.com");
-        userAuth.setUser_pwd("123");
+//        UserAuth userAuth = new UserAuth();
+//        user.setUser_nickname("member01");
+//        user.setUser_email("member01@ssafy.com");
+//        userAuth.setUser_email("member01@ssafy.com");
+//        userAuth.setUser_pwd("123");
 
         //when
         int joinId = userService.join(user);

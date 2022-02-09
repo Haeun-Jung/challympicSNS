@@ -19,7 +19,7 @@ public class Challenger {
     @JoinColumn(name = "user_no")
     private User user;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "challenge_no")
     private Challenge challenge;
 }

@@ -5,6 +5,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Date;
 
 import static javax.persistence.FetchType.LAZY;
@@ -22,9 +24,9 @@ public class Search {
     @JoinColumn(name = "user_no")
     private User user;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "tag_no")
-    private Tag tag;
+    private int tag_no;
+
+    private String tag_content;
 
     private String search_content;
 

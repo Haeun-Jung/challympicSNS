@@ -18,6 +18,8 @@ public class Tag {
 
     private String tag_content;
 
+    private String isChallenge;
+
     @OneToMany(mappedBy = "tag", fetch = LAZY)
     private List<Interest> interest;
 

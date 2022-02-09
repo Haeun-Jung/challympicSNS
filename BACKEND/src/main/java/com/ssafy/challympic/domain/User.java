@@ -46,22 +46,25 @@ public class User {
     @Column(nullable = false)
     private String user_nickname;
 
-    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "file_no")
     private Media media;
 
     private String user_title;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
+    private List<Challenge> challenge;
+
+    @OneToMany(mappedBy = "user")
     private List<Interest> interest;
 
-    @OneToMany(mappedBy = "follow_following_no", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "follow_following_no")
     private List<Follow> following;
 
-    @OneToMany(mappedBy = "follow_follower_no", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "follow_follower_no")
     private List<Follow> follower;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
     private List<QnA> qna;
 //
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

@@ -31,4 +31,10 @@ public class CommentRepository {
         em.remove(comment);
         em.flush();
     }
+
+    public List<Comment> findByUser(int user_no){
+        return em.createQuery("select c from Comment c where c.user.user_no = :user_no", Comment.class)
+                .setParameter("user_no", user_no)
+                .getResultList();
+    }
 }
