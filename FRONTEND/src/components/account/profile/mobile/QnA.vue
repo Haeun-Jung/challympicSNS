@@ -1,6 +1,6 @@
 <template>
 	<v-card
-		height="90vh"
+		height="100vh"
 		width="100%"
 		class="justify-center mobile-profile-delete-user-container"
 	>
@@ -52,35 +52,15 @@
 		<v-divider />
 		<!-- 문의 내용 -->
 		<v-container class="mobile-profile-change-user-password-container">
-			<v-data-table
-				:headers="dessertHeaders"
-				:expanded.sync="expanded"
-				:items="desserts"
-				item-key="name"
-				show-expand
-				single-expand="true"
-				:items-per-page="5"
-				class="elevation-1"
-				mobile-breakpoint="0"
-			>
-				<template v-slot:top> </template>
-				<template v-slot:expanded-item="{ headers }">
-					<!-- 
-                            
-					<template v-slot:expanded-item="{ headers, item }">
-                            여기에 item.answer로 갈아끼기 : A. {{item.answer}}-->
-					<td :colspan="headers.length">
-						여기에.. item.question도 마저 넣고.. A. challympic@ssafy.com으로
-						연락주세요
-					</td>
-				</template>
-			</v-data-table>
+			<mobile-qn-a-table />
 		</v-container>
 	</v-card>
 </template>
 
 <script>
+	import MobileQnATable from "../util/MobileQnATable.vue";
 	export default {
+		components: { MobileQnATable },
 		methods: {
 			onAsk() {
 				this.dialog = false;

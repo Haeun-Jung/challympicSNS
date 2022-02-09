@@ -1,5 +1,5 @@
 <template>
-	<v-card width="100%" app>
+	<v-card width="100%" height="100%" app>
 		<!--
 		<v-card-title class="text-h5 d-flex justify-center">
 	 -->
