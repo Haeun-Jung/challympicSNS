@@ -84,8 +84,4 @@ public class ChallengeRepository {
                 .setParameter("challenge_no", challenge_no)
                 .getResultList();
     }
-
-    public void deleteChallenger(Challenger c) {
-        em.remove(c);
-    }
 }
