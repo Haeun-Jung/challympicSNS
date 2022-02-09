@@ -3,6 +3,7 @@ package com.ssafy.challympic.api;
 import com.ssafy.challympic.api.Dto.ChallengeDto;
 import com.ssafy.challympic.api.Dto.PostDto;
 import com.ssafy.challympic.api.Dto.SearchDto;
+import com.ssafy.challympic.api.Dto.UserDto;
 import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.service.ChallengeService;
 import com.ssafy.challympic.service.SearchService;
@@ -33,7 +34,10 @@ public class SearchApiController {
     @GetMapping("/search")
     public Result getSearchList() {
         List<Tag> tagList = searchService.findTagList();
-        List<User> userList = searchService.findUserList();
+        List<User> users = searchService.findUserList();
+        List<UserDto> userList = users.stream()
+                .map(u -> new UserDto(u.getUser_no(), u.getUser_email(), u.getUser_nickname()))
+                .collect(Collectors.toList());
 
         Map<String, List> data = new HashMap<>();
 
