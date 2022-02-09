@@ -21,6 +21,10 @@ public class SearchChallenge {
     @JoinColumn(name = "challenge_no")
     private Challenge challenge;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_no")
+    private User user;
+
     @Column(columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
     private Date search_regdate;

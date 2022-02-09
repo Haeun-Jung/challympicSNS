@@ -23,6 +23,7 @@ public class FollowService {
     public boolean follow(int following_no, int follower_no){
         Follow follow = followRepository.findOne(following_no, follower_no);
         if(follow == null ){
+            follow = new Follow();
             User following = userRepository.findOne(following_no);
             User follower = userRepository.findOne(follower_no);
             follow.setFollow_following_no(following);

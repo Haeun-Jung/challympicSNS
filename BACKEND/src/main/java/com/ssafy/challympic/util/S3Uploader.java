@@ -63,16 +63,17 @@ public class S3Uploader {
         upload(uploadFile, inputPath, uploadFile.getName());    // 원본 파일 저장
 
         String outputPath = "output" + "/" + category + "/" + dateStr + "/" + timeStr;
+        String extension = uploadFile.getName().substring(uploadFile.getName().lastIndexOf(".") + 1);
 
         // 타입에 따른 처리
         if(type.equals("image")){
             // Output 경로에 저장
-            upload(uploadFile, outputPath, savedFileName+".png");
+            upload(uploadFile, outputPath, savedFileName+"."+extension);
 
             // 원본 파일 제거
             removeFile();
 
-            return new Media(uploadFile.getName(), savedFileName+".png", outputPath);
+            return new Media(uploadFile.getName(), savedFileName+"."+extension, outputPath);
 
         } else {
             // 해당 파일을 변환해서 저장

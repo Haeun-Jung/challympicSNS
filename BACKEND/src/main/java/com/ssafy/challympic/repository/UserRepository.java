@@ -24,9 +24,6 @@ public class UserRepository {
 
     public User findOne(int user_no){return em.find(User.class, user_no); }
 
-    public List<User> findAll(){ return em.createQuery("select u from User u", User.class)
-            .getResultList(); }
-
     public List<User> validateEmail(String user_email){
         return em.createQuery("select u from User u where u.user_email = :user_email", User.class)
                 .setParameter("user_email", user_email)

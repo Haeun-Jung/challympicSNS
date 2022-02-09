@@ -19,15 +19,15 @@ public class TagRepository {
         return em.find(Tag.class, tag_no);
     }
 
-    public List<Tag> autocomplete(String search){
-        return em.createQuery("select t from Tag t where t.tag_content LIKE :search", Tag.class)
-                .setParameter("search", "%"+search+"%")
+    public List<Tag> findByTagContent(String tagContent) {
+        return em.createQuery("select t from Tag t where t.tag_content = :tagContent", Tag.class)
+                .setParameter("tagContent", tagContent)
                 .getResultList();
     }
 
-    public Tag findByTagContent(String tagContent) {
+    public List<Tag> validateTagContent(String tagContent) {
         return em.createQuery("select t from Tag t where t.tag_content = :tagContent", Tag.class)
                 .setParameter("tagContent", tagContent)
-                .getSingleResult();
+                .getResultList();
     }
 }
