@@ -20,10 +20,14 @@ public class SubscriptionRepository {
     }
 
     public Subscription findSubscription(Subscription subscription) {
-        return (Subscription) em.createQuery("select s from Subscription s where s.challenge = :challenge_no and s.user = :user_no")
-                .setParameter("challenge_no", subscription.getChallenge())
-                .setParameter("user_no", subscription.getUser())
-                .getSingleResult();
+        try{
+            return (Subscription) em.createQuery("select s from Subscription s where s.challenge = :challenge_no and s.user = :user_no")
+                    .setParameter("challenge_no", subscription.getChallenge())
+                    .setParameter("user_no", subscription.getUser())
+                    .getSingleResult();
+        }catch (NoResultException e) {
+            return null;
+        }
 
     }
 

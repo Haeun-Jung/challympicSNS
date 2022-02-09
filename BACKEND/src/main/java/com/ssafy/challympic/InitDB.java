@@ -33,10 +33,20 @@ public class InitDB {
             String rawPwd = "123";
             String encPwd = bCryptPasswordEncoder.encode(rawPwd);
             user.setUser_pwd(encPwd);
-            user.setUser_nickname("관리자");
+            // local 환경 동작 시 DB User 테이블 UTF-8 설정이 되어있지 않다면 에러가 발생함 -> 영어로 변경
+            user.setUser_nickname("Admin");
             user.setUser_auth(UserAuthEnum.ADMIN);
 
             em.persist(user);
+
+            User testUser = new User();
+            testUser.setUser_email("test01@ssafy.com");
+            String testPwd = "123";
+            String encTestPwd = bCryptPasswordEncoder.encode(testPwd);
+            testUser.setUser_pwd(encTestPwd);
+            testUser.setUser_nickname("테스트");
+
+            em.persist(testUser);
         }
     }
 }

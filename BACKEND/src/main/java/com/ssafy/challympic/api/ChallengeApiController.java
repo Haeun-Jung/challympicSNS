@@ -41,6 +41,7 @@ public class ChallengeApiController {
         return new Result(true, HttpStatus.OK.value(), collect);
     }
 
+    private final AlertService alertService;
 
     /**
      * 챌린지 등록
@@ -57,8 +58,10 @@ public class ChallengeApiController {
         // 챌린지 초대한 사람이 있으면 PRIVATE
         else{
             challenge_access = ChallengeAccess.PRIVATE;
-            for(String user_nickname : request.getChallengers()) {
+            for(String str : request.getChallengers()) {
+                String user_nickname = str.substring(1);
                 User challengerUser = userService.findByNickname(user_nickname);
+                if(challengerUser == null) return new Result(false, HttpStatus.BAD_REQUEST.value());
                 challengers.add(challengerUser.getUser_no());
             }
         }
@@ -79,21 +82,35 @@ public class ChallengeApiController {
                 request.getChallenge_content()
         );
 
+        // 챌린지 엔티티 등록
+        challengeService.saveChallenge(challenge);
+
+
         // 챌린저 저장
         for(int cr : challengers) {
             Challenger challenger = new Challenger();
             challenger.setChallenge(challenge);
-            challenger.setUser(userService.findUser(cr));
+            User _challenger = userService.findUser(cr);
+            challenger.setUser(_challenger);
             challengeService.saveChallengers(challenger);
+
+            // 태그된사람 알림
+            Alert alert = new Alert();
+            alert.setUser(_challenger);
+            alert.setAlert_content(user.getUser_nickname() + "님이 챌린지에 초대했습니다.");
+            alertService.saveAlert(alert);
+
         }
 
-        // 챌린지 엔티티 등록
-        challengeService.saveChallenge(challenge);
 
         // 내용 파싱해서 태그 저장
         String content = request.challenge_content;
         List<String> tagContentList = new ArrayList<>();
         StringBuilder sb = null;
+
+        // 챌린지 제목 저장
+        tagContentList.add(request.challenge_title);
+        tagService.saveTag(request.challenge_title, true);
         for(char c : content.toCharArray()) {
             if(c == '#') {
                 if(sb != null) {
@@ -111,11 +128,16 @@ public class ChallengeApiController {
             sb.append(c);
         }
 
-        // 챌린지태그 저장
+        if(sb != null) {
+            tagService.saveTag(sb.toString());
+            tagContentList.add(sb.toString());
+        }
+
+        // 챌린지 태그 저장
         for(String s : tagContentList) {
             ChallengeTag challengeTag = new ChallengeTag();
-            challengeTag.setChallenge(challenge);
             challengeTag.setTag(tagService.findTagByTagContent(s));
+            challengeTag.setChallenge(challenge);
             challengeService.saveChallengeTag(challengeTag);
         }
 
@@ -164,6 +186,9 @@ public class ChallengeApiController {
     @PostMapping("/challenge/{challengeNo}/subscribe/{userNo}")
     public Result addSubscription(@PathVariable int challengeNo, @PathVariable int userNo) {
         Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
+        if(challenge == null) {
+            return new Result(false, HttpStatus.BAD_REQUEST.value());
+        }
         User user = userService.findUser(userNo);
 
         Subscription findSubscription = subscriptionService.findSubscriptionByChallengeAndUser(challengeNo, userNo);
@@ -181,6 +206,9 @@ public class ChallengeApiController {
     @DeleteMapping("/challenge/{challengeNo}/subscribe/{userNo}")
     public Result removeSubscription(@PathVariable int challengeNo, @PathVariable int userNo) {
         Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
+        if(challenge == null) {
+            return new Result(false, HttpStatus.BAD_REQUEST.value());
+        }
         User user = userService.findUser(userNo);
 
         subscriptionService.deleteSubscription(Subscription.setSubscription(challenge, user));

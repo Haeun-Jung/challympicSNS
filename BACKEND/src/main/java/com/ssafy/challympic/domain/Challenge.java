@@ -37,8 +37,6 @@ public class Challenge {
 
     private ChallengeType challenge_type;
 
-//    @OneToOne(fetch = LAZY)
-//    @JoinColumn(name = "title_no")
     @Column(nullable = false)
     private String challenge_title;
 

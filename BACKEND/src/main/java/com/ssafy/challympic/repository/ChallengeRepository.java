@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 @Repository
@@ -42,9 +43,14 @@ public class ChallengeRepository {
     }
 
     public Challenge findByChallengeNo(int challengeNo) {
-        return em.createQuery("select c from Challenge c where c.challenge_no = :challenge_no", Challenge.class)
-                .setParameter("challenge_no", challengeNo)
-                .getSingleResult();
+        try{
+            return em.createQuery("select c from Challenge c where c.challenge_no = :challenge_no", Challenge.class)
+                    .setParameter("challenge_no", challengeNo)
+                    .getSingleResult();
+        }catch (NoResultException e){
+            return null;
+        }
+
     }
 
     public Challenge findOne(int challengeNo){
