@@ -58,8 +58,10 @@ public class ChallengeApiController {
         // 챌린지 초대한 사람이 있으면 PRIVATE
         else{
             challenge_access = ChallengeAccess.PRIVATE;
-            for(String user_nickname : request.getChallengers()) {
+            for(String str : request.getChallengers()) {
+                String user_nickname = str.substring(1);
                 User challengerUser = userService.findByNickname(user_nickname);
+                if(challengerUser == null) return new Result(false, HttpStatus.BAD_REQUEST.value());
                 challengers.add(challengerUser.getUser_no());
             }
         }
@@ -80,6 +82,10 @@ public class ChallengeApiController {
                 request.getChallenge_content()
         );
 
+        // 챌린지 엔티티 등록
+        challengeService.saveChallenge(challenge);
+
+
         // 챌린저 저장
         for(int cr : challengers) {
             Challenger challenger = new Challenger();
@@ -96,8 +102,6 @@ public class ChallengeApiController {
 
         }
 
-        // 챌린지 엔티티 등록
-        challengeService.saveChallenge(challenge);
 
         // 내용 파싱해서 태그 저장
         String content = request.challenge_content;
