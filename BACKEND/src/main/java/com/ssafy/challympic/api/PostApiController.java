@@ -322,7 +322,11 @@ public class PostApiController {
 
         Post post = postService.getPost(postNo);
 
-        mediaService.delete(post.getMedia().getFile_no());
+        Media media = post.getMedia();
+
+        s3Uploader.deleteS3(media.getFile_path());
+
+        mediaService.delete(media.getFile_no());
 
         postService.delete(postNo);
 
