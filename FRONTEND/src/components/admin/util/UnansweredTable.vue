@@ -10,14 +10,9 @@
 			:sort-desc.sync="sortDesc"
 			:custom-filter="filter"
 		>
-			<template v-slot:expanded-item="{ item }">
-				<td :colspan="headers.length + 1">
-					<qn-a-expansion :item="item" />
-				</td>
-			</template>
-
 			<template #item.qna_title="{ item }">
 				<div
+					v-if="item.qna_answer_regdate == ``"
 					style="
 						text-overflow: ellipsis;
 						overflow: hidden;
@@ -27,6 +22,11 @@
 					"
 				>
 					{{ item.qna_title }}
+				</div>
+			</template>
+			<template #item.user_nickname="{ item }">
+				<div v-if="item.qna_answer_regdate == ``">
+					{{ item.user_nickname }}
 				</div>
 			</template>
 
@@ -62,7 +62,7 @@
 				dialogNote: [],
 				page: "",
 				search: "",
-				sortBy: "qna_question_regdate",
+				sortBy: "qna_report_regdate",
 				sortDesc: false,
 				show: false,
 				value: "comment_content",
@@ -81,7 +81,6 @@
 					},
 
 					{
-						text: "답변",
 						//	value: "qna_answer_regdate",
 						value: "actions",
 						align: "center",
@@ -141,6 +140,7 @@
 				//alert(item.qna_title + "애 대한 답변 하기 - 모달창으로 답변 등록 후 ");
 			},
 		},
+
 		/*	computed: {
 					show: {
 						get() {
