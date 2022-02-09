@@ -25,7 +25,7 @@ public class SubscriptionRepository {
                     .setParameter("challenge_no", subscription.getChallenge())
                     .setParameter("user_no", subscription.getUser())
                     .getSingleResult();
-        }catch (NullPointerException e) {
+        }catch (NoResultException e) {
             return null;
         }
 

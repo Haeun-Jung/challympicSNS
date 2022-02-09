@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 @Repository
@@ -22,7 +23,7 @@ public class TitleRepository {
             return em.createQuery("select t from Title t where t.challenge.challenge_no = :challenge_no", Title.class)
                     .setParameter("challenge_no", challenge_no)
                     .getSingleResult();
-        } catch (NullPointerException e) {
+        } catch (NoResultException e) {
             return null;
         }
     }
