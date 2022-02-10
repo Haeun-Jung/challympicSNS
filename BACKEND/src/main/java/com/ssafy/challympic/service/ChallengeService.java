@@ -24,6 +24,10 @@ public class ChallengeService {
         return challengeRepository.findByUserNo(userNo);
     }
 
+    // challengeNo로 challenger 가져오기
+    public List<Challenger> getChallengerByChallengeNo(int challengeNo){
+        return challengeRepository.findChallengerByChallengeNo(challengeNo);
+    }
 
     public List<Challenge> findChallenges() {
         return challengeRepository.findAll();
