@@ -2,7 +2,7 @@
 	<v-container>
 		<v-data-table
 			:headers="headers"
-			:items="challengeList"
+			:items="challenges"
 			item-key="challenge_no"
 			class="elevation-1"
 			:search="search"
@@ -36,25 +36,12 @@
 					{{ item.challenge_title }}
 				</router-link>
 			</template>
-			<template #item.user_nickname="{ item }">
-				<router-link
-					v-if="item.user_nickname != `챌림픽`"
-					:to="{ path: `/feed/${item.user_no}` }"
-					style="text-decoration: none; color: inherit; mr-2"
-				>
-					{{ item.user_nickname }}
-				</router-link>
-				<router-link
-					v-else
-					to=""
-					style="text-decoration: none; color: inherit; mr-2"
-				>
-					{{ item.user_nickname }}
-				</router-link>
+			<template #item.user_email="{ value }">
+				<a :href="`mailto:${value}`"> {{ value }} </a>
 			</template>
 			<template #item.duration="{ item }">
-				{{ item.challenge_start }} ~ <br />
-				{{ item.challenge_end }}
+				{{ item.challenge_start.substring(0, 10) }} ~ <br />
+				{{ item.challenge_end.substring(0, 10) }}
 			</template>
 			<template #item.actions="props">
 				<div class="ml-3">
@@ -81,7 +68,7 @@
 </template>
 
 <script>
-	//import {deleteUser, userList} from "@/api/member";
+	import { challengeList, deleteChallenge } from "@/api/admin";
 	export default {
 		name: "UserList",
 		data() {
@@ -109,16 +96,16 @@
 						text: "작성자",
 						sortable: false,
 						align: "center",
-						value: "user_nickname",
+						value: "user_email",
 					},
 					{
 						text: "참여수",
 						sortable: true /*디비 이름 확인하기 */,
-						value: "challenge_participants",
+						value: "post_cnt",
 					},
 					{
 						text: "구독수" /*db 이름 확인하기 */,
-						value: "challenge_subscribe_no",
+						value: "subscription_cnt",
 					},
 
 					{
@@ -127,8 +114,7 @@
 					},
 					{
 						text: "기간",
-
-						sortable: false,
+						//	sortable: false,
 						value: "duration",
 					},
 					{
@@ -144,51 +130,19 @@
 						sortable: false,
 					},
 				],
-				challengeList: [
-					{
-						challenge_no: 1,
-						challenge_title: "아이스버킷챌린지",
-						user_nickname: "챌림픽",
-						challenge_participants: 13254,
-						challenge_subscribe_no: 43554,
-						challenge_start: "2022-01-26",
-						challenge_end: "2022-07-26",
-						challenge_report: 4,
-						challenge_official: true,
-					},
-					{
-						challenge_no: 17,
-						challenge_title: "김싸피덤벼",
-						user_nickname: "이싸피",
-						challenge_participants: 1,
-						challenge_subscribe_no: 0,
-						challenge_start: "2021-12-5",
-						challenge_end: "2022-01-02",
-						challenge_report: 415,
-						challenge_official: false,
-					},
-					{
-						challenge_no: 7,
-						challenge_title: "공식",
-						user_nickname: "챌림픽",
-						challenge_participants: 0,
-						challenge_subscribe_no: 0,
-						challenge_start: "2022-02-05",
-						challenge_end: "2022-06-30",
-						challenge_report: 0,
-						challenge_official: true,
-					},
-				],
+				challenges: [],
 			};
 		},
 
 		methods: {
 			goodbye(item) {
+				let obj1 = { challenge_no: item.user_no };
+
 				var message = "정말 " + item.challenge_title + "을 삭제하시겠습니까?";
 				if (confirm(message)) {
 					alert(item.challenge_title + "를 삭제하였습니다.");
-					//item.user_no로 회원 정지 api통신
-					//deleteUser(this.item);
+					deleteChallenge(obj1);
+					location.reload();
 				} else {
 					alert("취소하였습니다.");
 				}
@@ -204,24 +158,17 @@
 				}
 			},
 		},
-		/*	Api 통신 용
 		created() {
-			let param = {
-				pg: 1,
-				spp: 20,
-				key: null,
-				word: null,
-			};
-			userList(
-				param,
+			challengeList(
 				(response) => {
-					this.userList = response.data;
+					this.challenges = response.data.data;
+					console.log(this.challenges);
 				},
 				(error) => {
-					console.log(error);
+					if (error) console.log("er");
 				}
 			);
-		},*/
+		},
 	};
 </script>
 

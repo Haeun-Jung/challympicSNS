@@ -7,15 +7,13 @@
 	>
 		<v-data-table
 			:headers="headers"
-			:items="challengeList"
+			:items="challenges"
 			item-key="challenge_no"
 			class="elevation-1"
 			:hide-default-footer="true"
 		>
-			<!--	<template #item.challenge_participants="{ value }">
-			</template>-->
 			<template v-slot:item="{ item }">
-				<div v-bind="sumField(item.challenge_participants)"></div>
+				<div v-bind="sumField(item.post_cnt)"></div>
 			</template>
 		</v-data-table>
 
@@ -30,13 +28,11 @@
 				>
 					mdi-account-group
 				</v-icon>
-
 				<div>
 					<div class="text-caption grey--text">전체 챌린지 참여 횟수</div>
 					<span class="text-h3 font-weight-black">
 						{{ setsum }}
 					</span>
-
 					<strong> 회</strong>
 				</div>
 			</v-row>
@@ -58,50 +54,17 @@
 </template>
 
 <script>
+	import { challengeList } from "@/api/admin";
 	const exhale = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 	export default {
 		data() {
 			return {
 				checking: false,
-				setsum: -1,
+				setsum: 0,
 				index: 0,
 				heartbeats: [],
 				headers: [],
-				challengeList: [
-					{
-						challenge_no: 1,
-						challenge_title: "아이스버킷챌린지",
-						user_nickname: "챌림픽",
-						challenge_participants: 13254,
-						challenge_subscribe_no: 43554,
-						challenge_start: "2022-01-26",
-						challenge_end: "2022-07-26",
-						challenge_report: 4,
-						challenge_official: true,
-					},
-					{
-						challenge_no: 17,
-						challenge_title: "김싸피덤벼",
-						user_nickname: "이싸피",
-						challenge_participants: 1,
-						challenge_subscribe_no: 0,
-						challenge_start: "2021-12-5",
-						challenge_end: "2022-01-02",
-						challenge_report: 415,
-						challenge_official: false,
-					},
-					{
-						challenge_no: 7,
-						challenge_title: "공식",
-						user_nickname: "챌림픽",
-						challenge_participants: 0,
-						challenge_subscribe_no: 0,
-						challenge_start: "2022-02-05",
-						challenge_end: "2022-06-30",
-						challenge_report: 0,
-						challenge_official: true,
-					},
-				],
+				challenges: [],
 			};
 		},
 		computed: {
@@ -113,13 +76,9 @@
 			},
 		},
 
-		created() {
-			this.takePulse(false);
-		},
-
 		methods: {
 			sumField(value) {
-				if (this.index < Object.keys(this.challengeList).length) {
+				if (this.index < Object.keys(this.challenges).length) {
 					this.index++;
 					this.setsum += value;
 
@@ -131,32 +90,23 @@
 			},
 			async takePulse(inhale = true) {
 				this.checking = true;
-
 				inhale && (await exhale(1000));
-
 				this.heartbeats = Array.from({ length: 20 }, this.heartbeat);
-
 				this.checking = false;
 			},
 		},
 
-		/*	Api 통신 용
 		created() {
-			let param = {
-				pg: 1,
-				spp: 20,
-				key: null,
-				word: null,
-			};
-			userList(
-				param,
+			this.takePulse(false);
+			challengeList(
 				(response) => {
-					this.userList = response.data;
+					this.challenges = response.data.data;
+					console.log(this.challenges);
 				},
 				(error) => {
-					console.log(error);
+					if (error) console.log("er");
 				}
 			);
-		},*/
+		},
 	};
 </script>

@@ -30,8 +30,8 @@
 					<v-list-item-subtitle class="ma-2 ml-2 grey--text">
 						<v-icon>mdi-calendar-month</v-icon>
 						{{ item.qna_question_regdate }}
-						<v-icon>mdi-clipboard-text-outline</v-icon>
-						{{ item.user_nickname }}
+						<!--	<v-icon>mdi-clipboard-text-outline</v-icon>
+						{{ item.user_nickname }}-->
 					</v-list-item-subtitle>
 					<v-sheet
 						height="150px"
@@ -48,9 +48,8 @@
 					</v-list-item-title>
 					<v-list-item-subtitle class="ma-2 ml-2 grey--text">
 						<v-icon>mdi-calendar-month</v-icon>
-						{{ currentDate() }}
+						현재 날짜 :{{ currentDate() }}
 					</v-list-item-subtitle>
-
 					<v-textarea
 						outlined
 						solo
@@ -63,13 +62,10 @@
 					></v-textarea>
 					<v-card-actions>
 						<v-spacer />
-						<v-btn
-							color="primary"
-							flat
-							@click="answer"
-							@click.stop="$set(dialogNote, item.qna_no, false)"
+						<v-btn color="primary" flat @click="answer(item.qna_no)"
 							>답변 등록</v-btn
 						>
+						<!--	@click.stop="$set(dialogNote, item.qna_no, false)"-->
 					</v-card-actions>
 				</v-list>
 			</div>
@@ -78,6 +74,7 @@
 </template>
 
 <script>
+	import { answer } from "@/api/admin";
 	export default {
 		name: "AnswerModal",
 		props: {
@@ -90,13 +87,13 @@
 			};
 		},
 		methods: {
-			answer() {
+			answer(no) {
+				let obj1 = { qna_no: no, qna_answer: this.answer_content };
+				//	console.log(obj1);
+				answer(obj1);
 				alert("답변을 등록하였습니다.");
-				this.answer_content.replace(/(?:\r\n|\r|\n)/g, "<br />");
-				console.log(this.answer_content);
-				//alert(this.item.qna_no);
-				//API 통신 -> send this.item.qna_no 와 answer_content
-				//reload
+				this.$set(this.dialogNote, no, false);
+				location.reload();
 			},
 			currentDate() {
 				const current = new Date();
