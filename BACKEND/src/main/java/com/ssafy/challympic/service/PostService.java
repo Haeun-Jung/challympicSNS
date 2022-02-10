@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @RequiredArgsConstructor
@@ -69,5 +68,13 @@ public class PostService {
             reportCnt += post.getPost_report();
         }
         return reportCnt;
+    }
+
+    public List<Post> getPostListByUserNo(int userNo) {
+        return postRepository.findByUser(userNo);
+    }
+
+    public List<Post> getLikePostListByUserNo(int userNo) {
+        return postRepository.findLikePostByUserNo(userNo);
     }
 }

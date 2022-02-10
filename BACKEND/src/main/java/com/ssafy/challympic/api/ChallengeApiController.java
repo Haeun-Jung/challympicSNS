@@ -1,6 +1,7 @@
 package com.ssafy.challympic.api;
 
 import com.ssafy.challympic.api.Dto.ChallengeDto;
+import com.ssafy.challympic.api.Dto.SubscriptionDto;
 import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.domain.defaults.ChallengeAccess;
 import com.ssafy.challympic.domain.defaults.ChallengeType;
@@ -145,7 +146,17 @@ public class ChallengeApiController {
         title.setChallenge(challenge);
         titleService.saveTitles(title);
 
-        return new Result(true, HttpStatus.OK.value());
+        List<Challenge> challengeList = challengeService.findChallengeByTitle(request.challenge_title);
+        int _challenge_no = 0;
+        for(Challenge chall :challengeList) {
+            if(chall.getChallenge_end().after(new Date())) {
+                _challenge_no = chall.getChallenge_no();
+            }
+        }
+
+        Integer challenge_no = _challenge_no;
+
+        return new Result(true, HttpStatus.OK.value(), challenge_no);
     }
 
     @Data
@@ -159,15 +170,9 @@ public class ChallengeApiController {
         private String title_name;
     }
 
-    /**
-     * 한글 pathVariable 인코딩 관련 이슈
-     * 해결 방법 : https://velog.io/@aszxvcb/Spring-PathVariable-%ED%95%9C%EA%B8%80-%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0-%EC%A0%84%EB%8B%AC
-     * @param challengeTitle
-     * @return
-     */
-    @GetMapping("/challenge/confirm/{challengeTitle}")
-    public Result ChallengeTitleCheck(@PathVariable String challengeTitle) {
-        List<Challenge> challenges = challengeService.findChallengeByTitle(challengeTitle);
+    @GetMapping("/challenge/confirm")
+    public Result ChallengeTitleCheck(@RequestBody ChallengeTitleCheckRequest request) {
+        List<Challenge> challenges = challengeService.findChallengeByTitle(request.getChallnege_title());
         for(Challenge c : challenges) {
             if(c.getChallenge_end().after(new Date())){
                 return new Result(false, HttpStatus.FORBIDDEN.value());
@@ -176,9 +181,13 @@ public class ChallengeApiController {
         return new Result(true, HttpStatus.OK.value());
     }
 
+    @Data
+    static class ChallengeTitleCheckRequest {
+        String challnege_title;
+    }
+
     /**
      * 구독추가
-     * //====subscription이 존재하는지 확인!!====//
      * @param challengeNo
      * @param userNo
      * @return
@@ -194,13 +203,24 @@ public class ChallengeApiController {
         Subscription findSubscription = subscriptionService.findSubscriptionByChallengeAndUser(challengeNo, userNo);
         if(findSubscription == null){
             subscriptionService.saveSubscription(Subscription.setSubscription(challenge, user));
-            return new Result(true, HttpStatus.OK.value());
+            Subscription sub = subscriptionService.findSubscriptionByChallengeAndUser(challengeNo, userNo);
+            return new Result(true, HttpStatus.OK.value(), new SubscriptionDto(sub.getSubscription_no(), "구독 추가"));
         }else{
-            return new Result(false, HttpStatus.BAD_REQUEST.value());
+            subscriptionService.deleteSubscription(findSubscription);
+            return new Result(true, HttpStatus.OK.value(), new SubscriptionDto(findSubscription.getSubscription_no(), "구독 취소"));
         }
     }
 
+    @GetMapping("/challenge/{challengeNo}")
+    public Result getChallenge(@PathVariable int challengeNo) {
+        Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
+        if(challenge == null) return new Result(false, HttpStatus.BAD_REQUEST.value());
+        else return new Result(true, HttpStatus.OK.value(), challenge);
+    }
+
+
     /**
+     * !!!! 폐기 !!!!
      * 구독 취소
      */
     @DeleteMapping("/challenge/{challengeNo}/subscribe/{userNo}")
@@ -214,6 +234,4 @@ public class ChallengeApiController {
         subscriptionService.deleteSubscription(Subscription.setSubscription(challenge, user));
         return new Result(true, HttpStatus.OK.value());
     }
-
-
 }
