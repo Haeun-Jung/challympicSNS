@@ -159,7 +159,7 @@ public class UserApiController {
         User findUser = userService.findUser(user_no);
         System.out.println(bCryptPasswordEncoder.matches(request.getUser_pwd(), findUser.getUser_pwd()));
         if(!bCryptPasswordEncoder.matches(request.getUser_pwd(), findUser.getUser_pwd())){
-            return new Result(false, HttpStatus.BAD_REQUEST.value(), new UserDto());
+            return new Result(false, HttpStatus.NO_CONTENT.value(), new UserDto());
         }
 
         String newpwd = bCryptPasswordEncoder.encode(request.getUser_newpwd());
