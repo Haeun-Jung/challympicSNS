@@ -69,7 +69,10 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import PasswordFind from "@/components/login/PasswordFind.vue";
+
+const userStore = "userStore";
 
 export default {
   name: "Login",
@@ -91,7 +94,8 @@ export default {
     }
   },
   methods: {
-    login: async function(event) {
+    ...mapActions(userStore, ["getUserInfo"]),
+    async login(event) {
       event.preventDefault();
 
       const validation = this.$refs.form.validate();
@@ -102,7 +106,9 @@ export default {
       if (this.emailSave) {
         this.$cookies.set("emailCookie", this.email);
       }
-      this.$store.dispatch('login', { user_email: this.email, user_pwd: this.password });
+
+      await this.$store.dispatch('userStore/login', { user_email: this.email, user_pwd: this.password });
+      this.getUserInfo(localStorage.getItem("Authorization"));
     },
     clickJoinBtn() {
       this.$router.push("/join");
