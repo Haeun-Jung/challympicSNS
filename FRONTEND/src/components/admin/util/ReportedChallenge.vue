@@ -2,7 +2,7 @@
 	<v-container>
 		<v-data-table
 			:headers="headers"
-			:items="challengeList"
+			:items="challenges"
 			item-key="challenge_no"
 			class="elevation-1"
 			dense
@@ -12,9 +12,9 @@
 			:hide-default-footer="true"
 		>
 			<!--search ends here-->
-			<template #item.challenge_participants="{ item }">
+			<template #item.post_cnt="{ item }">
 				<div v-if="item.challenge_report === 0" class="mr-8"></div>
-				<div v-else class="mr-8">{{ item.challenge_participants }}</div>
+				<div v-else class="mr-8">{{ item.post_cnt }}</div>
 			</template>
 
 			<template #item.challenge_title="{ item }">
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-	//import {deleteUser, userList} from "@/api/member";
+	import { challengeList } from "@/api/admin";
 	export default {
 		name: "UserList",
 		data() {
@@ -59,7 +59,6 @@
 				page: "",
 				sortBy: "challenge_report",
 				sortDesc: true,
-				//api 통신전 dummy data
 				headers: [
 					{
 						text: "챌린지",
@@ -69,13 +68,12 @@
 					{
 						text: "참여",
 						sortable: false,
-						value: "challenge_participants",
+						value: "post_cnt",
 					},
 					{
 						text: "신고",
 						sortable: false,
 						value: "challenge_report",
-						//		value: "action",
 					},
 					{
 						value: "delete",
@@ -83,41 +81,18 @@
 						sortable: false,
 					},
 				],
-				challengeList: [
-					{
-						challenge_no: 1,
-						challenge_title: "아이스버킷챌린지",
-						user_nickname: "챌림픽",
-						challenge_participants: 13254,
-						challenge_subscribe_no: 43554,
-						challenge_start: "2022-01-26",
-						challenge_end: "2022-07-26",
-						challenge_report: 4,
-						challenge_official: true,
-					},
-					{
-						challenge_no: 17,
-						challenge_title: "김싸피덤벼",
-						user_nickname: "이싸피",
-						challenge_participants: 1,
-						challenge_subscribe_no: 0,
-						challenge_start: "2021-12-5",
-						challenge_end: "2022-01-02",
-						challenge_report: 415,
-						challenge_official: false,
-					},
-					{
-						challenge_no: 7,
-						challenge_title: "공식",
-						user_nickname: "챌림픽",
-						challenge_participants: 0,
-						challenge_subscribe_no: 0,
-						challenge_start: "2022-02-05",
-						challenge_end: "2022-06-30",
-						challenge_report: 0,
-						challenge_official: true,
-					},
-				],
+				challenges: [],
+				created() {
+					challengeList(
+						(response) => {
+							this.challenges = response.data.data;
+							console.log(this.challenges);
+						},
+						(error) => {
+							if (error) console.log("er");
+						}
+					);
+				},
 			};
 		},
 
@@ -143,24 +118,17 @@
 				}
 			},
 		},
-		/*	Api 통신 용
 		created() {
-			let param = {
-				pg: 1,
-				spp: 20,
-				key: null,
-				word: null,
-			};
-			userList(
-				param,
+			challengeList(
 				(response) => {
-					this.userList = response.data;
+					this.challenges = response.data.data;
+					console.log(this.challenges);
 				},
 				(error) => {
-					console.log(error);
+					if (error) console.log("er");
 				}
 			);
-		},*/
+		},
 	};
 </script>
 

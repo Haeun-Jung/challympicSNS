@@ -16,6 +16,7 @@
 				<v-carousel-item v-for="(item, idx) in post" :key="item.id">
 					<!-- 동영상 재생 -->
 					<video
+						@click="hello"
 						ref="myvideo"
 						width="100%;!important"
 						height="280px;!important"
@@ -64,7 +65,9 @@
 			<v-list-item>
 				<v-list-item-content>
 					<v-list-item-title>
-						<h3 class="title-block" @click="goChallenge">{{ challenge.challenge_title }}</h3>
+						<h3 class="title-block" @click="goChallenge">
+							{{ challenge.challenge_title }}
+						</h3>
 					</v-list-item-title>
 					<v-list-item-subtitle>
 						{{ challenge.challenge_content }}
@@ -158,6 +161,9 @@
 			};
 		},
 		methods: {
+			hello() {
+				alert("hell");
+			},
 			pushLike(postid, arrIdx) {
 				//arrInx는 화면 바로 바꾸는용도
 				//postid로 좋아요 요청
