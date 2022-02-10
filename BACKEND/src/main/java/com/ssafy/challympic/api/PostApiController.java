@@ -187,9 +187,32 @@ public class PostApiController {
 
         log.info("Create Post");
 
-        // 1. 플로우 시작
+        // 플로우 시작
         Media media = null;
         MultipartFile files = null;
+        Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
+
+        // 챌린저 목록 가져옴
+        List<Challenger> challengerList = challengeService.getChallengerByChallengeNo(challengeNo);
+        User _user = userService.findUser(postRequest.getUser_no());
+        boolean isChallenger = false;
+
+        // 챌린저 목록이 지정되어 있거나 포스트 작성자가 챌린지 작성자인 경우
+        if(!challengerList.isEmpty()){
+            for(Challenger challenger : challengerList){
+                if(challenger.getUser() == _user) {
+                    isChallenger = true;
+                    break;
+                }
+            }
+
+            if(postRequest.getUser_no() == challenge.getUser().getUser_no())
+                isChallenger = true;
+
+            if(!isChallenger)
+                return new Result(false, HttpStatus.OK.value());
+        }
+
 
         try {
 
@@ -203,6 +226,11 @@ public class PostApiController {
             if(fileType == null)
                 // 지원하지 않는 확장자
                 return new Result(false, HttpStatus.OK.value());
+            
+            if(!fileType.equals(challenge.getChallenge_type().name())){
+                // 챌린지와 확장자 명이 다름
+                return new Result(false, HttpStatus.OK.value());
+            }
 
             // png/jpg, mp4 <- 확장자
             media = s3Uploader.upload(files, fileType.toLowerCase(), "media");
@@ -282,6 +310,7 @@ public class PostApiController {
 
             // 기존 가지고 있던 데이터 삭제
             Post post = postService.getPost(postNo);
+            s3Uploader.deleteS3(post.getMedia().getFile_path());
             mediaService.delete(post.getMedia().getFile_no());
 
             String type = getFileType(postRequest.getFile());
