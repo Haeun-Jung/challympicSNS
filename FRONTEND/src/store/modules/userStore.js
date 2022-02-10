@@ -1,7 +1,9 @@
 import router from '@/router/index.js';
-import { login, join, confirmEmail, confirmNickname } from '@/api/user.js';
+import jwt_decode from "jwt-decode";
+import { login, join, confirmEmail, confirmNickname, getUser } from '@/api/user.js';
 
 const userStore = {
+  namespaced: true,
   state: {
       isLoggedIn: false,
       loginFailed: false,
@@ -9,6 +11,7 @@ const userStore = {
       userTitle: '',
       userNickname: '',
       userEmail: '',
+      userInfo: null,
       possibleEmail: false,
       possibleNickname: false,
   },
@@ -28,6 +31,9 @@ const userStore = {
       },
       LOGOUT(state) {
         state.isLoggedIn = false;
+      },
+      SET_USER_INFO: (state, userInfo) => {
+        state.userInfo = userInfo;
       },
       CONFIRM_EMAIL(state, isDuplicated) {
         state.possibleEmail = !isDuplicated;
@@ -68,6 +74,23 @@ const userStore = {
         }
       )
     },
+    getUserInfo({ commit }, token) {
+      let decode_token = jwt_decode(token);
+      getUser(
+        decode_token.user_no,
+        (response) => {
+          if (response.status === 200) {
+            console.log(response.data.data);
+            commit("SET_USER_INFO", response.data.data);
+          } else {
+            console.log("유저 정보 없음!!");
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
     async confirmEmail({ commit }, email) {
       await confirmEmail(
         email,
@@ -91,4 +114,4 @@ const userStore = {
   }
 }
 
-export default userStore
+export default userStore;
