@@ -1,6 +1,7 @@
 package com.ssafy.challympic.api;
 
 import com.ssafy.challympic.api.Dto.ChallengeDto;
+import com.ssafy.challympic.api.Dto.SubscriptionDto;
 import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.domain.defaults.ChallengeAccess;
 import com.ssafy.challympic.domain.defaults.ChallengeType;
@@ -178,7 +179,6 @@ public class ChallengeApiController {
 
     /**
      * 구독추가
-     * //====subscription이 존재하는지 확인!!====//
      * @param challengeNo
      * @param userNo
      * @return
@@ -194,13 +194,17 @@ public class ChallengeApiController {
         Subscription findSubscription = subscriptionService.findSubscriptionByChallengeAndUser(challengeNo, userNo);
         if(findSubscription == null){
             subscriptionService.saveSubscription(Subscription.setSubscription(challenge, user));
-            return new Result(true, HttpStatus.OK.value());
+            Subscription sub = subscriptionService.findSubscriptionByChallengeAndUser(challengeNo, userNo);
+            return new Result(true, HttpStatus.OK.value(), new SubscriptionDto(sub.getSubscription_no(), "구독 추가"));
         }else{
-            return new Result(false, HttpStatus.BAD_REQUEST.value());
+            subscriptionService.deleteSubscription(findSubscription);
+            return new Result(true, HttpStatus.OK.value(), new SubscriptionDto(findSubscription.getSubscription_no(), "구독 취소"));
         }
     }
 
+
     /**
+     * !!!! 폐기 !!!!
      * 구독 취소
      */
     @DeleteMapping("/challenge/{challengeNo}/subscribe/{userNo}")

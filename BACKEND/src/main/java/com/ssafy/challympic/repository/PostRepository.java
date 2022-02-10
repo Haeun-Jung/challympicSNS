@@ -1,6 +1,5 @@
 package com.ssafy.challympic.repository;
 
-import com.ssafy.challympic.domain.Challenge;
 import com.ssafy.challympic.domain.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -35,6 +34,13 @@ public class PostRepository {
     public List<Post> findByUser(int user_no){
         return em.createQuery("select p from Post p where p.user.user_no = :user_no", Post.class)
                 .setParameter("user_no", user_no)
+                .getResultList();
+    }
+
+    public List<Post> findLikePostByUserNo(int userNo) {
+        return em.createQuery("select p from Post p where p.post_no = " +
+                "(select pl.post_no from PostLike pl where pl.user_no = :userNo)", Post.class)
+                .setParameter("userNo", userNo)
                 .getResultList();
     }
 }

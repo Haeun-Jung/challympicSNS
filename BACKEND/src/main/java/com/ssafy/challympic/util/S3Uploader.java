@@ -2,7 +2,9 @@ package com.ssafy.challympic.util;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.ssafy.challympic.domain.Media;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -110,6 +112,22 @@ public class S3Uploader {
     private String putS3(File uploadFile, String fileName) {
         amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
         return amazonS3Client.getUrl(bucket, fileName).toString();
+    }
+
+    public void deleteS3(String path){
+        try {
+            for (S3ObjectSummary file : amazonS3Client.listObjects(bucket, path).getObjectSummaries()) {
+                amazonS3Client.deleteObject(bucket, file.getKey());
+            }
+
+            for (S3ObjectSummary file : amazonS3Client.listObjects(bucket, path.replace("output", "input")).getObjectSummaries()) {
+                amazonS3Client.deleteObject(bucket, file.getKey());
+            }
+
+            log.info("[Delete] path : " + path);
+        } catch(Exception e){
+            log.error(e.getMessage());
+        }
     }
 
     // 로컬에 저장된 파일 지우기
