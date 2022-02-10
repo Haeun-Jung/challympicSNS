@@ -16,7 +16,8 @@ export default {
     },
     methods: {
         moveToAd() {
-           this.$router.push("/search/" + this.publicAd);
+          //  TODO: this.$router.push("/challenge/" + this.challengeNo); 로 수정하기
+           this.$router.push("/challenge/1");
         }
     }
 }
