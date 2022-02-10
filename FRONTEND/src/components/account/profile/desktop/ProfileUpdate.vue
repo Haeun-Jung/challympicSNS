@@ -14,26 +14,6 @@
 				</v-col>
 				<v-col>
 					<v-container>
-						<!-- 이름 -->
-						<v-row>
-							<v-col md="4">
-								<!-- 후에 {{user.name}}-->
-								<v-list-item-title>이름</v-list-item-title>
-							</v-col>
-							<v-col>
-								<v-list-item-title>김싸피</v-list-item-title>
-							</v-col>
-						</v-row>
-						<!-- 이메일 -->
-						<v-row>
-							<v-col md="4">
-								<!-- 후에 {{user.email}}-->
-								<v-list-item-title>이메일</v-list-item-title>
-							</v-col>
-							<v-col>
-								<v-list-item-title>ssafy@gmail.com</v-list-item-title>
-							</v-col>
-						</v-row>
 						<v-row class="row-bottom">
 							<!-- 타이틀 -->
 							<v-col md="4">
@@ -42,7 +22,7 @@
 							<v-col>
 								<!--label에는 후에 selected 에 user.title로 가져오기-->
 								<v-select
-									:items="titles"
+									:items="userInfo.titles"
 									label=""
 									dense
 									outlined
@@ -59,7 +39,7 @@
 							<v-col>
 								<v-text-field
 									label=""
-									v-model="nickname"
+									v-model="userInfo.user_nickname"
 									dense
 									outlined
 									clearable
@@ -69,6 +49,15 @@
 								<v-btn text color="primary" width="45px" @click="nicknameCheck"
 									>중복확인</v-btn
 								>
+							</v-col>
+						</v-row>
+						<!-- 이메일 -->
+						<v-row>
+							<v-col md="4">
+								<v-list-item-title>이메일</v-list-item-title>
+							</v-col>
+							<v-col>
+								<v-list-item-title>{{userInfo.user_email}}</v-list-item-title>
 							</v-col>
 						</v-row>
 						<!-- 내 관심사 -->
@@ -176,15 +165,21 @@
 </template>
 
 <script>
-	import ProfileUploadButton from "@/components/button/ProfilelUploadButton.vue";
-	export default {
+import { mapState, mapMutations } from "vuex";
+import ProfileUploadButton from "@/components/button/ProfilelUploadButton.vue";
+	
+const userStore = "userStore";
+
+export default {
 		components: { ProfileUploadButton },
+		computed: {
+			...mapState(userStore, ["userInfo"]),
+		},
 		//props: [selectedFile],
 		data() {
 			return {
 				profileUrl: "https://cdn.vuetifyjs.com/images/john.jpg", //후에 유저테이블에서 가져오기
 				titles: ["밥 잘먹는", "타이틀2"],
-				nickname: "nickname",
 				dialog: false,
 				search: "",
 				disabledTrue: true,
@@ -221,6 +216,7 @@
 			};
 		},
 		methods: {
+			...mapMutations(userStore, ["SET_USER_INFO"]),
 			onSubmit() {
 				//Submit 눌렀을 떄, 파일 명, 파일 이름 프롭스해서 보내기
 			},
