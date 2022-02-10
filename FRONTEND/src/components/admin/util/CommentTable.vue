@@ -2,7 +2,7 @@
 	<v-container>
 		<v-data-table
 			:headers="headers"
-			:items="commentList"
+			:items="comments"
 			item-key="comment_no"
 			class="elevation-1"
 			:search="search"
@@ -25,9 +25,11 @@
 					<div>
 						<v-list-item-subtitle class="ma-2 ml-2 grey--text">
 							<v-icon>mdi-calendar-month</v-icon>
-							{{ item.comment_regdate }}
+							{{ item.comment_regdate.substring(0, 10) }}
+							<!--
 							<v-icon>mdi-clipboard-text-outline</v-icon>
 							{{ item.user_nickname }}
+							-->
 						</v-list-item-subtitle>
 						<div class="admin-comment-expansion">
 							{{ item.comment_content }}
@@ -39,6 +41,9 @@
 			<!--search ends here-->
 			<template #item.comment_no="{ value }">
 				<div class="mr-8">{{ value }}</div>
+			</template>
+			<template #item.comment_regdate="{ value }">
+				{{ value.substring(0, 10) }}
 			</template>
 
 			<template #item.challenge_title="{ item }">
@@ -76,7 +81,7 @@
 
 <script>
 	import NickNameModule from "./NickNameModule.vue";
-	//import {deleteUser, userList} from "@/api/member";
+	import { deleteComment, commentList } from "@/api/admin";
 	export default {
 		name: "UserList",
 		components: {
@@ -92,18 +97,11 @@
 				sortDesc: false,
 				show: false,
 				value: "comment_content",
-
-				//api 통신전 dummy data
 				headers: [
 					{
 						text: "번호",
 						align: "center",
 						value: "comment_no",
-					},
-					{
-						text: "작성자",
-						align: "center",
-						value: "user_nickname",
 					},
 					{
 						text: "내용",
@@ -114,7 +112,7 @@
 					{
 						text: "좋아요",
 						sortable: true /*디비 이름 확인하기 */,
-						value: "comment_like",
+						value: "like_cnt",
 					},
 					{
 						text: "신고수" /*db 이름 확인하기 */,
@@ -129,56 +127,25 @@
 					{
 						text: "삭제",
 						value: "delete",
-
 						sortable: false,
 					},
 				],
-				commentList: [
-					{
-						comment_no: 1,
-						user_nickname: "김싸피",
-						comment_content: "🥕🥕🥕🥕🥕🥕🥕🥕",
-						comment_like: 154,
-						comment_report: 1234,
-						comment_regdate: "2022-01-28",
-					},
-					{
-						comment_no: 136,
-						user_nickname: "이싸피",
-						comment_content:
-							"🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕",
-						comment_like: 3,
-						comment_report: 1,
-						comment_regdate: "2022-01-28",
-					},
-					{
-						comment_no: 145,
-						user_nickname: "청싸피",
-						comment_content: "🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕🥕",
-						comment_like: 14,
-						comment_report: 12,
-						comment_regdate: "2022-01-28",
-					},
-				],
+				comments: [],
 			};
 		},
 
 		methods: {
 			goodbye(item) {
-				var message =
-					"정말 " + item.user_nickname + " 님의 댓글을 삭제하시겠습니까?";
+				let obj1 = { comment_no: item.comment_no };
+				var message = "정말 해당 댓글을 삭제하시겠습니까?";
 				if (confirm(message)) {
 					alert("해당 댓글을 삭제하였습니다.");
-					//item.user_no로 회원 정지 api통신
-					//deleteUser(this.item);
+					deleteComment(obj1);
+					location.reload();
 				} else {
 					alert("취소하였습니다.");
 				}
-				//locaation.reload();
 			},
-			/*	clicked(value) {
-				this.expanded.push(value);
-			},*/
 			clicked(item, event) {
 				if (event.isExpanded) {
 					const index = this.expanded.findIndex((i) => i === item);
@@ -189,31 +156,17 @@
 				}
 			},
 		},
-		/*	computed: {
-			show: {
-				get() {
-					return this.value !== null;
-				},
-			},
-		},*/
-		/*	Api 통신 용
 		created() {
-			let param = {
-				pg: 1,
-				spp: 20,
-				key: null,
-				word: null,
-			};
-			userList(
-				param,
+			commentList(
 				(response) => {
-					this.userList = response.data;
+					this.comments = response.data.data;
+					console.log(this.comments);
 				},
 				(error) => {
 					console.log(error);
 				}
 			);
-		},*/
+		},
 	};
 </script>
 
