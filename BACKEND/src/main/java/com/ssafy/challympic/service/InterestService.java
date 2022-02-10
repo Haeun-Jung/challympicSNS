@@ -24,11 +24,17 @@ public class InterestService {
     /**
      * 관심 저장
      */
-    public void save(int user_no, int tag_no){
-        Interest interest = new Interest();
-        interest.setUser(userRepository.findOne(user_no));
-        interest.setTag(tagRepository.findOne(tag_no));
-        interestRepository.save(interest);
+    public boolean save(int user_no, int tag_no){
+        Interest findInterest = interestRepository.findOne(user_no, tag_no);
+        if(findInterest != null){
+            return false;
+        }else{
+            Interest interest = new Interest();
+            interest.setUser(userRepository.findOne(user_no));
+            interest.setTag(tagRepository.findOne(tag_no));
+            interestRepository.save(interest);
+            return true;
+        }
     }
 
     public List<Interest> findByUser(int user_no){
