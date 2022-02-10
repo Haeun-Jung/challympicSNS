@@ -38,7 +38,7 @@ public class ChallengeRepository {
 
     public void deleteChallenger(Challenger challenger){
         em.remove(challenger);
-        em.flush();
+//        em.flush();
     }
 
     public List<Challenger> findChallengerList(int challenge_no){
