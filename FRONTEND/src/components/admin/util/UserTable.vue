@@ -101,8 +101,7 @@
 		},
 		methods: {
 			goodbye(item) {
-				if (item.user_inactive != `ACTIVE`)
-					alert("이미 비활성화된 회원입니다.");
+				if (item.user_active != `ACTIVE`) alert("이미 비활성화된 회원입니다.");
 				else {
 					let obj1 = { user_no: item.user_no };
 					var message =
