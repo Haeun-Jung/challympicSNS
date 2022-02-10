@@ -6,10 +6,7 @@ Vue.use(Vuex);
 
 import userStore from '@/store/modules/userStore.js'
 
-export default new Vuex.Store({
-  state: {},
-  mutations: {},
-  actions: {},
+const store = new Vuex.Store({
   modules: {
     userStore,
   },
@@ -19,3 +16,5 @@ export default new Vuex.Store({
     })
   ]
 });
+
+export default store;

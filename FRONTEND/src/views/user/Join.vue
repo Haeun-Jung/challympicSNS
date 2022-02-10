@@ -177,11 +177,11 @@ export default {
   },
   methods: {
     checkEmail() {
-      this.$store.dispatch('confirmEmail', this.email);
+      this.$store.dispatch('userStore/confirmEmail', this.email);
       this.duplicateEmailCheck = true;
     },
     checkNickname() {
-      this.$store.dispatch('confirmNickname', this.nickname);
+      this.$store.dispatch('userStore/confirmNickname', this.nickname);
       this.duplicateNicknameCheck = true;
     },
     join(event) {
@@ -191,7 +191,7 @@ export default {
       if (!validation || !this.possibleEmail || !this.possibleNickname) {
         return;
       }
-      this.$store.dispatch('join', { user_email: this.email, user_nickname: this.nickname, user_pwd: this.password});
+      this.$store.dispatch('userStore/join', { user_email: this.email, user_nickname: this.nickname, user_pwd: this.password});
       
     },
   },
