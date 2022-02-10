@@ -1,6 +1,7 @@
 package com.ssafy.challympic.api;
 
 import com.ssafy.challympic.domain.*;
+import com.ssafy.challympic.service.InterestService;
 import com.ssafy.challympic.service.MediaService;
 import com.ssafy.challympic.service.TitleService;
 import com.ssafy.challympic.service.UserService;
@@ -32,6 +33,7 @@ public class UserApiController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final S3Uploader s3Uploader;
     private final TitleService titleService;
+    private final InterestService interestService;
 
     @GetMapping("/user/account/{userNo}")
     public Result findUser(@PathVariable("userNo") int user_no){
@@ -43,12 +45,17 @@ public class UserApiController {
                     .map(t -> new titleDto(t))
                     .collect(Collectors.toList());
         }
+
+        List<Interest> interests = findUser.getInterest();
+        List<interestDto> userInterests = new ArrayList<>();
+        if(!interests.isEmpty()){
+            userInterests = interests.stream()
+                    .map(i -> new interestDto(i))
+                    .collect(Collectors.toList());
+        }
+
         if(findUser != null) {
-            if(!titles.isEmpty()){
-                return new Result(true, HttpStatus.OK.value(), new UserDto(findUser, userTitles));
-            }else{
-                return new Result(true, HttpStatus.OK.value(), new UserDto(findUser));
-            }
+            return new Result(true, HttpStatus.OK.value(), new UserDto(findUser, userTitles, userInterests));
         }else{
             return new Result(false, HttpStatus.BAD_REQUEST.value(), new UserDto());
         }
@@ -226,6 +233,19 @@ public class UserApiController {
     }
 
     @Data
+    static class interestDto{
+        private int interest_no;
+        private int tag_no;
+        private String tag_content;
+
+        public interestDto(Interest interest) {
+            this.interest_no = interest.getInterest_no();
+            this.tag_no = interest.getTag().getTag_no();
+            this.tag_content = interest.getTag().getTag_content();
+        }
+    }
+
+    @Data
     static class titleDto{
         private String title_name;
 
@@ -244,6 +264,7 @@ public class UserApiController {
         private String user_title;
         private int file_no;
         private List<titleDto> titles;
+        private List<interestDto> interests;
 
         public UserDto(User user) {
             this.user_no = user.getUser_no();
@@ -263,6 +284,20 @@ public class UserApiController {
             this.user_nickname = user.getUser_nickname();
             this.user_title = user.getUser_title();
             this.titles = titles;
+            if(user.getMedia() == null){
+                this.file_no = 0;
+            }else{
+                this.file_no = user.getMedia().getFile_no();
+            }
+        }
+
+        public UserDto(User user, List<titleDto> titles, List<interestDto> interests) {
+            this.user_no = user.getUser_no();
+            this.user_email = user.getUser_email();
+            this.user_nickname = user.getUser_nickname();
+            this.user_title = user.getUser_title();
+            this.titles = titles;
+            this.interests = interests;
             if(user.getMedia() == null){
                 this.file_no = 0;
             }else{
