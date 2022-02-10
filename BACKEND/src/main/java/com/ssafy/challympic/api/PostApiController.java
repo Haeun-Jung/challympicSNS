@@ -307,6 +307,21 @@ public class PostApiController {
         // 포스트 업데이트
         int postId = postService.update(postNo, _post);
 
+        String content = postRequest.getPost_content();
+        String[] splitSharp = content.split(" ");
+
+        for(String str : splitSharp){
+            if(str.startsWith("#")){
+                // #을 분리하고 태그명만 추출
+                Tag tag = tagService.findTagByTagContent(str);
+                PostTag postTag = new PostTag();
+                postTag.setPost(_post);
+                postTag.setTag(tag);
+                tagService.savePostTag(postTag);
+            }
+        }
+
+
         if(postId != 0)
             return new Result(true, HttpStatus.OK.value());
 

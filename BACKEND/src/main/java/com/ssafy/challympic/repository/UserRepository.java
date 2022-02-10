@@ -63,4 +63,8 @@ public class UserRepository {
         }
     }
 
+    public List<User> findAllUser() {
+        return em.createQuery("select u from User u", User.class)
+                .getResultList();
+    }
 }

@@ -76,4 +76,8 @@ public class UserService {
     public User findByNickname(String user_nickname){
         return userRepository.findByNickname(user_nickname);
     }
+
+    public List<User> findAllUser() {
+        return userRepository.findAllUser();
+    }
 }
