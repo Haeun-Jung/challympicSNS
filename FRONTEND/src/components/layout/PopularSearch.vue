@@ -4,9 +4,9 @@
         <h2>인기 급상승<v-icon icon class="chart-icon">mdi-chart-line</v-icon></h2>
     </v-card-subtitle>
     <v-list-item-content class="side-contents-trend-container">
-      <div v-for="keyword in keywords" class="search-item" :key="keyword.id"  @click="searchKeyword(keyword)">
+      <div v-for="keyword in keywords" class="search-item" :key="keyword.id"  @click="goChallengePage(keyword.challengeNo)">
         <span class="word-blank">{{ keywords.indexOf(keyword) + 1 }}</span>
-        <span>{{ keyword }}</span>
+        <span>{{ keyword.title }}</span>
       </div>
     </v-list-item-content>
     <!-- 급상승 아이콘
@@ -22,12 +22,16 @@ export default {
   name: 'PopularSearch',
   data() {
     return {
-      keywords: ["아이스_버킷_챌린지", "미라클_모닝", "요리"]
+      keywords: [
+        {challengeNo: 1, title: "아이스_버킷_챌린지"},
+        {challengeNo: 2, title: "미라클_모닝"},
+        {challengeNo: 3, title: "요리"},
+      ]
     }
   },
   methods: {
-    searchKeyword(keyword) {
-      this.$router.push("/search/" + keyword);
+    goChallengePage(challengeNo) {
+      this.$router.push(`/challenge/${challengeNo}`);
     }
   }
 }

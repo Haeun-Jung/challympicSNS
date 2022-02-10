@@ -152,9 +152,9 @@ const routes = [
   },
   {
     path: "/challenge/:challengeNo",
-    // path: "/challenge",
     name: "ChallengeDetail",
     component: ChallengeDetail,
+    props: true,
   },
   {
     path: "/admin/",

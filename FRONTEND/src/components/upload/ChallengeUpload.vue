@@ -12,16 +12,29 @@
           </v-row>
           <v-row>
               <v-col>
-                <input v-if="$vuetify.theme.dark" class="dark-mode input-box challenge-input" type="text" placeholder="챌린지"/>
-                <input v-else class="light-mode input-box challenge-input" type="text" placeholder="챌린지"/>
-                <v-btn color="#3396F4" class="overlap-check">
+                <input
+                  v-if="$vuetify.theme.dark"
+                  v-model="challenge.challengeName"
+                  class="dark-mode input-box challenge-input"
+                  type="text"
+                  placeholder="챌린지"
+                  :disabled="possibleChallengeName ? true : false"
+                />
+                <input
+                  v-else v-model="challenge.challengeName"
+                  class="light-mode input-box challenge-input"
+                  type="text"
+                  placeholder="챌린지"
+                  :disabled="possibleChallengeName ? true : false"
+                />
+                <v-btn @click="confirmChallengeName" color="#3396F4" class="overlap-check">
                   <label class="btn">중복확인</label>
                 </v-btn>
               </v-col>
           </v-row>
           <v-row class="row-area">
             <v-col class="input-title"># 챌린지 참여자 
-              <input id="selectChallengers" @click="inputChallenger" type="checkbox" />
+              <input v-model="challenge.challengers" id="selectChallengers" @click="inputChallenger" type="checkbox" />
               <label for="selectChallengers">
                 지목
               </label>
@@ -44,26 +57,26 @@
           </v-row>
           <v-row>
               <v-col>
-                <input v-if="$vuetify.theme.dark" class="dark-mode input-box" type="text" placeholder="ex) 밥 잘먹는, 스쿼트 왕, ..."/>
-                <input v-else class="light-mode input-box" type="text" placeholder="ex) 밥 잘먹는, 스쿼트 왕, ..."/>
+                <input v-if="$vuetify.theme.dark" v-model="challenge.titleName" class="dark-mode input-box" type="text" placeholder="ex) 밥 잘먹는, 스쿼트 왕, ..."/>
+                <input v-else v-model="challenge.titleName" class="light-mode input-box" type="text" placeholder="ex) 밥 잘먹는, 스쿼트 왕, ..."/>
               </v-col>
           </v-row>
           <v-row class="row-area">
             <v-col class="input-title"># 기간</v-col>
           </v-row>
-            <v-radio-group v-model="row" row>
-              <v-radio label="하루" value="1day" @click="DatePickCancel"></v-radio>
-              <v-radio label="일주일" value="1week" @click="DatePickCancel"></v-radio>
-              <v-radio label="한달" value="1month" @click="DatePickCancel"></v-radio>
+            <v-radio-group v-model="challenge.endDate" row>
+              <v-radio label="하루" value="1" @click="DatePickCancel"></v-radio>
+              <v-radio label="일주일" value="7" @click="DatePickCancel"></v-radio>
+              <v-radio label="한달" value="30" @click="DatePickCancel"></v-radio>
               <v-radio label="종료일" :value="date" @click="DatePickMenu"></v-radio>
                 <end-date-picker @endDate="saveDate" v-if="EndDateMenu"/>
             </v-radio-group>
           <v-row class="row-area">
             <v-col class="input-title"># 참여파일형식</v-col>
           </v-row>
-            <v-radio-group v-model="row" row>
-              <v-radio label="사진" value="photo"></v-radio>
-              <v-radio label="영상" value="video"></v-radio>
+            <v-radio-group v-model="challenge.fileType" row>
+              <v-radio label="사진" value="IMAGE"></v-radio>
+              <v-radio label="영상" value="VIDEO"></v-radio>
             </v-radio-group>
           <v-row>
             <v-col class="input-title"># 설명(최대 255자)</v-col>
@@ -71,7 +84,7 @@
           <v-row class="row-area">
             <v-col>
               <v-textarea
-                v-model="description"
+                v-model="challenge.description"
                 outlined
                 placeholder="운동하니까 힘들다 #운동 @김싸피"
               ></v-textarea>
@@ -86,7 +99,13 @@
           </v-row>
         </v-card-text>
       </v-card>
-      <post-upload v-if="postDialog" @close-modal="postDialog=false" type="register"></post-upload>
+      <post-upload
+        v-if="postDialog"
+        :propChallenge="challenge"
+        @close-modal="postDialog=false"
+        @close-challenge-modal="dialog=false"
+        type="register"
+      ></post-upload>
     </v-dialog>
 </template>
 
@@ -101,13 +120,29 @@ export default {
   },
   data: ()=> ({
     dialog: true, //true : Dialog열림, false : Dialog닫힘
-    selectChallenger: false, //true : 챌린저 지정, false : 챌린저 미지정
     postDialog: false, //true: PostDialog열림, false: PostDialog닫힘
+    selectChallenger: false, //true : 챌린저 지정, false : 챌린저 미지정
     EndDateMenu: false,
-    endDate: '',
+    date: new Date(),
     error: false,
+    challenge: {
+      challengeName: '',
+      challengers: '',
+      titleName: '',
+      endDate: '',
+      fileType: '',
+      description: '',
+    }
   }),
+  computed: {
+    possibleChallengeName() {
+      return this.$store.state.challengeStore.possibleChallengeName;
+    }
+  },
   methods: {
+    confirmChallengeName() {
+      this.$store.dispatch('confirmChallengeName', this.challenge.challengeName);
+    },
     inputChallenger() { // 챌린저 지목 체크 로직
       // 지목 false
       if (this.selectChallenger == false) {
@@ -135,7 +170,7 @@ export default {
       /* 오늘 날짜 */
       const today = new Date();
       const year = today.getFullYear();
-      const month = ('0' + (today.getMonth() + 1)).slice(-2);
+      const month = parseInt(('0' + (today.getMonth() + 1)).slice(-2));
       const day = parseInt(('0' + today.getDate()).slice(-2));
 
       /* 사용자가 선택한 종료날짜 */
@@ -152,9 +187,9 @@ export default {
         this.error = '이전 날짜는 선택이 불가능합니다.';
       } else {
         /* 유효한 종료일일 때, 값 저장 */
-        this.endDate = endDate;
+        this.challenge.endDate = endDate;
         this.error = false;
-        console.log(this.endDate);
+        console.log(this.challenge.endDate);
       }
     }
   }

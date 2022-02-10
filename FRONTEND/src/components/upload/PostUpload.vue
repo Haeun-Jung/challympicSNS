@@ -13,14 +13,15 @@
               <div class="example-drag">
               <div v-show="$refs.upload && $refs.upload.dropActive" class="drop-active">
               </div>
-              <template v-if="files.length">
+              <template v-if="post.file.length">
                 <v-data-table
                   dense
                   :headers="headers"
-                  :items="files"
+                  :items="post.file"
                   item-key="name"
                   class="elevation-1"
                   hide-default-footer
+                  hide-default-header
                 >
                 </v-data-table>
               </template>
@@ -30,7 +31,7 @@
                   :multiple="true"
                   :drop="true"
                   :drop-directory="true"
-                  v-model="files"
+                  v-model="post.file"
                   ref="upload"
                   @input="onDrop()"
                 >
@@ -66,14 +67,20 @@
         <v-row class="row-area">
           <v-col class="d-flex">
             <v-text-field
-              v-if="challengeName"
-              :value="`${challengeName}`"
+              v-if="propChallengeName"
+              :value="`${propChallengeName.challengeName}`"
+              disabled
+              outlined
+            ></v-text-field>
+            <v-text-field
+              v-else-if="propChallenge"
+              :value="`${propChallenge.challengeName}`"
               disabled
               outlined
             ></v-text-field>
             <v-select
               v-else
-              v-model="challenge"
+              v-model="post.challengeName"
               :items="challenges"
               dense
               outlined
@@ -90,7 +97,7 @@
         <v-row class="row-area">
           <v-col>
             <v-textarea
-              v-model="description"
+              v-model="post.description"
               outlined
               name="input-7-4"
               placeholder="운동하니까 힘들다 #운동 @김싸피"
@@ -104,7 +111,7 @@
                 class="ma-2"
                 color="#3396F4"
               >
-                <label v-if="this.type === 'register'" class="upload-btn" @click="uploadStart()">챌린지 등록하기</label>
+                <label v-if="type === 'register'" class="upload-btn" @click="uploadStart()">챌린지 등록하기</label>
                 <label v-else class="upload-btn" @click="uploadStart()">참여하기</label>
               </v-btn>
           </v-row>
@@ -123,17 +130,21 @@ export default {
   },
   props: {
     type: { type: String },
-    challengeName: { type: String },
+    postDialog: {type: Boolean},
+    propChallenge: { type: Object },
+    propChallengeName: { type: Object },
   },
   data: () => ({
     dialog: true, //true : Dialog열림, false : Dialog닫힘
+    // TODO: 임시 챌린지 목록 바꿔야 함
     challenges: ["미라클_모닝_챌린지", "싸피_챌린지"],
-    file: "",
-    challenge: "",
+    post: {
+      file: [],
+      challengeName: "",
+      description: "",
+    },
     form: "",
-    description: "",
     error: false,
-    files: [],
     headers: [
       { text: "name", value: "name" },
       { text: "size", value: "size" },
@@ -143,21 +154,70 @@ export default {
     onDrop(item) {
       console.log(item);
     },
+    getEndDate(period) {
+      const intPeriod = parseInt(period);
+      const today = new Date();
+      let year = today.getFullYear();
+      let month = today.getMonth() + 1;
+      let day = today.getDate();
+      const dayCount = new Date(year, month, 0).getDate();
+      if (day + intPeriod > dayCount) {
+        day = day + intPeriod - dayCount;
+        month += 1;
+        if (month > 12) {
+          month -= 12;
+          year += 1;
+        }
+      }
+      return `${year}-${('0' + month).slice(-2)}-${('0' + day).slice(-2)}`;
+    },
     uploadStart() {
       // 업로드할 파일 형식과 참여파일형식이 맞지 않을 때 확인(file, form)
 
+      // 챌린지명이 prop으로 넘어왔을 경우 처리
+      if (this.post.challengeName.length == 0) {
+        if (this.propChallengeName) {
+          this.post.challengeName = this.propChallengeName;
+        } else if (this.propChallenge) {
+          this.post.challengeName = this.propChallenge.challengeName;
+        }
+      } 
       // 항목들 입력 여부 확인
       if (
-        this.file.length == 0 ||
-        this.challenge.length == 0 ||
-        this.description.length == 0
+        !this.post.file[0] ||
+        this.post.challengeName.length == 0 ||
+        this.post.description.length == 0
       ) {
         this.error = "입력되지 않은 항목이 있습니다.";
       } else {
         this.error = false;
       }
-
+      let formData = new FormData();
+      formData.append("file", this.post.file[0]);
+      formData.append("user_no", this.$store.state.userStore.userNo);
+      formData.append("post_content", this.post.description);
       // 업로드 로직
+      // 챌린지 등록에서 넘어왔을 경우
+      if (this.propChallenge) {
+        const propEndDate = this.propChallenge.endDate;
+        if (propEndDate.length < 3) {
+          const endDate = this.getEndDate(propEndDate);
+          const challenge = {
+            ...this.propChallenge,
+            endDate
+          }
+          this.$store.dispatch('createChallengeWithPost', { challenge, post:formData });
+        } else {
+          this.$store.dispatch('createChallengeWithPost', { challenge: this.propChallenge, post: formData });
+        }
+      } else {
+        // 포스트 업로드
+        const challengeNo = this.propChallenge.challengeNo || this.propChallengeName.challengeNo;
+        this.$store.dispatch('createPost', { challengeNo, post: formData });
+      }
+      this.$store.commit('RESET_POSSIBLE_STATUS');
+      this.dialog = false;
+      this.$emit('close-challenge-modal');
     },
   },
 };

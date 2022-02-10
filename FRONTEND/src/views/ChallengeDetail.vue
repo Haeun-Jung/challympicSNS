@@ -190,7 +190,7 @@
 							/>
 							<post-upload
 								v-if="postDialog"
-								:challengeName="challenge.name"
+								:propChallengeName="{ challengeName: challenge.name, challengeNo: challenge.challengeNo }"
 								@close-modal="postDialog = false"
 							/>
 						</v-flex>
@@ -222,13 +222,13 @@
 				isSubscribed: false,
 				postDialog: false,
 				linkInput: false,
-				challenge: {
-					name: "아이스버킷챌린지",
-					content:
-						"풍부하게 있는 그들은 밝은 않는 끓는 철환하였는가? 타오르고 날카로우나 뜨고, 구할 봄바람이다. 열매를 살 영원히 우는 힘차게 듣는다. 보내는 품고 쓸쓸한 굳세게 위하여 귀는 능히 사막이다. 그림자는 우리의 대고, 보이는 이상이 인생에 말이다. 인간은 지혜는 피고, 날카로우나 같이, 그들에게 것은 물방아 피다.",
-					type: "image",
-					official: true,
-				},
+				// challenge: {
+				// 	name: "아이스버킷챌린지",
+				// 	content:
+				// 		"풍부하게 있는 그들은 밝은 않는 끓는 철환하였는가? 타오르고 날카로우나 뜨고, 구할 봄바람이다. 열매를 살 영원히 우는 힘차게 듣는다. 보내는 품고 쓸쓸한 굳세게 위하여 귀는 능히 사막이다. 그림자는 우리의 대고, 보이는 이상이 인생에 말이다. 인간은 지혜는 피고, 날카로우나 같이, 그들에게 것은 물방아 피다.",
+				// 	type: "image",
+				// 	official: true,
+				// },
 				itemsPerPage: -1,
 				// TODO: 기본 정렬 키 어떤 걸로 할지 결정
 				sortBy: "postInfo.postNo",
@@ -238,145 +238,145 @@
 					{ text: "인기 순", value: "postInfo.likeCnt" },
 					{ text: "댓글 순", value: "postInfo.comments.length" },
 				],
-				postList: [
-					// 테스트용 데이터
-					{
-						postInfo: {
-							postNo: 1,
-              userNo: 1,
-							nickname: "nickname",
-							content: "다음 타깃 @nickname1",
-							regDate: "2022.01.02",
-							likeCnt: 2,
-							isLiked: false,
-							fileName: "img2.png",
-						},
-						likedUsers: [
-							{
-								likeNo: 1,
-								userNo: 1,
-								avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-								name: "Jason Oner",
-								title: "밥 잘먹는",
-								isFollowing: true,
-							},
-							{
-								likeNo: 2,
-								userNo: 2,
-								avatar: "https://cdn.vuetifyjs.com/images/lists/2.jpg",
-								name: "Mike Carlson",
-								title: "스쿼트 장인",
-								isFollowing: false,
-							},
-						],
-						comments: [
-							{
-								commentNo: 1,
-                userNo: 4,
-								nickname: "박싸피",
-								content: "댓글입니다.",
-								regDate: "2021.11.11",
-								likeCnt: 0,
-								isLiked: false,
-							},
-							{
-								commentNo: 2,
-                userNo: 5,
-								nickname: "김싸피",
-								content: "댓글입니다!",
-								regDate: "2021.11.11",
-								likeCnt: 1,
-								isLiked: true,
-							},
-							{
-								commentNo: 3,
-                userNo: 6,
-								nickname: "최싸피",
-								content: "댓글입니다!",
-								regDate: "2021.11.12",
-								likeCnt: 1,
-								isLiked: true,
-							},
-						],
-					},
-					{
-						postInfo: {
-							postNo: 2,
-              userNo: 2,
-							nickname: "nickname2",
-							content:
-								"그러나, 이에 #의하여 #민사상이나 #형사상의 책임이 면제되지는 아니한다. 모든 국민은 신체의 자유를 가진다. 누구든지 법률에 의하지 아니하고는 체포·구속·압수·수색 또는 심문을 받지 아니하며, 법률과 적법한 절차에 의하지 아니하고는 처벌·보안처분 또는 강제노역을 받지 아니한다.",
-							regDate: "2022.01.20",
-							likeCnt: 1,
-							isLiked: false,
-							fileName: "img1.jpg",
-						},
-						likedUsers: [
-							{
-								likeNo: 1,
-								userNo: 3,
-								avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-								name: "Jason Oner",
-								title: "밥 잘먹는",
-								isFollowing: true,
-							},
-						],
-						comments: [
-							{
-								commentNo: 1,
-                userNo: 4,
-								nickname: "박싸피",
-								content: "댓글입니다.",
-								regDate: "2021.11.11",
-								likeCnt: 0,
-								isLiked: false,
-							},
-							{
-								commentNo: 2,
-                userNo: 5,
-								nickname: "김싸피",
-								content: "댓글입니다!",
-								regDate: "2021.11.11",
-								likeCnt: 0,
-								isLiked: false,
-							},
-						],
-					},
-					{
-						postInfo: {
-							postNo: 3,
-              userNo: 3,
-							nickname: "nickname3",
-							content:
-								"그러나, 이에 의하여 민사상이나 형사상의 책임이 면제되지는 아니한다. 모든 국민은 신체의 자유를 가진다. 누구든지 법률에 의하지 아니하고는 체포·구속·압수·수색 또는 심문을 받지 아니하며, 법률과 적법한 절차에 의하지 아니하고는 처벌·보안처분 또는 강제노역을 받지 아니한다.",
-							regDate: "2022.01.30",
-							likeCnt: 1,
-							isLiked: false,
-							fileName: "img2.png",
-						},
-						likedUsers: [
-							{
-								likeNo: 1,
-								userNo: 3,
-								avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-								name: "Jason Oner",
-								title: "밥 잘먹는",
-								isFollowing: true,
-							},
-						],
-						comments: [
-							{
-								commentNo: 1,
-                userNo: 4,
-								nickname: "박싸피",
-								content: "댓글입니다.",
-								regDate: "2021.11.11",
-								likeCnt: 0,
-								isLiked: false,
-							},
-						],
-					},
-				],
+				// postList: [
+				// 	// 테스트용 데이터
+				// 	{
+				// 		postInfo: {
+				// 			postNo: 1,
+        //       userNo: 1,
+				// 			nickname: "nickname",
+				// 			content: "다음 타깃 @nickname1",
+				// 			regDate: "2022.01.02",
+				// 			likeCnt: 2,
+				// 			isLiked: false,
+				// 			fileName: "img2.png",
+				// 		},
+				// 		likedUsers: [
+				// 			{
+				// 				likeNo: 1,
+				// 				userNo: 1,
+				// 				avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
+				// 				name: "Jason Oner",
+				// 				title: "밥 잘먹는",
+				// 				isFollowing: true,
+				// 			},
+				// 			{
+				// 				likeNo: 2,
+				// 				userNo: 2,
+				// 				avatar: "https://cdn.vuetifyjs.com/images/lists/2.jpg",
+				// 				name: "Mike Carlson",
+				// 				title: "스쿼트 장인",
+				// 				isFollowing: false,
+				// 			},
+				// 		],
+				// 		comments: [
+				// 			{
+				// 				commentNo: 1,
+        //         userNo: 4,
+				// 				nickname: "박싸피",
+				// 				content: "댓글입니다.",
+				// 				regDate: "2021.11.11",
+				// 				likeCnt: 0,
+				// 				isLiked: false,
+				// 			},
+				// 			{
+				// 				commentNo: 2,
+        //         userNo: 5,
+				// 				nickname: "김싸피",
+				// 				content: "댓글입니다!",
+				// 				regDate: "2021.11.11",
+				// 				likeCnt: 1,
+				// 				isLiked: true,
+				// 			},
+				// 			{
+				// 				commentNo: 3,
+        //         userNo: 6,
+				// 				nickname: "최싸피",
+				// 				content: "댓글입니다!",
+				// 				regDate: "2021.11.12",
+				// 				likeCnt: 1,
+				// 				isLiked: true,
+				// 			},
+				// 		],
+				// 	},
+				// 	{
+				// 		postInfo: {
+				// 			postNo: 2,
+        //       userNo: 2,
+				// 			nickname: "nickname2",
+				// 			content:
+				// 				"그러나, 이에 #의하여 #민사상이나 #형사상의 책임이 면제되지는 아니한다. 모든 국민은 신체의 자유를 가진다. 누구든지 법률에 의하지 아니하고는 체포·구속·압수·수색 또는 심문을 받지 아니하며, 법률과 적법한 절차에 의하지 아니하고는 처벌·보안처분 또는 강제노역을 받지 아니한다.",
+				// 			regDate: "2022.01.20",
+				// 			likeCnt: 1,
+				// 			isLiked: false,
+				// 			fileName: "img1.jpg",
+				// 		},
+				// 		likedUsers: [
+				// 			{
+				// 				likeNo: 1,
+				// 				userNo: 3,
+				// 				avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
+				// 				name: "Jason Oner",
+				// 				title: "밥 잘먹는",
+				// 				isFollowing: true,
+				// 			},
+				// 		],
+				// 		comments: [
+				// 			{
+				// 				commentNo: 1,
+        //         userNo: 4,
+				// 				nickname: "박싸피",
+				// 				content: "댓글입니다.",
+				// 				regDate: "2021.11.11",
+				// 				likeCnt: 0,
+				// 				isLiked: false,
+				// 			},
+				// 			{
+				// 				commentNo: 2,
+        //         userNo: 5,
+				// 				nickname: "김싸피",
+				// 				content: "댓글입니다!",
+				// 				regDate: "2021.11.11",
+				// 				likeCnt: 0,
+				// 				isLiked: false,
+				// 			},
+				// 		],
+				// 	},
+				// 	{
+				// 		postInfo: {
+				// 			postNo: 3,
+        //       userNo: 3,
+				// 			nickname: "nickname3",
+				// 			content:
+				// 				"그러나, 이에 의하여 민사상이나 형사상의 책임이 면제되지는 아니한다. 모든 국민은 신체의 자유를 가진다. 누구든지 법률에 의하지 아니하고는 체포·구속·압수·수색 또는 심문을 받지 아니하며, 법률과 적법한 절차에 의하지 아니하고는 처벌·보안처분 또는 강제노역을 받지 아니한다.",
+				// 			regDate: "2022.01.30",
+				// 			likeCnt: 1,
+				// 			isLiked: false,
+				// 			fileName: "img2.png",
+				// 		},
+				// 		likedUsers: [
+				// 			{
+				// 				likeNo: 1,
+				// 				userNo: 3,
+				// 				avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
+				// 				name: "Jason Oner",
+				// 				title: "밥 잘먹는",
+				// 				isFollowing: true,
+				// 			},
+				// 		],
+				// 		comments: [
+				// 			{
+				// 				commentNo: 1,
+        //         userNo: 4,
+				// 				nickname: "박싸피",
+				// 				content: "댓글입니다.",
+				// 				regDate: "2021.11.11",
+				// 				likeCnt: 0,
+				// 				isLiked: false,
+				// 			},
+				// 		],
+				// 	},
+				// ],
 			};
 		},
 		methods: {
@@ -418,9 +418,16 @@
 				}
 				return false;
 			},
+      challenge() {
+        return this.$sotre.state.challengeStore.challenge;
+      },
+      postList() {
+        return this.$store.state.postStore.postList;
+      }
 		},
 		created() {
-			// 포스트 목록 가져온 뒤 this.postList = 포스트 목록
+      this.$store.dispatch('getChallengeInfo', this.$route.params.challengeNo);
+      this.$store.dispatch('getPostList', this.$route.params.challengeNo);
 		},
 	};
 </script>
