@@ -9,6 +9,7 @@ import com.ssafy.challympic.service.ChallengeService;
 import com.ssafy.challympic.service.SearchService;
 import com.ssafy.challympic.service.TagService;
 import com.ssafy.challympic.service.UserService;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class SearchApiController {
         List<Tag> tagList = searchService.findTagList();
         List<User> users = searchService.findUserList();
         List<UserDto> userList = users.stream()
-                .map(u -> new UserDto(u.getUser_no(), u.getUser_email(), u.getUser_nickname()))
+                .map(u -> new UserDto(u.getUser_no(), u.getUser_nickname()))
                 .collect(Collectors.toList());
 
         Map<String, List> data = new HashMap<>();
@@ -47,6 +48,19 @@ public class SearchApiController {
         return new Result(true, HttpStatus.OK.value(), data);
     }
 
+    @Data
+    @AllArgsConstructor
+    static class UserDto{
+        private int user_no;
+        private String user_nickname;
+    }
+
+    /**
+     * 태그 PathVar 말고 requestbody
+     * @param tag
+     * @param request
+     * @return
+     */
     @GetMapping("/search/tag/{tag}")
     public Result searchTagList(@PathVariable String tag, @RequestBody UserRequest request) {
         List<Challenge> challenges = searchService.findChallengeListByTagContent("#" + tag);
@@ -65,7 +79,7 @@ public class SearchApiController {
 
         // 검색 기록 저장
         User user = userService.findUser(request.user_no);
-        searchService.saveSearchRecord("#" + tag, user);
+        if(user != null) searchService.saveSearchRecord("#" + tag, user);
 
         Tag findTag = tagService.findTagByTagContent("#" + tag);
 

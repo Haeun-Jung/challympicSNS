@@ -146,7 +146,17 @@ public class ChallengeApiController {
         title.setChallenge(challenge);
         titleService.saveTitles(title);
 
-        return new Result(true, HttpStatus.OK.value());
+        List<Challenge> challengeList = challengeService.findChallengeByTitle(request.challenge_title);
+        int _challenge_no = 0;
+        for(Challenge chall :challengeList) {
+            if(chall.getChallenge_end().after(new Date())) {
+                _challenge_no = chall.getChallenge_no();
+            }
+        }
+
+        Integer challenge_no = _challenge_no;
+
+        return new Result(true, HttpStatus.OK.value(), challenge_no);
     }
 
     @Data
@@ -160,21 +170,20 @@ public class ChallengeApiController {
         private String title_name;
     }
 
-    /**
-     * 한글 pathVariable 인코딩 관련 이슈
-     * 해결 방법 : https://velog.io/@aszxvcb/Spring-PathVariable-%ED%95%9C%EA%B8%80-%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0-%EC%A0%84%EB%8B%AC
-     * @param challengeTitle
-     * @return
-     */
-    @GetMapping("/challenge/confirm/{challengeTitle}")
-    public Result ChallengeTitleCheck(@PathVariable String challengeTitle) {
-        List<Challenge> challenges = challengeService.findChallengeByTitle(challengeTitle);
+    @GetMapping("/challenge/confirm")
+    public Result ChallengeTitleCheck(@RequestBody ChallengeTitleCheckRequest request) {
+        List<Challenge> challenges = challengeService.findChallengeByTitle(request.getChallnege_title());
         for(Challenge c : challenges) {
             if(c.getChallenge_end().after(new Date())){
                 return new Result(false, HttpStatus.FORBIDDEN.value());
             }
         }
         return new Result(true, HttpStatus.OK.value());
+    }
+
+    @Data
+    static class ChallengeTitleCheckRequest {
+        String challnege_title;
     }
 
     /**
@@ -202,6 +211,13 @@ public class ChallengeApiController {
         }
     }
 
+    @GetMapping("/challenge/{challengeNo}")
+    public Result getChallenge(@PathVariable int challengeNo) {
+        Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
+        if(challenge == null) return new Result(false, HttpStatus.BAD_REQUEST.value());
+        else return new Result(true, HttpStatus.OK.value(), challenge);
+    }
+
 
     /**
      * !!!! 폐기 !!!!
@@ -218,6 +234,4 @@ public class ChallengeApiController {
         subscriptionService.deleteSubscription(Subscription.setSubscription(challenge, user));
         return new Result(true, HttpStatus.OK.value());
     }
-
-
 }
