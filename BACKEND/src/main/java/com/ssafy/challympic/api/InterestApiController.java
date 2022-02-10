@@ -20,8 +20,12 @@ public class InterestApiController {
 
     @PostMapping("/user/interest/{userNo}")
     public Result save(@PathVariable("userNo") int user_no, @RequestBody interestRequest request){
-        interestService.save(user_no, request.getTag_no());
-        return new Result(true, HttpStatus.OK.value());
+        boolean saveOk = interestService.save(user_no, request.getTag_no());
+        if(saveOk){
+            return new Result(true, HttpStatus.OK.value());
+        }else{
+            return new Result(false, HttpStatus.BAD_REQUEST.value());
+        }
     }
 
     @GetMapping("/user/interest/{userNo}")

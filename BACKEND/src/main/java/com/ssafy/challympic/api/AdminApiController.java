@@ -69,9 +69,10 @@ public class AdminApiController {
 
     @DeleteMapping("/admin/challenges")
     public Result deleteChallenge(@RequestBody ChallengeRequest challengeRequest){
-        adminService.deletePostByChallenge(challengeRequest.challenge_no);
-        adminService.deleteChallenge(challengeRequest.challenge_no);
         // 하위 포스트 삭제
+        adminService.deletePostByChallenge(challengeRequest.challenge_no);
+        // 챌린지 삭제
+        adminService.deleteChallenge(challengeRequest.challenge_no);
         return new Result(true, HttpStatus.OK.value());
     }
 

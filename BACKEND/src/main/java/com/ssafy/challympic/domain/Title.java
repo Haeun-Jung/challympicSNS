@@ -17,11 +17,11 @@ public class Title {
 
     private String title_name;
 
-    @ManyToOne(fetch = LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_no")
     private User user;
 
-    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "challenge_no")
     private Challenge challenge;
 }
