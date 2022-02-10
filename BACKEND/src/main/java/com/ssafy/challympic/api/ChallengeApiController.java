@@ -146,7 +146,17 @@ public class ChallengeApiController {
         title.setChallenge(challenge);
         titleService.saveTitles(title);
 
-        return new Result(true, HttpStatus.OK.value());
+        List<Challenge> challengeList = challengeService.findChallengeByTitle(request.challenge_title);
+        int _challenge_no = 0;
+        for(Challenge chall :challengeList) {
+            if(chall.getChallenge_end().after(new Date())) {
+                _challenge_no = chall.getChallenge_no();
+            }
+        }
+
+        Integer challenge_no = _challenge_no;
+
+        return new Result(true, HttpStatus.OK.value(), challenge_no);
     }
 
     @Data
@@ -202,6 +212,13 @@ public class ChallengeApiController {
         }
     }
 
+    @GetMapping("/challenge/{challengeNo}")
+    public Result getChallenge(@PathVariable int challengeNo) {
+        Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
+        if(challenge == null) return new Result(false, HttpStatus.BAD_REQUEST.value());
+        else return new Result(true, HttpStatus.OK.value(), challenge);
+    }
+
 
     /**
      * !!!! 폐기 !!!!
@@ -218,6 +235,4 @@ public class ChallengeApiController {
         subscriptionService.deleteSubscription(Subscription.setSubscription(challenge, user));
         return new Result(true, HttpStatus.OK.value());
     }
-
-
 }
