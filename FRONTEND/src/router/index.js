@@ -38,6 +38,9 @@ import CommentManagement from "@/components/admin/CommentManagement.vue";
 import QnAManagement from "@/components/admin/QnAManagement.vue";
 import StatManagement from "@/components/admin/StatManagement.vue";
 
+/*메인 화면 */
+import Recent from "../views/Recent.vue";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -45,7 +48,13 @@ const routes = [
     path: "/",
     name: "Main",
     component: Main,
+    redirect:"/recent",
     children: [
+      {
+        path: "/recent",
+        name: Recent,
+        component:Recent,
+      },
       {
         path: "/search/:keyword/",
         name: "Search",
