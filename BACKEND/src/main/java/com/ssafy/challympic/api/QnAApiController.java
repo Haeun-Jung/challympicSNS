@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,16 +57,17 @@ public class QnAApiController {
         private String qna_title;
         private String qna_question;
         private String qna_answer;
-        private Date qna_question_regdate;
-        private Date qna_answer_regdate;
+        private String qna_question_regdate;
+        private String qna_answer_regdate;
 
         public QnADto(QnA qna) {
             this.qna_no = qna.getQna_no();
             this.qna_title = qna.getQna_title();
             this.qna_question = qna.getQna_question();
             this.qna_answer = qna.getQna_answer();
-            this.qna_question_regdate = qna.getQna_question_regdate();
-            this.qna_answer_regdate = qna.getQna_answer_regdate();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            this.qna_question_regdate = formatter.format(qna.getQna_question_regdate());
+            this.qna_answer_regdate = formatter.format(qna.getQna_answer_regdate());
         }
     }
 
