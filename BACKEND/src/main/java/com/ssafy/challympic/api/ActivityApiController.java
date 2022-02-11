@@ -26,8 +26,6 @@ public class ActivityApiController {
         activity.setPost_no(request.getPostNo());
         activity.setUser_no(request.getUserNo());
 
-//        List<Tag> tagList = tagService.findPostTagListByPostNo(request.getPostNo());
-
         activityService.saveActivity(activity);
         return new Result(true, HttpStatus.OK.value());
     }
