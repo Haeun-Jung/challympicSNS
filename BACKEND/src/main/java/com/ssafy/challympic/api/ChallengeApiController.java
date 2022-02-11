@@ -154,9 +154,13 @@ public class ChallengeApiController {
             }
         }
 
-        Integer challenge_no = _challenge_no;
+        return new Result(true, HttpStatus.OK.value(), new ChallengeResponse(_challenge_no));
+    }
 
-        return new Result(true, HttpStatus.OK.value(), challenge_no);
+    @Data
+    @AllArgsConstructor
+    static class ChallengeResponse {
+        private int challenge_no;
     }
 
     @Data
@@ -170,9 +174,9 @@ public class ChallengeApiController {
         private String title_name;
     }
 
-    @GetMapping("/challenge/confirm")
+    @PostMapping("/challenge/confirm")
     public Result ChallengeTitleCheck(@RequestBody ChallengeTitleCheckRequest request) {
-        List<Challenge> challenges = challengeService.findChallengeByTitle(request.getChallnege_title());
+        List<Challenge> challenges = challengeService.findChallengeByTitle(request.getChallenge_title());
         for(Challenge c : challenges) {
             if(c.getChallenge_end().after(new Date())){
                 return new Result(false, HttpStatus.FORBIDDEN.value());
@@ -183,14 +187,11 @@ public class ChallengeApiController {
 
     @Data
     static class ChallengeTitleCheckRequest {
-        String challnege_title;
+        String challenge_title;
     }
 
     /**
      * 구독추가
-     * @param challengeNo
-     * @param userNo
-     * @return
      */
     @PostMapping("/challenge/{challengeNo}/subscribe/{userNo}")
     public Result addSubscription(@PathVariable int challengeNo, @PathVariable int userNo) {
@@ -215,7 +216,10 @@ public class ChallengeApiController {
     public Result getChallenge(@PathVariable int challengeNo) {
         Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
         if(challenge == null) return new Result(false, HttpStatus.BAD_REQUEST.value());
-        else return new Result(true, HttpStatus.OK.value(), challenge);
+        else {
+            ChallengeDto challengeResponse = new ChallengeDto(challenge);
+            return new Result(true, HttpStatus.OK.value(), challengeResponse);
+        }
     }
 
 

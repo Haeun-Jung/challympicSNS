@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,8 +21,20 @@ public class InterestApiController {
 
     @PostMapping("/user/interest/{userNo}")
     public Result save(@PathVariable("userNo") int user_no, @RequestBody interestRequest request){
-        interestService.save(user_no, request.getTag_no());
-        return new Result(true, HttpStatus.OK.value());
+        boolean saveOk = interestService.save(user_no, request.getTag_no());
+        List<Interest> interestList = interestService.findByUser(user_no);
+        List<InterestDto> interests = new ArrayList<>();
+        if(!interestList.isEmpty()) {
+            interests = interestList.stream()
+                    .map(i -> new InterestDto(i))
+                    .collect(Collectors.toList());
+        }
+
+        if(saveOk){
+            return new Result(true, HttpStatus.OK.value(), interests);
+        }else{
+            return new Result(false, HttpStatus.BAD_REQUEST.value());
+        }
     }
 
     @GetMapping("/user/interest/{userNo}")
@@ -36,7 +49,14 @@ public class InterestApiController {
     @DeleteMapping("/user/interest/{userNo}/{tagNo}")
     public Result delete(@PathVariable("userNo") int user_no, @PathVariable("tagNo") int tag_no){
         interestService.deleteInterest(user_no, tag_no);
-        return new Result(true, HttpStatus.OK.value());
+        List<Interest> interestList = interestService.findByUser(user_no);
+        List<InterestDto> interests = new ArrayList<>();
+        if(!interestList.isEmpty()) {
+            interests = interestList.stream()
+                    .map(i -> new InterestDto(i))
+                    .collect(Collectors.toList());
+        }
+        return new Result(true, HttpStatus.OK.value(), interests);
     }
 
     @Data
