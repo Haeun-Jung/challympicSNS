@@ -16,7 +16,6 @@
 				<v-col>
 					<router-view />
 				</v-col>
-				<v-col md="2" />
 			</v-layout>
 		</v-container>
 	</v-card>

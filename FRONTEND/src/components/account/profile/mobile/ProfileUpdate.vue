@@ -1,5 +1,5 @@
 <template>
-	<v-card height="100%" width="94%" class="justify-center">
+	<v-card height="100%" class="justify-center">
 		<v-card-title class="justify-center">프로필 수정</v-card-title>
 		<v-divider />
 		<v-container class="mobile-profile-delete-user-container">
@@ -166,7 +166,7 @@
 			<v-row class="mobile-profile-delete-user-container">
 				<v-spacer />
 				<v-btn
-					class="text-none"
+					class="text-none mb-10"
 					depressed
 					color="primary"
 					@click="onSubmit"
