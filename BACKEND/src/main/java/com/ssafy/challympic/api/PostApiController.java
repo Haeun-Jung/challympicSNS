@@ -76,6 +76,7 @@ public class PostApiController {
         private int user_no;
         private String user_nickname;
         private String user_title;
+        private String user_profile;
 
         // 챌린지 타입
         private String challenge_type;
@@ -120,6 +121,11 @@ public class PostApiController {
             postDto.setUser_no(user.getUser_no());
             postDto.setUser_nickname(user.getUser_nickname());
             postDto.setUser_title(user.getUser_title());
+            if(user.getMedia() != null)
+                postDto.setUser_profile(user.getMedia().getFile_path() + "/" + user.getMedia().getFile_savedname());
+            else
+                postDto.setUser_profile(null);
+
 
             // 챌린지 타입
             postDto.setChallenge_type(type);

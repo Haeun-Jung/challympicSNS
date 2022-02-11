@@ -30,7 +30,8 @@ public class QnAApiController {
         qnA.setQna_title(request.getQna_title());
         qnA.setQna_question(request.getQna_question());
         qnAService.save(qnA);
-        return new Result(true, HttpStatus.OK.value());
+        Result collect = qnaList(user_no);
+        return new Result(true, HttpStatus.OK.value(), collect);
     }
 
     @GetMapping("/user/{userNo}/qna")
