@@ -47,7 +47,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         // 서명이 정상적으로 됨
         if(user_no > 0){
-            System.out.println("서명 정상이야?");
             User user = userRepository.findOne(user_no);
 
             PrincipalDetails principalDetails = new PrincipalDetails(user);
@@ -60,8 +59,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
 
            chain.doFilter(request, response);
-        }else{
-            System.out.println("서명 정상아냐ㅠㅠ");
         }
 
     }
