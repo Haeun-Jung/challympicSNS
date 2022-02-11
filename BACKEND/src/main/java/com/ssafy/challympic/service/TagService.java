@@ -4,7 +4,6 @@ import com.ssafy.challympic.domain.PostTag;
 import com.ssafy.challympic.domain.Tag;
 import com.ssafy.challympic.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,5 +60,13 @@ public class TagService {
 
     public List<Tag> findPostTagListByPostNo(int postNo) {
         return tagRepository.findPostTagListByPostNo(postNo);
+    }
+
+    public int getMaxTag() {
+        return tagRepository.getMaxTag();
+    }
+
+    public List<PostTag> findPostTagList(int post_no) {
+        return tagRepository.findPostTagList(post_no);
     }
 }

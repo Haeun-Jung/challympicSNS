@@ -1,21 +1,16 @@
 package com.ssafy.challympic.api;
 
-import com.ssafy.challympic.domain.Activity;
-import com.ssafy.challympic.domain.Result;
-import com.ssafy.challympic.domain.Tag;
-import com.ssafy.challympic.domain.User;
+import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.service.ActivityService;
 import com.ssafy.challympic.service.TagService;
 import com.ssafy.challympic.service.UserService;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,28 +32,42 @@ public class ActivityApiController {
         return new Result(true, HttpStatus.OK.value());
     }
 
+    private final int maxTag = 50;
+
     @GetMapping("/activity/{userNo}")
     public Result getActivity(@PathVariable int userNo) {
-        List<Activity> mainActivityList = activityService.findActivityListByUserNo(userNo);
-        Map<Integer, List<Activity>> activityMap = new HashMap<>();
-        List<User> allUser = userService.findAllUser();
-        for(User user : allUser) {
-            List<Activity> activityList = activityService.findActivityListByUserNo(user.getUser_no());
-            activityMap.put(user.getUser_no(), activityList);
+        List<Activity> activityList = activityService.findActivityListByUserNo(userNo);
+        List<Tag> tagAll = new ArrayList<>();
+        for(Activity activity : activityList) {
+            List<PostTag> postTagList = tagService.findPostTagList(activity.getPost_no());
+            for(PostTag postTag : postTagList) {
+                tagAll.add(postTag.getTag());
+            }
         }
-        activityMap.forEach((user_no, activity) -> {
-            /*
-            1. 같은 포스트를 확인한 사용자만을 대상으로 한다면 결국 비슷한 태그만 나올 수 밖에 없음.
-            2. 결국 순서를 확인하는 것이 그나마 나을 수 있을 수도.
-            3. 순서를 확인할 때 안나오면 넘어갈지
-            4. 알고리즘을 어떻게 구성할지에 대해 생각해보아야함.
-             */
+//        int maxTag = tagService.getMaxTag();
+        int[][] tagCount = new int[maxTag][2];
 
+        for(int i = 0; i < maxTag; i++) tagCount[i][0] = i + 1;
+        for(Tag tag : tagAll) {
+            tagCount[tag.getTag_no()][1]++;
+        }
+
+        Arrays.sort(tagCount, (int[] o1, int[] o2) -> {
+            return o1[1] - o2[1];
         });
 
+        List<Tag> tagResponse = new ArrayList<>();
+        for(int i = 0; i < 5; i++) {
+            tagResponse.add(tagService.findOne(tagCount[i][0]));
+        }
 
+        return new Result(true, HttpStatus.OK.value(), new ActivityResponse(tagResponse));
+    }
 
-        return null;
+    @Data
+    @AllArgsConstructor
+    static class ActivityResponse {
+        List<Tag> tagList;
     }
 
     @Data
