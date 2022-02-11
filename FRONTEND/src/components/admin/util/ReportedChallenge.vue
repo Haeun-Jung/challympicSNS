@@ -122,6 +122,9 @@
 			challengeList(
 				(response) => {
 					this.challenges = response.data.data;
+					this.challenges = this.challenges.filter(function (el) {
+						return el.challenge_report != 0;
+					});
 					console.log(this.challenges);
 				},
 				(error) => {
