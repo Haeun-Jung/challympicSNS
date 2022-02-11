@@ -19,8 +19,4 @@ public class Activity {
     private int user_no;
 
     private int post_no;
-
-    @OneToMany(fetch = LAZY)
-    @JoinColumn(name = "tag_no")
-    private List<Tag> tagList;
 }
