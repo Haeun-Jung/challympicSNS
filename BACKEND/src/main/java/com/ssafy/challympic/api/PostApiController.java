@@ -384,6 +384,7 @@ public class PostApiController {
 
             // 좋아요를 눌렀을때 알림 설정
             Alert alert = new Alert();
+            System.out.println(postNo);
             User writer = postService.getPost(postNo).getUser();
             alert.setUser(writer);
             alert.setAlert_content(writer.getUser_nickname() + "님이 포스트에 좋아요를 눌렀습니다.");
