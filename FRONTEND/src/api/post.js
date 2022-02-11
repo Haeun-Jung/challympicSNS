@@ -7,9 +7,16 @@ function getPostList(challengeNo, success, fail) {
 }
 
 function createPost(challengeNo, post, success, fail) {
-  api.headers.post['Content-Type'] = 'multipart/form-data';
   console.log(post);
-  api.get(`/challympic/challenge/${challengeNo}/post`, JSON.stringify(post)).then(success).catch(fail);
+  api.post(`/challympic/challenge/${challengeNo}/post`,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      params: {
+        post
+      }
+    }).then(success).catch(fail);
 }
 
 export { getPostList, createPost };
