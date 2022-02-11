@@ -102,24 +102,24 @@ public class CommentApiController {
         return new Result(true, HttpStatus.OK.value());
     }
 
-    /**
-     * 포스트 no로 comment 부르기
-     */
-    @GetMapping("/comment/{postNo}/{userNo}")
-    public Result commentInPost(@PathVariable("postNo") int post_no, @PathVariable("userNo") int user_no){
-        List<Comment> commentList = commentService.findByPost(post_no);
-        List<CommentDto> collect = new ArrayList<>();
-        if(!commentList.isEmpty()){
-            collect = commentList.stream()
-                    .map(c -> {
-                        CommentDto commentDto = new CommentDto(c);
-            int commentLikeCnt = commentLikeService.findLikeCntByComment(c.getComment_no());
-                            commentDto.setLike_cnt(commentLikeCnt);
-            return commentDto;
-        }).collect(Collectors.toList());
-        }
-        return new Result(true, HttpStatus.OK.value(), collect);
-    }
+//    /**
+//     * 포스트 no로 comment 부르기
+//     */
+//    @GetMapping("/comment/{postNo}/{userNo}")
+//    public Result commentInPost(@PathVariable("postNo") int post_no, @PathVariable("userNo") int user_no){
+//        List<Comment> commentList = commentService.findByPost(post_no);
+//        List<CommentDto> collect = new ArrayList<>();
+//        if(!commentList.isEmpty()){
+//            collect = commentList.stream()
+//                    .map(c -> {
+//                        CommentDto commentDto = new CommentDto(c);
+//            int commentLikeCnt = commentLikeService.findLikeCntByComment(c.getComment_no());
+//                            commentDto.setLike_cnt(commentLikeCnt);
+//            return commentDto;
+//        }).collect(Collectors.toList());
+//        }
+//        return new Result(true, HttpStatus.OK.value(), collect);
+//    }
 
     @Data
     static class CommentDto{
