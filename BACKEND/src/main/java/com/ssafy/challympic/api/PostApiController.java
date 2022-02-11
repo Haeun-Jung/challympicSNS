@@ -1,5 +1,6 @@
 package com.ssafy.challympic.api;
 
+import com.ssafy.challympic.api.Dto.CommentDto;
 import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.service.*;
 import com.ssafy.challympic.util.S3Uploader;
@@ -91,6 +92,9 @@ public class PostApiController {
 
         // 이 유저가 좋아요를 눌렀는지
         private boolean IsLike = false;
+
+        // 댓글 리스트
+        private List<CommentDto> commentList;
     }
 
     @Data
@@ -98,6 +102,8 @@ public class PostApiController {
         private int userNo;
         private int challengeNo;
     }
+
+    private final CommentService commentService;
 
     /**
      *  챌린지 번호로 포스트 가져오기(챌린지로 확인 예정
@@ -152,6 +158,21 @@ public class PostApiController {
 
             boolean isLike = postService.getPostLikeByUserNo(request.getUserNo());
             postDto.setIsLike(isLike);
+
+            List<Comment> comments = commentService.findByPost(post.getPost_no());
+            List<CommentDto> commentList = comments.stream()
+                            .map(c -> new CommentDto(
+                                    c.getComment_no(),
+                                    c.getUser().getUser_no(),
+                                    c.getPost().getPost_no(),
+                                    c.getComment_content(),
+                                    c.getComment_regdate(),
+                                    c.getComment_update(),
+                                    c.getCommentLike().size(),
+                                    c.getComment_report()
+                                    ))
+                    .collect(Collectors.toList());
+            postDto.setCommentList(commentList);
 
             collect.add(postDto);
         }
