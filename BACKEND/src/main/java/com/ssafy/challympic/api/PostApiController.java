@@ -28,6 +28,7 @@ public class PostApiController {
     private final PostLikeService postLikeService;
     private final UserService userService;
     private final TagService tagService;
+    private final FollowService followService;
 
     private final S3Uploader s3Uploader;
 
@@ -59,8 +60,25 @@ public class PostApiController {
     @Data
     @AllArgsConstructor
     static class PostLikeUserDto{
-        private int userNo;
-        private String userName;
+        private int user_no;
+        private String user_nickname;
+        private String user_title;
+        private int file_no;
+        private String file_path;
+        private String file_savedname;
+        private Boolean isFollowing;
+
+        public PostLikeUserDto(User user, Media media, boolean isFollowing) {
+            this.user_no = user.getUser_no();
+            this.user_nickname = user.getUser_nickname();
+            this.user_title = user.getUser_title();
+            if(media != null){
+                this.file_no = media.getFile_no();
+                this.file_path = media.getFile_path();
+                this.file_savedname = media.getFile_savedname();
+            }
+            this.isFollowing = isFollowing;
+        }
     }
 
     @Data
@@ -192,8 +210,8 @@ public class PostApiController {
      *      - 유저 번호와 유저 닉네임만 전달받을 수도 있음
      *      - 현재 번호만 가져옴
      * */
-    @GetMapping("/post/{postNo}/like")
-    public Result likeList(@PathVariable("postNo") int postNo){
+    @GetMapping("/post/{postNo}/like/{userNo}")
+    public Result likeList(@PathVariable("postNo") int postNo, @PathVariable("userNo") int userNo){
 
         // PostLike에서 게시글이 post인 것 추출
 
@@ -204,7 +222,8 @@ public class PostApiController {
         List<PostLikeUserDto> userList = new ArrayList<>();
         for(PostLike postLike : postLikeList){
             User user = userService.findUser(postLike.getUser_no());
-            userList.add(new PostLikeUserDto(user.getUser_no(), user.getUser_nickname()));
+            boolean follow = followService.follow(userNo, user.getUser_no());
+            userList.add(new PostLikeUserDto(user, user.getMedia(), follow));
         }
 
         return new Result(true, HttpStatus.OK.value(), userList);
