@@ -28,4 +28,8 @@ async function getUser(user_no, success, fail) {
   await api.get(`/challympic/user/account/${user_no}`).then(success).catch(fail);
 }
 
-export { join, login, confirmEmail, confirmNickname, getUser };
+/* 관심사 추가 */
+function save (user_no, tag ,success, fail) {
+  api.post(`/user/interest/${user_no}`,JSON.stringify(tag)).then(success).catch(fail);
+}
+export { join, login, confirmEmail, confirmNickname, getUser , save };

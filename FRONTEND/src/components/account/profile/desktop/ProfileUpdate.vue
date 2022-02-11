@@ -57,7 +57,7 @@
 								<v-list-item-title>이메일</v-list-item-title>
 							</v-col>
 							<v-col>
-								<v-list-item-title>{{userInfo.user_email}}</v-list-item-title>
+								<v-list-item-title>{{ userInfo.user_email }}</v-list-item-title>
 							</v-col>
 						</v-row>
 						<!-- 내 관심사 -->
@@ -83,30 +83,38 @@
 
 											<v-card-text>
 												<v-container fluid>
-													<v-combobox
-														v-model="model"
+													<v-autocomplete
+														v-model="selectedAllTags"
 														:items="AllTags"
 														:search-input.sync="search"
 														hide-selected
-														hint="최대 5가지 태그 추가 가능"
 														label=""
-														multiple
 														persistent-hint
 														small-chips
+														item-text="tag_content"
+														item-value="tag_content"
+														return-object
 													>
 														<template v-slot:no-data>
 															<v-list-item>
 																<v-list-item-content>
 																	<v-list-item-title>
-																		입력된 "<strong>{{ search }}</strong
+																		입력된 "<kbd>{{ search }}</kbd
 																		>" 태그가 존재하지 않습니다.
-																		<kbd>enter</kbd> 를 눌러 새로운 태그를
-																		추가하십시오.
 																	</v-list-item-title>
 																</v-list-item-content>
 															</v-list-item>
 														</template>
-													</v-combobox>
+														<template v-slot:selection="data">
+															<v-chip
+																v-bind="data.attrs"
+																:search="data.selected"
+																@click="data.select"
+															>
+																{{ data.item.tag_content }}
+															</v-chip>
+														</template>
+													</v-autocomplete>
 												</v-container>
 											</v-card-text>
 
@@ -129,16 +137,15 @@
 								<!-- 템플릿으로 chips 뿌림-->
 								<v-chip
 									v-for="tag in interests"
-									:key="tag.id"
-									:value="tag"
+									:key="tag.tag_no"
+									:value="tag.tag_content"
 									v-model="tag.isOpen"
 									color="primary"
 									outlined
 									close
 									@click:close="remove(tag.id)"
 								>
-									<!-- {{tag.tagContent}}-->
-									{{ tag.name }}
+									{{ value }}
 								</v-chip>
 							</v-col>
 							<v-col md="1"> </v-col>
@@ -165,12 +172,14 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
-import ProfileUploadButton from "@/components/button/ProfilelUploadButton.vue";
-	
-const userStore = "userStore";
+	import { mapState, mapMutations } from "vuex";
+	import ProfileUploadButton from "@/components/button/ProfilelUploadButton.vue";
+	import { getSearchList } from "@/api/search.js";
+	import { save } from "@/api/user.js";
 
-export default {
+	const userStore = "userStore";
+
+	export default {
 		components: { ProfileUploadButton },
 		computed: {
 			...mapState(userStore, ["userInfo"]),
@@ -183,35 +192,9 @@ export default {
 				dialog: false,
 				search: "",
 				disabledTrue: true,
-				AllTags: ["#Gaming", "#Programming", "#Vue", "#Vuetify"], //전체 태그
-				model: [],
-				interests: [
-					//사용자 태그
-					{
-						id: 1,
-						name: "Work",
-					},
-					{
-						id: 2,
-						name: "Food",
-					},
-					{
-						id: 3,
-						name: "Art",
-					},
-					{
-						id: 4,
-						name: "Shopping",
-					},
-					{
-						id: 5,
-						name: "Tech",
-					},
-					{
-						id: 6,
-						name: "Home Improvement",
-					},
-				],
+				AllTags: [], //전체 태그
+				selectedAllTags: "",
+				interests: [],
 				index: 1,
 			};
 		},
@@ -221,6 +204,7 @@ export default {
 				//Submit 눌렀을 떄, 파일 명, 파일 이름 프롭스해서 보내기
 			},
 			remove(id) {
+				//테그 삭제 api 연결!
 				// 여기서 delete로 삭제된 태그 id마 보냄
 				this.interests.splice(id - this.index, 1);
 				this.index++; //카운트 해줘야 다음 태그 제대로 지워짐
@@ -239,12 +223,16 @@ export default {
 				this.disabledTrue = false;
 			},
 			saveInterest() {
-				alert("save to list");
+				//테그 추가 api 연결!
+				alert("저장되었습니다");
 				this.dialog = false;
 				this.disabledTrue = false;
-
-				//api 요청 -> 현재 리스트 보내기
-				//refresh하는것두...
+				save({
+					user_no: userStore.user_no, //이거 어케하나요..?
+					tag_no: this.selectedAllTags.tag_no,
+				});
+				location.reload();
+				//console.log(this.selectedAllTags.tag_no); -> 괄호 안에 들어간게 tagNo 입니다 !
 			},
 			titleChange() {
 				this.disabledTrue = false;
@@ -256,6 +244,16 @@ export default {
 					this.$nextTick(() => this.model.pop());
 				}
 			},
+		},
+		created() {
+			getSearchList(
+				(response) => {
+					this.AllTags = response.data.data.tagList;
+				},
+				(error) => {
+					console.log(error);
+				}
+			);
 		},
 	};
 </script>
