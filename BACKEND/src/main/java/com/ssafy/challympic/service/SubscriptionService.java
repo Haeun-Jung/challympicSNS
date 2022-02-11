@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -30,5 +32,9 @@ public class SubscriptionService {
 
     public Subscription findSubscriptionByChallengeAndUser(int challengeNo, int userNo) {
         return subscriptionRepository.findSubscriptionByChallengeAndUser(challengeNo, userNo);
+    }
+
+    public List<Subscription> findSubscriptionByUser(int userNo) {
+        return subscriptionRepository.findSubscriptionByUser(userNo);
     }
 }
