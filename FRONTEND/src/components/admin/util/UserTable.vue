@@ -120,6 +120,7 @@
 			userList(
 				(response) => {
 					this.users = response.data.data;
+					delete this.users[0];
 				},
 				(error) => {
 					if (error) console.log("er");
