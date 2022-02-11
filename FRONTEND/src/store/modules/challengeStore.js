@@ -3,11 +3,12 @@ import { createPost } from '../../api/post';
 
 const challengeStore = {
   state: {
-      challenge: {},
-      possibleChallengeName: false,
+    challenge: {},
+    possibleChallengeName: false,
+    confirmedButImpossibleName: false,
   },
   getters: {
-      
+
   },
   mutations: {
     SET_CHALLENGE(state, challenge) {
@@ -28,19 +29,24 @@ const challengeStore = {
           const { data } = response;
           commit('SET_CHALLENGE', data.data);
         },
-        () => {}
+        () => { }
       )
     },
     confirmChallengeName({ commit }, challengeName) {
+      if (challengeName.length === 1) {
+        return;
+      }
       confirmChallengeName(
         challengeName,
         (response) => {
           const { data } = response;
-          if (data.data.success) {
+          if (data.success) {
             commit('CONFIRM_CHALLENGE_NAME');
+          } else {
+            commit('REFUSE_CHALLENGE_NAME');
           }
         },
-        () => {}
+        () => { }
       )
     },
     createChallengeWithPost({ rootState }, { challenge, post }) {
@@ -55,12 +61,11 @@ const challengeStore = {
       }
       createChallenge(
         challengeItem,
-        (response) =>{
+        (response) => {
           const { data } = response;
-          const challenge_no = data.data.challenge_no;
           console.log("챌린지 생성!");
           createPost(
-            challenge_no,
+            data.data.challenge_no,
             post,
             () => {
               console.log("포스트 생성!");
@@ -70,8 +75,9 @@ const challengeStore = {
               console.log("포스트 생성 실패");
             }
           )
+
         },
-        () => {}
+        () => { }
       )
     }
   }

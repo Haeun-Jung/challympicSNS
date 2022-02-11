@@ -419,14 +419,14 @@
 				return false;
 			},
       challenge() {
-        return this.$sotre.state.challengeStore.challenge;
+        return this.$store.state.challengeStore.challenge;
       },
       postList() {
         return this.$store.state.postStore.postList;
       }
 		},
 		created() {
-      this.$store.dispatch('getChallengeInfo', this.$route.params.challengeNo);
+      this.$store.dispatch('getChallenge', this.$route.params.challengeNo);
       this.$store.dispatch('getPostList', this.$route.params.challengeNo);
 		},
 	};
