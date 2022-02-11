@@ -88,22 +88,30 @@ public class PostApiController {
 
         // 좋아요 수
         private Integer LikeCnt;
+
+        // 이 유저가 좋아요를 눌렀는지
+        private boolean IsLike = false;
+    }
+
+    @Data
+    static class ChallengePostRequest {
+        private int userNo;
+        private int challengeNo;
     }
 
     /**
      *  챌린지 번호로 포스트 가져오기(챌린지로 확인 예정
-     *
      * */
-    @GetMapping("/challenge/{challengeNo}/post")
-    public Result list(@PathVariable("challengeNo") int challengeNo){
+    @PostMapping("/challenge/post")
+    public Result list(@RequestBody ChallengePostRequest request){
         Result result = null;
 
         // 챌린지 정보
-        Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
+        Challenge challenge = challengeService.findChallengeByChallengeNo(request.getChallengeNo());
         if(challenge == null) return new Result(false, HttpStatus.BAD_REQUEST.value());
         String type = challenge.getChallenge_type().name().toLowerCase();
         // 포스트 리스트
-        List<Post> postList = postService.getPostList(challengeNo);
+        List<Post> postList = postService.getPostList(request.getChallengeNo());
 
         List<PostDto> collect = new ArrayList<>();
 
@@ -141,6 +149,9 @@ public class PostApiController {
             } else{
                 postDto.setLikeCnt(postLikeList.size());
             }
+
+            boolean isLike = postService.getPostLikeByUserNo(request.getUserNo());
+            postDto.setIsLike(isLike);
 
             collect.add(postDto);
         }
