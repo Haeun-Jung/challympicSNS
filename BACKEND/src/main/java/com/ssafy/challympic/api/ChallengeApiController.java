@@ -204,11 +204,24 @@ public class ChallengeApiController {
         Subscription findSubscription = subscriptionService.findSubscriptionByChallengeAndUser(challengeNo, userNo);
         if(findSubscription == null){
             subscriptionService.saveSubscription(Subscription.setSubscription(challenge, user));
-            Subscription sub = subscriptionService.findSubscriptionByChallengeAndUser(challengeNo, userNo);
-            return new Result(true, HttpStatus.OK.value(), new SubscriptionDto(sub.getSubscription_no(), "구독 추가"));
+            List<Subscription> subscriptionList = subscriptionService.findSubscriptionByUser(userNo);
+            List<SubscriptionDto> subscriptions = new ArrayList<>();
+            if(!subscriptionList.isEmpty()){
+                subscriptions = subscriptionList.stream()
+                        .map(s -> new SubscriptionDto(s))
+                        .collect(Collectors.toList());
+            }
+            return new Result(true, HttpStatus.OK.value(), subscriptions);
         }else{
             subscriptionService.deleteSubscription(findSubscription);
-            return new Result(true, HttpStatus.OK.value(), new SubscriptionDto(findSubscription.getSubscription_no(), "구독 취소"));
+            List<Subscription> subscriptionList = subscriptionService.findSubscriptionByUser(userNo);
+            List<SubscriptionDto> subscriptions = new ArrayList<>();
+            if(!subscriptionList.isEmpty()){
+                subscriptions = subscriptionList.stream()
+                        .map(s -> new SubscriptionDto(s))
+                        .collect(Collectors.toList());
+            }
+            return new Result(true, HttpStatus.OK.value(), subscriptions);
         }
     }
 
