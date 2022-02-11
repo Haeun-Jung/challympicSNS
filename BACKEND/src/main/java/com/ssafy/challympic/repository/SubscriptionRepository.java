@@ -57,4 +57,10 @@ public class SubscriptionRepository {
             return null;
         }
     }
+
+    public List<Subscription> findSubscriptionByUser(int userNo) {
+        return em.createQuery("select s from Subscription s where s.user.user_no = :user_no", Subscription.class)
+                .setParameter("user_no", userNo)
+                .getResultList();
+    }
 }
