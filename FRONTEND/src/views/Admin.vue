@@ -18,6 +18,7 @@
 		<v-card
 			height="90vh"
 			max-width="96%"
+			elevation="0"
 			color="transparent"
 			row
 			v-else-if="isMobile()"
