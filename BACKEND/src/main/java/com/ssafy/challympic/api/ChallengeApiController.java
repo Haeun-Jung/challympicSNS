@@ -153,7 +153,6 @@ public class ChallengeApiController {
                 _challenge_no = chall.getChallenge_no();
             }
         }
-
         return new Result(true, HttpStatus.OK.value(), new ChallengeResponse(_challenge_no));
     }
 
@@ -174,7 +173,6 @@ public class ChallengeApiController {
         private String title_name;
     }
 
-    //
     @PostMapping("/challenge/confirm")
     public Result ChallengeTitleCheck(@RequestBody ChallengeTitleCheckRequest request) {
         List<Challenge> challenges = challengeService.findChallengeByTitle(request.getChallenge_title());
