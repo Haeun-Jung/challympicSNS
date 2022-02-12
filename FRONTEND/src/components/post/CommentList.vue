@@ -10,7 +10,7 @@
 		<v-card-text
 			v-for="comment in comments"
 			class="content-and-btns py-2"
-			:key="comment.commentNo"
+			:key="comment.comment_no"
 		>
 			<div class="profile-img-and-comment">
 				<img
@@ -22,17 +22,17 @@
 					<div>
 						<span class="font-weight-bold">
 							<router-link
-								:to="{ path: `/feed/${comment.userNo}` }"
+								:to="{ path: `/feed/${comment.user_no}` }"
 								style="text-decoration: none; color: inherit; mr-2"
 							>
-								{{ comment.nickname }}
+								{{ comment.user_nickname }}
 							</router-link>
 						</span>
-						<span>{{ comment.content }}</span>
+						<span>{{ comment.comment_content }}</span>
 					</div>
 					<div class="comment-info">
-						<span class="mr-2">{{ comment.regDate }}</span>
-						<span class="mr-2">좋아요 {{ comment.likeCnt }}</span>
+						<span class="mr-2">{{ comment.regdate }}</span>
+						<span class="mr-2">좋아요 {{ comment.like_cnt }}</span>
 						<span @click="confirmReportDialog = true" class="report-btn"
 							>신고하기</span
 						>
@@ -40,7 +40,7 @@
 				</span>
 			</div>
 			<div>
-				<span v-if="comment.nickname === nickname">
+				<span v-if="comment.user_nickname === nickname">
 					<v-btn @click="editComment" icon>
 						<v-icon small>mdi-pencil-outline</v-icon>
 					</v-btn>

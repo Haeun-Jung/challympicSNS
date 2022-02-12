@@ -24,18 +24,24 @@
 		<div class="main-toolbar-search hidden-md-and-down">
 			<v-autocomplete
 				v-model="searchInput"
-				:items="AllTags"
+				:items="dynamicArr"
 				:search-input.sync="search"
 				hide-selected
 				hide-details="true"
 				label=""
-				persistent-hint
+				v-click-outside="onClickOutside"
+				:close="onClickOutside"
 				rounded
 				small-chips
 				@change="keywordSearch"
+				@keyup="test"
+				@keyup.delete="test"
+				@keydown.enter="keywordSearch"
 				class="ml-5"
 				flat
 				solo
+				item-text="key"
+				item-value="key"
 				clearable
 				append-icon="mdi-magnify"
 				width="600px"
@@ -51,6 +57,15 @@
 							</v-list-item-title>
 						</v-list-item-content>
 					</v-list-item>
+				</template>
+				<template v-slot:selection="data">
+					<v-chip
+						v-bind="data.attrs"
+						:search="data.selected"
+						@click="data.select"
+					>
+						{{ data.item.key }}
+					</v-chip>
 				</template>
 			</v-autocomplete>
 		</div>
@@ -73,40 +88,40 @@
 				</template>
 
 				<v-autocomplete
-					v-model="searchInput"
-					:items="AllTags"
-					:search-input.sync="search"
+					v-model="mobileSearchInput"
+					:items="dynamicArr"
+					:search-input.sync="mobileSearch"
 					label=""
 					small-chips
 					flat
+					item-text="key"
+					item-value="key"
 					solo
 					hide-details="true"
 					clearable
 					append-icon="mdi-magnify"
-					@change="keywordSearch"
+					@change="mobileKeywordSearch"
+					@keyup="mobiletest"
+					@keyup.delete="mobiletest"
 				>
 					<template v-slot:no-data>
 						<v-list-item>
 							<v-list-item-content>
-								<v-list-item-title>
-									입력된
-									<kbd>
-										<strong>{{ search }}</strong> </kbd
-									>태그 또는 사용자가 존재하지 않습니다.
-								</v-list-item-title>
+								<v-list-item-title> 검색결과 없음 </v-list-item-title>
 							</v-list-item-content>
 						</v-list-item>
 					</template>
 					<!--
 							@click="data.select"
 							-->
+
 					<template v-slot:selection="data">
 						<v-chip
 							v-bind="data.attrs"
 							:search="data.selected"
 							@click="data.select"
 						>
-							{{ data.item }}
+							{{ data.item.key }}
 						</v-chip>
 					</template>
 				</v-autocomplete>
@@ -171,7 +186,7 @@
 						v-for="(item, i) in profileMenu"
 						:key="i"
 						:to="item.link1"
-            @click="handleProfileMenuClick(i)"
+						@click="handleProfileMenuClick(i)"
 					>
 						<v-list-item-title>{{ item.title }}</v-list-item-title>
 					</v-list-item>
@@ -236,7 +251,7 @@
 						v-for="(item, i) in profileMenu"
 						:key="i"
 						:to="item.link2"
-            @click="handleProfileMenuClick(i)"
+						@click="handleProfileMenuClick(i)"
 					>
 						<v-list-item-title>{{ item.title }}</v-list-item-title>
 					</v-list-item>
@@ -266,6 +281,7 @@
 <script>
 	import SideContents from "@/components/layout/SideContents.vue";
 	import fromNow from "@/plugins/dayjs.js";
+	import { getSearchList } from "@/api/search.js";
 
 	export default {
 		name: "ToolBar",
@@ -276,7 +292,9 @@
 				onSelect: false,
 				loading: false,
 				search: "",
+				mobileSearch: "",
 				searchInput: "",
+				mobileSearchInput: "",
 				active: false,
 				menu: false,
 				profileMenu: [
@@ -300,66 +318,19 @@
 					},
 					{ title: "Click Me 2" },
 				],
-				alertMenu: [
-					{
-						title: "nickname님이 회원님을 팔로우하기 시작했습니다.",
-						regDate: "2022-02-07 15:30:25",
-					},
-					{
-						title: "SSAFY님이 회원님의 게시글에 좋아요를 눌렀습니다.",
-						regDate: "2022-02-06 20:13:25",
-					},
-					{
-						title: "SSAFY님이 회원님의 게시글에 좋아요를 눌렀습니다.",
-						regDate: "2022-02-06 20:10:25",
-					},
-					{
-						title: "SSAFY님이 회원님의 게시글에 좋아요를 눌렀습니다.",
-						regDate: "2022-02-05 20:20:25",
-					},
-					{
-						title: "SSAFY님이 회원님의 게시글에 좋아요를 눌렀습니다.",
-						regDate: "2022-02-05 20:20:25",
-					},
-				],
-				AllTags: [
-					//검색용 태그 : 태그 + 사용자
-					"#Gaming",
-					"#Food",
-					"#Work",
-					"#Art",
-					"@Loren",
-					"#김싸피덤벼",
-					"@김싸피",
-					"#Gaming1",
-					"#Food1",
-					"#Work1",
-					"#Art1",
-					"@Loren1",
-					"@김싸피1",
-					"#Gaming2",
-					"#Food2",
-					"#Work2",
-					"#Art2",
-					"@Loren2",
-					"@김싸피2",
-				],
+				alertMenu: [],
+				tags: [],
+				empty: [],
+				dynamicArr: [],
+				obj1: [],
+				obj2: [],
+				temp: [],
 			};
 		},
 		watch: {
 			group() {
 				this.drawer = false;
 			},
-			/* chore for warning msg : 이후에 autocomplete 처음 눌렀을 때 제한하고 싶어서 만든 메서드
-			search(val) {
-				val && val !== this.searchInput && this.querySelections(val);
-				if (val.length > 2) {
-					alert(this.val);
-					this.minimumCharacter = "show";
-				} else {
-					this.minimumCharacter = "null";
-				}
-			},*/
 		},
 		computed: {
 			activeAlert() {
@@ -373,6 +344,14 @@
 			}
 		},
 		methods: {
+			test() {
+				if (this.search.trim().length > 0) this.dynamicArr = this.tags;
+				else if (this.search.length == 0) this.dynamicArr = this.empty;
+			},
+			mobiletest() {
+				if (this.mobileSearch.trim().length > 0) this.dynamicArr = this.tags;
+				else if (this.mobileSearch.length == 0) this.dynamicArr = this.empty;
+			},
 			dayjsRegDate(regDate) {
 				return fromNow(regDate);
 			},
@@ -391,56 +370,48 @@
 			clickLoginBtn() {
 				this.$router.push("/login");
 			},
-      handleProfileMenuClick(i) {
-        if (this.profileMenu[i].title === "로그아웃") {
-          console.log("로그아웃");
-          localStorage.removeItem('Authorization');
-          this.$store.commit('userStore/LOGOUT');
-		  this.$router.push("/login");
-        }
-      },
+			handleProfileMenuClick(i) {
+				if (this.profileMenu[i].title === "로그아웃") {
+					console.log("로그아웃");
+					localStorage.removeItem("Authorization");
+					this.$store.commit("userStore/LOGOUT");
+					this.$router.push("/login");
+				}
+			},
 			deleteAlert() {
 				this.menu = false;
 				setTimeout(() => {
 					this.alertMenu = [];
 				}, 500);
 			},
-			/*	autocomplete 처리
-			handleInput() {
-				if (this.search.length < 2) {
-					return [];
-				} else {
-					//alert("?");
-					//watch나 이쪽 로직에서 처리하면 될 것 같은데..
-				}
-			},*/
-			keywordSearch() {
-				if (this.searchInput) {
-					console.log(this.searchInput);
-					alert(this.searchInput);
-					//이쪽에서 start with @인지 #인지 확인
-					let searchCategory = this.searchInput.charAt(0);
-					var to = this.searchInput.substring(1);
-					//	alert(searchCategory);
-					if (searchCategory === "@") {
-						this.$router.push("/feed/" + to);
-					} else if (searchCategory === "#") {
-						//	this.$emit("search", this.searchInput);
-						this.$router.push("/search/" + to);
-					}
-				}
-			},
-
-			selectSearch(val) {
-				alert("selected" + this.search);
-
+			keywordSearch(val) {
 				var to = val.substring(1);
 				let searchCategory = this.searchInput.charAt(0);
-				//	alert(searchCategory);
 				if (searchCategory === "@") {
+					var foundValue = this.obj2.filter((obj) => obj.key == val);
+					to = foundValue[0].no; // : feed 번호
+					this.dynamicArr = this.empty;
 					this.$router.push("/feed/" + to);
 				} else if (searchCategory === "#") {
-					//	this.$emit("search", this.searchInput);
+					this.dynamicArr = this.empty;
+					this.$router.push("/search/" + to);
+				}
+			},
+			mobileKeywordSearch() {
+				var to = this.mobileSearchInput.substring(1);
+				let searchCategory = this.mobileSearchInput.charAt(0);
+				alert(this.mobileSearchInput);
+				if (searchCategory === "@") {
+					var foundValue = this.obj2.filter(
+						(obj) => obj.key == this.mobileSearchInput
+					);
+					this.mobileSearchInput = "";
+					to = foundValue[0].no; // : feed 번호
+					this.dynamicArr = this.empty;
+					this.$router.push("/feed/" + to);
+				} else if (searchCategory === "#") {
+					this.mobileSearchInput = "";
+					this.dynamicArr = this.empty;
 					this.$router.push("/search/" + to);
 				}
 			},
@@ -457,11 +428,49 @@
 			},
 		},
 		created() {
-			// API 요청 - alert 목록 불러오기
+			getSearchList(
+				(response) => {
+					this.obj1 = response.data.data.tagList;
+					this.obj2 = response.data.data.userList;
+					renameKeyInObjArray(this.obj1, "tag_no", "no", "tag_content", "key");
+					renameKeyInObjArray(
+						this.obj2,
+						"user_no",
+						"no",
+						"user_nickname",
+						"key"
+					);
+					delete this.obj2[0];
+					this.tags = this.obj1.concat(this.obj2);
+				},
+				(error) => {
+					console.log(error);
+				}
+			);
 		},
 	};
+	//작동하면 나중에 다 빼자..
+	function renameKeyInObjArray(array, oldKey, newKey, oldKey2, newKey2) {
+		return array.map(function (obj) {
+			if (oldKey2 == "user_nickname")
+				obj["user_nickname"] = "@" + obj["user_nickname"];
+			Object.defineProperty(
+				obj,
+				newKey,
+				Object.getOwnPropertyDescriptor(obj, oldKey)
+			);
+			Object.defineProperty(
+				obj,
+				newKey2,
+				Object.getOwnPropertyDescriptor(obj, oldKey2)
+			);
+			delete obj[oldKey];
+			delete obj[oldKey2];
+			return obj;
+		});
+	}
 </script>
-<style scoped>
+<style>
 	.v-toolbar-title:hover {
 		cursor: pointer;
 	}
@@ -507,6 +516,17 @@
 		width: 0px;
 	}
 	.v-menu__content::-webkit-scrollbar-thumb {
+		-webkit-box-shadow: inset 0 0 6px #424242;
+		background-color: #424242;
+	}
+	.v-list-item-content__text::-webkit-scrollbar-track {
+		-webkit-box-shadow: inset 0 0 6px #5d5d5d;
+		background-color: #5d5d5d;
+	}
+	.v-list-item-content__text::-webkit-scrollbar {
+		width: 0px;
+	}
+	.v-list-item-content__text::-webkit-scrollbar-thumb {
 		-webkit-box-shadow: inset 0 0 6px #424242;
 		background-color: #424242;
 	}

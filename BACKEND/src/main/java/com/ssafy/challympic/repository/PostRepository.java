@@ -1,11 +1,12 @@
 package com.ssafy.challympic.repository;
 
-import com.ssafy.challympic.domain.Challenge;
 import com.ssafy.challympic.domain.Post;
+import com.ssafy.challympic.domain.PostLike;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 @Repository
@@ -36,5 +37,22 @@ public class PostRepository {
         return em.createQuery("select p from Post p where p.user.user_no = :user_no", Post.class)
                 .setParameter("user_no", user_no)
                 .getResultList();
+    }
+
+    public List<Post> findLikePostByUserNo(int userNo) {
+        return em.createQuery("select p from Post p where p.post_no = " +
+                "(select pl.post_no from PostLike pl where pl.user_no = :userNo)", Post.class)
+                .setParameter("userNo", userNo)
+                .getResultList();
+    }
+
+    public PostLike findPostLikeByUserNo(int user_no) {
+        try{
+            return em.createQuery("select pl from PostLike pl where pl.user_no = :user_no", PostLike.class)
+                    .setParameter("user_no", user_no)
+                    .getSingleResult();
+        }catch (NoResultException e) {
+            return null;
+        }
     }
 }

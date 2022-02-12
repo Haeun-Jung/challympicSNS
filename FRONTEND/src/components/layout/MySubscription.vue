@@ -23,7 +23,7 @@
 			v-for="challenge in userInfo.subscriptions"
 			:key="challenge.challenge_no"
 			:value="challenge"
-			:to="{ path: '/search/' + challenge.title }"
+			:to="{ path: '/challenge/' + challenge.id }"
 			v-model="challenge.isOpen"
 			color="primary"
 			outlined

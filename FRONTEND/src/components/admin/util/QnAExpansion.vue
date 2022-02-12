@@ -8,8 +8,8 @@
 			<v-list-item-subtitle class="ma-2 ml-2 grey--text">
 				<v-icon>mdi-calendar-month</v-icon>
 				{{ item.qna_question_regdate }}
-				<v-icon>mdi-clipboard-text-outline</v-icon>
-				{{ item.user_nickname }}
+				<!-- <v-icon>mdi-clipboard-text-outline</v-icon>
+				{{ item.user_nickname }} -->
 			</v-list-item-subtitle>
 
 			<v-list-item-subtitle>
@@ -26,7 +26,7 @@
 				</v-sheet>
 			</v-list-item-subtitle>
 		</div>
-		<div v-if="item.qna_answer_regdate !== item.qna_question_regdate">
+		<div v-if="item.qna_answer_regdate != item.qna_question_regdate">
 			<v-divider />
 			<div>
 				<v-list-item-subtitle class="ma-2 ml-2">

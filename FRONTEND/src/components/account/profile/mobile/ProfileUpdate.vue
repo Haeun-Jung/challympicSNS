@@ -1,5 +1,5 @@
 <template>
-	<v-card height="100%" width="94%" class="justify-center">
+	<v-card height="100%" elevation="0" class="justify-center">
 		<v-card-title class="justify-center">프로필 수정</v-card-title>
 		<v-divider />
 		<v-container class="mobile-profile-delete-user-container">
@@ -92,7 +92,7 @@
 											>
 										</template>
 
-										<v-card>
+										<v-card elevation="0">
 											<v-card-title
 												class="text-h6"
 												:color="$vuetify.theme.dark ? '#424242' : '#FAFAFA'"
@@ -103,13 +103,15 @@
 											<v-card-text>
 												<v-container fluid>
 													<v-combobox
-														v-model="model"
+														v-model="selectedAllTags"
 														:items="AllTags"
 														:search-input.sync="search"
 														hide-selected
 														hint="최대 5가지 태그 추가 가능"
 														label=""
 														multiple
+														item-text="tag_content"
+														item-value="tag_content"
 														persistent-hint
 														small-chips
 													>
@@ -117,13 +119,20 @@
 															<v-list-item>
 																<v-list-item-content>
 																	<v-list-item-title>
-																		입력된 "<strong>{{ search }}</strong
+																		입력된 "<kbd>{{ search }}</kbd
 																		>" 태그가 존재하지 않습니다.
-																		<kbd>enter</kbd> 를 눌러 새로운 태그를
-																		추가하십시오.
 																	</v-list-item-title>
 																</v-list-item-content>
 															</v-list-item>
+														</template>
+														<template v-slot:selection="data">
+															<v-chip
+																v-bind="data.attrs"
+																:search="data.selected"
+																@click="data.select"
+															>
+																{{ data.item.tag_content }}
+															</v-chip>
 														</template>
 													</v-combobox>
 												</v-container>
@@ -170,7 +179,7 @@
 			<v-row class="mobile-profile-delete-user-container page-bottom">
 				<v-spacer />
 				<v-btn
-					class="text-none"
+					class="text-none mb-10"
 					depressed
 					color="primary"
 					@click="onSubmit"
@@ -187,8 +196,10 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+	import { mapState, mapActions } from "vuex";
+	import { getSearchList } from "@/api/search.js";
 	// import ProfileUploadButton from "@/components/button/ProfilelUploadButton.vue";
+	import { save } from "@/api/user.js";
 	const userStore = "userStore";
 	export default {
 		// components: { ProfileUploadButton },
@@ -225,14 +236,15 @@ import { mapState, mapActions } from "vuex";
 				title: null,
 				dialog: false,
 				disabledTrue: false,
-				AllTags: ["#Gaming", "#Programming", "#Vue", "#Vuetify"], //전체 태그
+				AllTags: [], //전체 태그
 				model: [],
-				search: "",
 				file: {}, //업로드용 파일
 				changeFile: {}, //업로드용 파일
 				filePreview: {},
 				formData: '',
 				alertMsg: '',
+				selectedAllTags: "",
+				search: "",
 			};
 		},
 		/* 프로필 이미지 설정 */
@@ -303,12 +315,14 @@ import { mapState, mapActions } from "vuex";
 				}
 			},
 			saveInterest() {
-				alert("save to list");
+				alert("저장되었습니다");
 				this.dialog = false;
 				this.disabledTrue = false;
-
-				//api 요청 -> 현재 리스트 보내기
-				//refresh하는것두...
+				save({
+					user_no: this.user_no, //이거 어케하나요..?
+					tag_no: this.selectedAllTags.tag_no,
+				});
+				location.reload();
 			},
 			titleChange(title) {
 				this.title = title;
@@ -336,6 +350,16 @@ import { mapState, mapActions } from "vuex";
 					this.$nextTick(() => this.model.pop());
 				}
 			},
+		},
+		created() {
+			getSearchList(
+				(response) => {
+					this.AllTags = response.data.data.tagList;
+				},
+				(error) => {
+					console.log(error);
+				}
+			);
 		},
 	};
 </script>

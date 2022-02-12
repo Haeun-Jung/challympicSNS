@@ -29,8 +29,11 @@ public class QnAApiController {
         qnA.setUser(user);
         qnA.setQna_title(request.getQna_title());
         qnA.setQna_question(request.getQna_question());
+        qnA.setQna_answer_regdate(new Date());
+        qnA.setQna_question_regdate(new Date());
         qnAService.save(qnA);
-        return new Result(true, HttpStatus.OK.value());
+        Result collect = qnaList(user_no);
+        return new Result(true, HttpStatus.OK.value(), collect);
     }
 
     @GetMapping("/user/{userNo}/qna")
@@ -56,16 +59,20 @@ public class QnAApiController {
         private String qna_title;
         private String qna_question;
         private String qna_answer;
-        private Date qna_question_regdate;
-        private Date qna_answer_regdate;
+        private String qna_question_regdate;
+        private String qna_answer_regdate;
 
         public QnADto(QnA qna) {
             this.qna_no = qna.getQna_no();
             this.qna_title = qna.getQna_title();
             this.qna_question = qna.getQna_question();
             this.qna_answer = qna.getQna_answer();
-            this.qna_question_regdate = qna.getQna_question_regdate();
-            this.qna_answer_regdate = qna.getQna_answer_regdate();
+//            this.qna_question_regdate = qna.getQna_question_regdate();
+//            this.qna_answer_regdate = qna.getQna_answer_regdate();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            this.qna_question_regdate = formatter.format(qna.getQna_question_regdate());
+            this.qna_answer_regdate = formatter.format(qna.getQna_answer_regdate());
+
         }
     }
 

@@ -71,7 +71,7 @@
 								<v-list-item-title>이메일</v-list-item-title>
 							</v-col>
 							<v-col>
-								<v-list-item-title>{{userInfo.user_email}}</v-list-item-title>
+								<v-list-item-title>{{ userInfo.user_email }}</v-list-item-title>
 							</v-col>
 						</v-row>
 						<!-- 내 관심사 -->
@@ -97,30 +97,38 @@
 
 											<v-card-text>
 												<v-container fluid>
-													<v-combobox
-														v-model="model"
+													<v-autocomplete
+														v-model="selectedAllTags"
 														:items="AllTags"
 														:search-input.sync="search"
 														hide-selected
-														hint="최대 5가지 태그 추가 가능"
 														label=""
-														multiple
 														persistent-hint
 														small-chips
+														item-text="tag_content"
+														item-value="tag_content"
+														return-object
 													>
 														<template v-slot:no-data>
 															<v-list-item>
 																<v-list-item-content>
 																	<v-list-item-title>
-																		입력된 "<strong>{{ search }}</strong
+																		입력된 "<kbd>{{ search }}</kbd
 																		>" 태그가 존재하지 않습니다.
-																		<kbd>enter</kbd> 를 눌러 새로운 태그를
-																		추가하십시오.
 																	</v-list-item-title>
 																</v-list-item-content>
 															</v-list-item>
 														</template>
-													</v-combobox>
+														<template v-slot:selection="data">
+															<v-chip
+																v-bind="data.attrs"
+																:search="data.selected"
+																@click="data.select"
+															>
+																{{ data.item.tag_content }}
+															</v-chip>
+														</template>
+													</v-autocomplete>
 												</v-container>
 											</v-card-text>
 
@@ -144,7 +152,7 @@
 								<v-chip
 									v-for="tag in listInterest"
 									:key="tag.tag_no"
-									:value="tag"
+									:value="tag.tag_content"
 									v-model="tag.isOpen"
 									color="primary"
 									outlined
@@ -177,13 +185,15 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
-//import ProfileUploadButton from "@/components/button/ProfilelUploadButton.vue";
-	
-const userStore = "userStore";
+	import { mapState, mapActions, mapMutations } from "vuex";
+	// import ProfileUploadButton from "@/components/button/ProfilelUploadButton.vue";
+	import { getSearchList } from "@/api/search.js";
+	import { save } from "@/api/user.js";
 
-export default {
-		//components: { ProfileUploadButton },
+	const userStore = "userStore";
+
+	export default {
+		// components: { ProfileUploadButton },
 		computed: {
 			...mapState(userStore, ["userInfo", "listInterest"]),
 			possibleNickname() {
@@ -218,13 +228,14 @@ export default {
 				dialog: false,
 				search: "",
 				disabledTrue: false,
-				AllTags: ["#Gaming", "#Programming", "#Vue", "#Vuetify"], //전체 태그
+				AllTags: [], //전체 태그
 				model: [],
 				file: {}, //업로드용 파일
 				changeFile: {}, //업로드용 파일
 				filePreview: {},
 				formData: '',
 				alertMsg: '',
+				selectedAllTags: "",
 			};
 		},
 		/* 프로필 이미지 설정 */
@@ -299,12 +310,16 @@ export default {
 				}
 			},
 			saveInterest() {
-				alert("save to list");
+				//테그 추가 api 연결!
+				alert("저장되었습니다");
 				this.dialog = false;
-				// this.disabledTrue = false;
-
-				//api 요청 -> 현재 리스트 보내기
-				//refresh하는것두...
+				this.disabledTrue = false;
+				save({
+					user_no: userStore.user_no, //이거 어케하나요..?
+					tag_no: this.selectedAllTags.tag_no,
+				});
+				location.reload();
+				//console.log(this.selectedAllTags.tag_no); -> 괄호 안에 들어간게 tagNo 입니다 !
 			},
 			titleChange(title) {
 				this.title = title;
@@ -333,6 +348,16 @@ export default {
 					this.$nextTick(() => this.model.pop());
 				}
 			},
+		},
+		created() {
+			getSearchList(
+				(response) => {
+					this.AllTags = response.data.data.tagList;
+				},
+				(error) => {
+					console.log(error);
+				}
+			);
 		},
 	};
 </script>

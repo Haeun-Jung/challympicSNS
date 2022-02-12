@@ -68,6 +68,11 @@ function registerQuestion(user_no, qna, success, fail) {
   api.post(`/challympic/user/${user_no}/qna`, JSON.stringify(qna)).then(success).catch(fail);
 }
 
+/* 관심사 추가 */
+function save (user_no, tag ,success, fail) {
+  api.post(`/user/interest/${user_no}`,JSON.stringify(tag)).then(success).catch(fail);
+}
+
 export { 
   join, 
   login, 
@@ -81,5 +86,6 @@ export {
    deleteInterest,
    deleteSubscription,
    getQnA,
-   registerQuestion
+   registerQuestion,
+   save,
   };
