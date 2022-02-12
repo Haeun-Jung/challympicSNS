@@ -1,6 +1,6 @@
 <template>
 	<v-card
-		height="100vh"
+		height="100%"
 		width="100%"
 		class="justify-center mobile-profile-delete-user-container"
 	>
@@ -58,14 +58,24 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 	import MobileQnATable from "../util/MobileQnATable.vue";
+	const userStore = "userStore";
 	export default {
 		components: { MobileQnATable },
 		methods: {
+			...mapActions(userStore, ["registerQuestion", "getQnA"]),
 			onAsk() {
+				if (!this.questionTitle || !this.questionContent) {
+					return;
+				}
+				this.questionContent.replace(/(?:\r\n|\r|\n)/g, "<br />");
+				this.registerQuestion({ qna_title: this.questionTitle, qna_question: this.questionContent, token: localStorage.getItem('Authorization') })
+				this.getQnA(localStorage.getItem("Authorization"));
+				window.location.reload();
 				this.dialog = false;
-				//alert(this.questionContent);
-				//문의하기 api 연결
+				this.questionTitle = '';
+				this.questionContent = '';
 			},
 		},
 		data() {
@@ -78,43 +88,6 @@
 				pagination: {
 					rowsPerPage: 5,
 				},
-				dessertHeaders: [
-					{
-						text: "질문",
-						align: "start",
-						sortable: false,
-						value: "name",
-					},
-					{ text: "답변 여부", value: "answerStatus" },
-
-					{ text: "", value: "data-table-expand" },
-				],
-				desserts: [
-					{
-						name: "Q. 챌린지가 등록이 안되요1",
-						answerStatus: 159,
-					},
-					{
-						name: "Q. 챌린지가 등록이 안되요2",
-						answerStatus: 237,
-					},
-					{
-						name: "Q. 챌린지가 등록이 안되요3",
-						answerStatus: 262,
-					},
-					{
-						name: "Q. 챌린지가 등록이 안되요4",
-						answerStatus: 305,
-					},
-					{
-						name: "Q. 챌린지가 등록이 안되요5",
-						answerStatus: 356,
-					},
-					{
-						name: "Q. 챌린지가 등록이 안되요6",
-						answerStatus: 375,
-					},
-				],
 			};
 		},
 	};

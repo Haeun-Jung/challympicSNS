@@ -26,7 +26,7 @@
 				</v-sheet>
 			</v-list-item-subtitle>
 		</div>
-		<div v-if="item.qna_answer_regdate != ``">
+		<div v-if="item.qna_answer_regdate !== item.qna_question_regdate">
 			<v-divider />
 			<div>
 				<v-list-item-subtitle class="ma-2 ml-2">
