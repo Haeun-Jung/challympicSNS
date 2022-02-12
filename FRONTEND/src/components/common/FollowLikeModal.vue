@@ -12,26 +12,27 @@
 
       <div>
         <v-list class="overflow-y-auto">
-          <v-list-item v-for="user in users" :key="user.userNo">
-              <img v-if="user.title" class="medal-icon" src="https://cdn-icons-png.flaticon.com/512/744/744922.png"/>
+          <v-list-item v-for="user in users" :key="user.user_no">
+              <img v-if="user.user_title" class="medal-icon" src="https://cdn-icons-png.flaticon.com/512/744/744922.png"/>
             <v-list-item-avatar class="user-image">
-              <v-img :alt="`${user.userName} avatar`" :src="user.avatar"></v-img>
+              <v-img v-if="user.file_savedname" :alt="`${user.user_nickname} avatar`" :src="`https://d384sk7z91xokb.cloudfront.net/${user.file_path}/${user.file_savedname}`"></v-img>
+              <v-img v-else :alt="`${user.user_nickname} avatar`" src="../../assets/profile.png"></v-img>
             </v-list-item-avatar>
 
             <v-list-item-content>
               <!-- 배지.. -->
               <!-- <v-img v-if="user.title" max-width="20" src="https://cdn-icons-png.flaticon.com/512/744/744922.png"/> -->
               <v-list-item-subtitle
-                v-text="user.title"
+                v-text="user.user_title"
                 src="https://cdn-icons-png.flaticon.com/512/744/744922.png"
               ></v-list-item-subtitle>
-              <v-list-item-title v-text="user.userName"></v-list-item-title>
+              <v-list-item-title v-text="user.user_nickname"></v-list-item-title>
             </v-list-item-content>
 
             <v-list-item-icon>
               <v-btn
                 v-if="user.isFollowing"
-                @click="follow(user.userNo)"
+                @click="follow(user.user_no)"
                 color="#3396F4"
                 class="white--text rounded-xl"
                 small
@@ -40,7 +41,7 @@
               </v-btn>
               <v-btn
                 v-else
-                @click="follow(user.userNo)"
+                @click="follow(user.user_no)"
                 color="#3396F4"
                 class="rounded-xl"
                 small
