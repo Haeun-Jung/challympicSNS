@@ -170,9 +170,16 @@ public class ChallengeApiController {
         private String title_name;
     }
 
-    @GetMapping("/challenge/confirm")
+    @PostMapping("/challenge/confirm")
     public Result ChallengeTitleCheck(@RequestBody ChallengeTitleCheckRequest request) {
         List<Challenge> challenges = challengeService.findChallengeByTitle(request.getChallnege_title());
+
+        System.out.println("length : " + challenges.size());
+
+        if(challenges.size() != 0){
+            return new Result(false, HttpStatus.FORBIDDEN.value());
+        }
+
         for(Challenge c : challenges) {
             if(c.getChallenge_end().after(new Date())){
                 return new Result(false, HttpStatus.FORBIDDEN.value());
