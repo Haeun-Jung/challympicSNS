@@ -94,7 +94,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(userStore, ["getUserInfo"]),
+    ...mapActions(userStore, ["getUserInfo", "getInterest"]),
     async login(event) {
       event.preventDefault();
 
@@ -109,6 +109,7 @@ export default {
 
       await this.$store.dispatch('userStore/login', { user_email: this.email, user_pwd: this.password });
       this.getUserInfo(localStorage.getItem("Authorization"));
+      this.getInterest(localStorage.getItem("Authorization"));
     },
     clickJoinBtn() {
       this.$router.push("/join");
