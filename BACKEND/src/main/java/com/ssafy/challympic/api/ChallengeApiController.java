@@ -153,7 +153,6 @@ public class ChallengeApiController {
                 _challenge_no = chall.getChallenge_no();
             }
         }
-
         return new Result(true, HttpStatus.OK.value(), new ChallengeResponse(_challenge_no));
     }
 
