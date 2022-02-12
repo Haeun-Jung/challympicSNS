@@ -27,8 +27,8 @@ function deletePost(postNo, success, fail) {
   api.delete(`/challympic/post/${postNo}`).then(success).catch(fail);
 }
 
-function getLikeList(postNo, success, fail) {
-  api.get(`challympic/post/${postNo}/like`).then(success).catch(fail);
+function getLikeList(postNo, userNo, success, fail) {
+  api.get(`challympic/post/${postNo}/like/${userNo}`).then(success).catch(fail);
 }
 
 export { getPostList, createPost, updatePost, deletePost, getLikeList };

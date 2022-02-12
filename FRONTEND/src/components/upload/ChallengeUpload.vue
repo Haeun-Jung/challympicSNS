@@ -9,7 +9,7 @@
           icon
           @click="
             $emit('close-modal');
-            $store.commit('RESET_POSSIBLE_STATUS');
+            $store.commit('challengeStore/RESET_POSSIBLE_STATUS');
           "
         >
           <v-icon>mdi-close</v-icon>
