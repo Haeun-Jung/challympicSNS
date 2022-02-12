@@ -1,6 +1,6 @@
 <template>
 	<!-- 로그인 X -->	
-	<div v-if="isGuest" class="title-width">
+	<div v-if="!isLoggedIn" class="title-width">
 		<v-card-subtitle>
 			<h2>구독</h2>
 		</v-card-subtitle>
@@ -10,6 +10,7 @@
 			</h4>
 		</v-list-item-content>
 	</div>
+	<!-- 로그인 O -->
     <v-list v-else class="title-width">
         <v-list-group>
           <template v-slot:activator class="title-background">
@@ -18,57 +19,46 @@
 				<h4 v-else>구독</h4>
 			</v-card-subtitle>
           </template>
-		  <!-- 로그인 O -->
           <v-chip
-			v-for="challenge in subscriptions"
-			:key="challenge.id"
+			v-for="challenge in userInfo.subscriptions"
+			:key="challenge.challenge_no"
 			:value="challenge"
 			:to="{ path: '/search/' + challenge.title }"
 			v-model="challenge.isOpen"
 			color="primary"
 			outlined
 			close
-			@click:close="remove(challenge.id)">
-			{{ challenge.title }}
+			@click:close="remove(challenge.challenge_no)">
+			{{ challenge.challenge_title }}
 			</v-chip>
         </v-list-group>
     </v-list>
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
+	
+const userStore = "userStore";
 export default {
   name: 'MySubscription',
   props: { search: String },
+  computed: {
+		...mapState(userStore, ["userInfo"]),
+		isLoggedIn() {
+			return this.$store.state.userStore.isLoggedIn;
+		}
+	},
   data() {
     return {
-	  isGuest: false,
-      subscriptions: [
-			//사용자 태그
-			{
-				id: 1,
-				title: "미라클모닝_챌린지",
-			},
-			{
-				id: 2,
-				title: "요리_챌린지",
-			},
-			{
-				id: 3,
-				title: "코딩_챌린지",
-			},
-		],
-		index: 1,
     }
   },
   methods: {
-		remove(id) {
-			// 여기서 delete로 삭제된 태그 id마 보냄
-			this.subscriptions.splice(id - this.index, 1);
-			this.index++; //카운트 해줘야 다음 태그 제대로 지워짐
-			// 이렇게 하고, 페이지 refresh 해서 태그 다시 받아와야함.....
-			alert(id);
-			alert(id - 1);
-			this.subscriptions = [...this.subscriptions];
+	  	...mapActions(userStore, ["getUserInfo"]),
+		remove(no) {
+			this.$store.dispatch('userStore/deleteSubscription', { no, token: localStorage.getItem('Authorization') })
+			setTimeout(() => {
+				this.getUserInfo(localStorage.getItem("Authorization"));
+			}, 300);
 		},
 		isMobile() {
             if (
@@ -89,9 +79,9 @@ export default {
 .title-width {
 	width: 100%;
 	background: transparent;
+	padding-right: 0px;
 }
 .main-side-menu-contents {
-	color: #121212;
 	text-align: center;
 	margin: 1%;
 	padding-left: 5%;
