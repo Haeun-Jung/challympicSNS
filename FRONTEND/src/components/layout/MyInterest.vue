@@ -1,6 +1,29 @@
 <template>
+	<!-- 로그인 O -->
+	<v-list v-if="isLoggedIn" class="title-width">
+		<v-list-group>
+		<template v-slot:activator>
+			<v-card-subtitle class="title-width">
+				<h4 v-if="isMobile()">내 관심사</h4>
+				<h2 v-else>내 관심사</h2>
+			</v-card-subtitle>
+		</template>
+		<v-chip
+			v-for="tag in listInterest"
+			:key="tag.tag_no"
+			:value="tag"
+			:to="{ path: '/search/' + tag.name }"
+			v-model="tag.isOpen"
+			color="primary"
+			outlined
+			close
+			@click:close="remove(tag.tag_no)">
+			{{ tag.tag_content }}
+		</v-chip>
+		</v-list-group>
+	</v-list>
 	<!-- 로그인 X -->	
-	<div v-if="isGuest" class="interest-wrapper">
+	<div v-else class="interest-wrapper">
 		<v-card-subtitle>
 			<h2>내 관심사</h2>
 		</v-card-subtitle>
@@ -19,71 +42,34 @@
 			</div>
 		</v-list-item-content>
 	</div>
-	<!-- 로그인 O -->
-	<v-list v-else class="title-width">
-        <v-list-group>
-          <template v-slot:activator>
-            <v-card-subtitle class="title-width">
-				<h2 v-if="!isMobile()">내 관심사</h2>
-				<h4 v-else>내 관심사</h4>
-			</v-card-subtitle>
-          </template>
-          <v-chip
-			v-for="tag in interests"
-			:key="tag.id"
-			:value="tag"
-			:to="{ path: '/search/' + tag.name }"
-			v-model="tag.isOpen"
-			color="primary"
-			outlined
-			close
-			@click:close="remove(tag.id)">
-			{{ tag.name }}
-		</v-chip>
-        </v-list-group>
-    </v-list>
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
+	
+const userStore = "userStore";
 export default {
 	name: "MyInterest",
+	computed: {
+		...mapState(userStore, ["listInterest"]),
+		isLoggedIn() {
+			return this.$store.state.userStore.isLoggedIn;
+		}
+	},
 	data() {
 		return {
-			isGuest: false,
-			interests: [
-				//사용자 태그
-				{
-					id: 1,
-					name: "요리",
-				},
-				{
-					id: 2,
-					name: "운동",
-				},
-				{
-					id: 3,
-					name: "IT",
-				},
-				{
-					id: 4,
-					name: "인테리어",
-				},
-			],
-			index: 1,
 		};
 	},
 	methods: {
+		...mapActions(userStore, ["getInterest"]),
 		clickLoginBtn() {
 			this.$router.push("/login");
 		},
-		remove(id) {
-			// 여기서 delete로 삭제된 태그 id마 보냄
-			this.interests.splice(id - this.index, 1);
-			this.index++; //카운트 해줘야 다음 태그 제대로 지워짐
-			// 이렇게 하고, 페이지 refresh 해서 태그 다시 받아와야함.....
-			alert(id);
-			alert(id - 1);
-			this.interests = [...this.interests];
+		remove(no) {
+			this.$store.dispatch('userStore/deleteInterest', { no, token: localStorage.getItem('Authorization') })
+			setTimeout(() => {
+				this.getInterest(localStorage.getItem("Authorization"));
+			}, 300);
 		},
 		isMobile() {
             if (
@@ -118,5 +104,6 @@ export default {
 	width: 100%;
 	justify-content: space-between;
 	background: transparent;
+	padding-right: 0px;
 }
 </style>
