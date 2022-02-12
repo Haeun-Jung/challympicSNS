@@ -1,15 +1,22 @@
 <template>
   <v-card class="my-5">
-    <a :href="`#${post.postInfo.postNo}`" :id="`${post.postInfo.postNo}`"></a>
+    <a :href="`#${post.post_no}`" :id="`${post.post_no}`"></a>
     <v-card-title class="d-flex justify-space-between">
       <div class="d-flex align-center">
         <img
+          v-if="post.user_profile"
+          class="profile mr-3"
+          :src="`https://d384sk7z91xokb.cloudfront.net/${post.user_profile}`"
+          alt="profile img"
+        />
+        <img
+          v-else
           class="profile mr-3"
           src="../../assets/profile.png"
           alt="profile img"
         />
         <a
-          :href="`/feed/${post.postInfo.userNo}`"
+          :href="`/feed/${post.user_no}`"
           :class="[
             'text-decoration-none',
             'font-weight-bold',
@@ -17,11 +24,11 @@
             [$vuetify.theme.dark ? 'dark-mode-text' : 'black-text'],
           ]"
         >
-          <span>{{ post.postInfo.nickname }}</span>
+          <span>{{ post.user_nickname }}</span>
         </a>
       </div>
       <!-- 'nickname'을 현재 로그인한 유저의 닉네임으로 수정 -->
-      <div v-if="post.postInfo.nickname == 'nickname'">
+      <div v-if="post.user_nickname == $store.state.userStore.userNickname">
         <v-btn @click="editPost" icon>
           <v-icon>mdi-pencil-outline</v-icon>
         </v-btn>
@@ -33,17 +40,17 @@
     <!-- 이미지/동영상 props 넘겨주기 -->
 
     <v-card-text class="px-0">
-      <span v-if="type == 'video'">
-        <player />
+      <span v-if="post.challenge_type.toUpperCase == 'VIDEO'">
+        <player :fileName="post.file_savedname" :filePath="post.file_path" />
       </span>
       <span v-else>
-        <post-image :fileName="post.postInfo.fileName" />
+        <post-image :fileName="post.file_savedname" :filePath="post.file_path" />
       </span>
     </v-card-text>
     <v-card-text class="d-flex justify-space-between pt-0 pl-0 pb-0">
       <span>
         <v-btn @click="like(post)" class="icon-margin" icon>
-          <v-icon :class="{ 'active-like-btn': post.postInfo.isLiked }" large>
+          <v-icon :class="{ 'active-like-btn': post.isLike }" large>
             mdi-heart-outline
           </v-icon>
         </v-btn>
@@ -54,7 +61,7 @@
         </v-btn>
       </span>
       <span>
-        <share-button :post-no="post.postInfo.postNo" />
+        <share-button :post-no="post.post_no" />
       </span>
     </v-card-text>
     <v-card-text class="py-2">
@@ -65,32 +72,32 @@
         ]"
         @click="toggleLikeDialog"
       >
-        좋아요 {{ post.postInfo.likeCnt }}개
+        좋아요 {{ post.likeCnt }}개
       </span>
     </v-card-text>
     <v-card-text class="py-1">
       <span class="mr-3">
         <a
-          :href="`/feed/${post.postInfo.userNo}`"
+          :href="`/feed/${post.user_no}`"
           :class="[
             'text-decoration-none',
             'font-weight-bold',
             [$vuetify.theme.dark ? 'dark-mode-text' : 'black-text'],
           ]"
         >
-          {{ post.postInfo.nickname }}
+          {{ post.user_nickname }}
         </a>
       </span>
       <span
         :class="[$vuetify.theme.dark ? 'dark-mode-text' : 'black-text']"
-        v-html="$options.filters.hashAnchor(post.postInfo.content)"
+        v-html="$options.filters.hashAnchor(post.post_content)"
       ></span>
-      <p>{{ post.postInfo.regDate }}</p>
+      <p>{{ post.post_regdate }}</p>
     </v-card-text>
     <v-divider />
     <v-expand-transition>
       <div v-show="showComment">
-        <comment-list :comments="post.comments" />
+        <comment-list :comments="post.commentList" />
         <v-divider />
       </div>
     </v-expand-transition>
@@ -112,7 +119,7 @@
     </v-card-text>
     <follow-like-modal
       v-if="likeDialog"
-      :users="post.likedUsers"
+      :users="likeList"
       :type="dialogType"
       @close-dialog="toggleLikeDialog"
     />
@@ -125,6 +132,7 @@ import Player from "./Player.vue";
 import FollowLikeModal from "../common/FollowLikeModal.vue";
 import CommentList from "./CommentList.vue";
 import ShareButton from "../button/ShareButton.vue";
+import { createComment } from '@/api/comment.js';
 
 export default {
   name: "PostItem",
@@ -141,21 +149,32 @@ export default {
       dialogType: "like",
     };
   },
+  computed: {
+    likeList() {
+      return this.$store.state.postStore.likeList;
+    }
+  },
   methods: {
     like(post) {
       // 좋아요 API 요청
-      post.postInfo.isLiked = !post.postInfo.isLiked;
-      if (post.postInfo.isLiked) {
-        post.postInfo.likeCnt += 1;
+      post.isLike = !post.isLike;
+      if (post.isLike) {
+        post.likeCnt += 1;
       } else {
-        post.postInfo.likeCnt -= 1;
+        post.likeCnt -= 1;
       }
     },
     toggleCommentShow() {
       this.showComment = !this.showComment;
+      if (this.showComment) {
+        // this.$store.dispatch('getCommentList', this.post.post_no);
+      }
     },
     toggleLikeDialog() {
       this.likeDialog = !this.likeDialog;
+      if (this.likeDialog) {
+        this.$store.dispatch('postStore/getLikeList', { postNo: this.post.post_no, userNo: this.$store.state.userStore.userInfo.user_no });
+      }
     },
     editPost() {
       // 포스트 수정 API 요청
@@ -169,6 +188,17 @@ export default {
     },
     addComment() {
       // 댓글 작성 API 호출
+      createComment(
+        this.post.post_no,
+        this.$store.state.userStore.userNo,
+        this.commentInput,
+        (response) => {
+          const { data } = response;
+          // TODO: 리턴받은 댓글 정보에 + user_no, user_nickname, user_profile 추가해서 this.post.commentList에 append
+          this.post.commentList.push(data.data);
+        },
+        () => {}
+      );
       this.commentInput = "";
     },
   },
@@ -185,9 +215,6 @@ export default {
       );
     },
   },
-  created() {
-      console.log(this.type);
-  }
 };
 </script>
 

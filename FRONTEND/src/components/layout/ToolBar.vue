@@ -341,7 +341,7 @@
 			},
 			isLoggedIn() {
 				return this.$store.state.userStore.isLoggedIn;
-			},
+			}
 		},
 		methods: {
 			test() {

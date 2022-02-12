@@ -2,7 +2,7 @@
 	<v-container>
 		<v-data-table
 			:headers="headers"
-			:items="qnaList"
+			:items="listQnA"
 			item-key="qna_no"
 			class="elevation-1"
 			:header-props="{ sortIcon: null }"
@@ -27,7 +27,7 @@
 			</template>
 
 			<template v-slot:item.actions="props">
-				<div v-if="props.item.qna_answer_regdate == ``">
+				<div v-if="props.item.qna_answer_regdate == props.item.qna_question_regdate">
 					<v-btn
 						dense
 						elevation="0"
@@ -55,12 +55,19 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 	import AnswerModal from "./AnswerModal.vue";
+	const userStore = "userStore";
 	//import {deleteUser, userList} from "@/api/member";
 	export default {
 		components: { AnswerModal },
-
 		name: "UserList",
+		computed: {
+			...mapState(userStore, ["listQnA"]),
+		},
+		mounted() {
+			this.getQnA(localStorage.getItem("Authorization"));
+		},
 		data() {
 			return {
 				expanded: [],
@@ -82,40 +89,11 @@
 						value: "actions",
 					},
 				],
-				qnaList: [
-					{
-						qna_no: 1,
-						user_nickname: "김싸피",
-						qna_title: "🥕🥕🥕🥕🥕🥕🥕🥕",
-						qna_question: "도와주세여...",
-						qna_answer: "네...",
-						qna_question_regdate: "2022-01-28",
-						qna_answer_regdate: "2022-02-29",
-					},
-					{
-						qna_no: 2,
-						user_nickname: "김싸피",
-						qna_title: "문의사항 있습니다",
-						qna_question: "문의내용ㅇ",
-						qna_answer: "",
-						qna_question_regdate: "2022-02-06",
-						qna_answer_regdate: "",
-					},
-					{
-						qna_no: 24,
-						user_nickname: "청싸피",
-						qna_title: "질문!",
-						qna_question:
-							"Lorem Ipsum is simply dummy text of the printing<br/> and typesetting industry. Lorem Ipsum <br/>has been the industry's standard dummy text ever since<br/> the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.<br/> It has survived not only five centuries, but also <br/>the leap into electronic typesetting, remaining <br/>essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets <br/>containing Lorem Ipsum passages, and more recently with desktop publishing software<br/> like Aldus PageMaker including versions of Lorem Ipsum.",
-						qna_answer: "",
-						qna_question_regdate: "2022-01-31",
-						qna_answer_regdate: "",
-					},
-				],
 			};
 		},
 
 		methods: {
+			...mapActions(userStore, ["getQnA"]),
 			clicked(item, event) {
 				if (event.isExpanded) {
 					const index = this.expanded.findIndex((i) => i === item);

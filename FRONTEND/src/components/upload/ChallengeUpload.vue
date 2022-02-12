@@ -9,7 +9,7 @@
           icon
           @click="
             $emit('close-modal');
-            $store.commit('RESET_POSSIBLE_STATUS');
+            $store.commit('challengeStore/RESET_POSSIBLE_STATUS');
           "
         >
           <v-icon>mdi-close</v-icon>
@@ -212,8 +212,8 @@ export default {
   methods: {
     confirmChallengeName() {
       this.$store.dispatch(
-        "confirmChallengeName",
-        "#" + this.challenge.challengeName
+        "challengeStore/confirmChallengeName",
+        this.challenge.challengeName
       );
     },
     inputChallenger() {
@@ -246,6 +246,7 @@ export default {
         this.error = "입력되지 않은 필수 항목이 있습니다.";
         return;
       }
+      this.dialog = false;
       this.postDialog = true;
     },
     DatePickMenu() {

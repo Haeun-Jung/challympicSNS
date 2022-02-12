@@ -1,5 +1,6 @@
 package com.ssafy.challympic.api;
 
+import com.ssafy.challympic.api.Dto.CommentDto;
 import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.service.*;
 import com.ssafy.challympic.util.S3Uploader;
@@ -27,6 +28,7 @@ public class PostApiController {
     private final PostLikeService postLikeService;
     private final UserService userService;
     private final TagService tagService;
+    private final FollowService followService;
 
     private final S3Uploader s3Uploader;
 
@@ -58,8 +60,25 @@ public class PostApiController {
     @Data
     @AllArgsConstructor
     static class PostLikeUserDto{
-        private int userNo;
-        private String userName;
+        private int user_no;
+        private String user_nickname;
+        private String user_title;
+        private int file_no;
+        private String file_path;
+        private String file_savedname;
+        private Boolean isFollowing;
+
+        public PostLikeUserDto(User user, Media media, boolean isFollowing) {
+            this.user_no = user.getUser_no();
+            this.user_nickname = user.getUser_nickname();
+            this.user_title = user.getUser_title();
+            if(media != null){
+                this.file_no = media.getFile_no();
+                this.file_path = media.getFile_path();
+                this.file_savedname = media.getFile_savedname();
+            }
+            this.isFollowing = isFollowing;
+        }
     }
 
     @Data
@@ -88,22 +107,35 @@ public class PostApiController {
 
         // 좋아요 수
         private Integer LikeCnt;
+
+        // 이 유저가 좋아요를 눌렀는지
+        private boolean IsLike = false;
+
+        // 댓글 리스트
+        private List<CommentDto> commentList;
     }
+
+    @Data
+    static class ChallengePostRequest {
+        private int userNo;
+        private int challengeNo;
+    }
+
+    private final CommentService commentService;
 
     /**
      *  챌린지 번호로 포스트 가져오기(챌린지로 확인 예정
-     *
      * */
-    @GetMapping("/challenge/{challengeNo}/post")
-    public Result list(@PathVariable("challengeNo") int challengeNo){
+    @PostMapping("/challenge/post")
+    public Result list(@RequestBody ChallengePostRequest request){
         Result result = null;
 
         // 챌린지 정보
-        Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
+        Challenge challenge = challengeService.findChallengeByChallengeNo(request.getChallengeNo());
         if(challenge == null) return new Result(false, HttpStatus.BAD_REQUEST.value());
         String type = challenge.getChallenge_type().name().toLowerCase();
         // 포스트 리스트
-        List<Post> postList = postService.getPostList(challengeNo);
+        List<Post> postList = postService.getPostList(request.getChallengeNo());
 
         List<PostDto> collect = new ArrayList<>();
 
@@ -142,6 +174,24 @@ public class PostApiController {
                 postDto.setLikeCnt(postLikeList.size());
             }
 
+            boolean isLike = postService.getPostLikeByUserNo(request.getUserNo());
+            postDto.setIsLike(isLike);
+
+            List<Comment> comments = commentService.findByPost(post.getPost_no());
+            List<CommentDto> commentList = comments.stream()
+                            .map(c -> new CommentDto(
+                                    c.getComment_no(),
+                                    c.getUser().getUser_no(),
+                                    c.getPost().getPost_no(),
+                                    c.getComment_content(),
+                                    c.getComment_regdate(),
+                                    c.getComment_update(),
+                                    c.getCommentLike().size(),
+                                    c.getComment_report()
+                                    ))
+                    .collect(Collectors.toList());
+            postDto.setCommentList(commentList);
+
             collect.add(postDto);
         }
 
@@ -160,8 +210,8 @@ public class PostApiController {
      *      - 유저 번호와 유저 닉네임만 전달받을 수도 있음
      *      - 현재 번호만 가져옴
      * */
-    @GetMapping("/post/{postNo}/like")
-    public Result likeList(@PathVariable("postNo") int postNo){
+    @GetMapping("/post/{postNo}/like/{userNo}")
+    public Result likeList(@PathVariable("postNo") int postNo, @PathVariable("userNo") int userNo){
 
         // PostLike에서 게시글이 post인 것 추출
 
@@ -172,7 +222,8 @@ public class PostApiController {
         List<PostLikeUserDto> userList = new ArrayList<>();
         for(PostLike postLike : postLikeList){
             User user = userService.findUser(postLike.getUser_no());
-            userList.add(new PostLikeUserDto(user.getUser_no(), user.getUser_nickname()));
+            boolean follow = followService.follow(userNo, user.getUser_no());
+            userList.add(new PostLikeUserDto(user, user.getMedia(), follow));
         }
 
         return new Result(true, HttpStatus.OK.value(), userList);
