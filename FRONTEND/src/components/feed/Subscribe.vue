@@ -14,7 +14,7 @@
               >
                 <v-img :src="post.src">
                   <!-- 비디오일때만 -->
-                  <i v-if="post.isVideo" class='fas fa-play play-btn'></i>
+                  <v-icon v-if="post.isVideo" icon class="play-btn">mdi-play</v-icon>
                 </v-img>
                 <v-fade-transition>
                   <v-overlay
@@ -23,8 +23,8 @@
                     color="#2E2E2E"
                   >
                   <div class="info-wrapper">
-                    <div class="challenge-info"><i class='fas fa-hashtag icon'></i>{{ post.challenge }}</div>
-                    <div class="participated-info"><i class='fas fa-user-plus icon'></i>{{ post.participated }}<v-icon icon class="icon bookmark-icon">mdi-bookmark</v-icon>{{ post.subscribe }}</div>
+                    <div class="challenge-info"><v-icon icon class="icon hashtag-icon">mdi-pound</v-icon>{{ post.challenge }}</div>
+                    <div class="participated-info"><v-icon icon class="icon challenger-icon">mdi-account-plus</v-icon>{{ post.participated }}<v-icon icon class="icon bookmark-icon">mdi-bookmark</v-icon>{{ post.subscribe }}</div>
                   </div>
                   </v-overlay>
                 </v-fade-transition>
@@ -83,9 +83,9 @@ export default {
 }
 .play-btn {
   float: right;
-  width: 22px;
+  width: 40px;
   color: #fff;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 .challenge-info {
   font-size: 20px;
@@ -95,11 +95,14 @@ export default {
   font-size: 18px;
 }
 .icon {
-  margin-top: 8px;
+  margin-top: -2px;
   margin-left: 6px;
   margin-right: 4px;
 }
-.bookmark-icon {
-  margin-top: -2px;
+.hashtag-icon {
+  margin-top: -5px;
+}
+.challenger-icon {
+  margin-right: 9px;
 }
 </style>

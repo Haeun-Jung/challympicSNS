@@ -1,5 +1,5 @@
 <template>
-	<v-card height="85vh" elevation="0">
+	<v-card height="88vh" elevation="0">
 		<v-card-title>회원 탈퇴</v-card-title>
 		<v-divider />
 		<v-container>
@@ -9,19 +9,11 @@
 					<v-card elevation="0" outlined>
 						<v-card-text
 							>회원 탈퇴 시 개인정보 및 CHALLYMPIC에서 만들어진 모든 데이터는
-							삭제됩니다. 이부분..시간남을때..Lorem ipsum, or lipsum as it is
-							sometimes known, is dummy text used in laying out print, graphic
-							or web designs. The passage is attributed to an unknown typesetter
-							in the 15th century who is thought to have scrambled parts of
-							Cicero's De Finibus Bonorum et Malorum for use in a type specimen
-							book. It usually begins with: “Lorem ipsum dolor sit amet,
-							consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-							labore et dolore magna aliqua.” The purpose of lorem ipsum is to
-							create a natural looking block of text (sentence, paragraph, page,
-							etc.) that doesn't distract from the layout. A practice not
-							without controversy, laying out pages with meaningless filler text
-							can be very useful when the focus is meant to be on design, not
-							content.</v-card-text
+							삭제됩니다.
+							<br/>
+							회원정보 및 챌린지 등 개인형 서비스 이용기록은 모두 삭제되며, 삭제된 데이터는 복구되지 않습니다.
+							<br/>
+							삭제되기 전, 필요한 데이터는 미리 백업을 해주세요.</v-card-text
 						>
 					</v-card>
 				</v-col>
@@ -60,6 +52,9 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
+
+const userStore = "userStore";
 	export default {
 		name: "PasswordUpdate",
 		data() {
@@ -72,15 +67,19 @@
 				},
 			};
 		},
+		computed: {
+			...mapState(userStore, ["userInfo"]),
+		},
 		methods: {
+			...mapActions(userStore, ["deleteUser"]),
 			onSubmit() {
-				//	alert(this.optOutText);
-				// api로 유저넘버 보내기
+				this.deleteUser(localStorage.getItem("Authorization"));
+				this.$store.commit('userStore/LOGOUT');
+				window.location.href="/";
 			},
 			checkOpt() {
 				if (this.optOutText === "탈퇴하겠습니다.") {
 					this.disabledTrue = false;
-					alert("eye");
 				} else {
 					this.disabledTrue = true;
 				}

@@ -1,7 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Main from "../views/Main.vue";
-<<<<<<< HEAD
 /*검색 화면 */
 import Search from "../components/search/Search.vue";
 /*프로필 */
@@ -31,8 +30,16 @@ import Join from "../views/user/Join.vue";
 import Login from "../views/user/Login.vue";
 import ChallengeDetail from "../views/ChallengeDetail.vue";
 
-=======
->>>>>>> 59b10cbf8e03668b5e7e2f3b3eda90cb0aab7a68
+/*관리자 페이지 */
+import Admin from "../views/Admin.vue";
+import UserManagement from "@/components/admin/UserManagement.vue";
+import ChallengeManagement from "@/components/admin/ChallengeManagement.vue";
+import CommentManagement from "@/components/admin/CommentManagement.vue";
+import QnAManagement from "@/components/admin/QnAManagement.vue";
+import StatManagement from "@/components/admin/StatManagement.vue";
+
+/*메인 화면 */
+import Recent from "../views/Recent.vue";
 
 Vue.use(VueRouter);
 
@@ -41,15 +48,20 @@ const routes = [
     path: "/",
     name: "Main",
     component: Main,
+    redirect:"/recent",
     children: [
+      {
+        path: "/recent",
+        name: Recent,
+        component:Recent,
+      },
       {
         path: "/search/:keyword/",
         name: "Search",
-        component:Search,
+        component: Search,
       }
     ]
   },
-<<<<<<< HEAD
   {
     path: "/user/account/",
     name: "Account",
@@ -113,27 +125,27 @@ const routes = [
     path: "/feed/:userNo/",
     name: "UserFeed",
     component: UserFeed,
-    redirect : "/feed/:userNo/post",
+    redirect: "/feed/:userNo/post",
     children: [
       {
         path: "/feed/:userNo/post",
         name: "Participated",
-        component : Participated,
+        component: Participated,
       },
       {
         path: "/feed/:userNo/challenge",
         name: "Created",
-        component : Created,
+        component: Created,
       },
       {
         path: "/feed/:userNo/like",
         name: "Like",
-        component : Like,
+        component: Like,
       },
       {
         path: "/feed/:userNo/subscription",
         name: "Subscribe",
-        component : Subscribe,
+        component: Subscribe,
       },
     ]
   },
@@ -148,13 +160,45 @@ const routes = [
     component: Login,
   },
   {
-     path: "/challenge/:challengeNo",
-   // path: "/challenge",
+    path: "/challenge/:challengeNo",
     name: "ChallengeDetail",
     component: ChallengeDetail,
+    props: true,
   },
-=======
->>>>>>> 59b10cbf8e03668b5e7e2f3b3eda90cb0aab7a68
+  {
+    path: "/admin/",
+    name: "Admin",
+    component: Admin,
+    redirect:"/admin/user",
+    //redirect를 stat으로 하기
+    children: [
+      {
+        path: "/admin/user",
+        name: "UserManagement",
+        component:UserManagement,
+      },
+      {
+        path: "/admin/challenge",
+        name: "ChallengeManagement",
+        component:ChallengeManagement,
+      },
+      {
+        path: "/admin/comment",
+        name: "CommentManagement",
+        component:CommentManagement,
+      },
+      {
+        path: "/admin/qna",
+        name: "QnAManagement",
+        component:QnAManagement,
+      },
+      {
+        path: "/admin/stats",
+        name: "StatManagement",
+        component:StatManagement,
+      },
+    ]
+  }
 ];
 
 const router = new VueRouter({

@@ -3,21 +3,6 @@
 			호버했을 때 : 해당 챌린지 바로가기 ㄱㄱ ? or 포스트 바로가기 ?
      -->
 	<v-card elevation="2" max-width="444" class="mx-auto">
-		<v-system-bar lights-out>
-			<v-row class="justify-end">
-				<v-btn
-					color="blue lighten-2"
-					depressed
-					plain
-					tile
-					:ripple="false"
-					dense
-					@click="goChallenge"
-				>
-					<v-list-item-subtitle>챌린지 바로가기</v-list-item-subtitle>
-				</v-btn>
-			</v-row></v-system-bar
-		>
 		<div class="holder">
 			<video
 				ref="myvideo"
@@ -63,20 +48,13 @@
 				<v-list-item>
 					<v-list-item-content>
 						<v-list-item-title>
-							<h3>{{ post.challenge_title }}</h3>
+							<h3 class="title-block" @click="goChallenge">{{ post.challenge_title }}</h3>
 						</v-list-item-title>
-
 						<v-list-item-subtitle>
 							{{ splitContents }}
 						</v-list-item-subtitle>
 						<v-list-item-subtitle> {{ splitTags }}</v-list-item-subtitle>
 					</v-list-item-content>
-
-					<!--누르면 챌린지 상세 페이지로 이동
-							<span>
-
-							</span>
-						-->
 				</v-list-item>
 			</v-list>
 		</v-card>
@@ -168,6 +146,10 @@
 		position: absolute;
 		top: 7%;
 		right: 5%;
+	}
+	.title-block {
+		display: inline-block;
+		cursor: pointer;
 	}
 	/*	#hello:not(.on-hover) {
 		opacity: 0.5;

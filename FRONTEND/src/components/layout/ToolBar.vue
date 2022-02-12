@@ -1,5 +1,4 @@
 <template>
-<<<<<<< HEAD
 	<!-- 태그바 fixed 잡고 포지션 고정시키면 됨-->
 	<v-app-bar
 		fixed
@@ -25,18 +24,24 @@
 		<div class="main-toolbar-search hidden-md-and-down">
 			<v-autocomplete
 				v-model="searchInput"
-				:items="AllTags"
+				:items="dynamicArr"
 				:search-input.sync="search"
 				hide-selected
 				hide-details="true"
 				label=""
-				persistent-hint
+				v-click-outside="onClickOutside"
+				:close="onClickOutside"
 				rounded
 				small-chips
 				@change="keywordSearch"
+				@keyup="test"
+				@keyup.delete="test"
+				@keydown.enter="keywordSearch"
 				class="ml-5"
 				flat
 				solo
+				item-text="key"
+				item-value="key"
 				clearable
 				append-icon="mdi-magnify"
 				width="600px"
@@ -52,6 +57,15 @@
 							</v-list-item-title>
 						</v-list-item-content>
 					</v-list-item>
+				</template>
+				<template v-slot:selection="data">
+					<v-chip
+						v-bind="data.attrs"
+						:search="data.selected"
+						@click="data.select"
+					>
+						{{ data.item.key }}
+					</v-chip>
 				</template>
 			</v-autocomplete>
 		</div>
@@ -74,52 +88,93 @@
 				</template>
 
 				<v-autocomplete
-					v-model="searchInput"
-					:items="AllTags"
-					:search-input.sync="search"
+					v-model="mobileSearchInput"
+					:items="dynamicArr"
+					:search-input.sync="mobileSearch"
 					label=""
 					small-chips
 					flat
+					item-text="key"
+					item-value="key"
 					solo
 					hide-details="true"
 					clearable
 					append-icon="mdi-magnify"
-					@change="keywordSearch"
+					@change="mobileKeywordSearch"
+					@keyup="mobiletest"
+					@keyup.delete="mobiletest"
 				>
 					<template v-slot:no-data>
 						<v-list-item>
 							<v-list-item-content>
-								<v-list-item-title>
-									입력된
-									<kbd>
-										<strong>{{ search }}</strong> </kbd
-									>태그 또는 사용자가 존재하지 않습니다.
-								</v-list-item-title>
+								<v-list-item-title> 검색결과 없음 </v-list-item-title>
 							</v-list-item-content>
 						</v-list-item>
 					</template>
 					<!--
 							@click="data.select"
 							-->
+
 					<template v-slot:selection="data">
 						<v-chip
 							v-bind="data.attrs"
 							:search="data.selected"
 							@click="data.select"
 						>
-							{{ data.item }}
+							{{ data.item.key }}
 						</v-chip>
 					</template>
 				</v-autocomplete>
 			</v-menu>
 		</div>
 
-		<v-btn @click="clickLoginBtn" color="primary" outlined small x-small
+		<v-btn
+			v-if="!isLoggedIn"
+			@click="clickLoginBtn"
+			color="primary"
+			outlined
+			small
+			x-small
 			>로그인</v-btn
 		>
 
-		<div v-if="!isMobile()">
-			<v-menu bottom left>
+		<div v-if="!isMobile() && isLoggedIn">
+			<v-menu bottom left offset-y max-height="260" width="300" display="block">
+				<template v-slot:activator="{ on, attrs }">
+					<v-btn icon v-bind="attrs" v-on="on">
+						<div v-if="activeAlert" id="alert-badge"></div>
+						<v-icon> mdi-bell-outline </v-icon>
+					</v-btn>
+				</template>
+
+				<v-card v-if="alertMenu.length > 1" width="300">
+					<v-list class="overflow-y-auto">
+						<v-list-item
+							v-for="(item, i) in alertMenu"
+							:key="i"
+							:to="item.link1"
+							class="px-3; mx-1;,my-2"
+						>
+							<v-list-item-title>
+								{{ item.title }}
+								<span class="date-text">{{ dayjsRegDate(item.regDate) }}</span>
+							</v-list-item-title>
+						</v-list-item>
+					</v-list>
+					<v-card-actions>
+						<v-spacer></v-spacer>
+						<v-btn text @click="deleteAlert"> 모두 읽음 </v-btn>
+					</v-card-actions>
+				</v-card>
+				<v-card v-else>
+					<v-list>
+						<v-list-item>
+							<v-list-item-title>새로운 알림이 없습니다.</v-list-item-title>
+						</v-list-item>
+					</v-list>
+				</v-card>
+			</v-menu>
+			<v-menu bottom left offset-y display="block">
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn icon v-bind="attrs" v-on="on">
 						<v-icon>mdi-account-circle</v-icon>
@@ -131,14 +186,60 @@
 						v-for="(item, i) in profileMenu"
 						:key="i"
 						:to="item.link1"
+						@click="handleProfileMenuClick(i)"
 					>
 						<v-list-item-title>{{ item.title }}</v-list-item-title>
 					</v-list-item>
 				</v-list>
 			</v-menu>
 		</div>
-		<div v-else>
-			<v-menu bottom left>
+		<div v-if="isMobile() && isLoggedIn">
+			<v-menu
+				bottom
+				center
+				offset-y
+				max-height="260"
+				width="210"
+				display="block"
+			>
+				<template v-slot:activator="{ on, attrs }">
+					<v-btn icon v-bind="attrs" v-on="on">
+						<div v-if="activeAlert" id="alert-badge"></div>
+						<v-icon> mdi-bell-outline </v-icon>
+					</v-btn>
+				</template>
+
+				<v-card v-if="alertMenu.length > 1" width="210">
+					<v-list class="overflow-y-auto">
+						<v-list-item
+							v-for="(item, i) in alertMenu"
+							:key="i"
+							:to="item.link1"
+						>
+							<v-list-item-title class="text-caption">
+								{{ item.title }}
+								<span class="date-text-mobile">{{
+									dayjsRegDate(item.regDate)
+								}}</span>
+							</v-list-item-title>
+						</v-list-item>
+					</v-list>
+					<v-card-actions>
+						<v-spacer></v-spacer>
+						<v-btn text @click="deleteAlert"> 모두 읽음 </v-btn>
+					</v-card-actions>
+				</v-card>
+				<v-card v-else>
+					<v-list>
+						<v-list-item>
+							<v-list-item-title class="text-caption"
+								>새로운 알림이 없습니다.</v-list-item-title
+							>
+						</v-list-item>
+					</v-list>
+				</v-card>
+			</v-menu>
+			<v-menu bottom left offset-y width="300px">
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn icon v-bind="attrs" v-on="on">
 						<v-icon>mdi-account-circle</v-icon>
@@ -150,6 +251,7 @@
 						v-for="(item, i) in profileMenu"
 						:key="i"
 						:to="item.link2"
+						@click="handleProfileMenuClick(i)"
 					>
 						<v-list-item-title>{{ item.title }}</v-list-item-title>
 					</v-list-item>
@@ -174,96 +276,13 @@
 			</v-container>
 		</v-navigation-drawer>
 	</v-app-bar>
-=======
-  <v-app-bar
-    fixed
-    flat
-    outlined
-    elevation="0"
-    :color="$vuetify.theme.dark ? '#424242' : '#FAFAFA'"
-    app
-  >
-    <v-toolbar-items>
-      <v-app-bar-nav-icon
-        slot="activator"
-        @click.stop="drawer = !drawer"
-        class="hidden-sm-and-up"
-      ></v-app-bar-nav-icon>
-    </v-toolbar-items>
-    <!--logo-->
-    <v-toolbar-title>Challympic</v-toolbar-title>
-    <v-spacer />
-    <v-toolbar-items class="hidden-md-and-down">
-      <div class="main-toolbar-search">
-        <v-text-field
-          label="@유저 #챌린지 검색"
-          hide-details
-          class="ml-5"
-          flat
-          solo
-          append-icon="mdi-magnify"
-          width="600px"
-        >
-        </v-text-field>
-      </div>
-    </v-toolbar-items>
-    <v-spacer></v-spacer>
-    <!--search on small screen -->
-    <v-menu
-      open-on-hover
-      offset-y
-      v-model="menu"
-      :close-on-content-click="false"
-      min-width="220px"
-    >
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn v-bind="attrs" v-on="on" icon class="hidden-sm-and-up">
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
-      </template>
-      <v-text-field
-        label="@사용자,#챌린지로 검색"
-        solo
-        dense
-        hide-details="true"
-        height="50px"
-      ></v-text-field>
-    </v-menu>
-    <!--v-if users>
-          <v-btn icon>
-          <v-icon>mdi-bell-outline</v-icon>
-            </v-if>
-          </v-btn>
-            else :
-            -->
-    <v-btn color="primary" outlined small x-small>로그인</v-btn>
-    <!-- Add a navigation bar -->
-    <v-navigation-drawer
-      hide-overlay
-      v-model="drawer"
-      absolute
-      width="70%"
-      clipped
-      class="hidden-sm-and-up"
-      app
-    >
-      <v-card-title><h3>Challympic</h3></v-card-title>
-      <v-container>
-        <side-contents />
-      </v-container>
-    </v-navigation-drawer>
-  </v-app-bar>
->>>>>>> 59b10cbf8e03668b5e7e2f3b3eda90cb0aab7a68
 </template>
 
 <script>
-import SideContents from "@/components/layout/SideContents.vue";
+	import SideContents from "@/components/layout/SideContents.vue";
+	import fromNow from "@/plugins/dayjs.js";
+	import { getSearchList } from "@/api/search.js";
 
-export default {
-  name: "ToolBar",
-  components: { SideContents },
-
-<<<<<<< HEAD
 	export default {
 		name: "ToolBar",
 		components: { SideContents },
@@ -273,7 +292,9 @@ export default {
 				onSelect: false,
 				loading: false,
 				search: "",
+				mobileSearch: "",
 				searchInput: "",
+				mobileSearchInput: "",
 				active: false,
 				menu: false,
 				profileMenu: [
@@ -287,49 +308,53 @@ export default {
 						link1: "/feed/:userNo/",
 						link2: "/feed/:userNo/",
 					},
-					{ title: "Click Me" },
+					{
+						title: "관리자 페이지",
+						link1: "/admin/",
+						link2: "/admin/",
+					},
+					{
+						title: "로그아웃",
+					},
 					{ title: "Click Me 2" },
 				],
-				AllTags: [
-					//검색용 태그 : 태그 + 사용자
-					"#Gaming",
-					"#Food",
-					"#Work",
-					"#Art",
-					"@Loren",
-					"#김싸피덤벼",
-					"@김싸피",
-					"#Gaming1",
-					"#Food1",
-					"#Work1",
-					"#Art1",
-					"@Loren1",
-					"@김싸피1",
-					"#Gaming2",
-					"#Food2",
-					"#Work2",
-					"#Art2",
-					"@Loren2",
-					"@김싸피2",
-				],
+				alertMenu: [],
+				tags: [],
+				empty: [],
+				dynamicArr: [],
+				obj1: [],
+				obj2: [],
+				temp: [],
 			};
 		},
 		watch: {
 			group() {
 				this.drawer = false;
 			},
-			/* chore for warning msg : 이후에 autocomplete 처음 눌렀을 때 제한하고 싶어서 만든 메서드
-			search(val) {
-				val && val !== this.searchInput && this.querySelections(val);
-				if (val.length > 2) {
-					alert(this.val);
-					this.minimumCharacter = "show";
-				} else {
-					this.minimumCharacter = "null";
+		},
+		computed: {
+			activeAlert() {
+				if (this.alertMenu.length > 1) {
+					return true;
 				}
-			},*/
+				return false;
+			},
+			isLoggedIn() {
+				return this.$store.state.userStore.isLoggedIn;
+			}
 		},
 		methods: {
+			test() {
+				if (this.search.trim().length > 0) this.dynamicArr = this.tags;
+				else if (this.search.length == 0) this.dynamicArr = this.empty;
+			},
+			mobiletest() {
+				if (this.mobileSearch.trim().length > 0) this.dynamicArr = this.tags;
+				else if (this.mobileSearch.length == 0) this.dynamicArr = this.empty;
+			},
+			dayjsRegDate(regDate) {
+				return fromNow(regDate);
+			},
 			menuItems() {
 				return this.menu;
 			},
@@ -345,42 +370,48 @@ export default {
 			clickLoginBtn() {
 				this.$router.push("/login");
 			},
-			/*	autocomplete 처리
-			handleInput() {
-				if (this.search.length < 2) {
-					return [];
-				} else {
-					//alert("?");
-					//watch나 이쪽 로직에서 처리하면 될 것 같은데..
-				}
-			},*/
-			keywordSearch() {
-				if (this.searchInput) {
-					console.log(this.searchInput);
-					alert(this.searchInput);
-					//이쪽에서 start with @인지 #인지 확인
-					let searchCategory = this.searchInput.charAt(0);
-					var to = this.searchInput.substring(1);
-					//	alert(searchCategory);
-					if (searchCategory === "@") {
-						this.$router.push("/feed/" + to);
-					} else if (searchCategory === "#") {
-						//	this.$emit("search", this.searchInput);
-						this.$router.push("/search/" + to);
-					}
+			handleProfileMenuClick(i) {
+				if (this.profileMenu[i].title === "로그아웃") {
+					console.log("로그아웃");
+					localStorage.removeItem("Authorization");
+					this.$store.commit("userStore/LOGOUT");
+					this.$router.push("/login");
 				}
 			},
-
-			selectSearch(val) {
-				alert("selected" + this.search);
-
+			deleteAlert() {
+				this.menu = false;
+				setTimeout(() => {
+					this.alertMenu = [];
+				}, 500);
+			},
+			keywordSearch(val) {
 				var to = val.substring(1);
 				let searchCategory = this.searchInput.charAt(0);
-				//	alert(searchCategory);
 				if (searchCategory === "@") {
+					var foundValue = this.obj2.filter((obj) => obj.key == val);
+					to = foundValue[0].no; // : feed 번호
+					this.dynamicArr = this.empty;
 					this.$router.push("/feed/" + to);
 				} else if (searchCategory === "#") {
-					//	this.$emit("search", this.searchInput);
+					this.dynamicArr = this.empty;
+					this.$router.push("/search/" + to);
+				}
+			},
+			mobileKeywordSearch() {
+				var to = this.mobileSearchInput.substring(1);
+				let searchCategory = this.mobileSearchInput.charAt(0);
+				alert(this.mobileSearchInput);
+				if (searchCategory === "@") {
+					var foundValue = this.obj2.filter(
+						(obj) => obj.key == this.mobileSearchInput
+					);
+					this.mobileSearchInput = "";
+					to = foundValue[0].no; // : feed 번호
+					this.dynamicArr = this.empty;
+					this.$router.push("/feed/" + to);
+				} else if (searchCategory === "#") {
+					this.mobileSearchInput = "";
+					this.dynamicArr = this.empty;
 					this.$router.push("/search/" + to);
 				}
 			},
@@ -396,30 +427,50 @@ export default {
 				}
 			},
 		},
+		created() {
+			getSearchList(
+				(response) => {
+					this.obj1 = response.data.data.tagList;
+					this.obj2 = response.data.data.userList;
+					renameKeyInObjArray(this.obj1, "tag_no", "no", "tag_content", "key");
+					renameKeyInObjArray(
+						this.obj2,
+						"user_no",
+						"no",
+						"user_nickname",
+						"key"
+					);
+					delete this.obj2[0];
+					this.tags = this.obj1.concat(this.obj2);
+				},
+				(error) => {
+					console.log(error);
+				}
+			);
+		},
 	};
-=======
-  data() {
-    return {
-      drawer: false,
-      menu: false,
-    };
-  },
-  watch: {
-    group() {
-      this.drawer = false;
-    },
-  },
-  methods: {
-    menuItems() {
-      return this.menu;
-    },
-  },
-};
->>>>>>> 59b10cbf8e03668b5e7e2f3b3eda90cb0aab7a68
+	//작동하면 나중에 다 빼자..
+	function renameKeyInObjArray(array, oldKey, newKey, oldKey2, newKey2) {
+		return array.map(function (obj) {
+			if (oldKey2 == "user_nickname")
+				obj["user_nickname"] = "@" + obj["user_nickname"];
+			Object.defineProperty(
+				obj,
+				newKey,
+				Object.getOwnPropertyDescriptor(obj, oldKey)
+			);
+			Object.defineProperty(
+				obj,
+				newKey2,
+				Object.getOwnPropertyDescriptor(obj, oldKey2)
+			);
+			delete obj[oldKey];
+			delete obj[oldKey2];
+			return obj;
+		});
+	}
 </script>
-
-<style scoped>
-<<<<<<< HEAD
+<style>
 	.v-toolbar-title:hover {
 		cursor: pointer;
 	}
@@ -430,16 +481,53 @@ export default {
 	.v-toolbar__extension {
 		padding: 0;
 	}
+	.date-text-mobile {
+		font-size: 6px;
+		color: rgb(160, 160, 160);
+	}
+	.date-text {
+		font-size: 13px;
+		color: rgb(160, 160, 160);
+	}
 	.font-weight {
 		font-weight: bold;
 	}
-=======
-.v-text-field {
-  width: 600px;
-}
-.main-toolbar-search {
-  margin-top: 1.2%;
-  /*background-color: pink;*/
-}
->>>>>>> 59b10cbf8e03668b5e7e2f3b3eda90cb0aab7a68
+	#alert-badge {
+		position: absolute;
+		top: 2px;
+		right: 13px;
+		width: 10px;
+		height: 10px;
+		background-color: red;
+		border-radius: 50%;
+		z-index: 1;
+	}
+	::v-deep .v-list-item {
+		padding: 2px 16px;
+	}
+	::v-deep .v-list-item__title {
+		white-space: normal;
+	}
+	.v-menu__content::-webkit-scrollbar-track {
+		-webkit-box-shadow: inset 0 0 6px #5d5d5d;
+		background-color: #5d5d5d;
+	}
+	.v-menu__content::-webkit-scrollbar {
+		width: 0px;
+	}
+	.v-menu__content::-webkit-scrollbar-thumb {
+		-webkit-box-shadow: inset 0 0 6px #424242;
+		background-color: #424242;
+	}
+	.v-list-item-content__text::-webkit-scrollbar-track {
+		-webkit-box-shadow: inset 0 0 6px #5d5d5d;
+		background-color: #5d5d5d;
+	}
+	.v-list-item-content__text::-webkit-scrollbar {
+		width: 0px;
+	}
+	.v-list-item-content__text::-webkit-scrollbar-thumb {
+		-webkit-box-shadow: inset 0 0 6px #424242;
+		background-color: #424242;
+	}
 </style>
