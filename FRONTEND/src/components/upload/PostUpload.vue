@@ -33,7 +33,7 @@
                   :drop-directory="true"
                   v-model="post.file"
                   ref="upload"
-                  @input="onDrop()"
+                  @change="onDrop"
                 >
                 </FileUpload>
                 <v-row>
@@ -168,6 +168,8 @@ export default {
           month -= 12;
           year += 1;
         }
+      } else {
+        day = day + intPeriod;
       }
       return `${year}-${('0' + month).slice(-2)}-${('0' + day).slice(-2)}`;
     },
@@ -193,31 +195,38 @@ export default {
         this.error = false;
       }
       let formData = new FormData();
+      console.log(this.post.file.length);
       formData.append("file", this.post.file[0]);
-      formData.append("user_no", this.$store.state.userStore.userNo);
+      console.log(this.post.file);
+      formData.append("user_no", this.$store.state.userStore.userInfo.user_no);
       formData.append("post_content", this.post.description);
+      console.log(formData.get("file"));
+      for (var pair of formData.entries()) {
+            console.log(pair[0]+ ', ' + pair[1]);
+          }
+
       // 업로드 로직
       // 챌린지 등록에서 넘어왔을 경우
-      if (this.propChallenge) {
-        const propEndDate = this.propChallenge.endDate;
-        if (propEndDate.length < 3) {
-          const endDate = this.getEndDate(propEndDate);
-          const challenge = {
-            ...this.propChallenge,
-            endDate
-          }
-          this.$store.dispatch('createChallengeWithPost', { challenge, post:formData });
-        } else {
-          this.$store.dispatch('createChallengeWithPost', { challenge: this.propChallenge, post: formData });
-        }
-      } else {
-        // 포스트 업로드
-        const challengeNo = this.propChallenge.challengeNo || this.propChallengeName.challengeNo;
-        this.$store.dispatch('createPost', { challengeNo, post: formData });
-      }
-      this.$store.commit('RESET_POSSIBLE_STATUS');
-      this.dialog = false;
-      this.$emit('close-challenge-modal');
+      // if (this.propChallenge) {
+      //   const propEndDate = this.propChallenge.endDate;
+      //   if (propEndDate.length < 3) {
+      //     const endDate = this.getEndDate(propEndDate);
+      //     const challenge = {
+      //       ...this.propChallenge,
+      //       endDate
+      //     }
+      //     this.$store.dispatch('challengeStore/createChallengeWithPost', { challenge, post:formData });
+      //   } else {
+      //     this.$store.dispatch('challengeStore/createChallengeWithPost', { challenge: this.propChallenge, post: formData });
+      //   }
+      // } else {
+      //   // 포스트 업로드
+      //   const challengeNo = this.propChallenge.challengeNo || this.propChallengeName.challengeNo;
+      //   this.$store.dispatch('postStore/createPost', { challengeNo, post: formData });
+      // }
+      // this.$store.commit('challengeStore/RESET_POSSIBLE_STATUS');
+      // this.dialog = false;
+      // this.$emit('close-challenge-modal');
     },
   },
 };
