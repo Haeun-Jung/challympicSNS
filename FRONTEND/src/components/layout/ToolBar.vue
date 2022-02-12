@@ -368,9 +368,9 @@
 				}
 				return false;
 			},
-      isLoggedIn() {
-        return this.$store.state.userStore.isLoggedIn;
-      }
+			isLoggedIn() {
+				return this.$store.state.userStore.isLoggedIn;
+			}
 		},
 		methods: {
 			dayjsRegDate(regDate) {
