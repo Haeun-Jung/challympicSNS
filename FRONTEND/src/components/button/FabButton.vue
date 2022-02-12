@@ -85,13 +85,14 @@
 		}),
 		methods: {
 			chooseDialog(item) {
+				let Auth = sessionStorage.getItem("Authorization");
 				if (item.title == "챌린지 참여") {
-					if(this.$store.state.isLoggedIn)
+					if(Auth)
 						this.post = true;
 					else
 						this.snackbar = true;
 				} else {
-					if(this.$store.state.isLoggedIn)
+					if(Auth)
 						this.challenge = true;
 					else
 						this.snackbar = true;
