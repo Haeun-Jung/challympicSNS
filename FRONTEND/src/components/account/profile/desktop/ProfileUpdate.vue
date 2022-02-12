@@ -185,7 +185,7 @@
 </template>
 
 <script>
-	import { mapState, mapActions, mapMutations } from "vuex";
+	import { mapState, mapActions} from "vuex";
 	// import ProfileUploadButton from "@/components/button/ProfilelUploadButton.vue";
 	import { getSearchList } from "@/api/search.js";
 	import { save } from "@/api/user.js";
@@ -240,7 +240,7 @@
 		},
 		/* 프로필 이미지 설정 */
 		mounted() {
-			if (this.$store.state.userStore.filePath == '') {
+			if (this.$store.state.userStore.filePath == null) {
 				this.profile = false;
 				return;
 			}
