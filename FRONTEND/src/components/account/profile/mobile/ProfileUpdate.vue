@@ -9,7 +9,8 @@
 			<v-row class="mobile-profile-delete-user-container">
 				<v-col md="6" class="profile-setting-avatar-container">
 					<v-avatar size="150">
-						<img :src="profile" alt="profile" />
+						<img v-if="profile" :src="profile" alt="profile" />
+						<div v-else>이미지를 <br/>업로드하세요!</div>
 					</v-avatar>
 					<v-container>
 						<v-btn
@@ -249,6 +250,10 @@
 		},
 		/* 프로필 이미지 설정 */
 		mounted() {
+			if (this.$store.state.userStore.filePath == null) {
+				this.profile = false;
+				return;
+			}
 			this.profile  = 
 			"http://d384sk7z91xokb.cloudfront.net/" + 
 			this.$store.state.userStore.filePath + "/" + 
