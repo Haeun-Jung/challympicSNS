@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,6 +35,7 @@ public class CommentApiController {
         comment.setUser(findUser);
         comment.setPost(findPost);
         comment.setComment_content(request.getComment_content());
+        comment.setComment_regdate(new Date());
         commentService.save(comment);
 
         // 댓글 작성시 알람 설정
@@ -55,13 +58,16 @@ public class CommentApiController {
             }
         }
 
-        return new Result(true, HttpStatus.OK.value());
+        CommentDto result = new CommentDto(comment);
+
+        return new Result(true, HttpStatus.OK.value(), result);
     }
 
     @PutMapping("/comment")
     public Result update(@RequestBody CommentRequest request){
         commentService.update(request.comment_no, request.comment_content);
-        return new Result(true, HttpStatus.OK.value());
+        CommentDto comment = new CommentDto(commentService.findOne(request.comment_no));
+        return new Result(true, HttpStatus.OK.value(), comment);
     }
 
     @DeleteMapping("/comment")
@@ -96,34 +102,39 @@ public class CommentApiController {
         return new Result(true, HttpStatus.OK.value());
     }
 
-    /**
-     * 포스트 no로 comment 부르기
-     */
-    @GetMapping("/comment")
-    public Result commentInPost(@RequestBody CommentRequest request){
-        List<Comment> commentList = commentService.findByPost(request.post_no);
-        List<AdminApiController.CommentDto> collect = commentList.stream()
-                .map(c -> {
-                    AdminApiController.CommentDto commentDto = new AdminApiController.CommentDto(c);
-                    commentDto.setLike_cnt(10);
-                    return commentDto;
-                }).collect(Collectors.toList());
-        return new Result(true, HttpStatus.OK.value(), collect);
-    }
+//    /**
+//     * 포스트 no로 comment 부르기
+//     */
+//    @GetMapping("/comment/{postNo}/{userNo}")
+//    public Result commentInPost(@PathVariable("postNo") int post_no, @PathVariable("userNo") int user_no){
+//        List<Comment> commentList = commentService.findByPost(post_no);
+//        List<CommentDto> collect = new ArrayList<>();
+//        if(!commentList.isEmpty()){
+//            collect = commentList.stream()
+//                    .map(c -> {
+//                        CommentDto commentDto = new CommentDto(c);
+//            int commentLikeCnt = commentLikeService.findLikeCntByComment(c.getComment_no());
+//                            commentDto.setLike_cnt(commentLikeCnt);
+//            return commentDto;
+//        }).collect(Collectors.toList());
+//        }
+//        return new Result(true, HttpStatus.OK.value(), collect);
+//    }
 
     @Data
     static class CommentDto{
         private int comment_no;
         private String comment_content;
         private int like_cnt;
-        private Date comment_regdate;
+        private String comment_regdate;
         private int comment_report;
 
         public CommentDto(Comment comment) {
             this.comment_no = comment.getComment_no();
             this.comment_content = comment.getComment_content();
-            this.comment_regdate = comment.getComment_regdate();
             this.comment_report = comment.getComment_report();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            this.comment_regdate = formatter.format(comment.getComment_regdate());
         }
     }
 

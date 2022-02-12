@@ -2,6 +2,7 @@ package com.ssafy.challympic.service;
 
 
 import com.ssafy.challympic.domain.Post;
+import com.ssafy.challympic.domain.PostLike;
 import com.ssafy.challympic.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -76,5 +77,11 @@ public class PostService {
 
     public List<Post> getLikePostListByUserNo(int userNo) {
         return postRepository.findLikePostByUserNo(userNo);
+    }
+
+    public boolean getPostLikeByUserNo(int user_no) {
+        PostLike pl = postRepository.findPostLikeByUserNo(user_no);
+        if(pl == null) return false;
+        else return true;
     }
 }
