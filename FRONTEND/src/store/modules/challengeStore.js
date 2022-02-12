@@ -2,6 +2,7 @@ import { getChallenge, confirmChallengeName, createChallenge } from '@/api/chall
 import { createPost } from '../../api/post';
 
 const challengeStore = {
+  namespaced: true,
   state: {
     challenge: {},
     possibleChallengeName: false,
@@ -12,10 +13,19 @@ const challengeStore = {
   },
   mutations: {
     SET_CHALLENGE(state, challenge) {
-      state.challenge = challenge;
+
+      state.challenge = {
+        ...challenge,
+        challenge_start: challenge.challenge_start.split("T")[0].replace(/-/g, "."),
+        challenge_end: challenge.challenge_end.split("T")[0].replace(/-/g, "."),
+      };
     },
     CONFIRM_CHALLENGE_NAME(state) {
       state.possibleChallengeName = true;
+      state.confirmedButImpossibleName = false;
+    },
+    REFUSE_CHALLENGE_NAME(state) {
+      state.confirmedButImpossibleName = true;
     },
     RESET_POSSIBLE_STATUS(state) {
       state.possibleChallengeName = false;
@@ -29,7 +39,9 @@ const challengeStore = {
           const { data } = response;
           commit('SET_CHALLENGE', data.data);
         },
-        () => { }
+        () => {
+          console.log("챌린지 가져오기 실패");
+        }
       )
     },
     confirmChallengeName({ commit }, challengeName) {
@@ -51,8 +63,8 @@ const challengeStore = {
     },
     createChallengeWithPost({ rootState }, { challenge, post }) {
       const challengeItem = {
-        user_no: rootState.userStore.userNo,
-        challengers: challenge.challengers,
+        user_no: rootState.userStore.userInfo.user_no,
+        challengers: challenge.challengers.length > 1 ? challenge.challengers.split() : [],
         challenge_title: challenge.challengeName,
         challenge_content: challenge.description,
         challenge_end: challenge.endDate,
@@ -64,6 +76,9 @@ const challengeStore = {
         (response) => {
           const { data } = response;
           console.log("챌린지 생성!");
+          for (var pair of post.entries()) {
+            console.log(pair[0]+ ', ' + pair[1]);
+          }
           createPost(
             data.data.challenge_no,
             post,
@@ -75,11 +90,10 @@ const challengeStore = {
               console.log("포스트 생성 실패");
             }
           )
-
         },
         () => { }
       )
-    }
+    },
   }
 }
 
