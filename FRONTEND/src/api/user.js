@@ -29,7 +29,7 @@ async function getUser(user_no, success, fail) {
 }
 
 /* 관심사 추가 */
-function save (user_no, tag ,success, fail) {
-  api.post(`/user/interest/${user_no}`,JSON.stringify(tag)).then(success).catch(fail);
+function save(user_no, tag_no, success, fail) {
+  api.post(`/challympic/user/interest/${user_no}`, { tag_no }).then(success).catch(fail);
 }
 export { join, login, confirmEmail, confirmNickname, getUser , save };

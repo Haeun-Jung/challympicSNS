@@ -227,11 +227,9 @@
 				alert("저장되었습니다");
 				this.dialog = false;
 				this.disabledTrue = false;
-				save({
-					user_no: userStore.user_no, //이거 어케하나요..?
-					tag_no: this.selectedAllTags.tag_no,
-				});
+				save(this.userInfo.user_no, this.selectedAllTags.tag_no);
 				location.reload();
+
 				//console.log(this.selectedAllTags.tag_no); -> 괄호 안에 들어간게 tagNo 입니다 !
 			},
 			titleChange() {
