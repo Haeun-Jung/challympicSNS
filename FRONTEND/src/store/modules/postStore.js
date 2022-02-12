@@ -44,9 +44,10 @@ const postStore = {
         () => {}
       );
     },
-    getLikeList({ commit }, postNo) {
+    getLikeList({ commit }, { postNo, userNo }) {
       getLikeList(
         postNo,
+        userNo,
         (response) => {
           const { data } = response;
           commit('SET_LIKE_LIST', data.data);
