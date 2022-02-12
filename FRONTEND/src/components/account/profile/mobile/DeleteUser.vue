@@ -62,7 +62,7 @@ const userStore = "userStore";
 		methods: {
 			...mapActions(userStore, ["deleteUser"]),
 			onSubmit() {
-				this.deleteUser(localStorage.getItem("Authorization"));
+				this.deleteUser(sessionStorage.getItem("Authorization"));
 				this.$store.commit('userStore/LOGOUT');
 				window.location.href="/";
 			},

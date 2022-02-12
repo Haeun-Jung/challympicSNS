@@ -62,8 +62,8 @@ export default {
 				return;
 			}
 			this.questionContent.replace(/(?:\r\n|\r|\n)/g, "<br />");
-			this.registerQuestion({ qna_title: this.questionTitle, qna_question: this.questionContent, token: localStorage.getItem('Authorization') })
-			this.getQnA(localStorage.getItem("Authorization"));
+			this.registerQuestion({ qna_title: this.questionTitle, qna_question: this.questionContent, token: sessionStorage.getItem('Authorization') })
+			this.getQnA(sessionStorage.getItem("Authorization"));
 			window.location.reload();
 			this.dialog = false;
 			this.questionTitle = '';

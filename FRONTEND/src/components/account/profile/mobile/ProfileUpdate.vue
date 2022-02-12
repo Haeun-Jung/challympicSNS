@@ -285,7 +285,7 @@
 					let formData = new FormData();
 					formData.append("user_nickname", this.nickname);
 					formData.append("user_title", this.title);
-					this.modifyUser({file: formData, token: localStorage.getItem("Authorization")});
+					this.modifyUser({file: formData, token: sessionStorage.getItem("Authorization")});
 				}
 				/* 사진 변경 O */ 
 				else {
@@ -293,7 +293,7 @@
 					if (this.title == null) this.title = this.userInfo.user_title;
 					this.formData.append("user_nickname", this.nickname);
 					this.formData.append("user_title", this.title);
-					this.modifyUser({file: this.formData, token: localStorage.getItem("Authorization")});
+					this.modifyUser({file: this.formData, token: sessionStorage.getItem("Authorization")});
 				}
 				this.duplicateNicknameCheck = true;
 				this.alertMsg = "회원정보가 변경되었습니다."
@@ -302,9 +302,9 @@
 				// }, 300);
 			},
 			remove(no) {
-				this.$store.dispatch('userStore/deleteInterest', { no, token: localStorage.getItem('Authorization') })
+				this.$store.dispatch('userStore/deleteInterest', { no, token: sessionStorage.getItem('Authorization') })
 				setTimeout(() => {
-					this.getInterest(localStorage.getItem("Authorization"));
+					this.getInterest(sessionStorage.getItem("Authorization"));
 				}, 300);
 			},
 			changed() {

@@ -66,9 +66,9 @@ export default {
 			this.$router.push("/login");
 		},
 		remove(no) {
-			this.$store.dispatch('userStore/deleteInterest', { no, token: localStorage.getItem('Authorization') })
+			this.$store.dispatch('userStore/deleteInterest', { no, token: sessionStorage.getItem('Authorization') })
 			setTimeout(() => {
-				this.getInterest(localStorage.getItem("Authorization"));
+				this.getInterest(sessionStorage.getItem("Authorization"));
 			}, 300);
 		},
 		isMobile() {

@@ -373,7 +373,7 @@
 			handleProfileMenuClick(i) {
 				if (this.profileMenu[i].title === "로그아웃") {
 					console.log("로그아웃");
-					localStorage.removeItem("Authorization");
+					sessionStorage.removeItem("Authorization");
 					this.$store.commit("userStore/LOGOUT");
 					this.$router.push("/login");
 				}
