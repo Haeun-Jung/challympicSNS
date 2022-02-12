@@ -212,8 +212,8 @@ export default {
   methods: {
     confirmChallengeName() {
       this.$store.dispatch(
-        "confirmChallengeName",
-        "#" + this.challenge.challengeName
+        "challengeStore/confirmChallengeName",
+        this.challenge.challengeName
       );
     },
     inputChallenger() {

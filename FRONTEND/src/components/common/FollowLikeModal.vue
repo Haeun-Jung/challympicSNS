@@ -5,17 +5,17 @@
         <span v-if="this.type === 'follower'">팔로워</span>
         <span v-else-if="this.type === 'following'">팔로잉</span>
         <span v-else>좋아요</span>
-        <v-btn class="cancel-btn" absolute top right icon @click="dialog = false"> <v-icon>mdi-close</v-icon> </v-btn>
+        <v-btn class="cancel-btn" absolute top right icon @click="dialog = false; $emit('close-dialog')"> <v-icon>mdi-close</v-icon> </v-btn>
       </v-card-title>
 
       <v-divider />
 
       <div>
         <v-list class="overflow-y-auto">
-          <v-list-item v-for="user in users" :key="user.name">
+          <v-list-item v-for="user in users" :key="user.userNo">
               <img v-if="user.title" class="medal-icon" src="https://cdn-icons-png.flaticon.com/512/744/744922.png"/>
             <v-list-item-avatar class="user-image">
-              <v-img :alt="`${user.name} avatar`" :src="user.avatar"></v-img>
+              <v-img :alt="`${user.userName} avatar`" :src="user.avatar"></v-img>
             </v-list-item-avatar>
 
             <v-list-item-content>
@@ -25,7 +25,7 @@
                 v-text="user.title"
                 src="https://cdn-icons-png.flaticon.com/512/744/744922.png"
               ></v-list-item-subtitle>
-              <v-list-item-title v-text="user.name"></v-list-item-title>
+              <v-list-item-title v-text="user.userName"></v-list-item-title>
             </v-list-item-content>
 
             <v-list-item-icon>
@@ -69,9 +69,6 @@ export default {
     };
   },
   methods: {
-    closeDialog() {
-      this.$emit("close-dialog");
-    },
     follow(userNo) {
       console.log(userNo);
       // 팔로우 API 요청 보내기
