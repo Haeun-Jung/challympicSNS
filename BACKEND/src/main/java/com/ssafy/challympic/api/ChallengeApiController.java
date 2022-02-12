@@ -174,6 +174,7 @@ public class ChallengeApiController {
         private String title_name;
     }
 
+    //
     @PostMapping("/challenge/confirm")
     public Result ChallengeTitleCheck(@RequestBody ChallengeTitleCheckRequest request) {
         List<Challenge> challenges = challengeService.findChallengeByTitle(request.getChallenge_title());
