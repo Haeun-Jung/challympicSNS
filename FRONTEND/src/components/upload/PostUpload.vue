@@ -207,26 +207,26 @@ export default {
 
       // 업로드 로직
       // 챌린지 등록에서 넘어왔을 경우
-      // if (this.propChallenge) {
-      //   const propEndDate = this.propChallenge.endDate;
-      //   if (propEndDate.length < 3) {
-      //     const endDate = this.getEndDate(propEndDate);
-      //     const challenge = {
-      //       ...this.propChallenge,
-      //       endDate
-      //     }
-      //     this.$store.dispatch('challengeStore/createChallengeWithPost', { challenge, post:formData });
-      //   } else {
-      //     this.$store.dispatch('challengeStore/createChallengeWithPost', { challenge: this.propChallenge, post: formData });
-      //   }
-      // } else {
-      //   // 포스트 업로드
-      //   const challengeNo = this.propChallenge.challengeNo || this.propChallengeName.challengeNo;
-      //   this.$store.dispatch('postStore/createPost', { challengeNo, post: formData });
-      // }
-      // this.$store.commit('challengeStore/RESET_POSSIBLE_STATUS');
-      // this.dialog = false;
-      // this.$emit('close-challenge-modal');
+      if (this.propChallenge) {
+        const propEndDate = this.propChallenge.endDate;
+        if (propEndDate.length < 3) {
+          const endDate = this.getEndDate(propEndDate);
+          const challenge = {
+            ...this.propChallenge,
+            endDate
+          }
+          this.$store.dispatch('challengeStore/createChallengeWithPost', { challenge, post:formData });
+        } else {
+          this.$store.dispatch('challengeStore/createChallengeWithPost', { challenge: this.propChallenge, post: formData });
+        }
+      } else {
+        // 포스트 업로드
+        const challengeNo = this.propChallenge.challengeNo || this.propChallengeName.challengeNo;
+        this.$store.dispatch('postStore/createPost', { challengeNo, post: formData });
+      }
+      this.$store.commit('challengeStore/RESET_POSSIBLE_STATUS');
+      this.dialog = false;
+      this.$emit('close-challenge-modal');
     },
   },
 };
