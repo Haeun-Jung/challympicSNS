@@ -28,4 +28,58 @@ async function getUser(user_no, success, fail) {
   await api.get(`/challympic/user/account/${user_no}`).then(success).catch(fail);
 }
 
-export { join, login, confirmEmail, confirmNickname, getUser };
+/* 회원 정보 수정 */
+function modifyUser(user_no, user, success, fail) {
+  api.put(`/challympic/user/account/${user_no}`, user, { headers: { 'Content-Type': 'multipart/form-data' } }).then(success).catch(fail);
+}
+
+/* 회원 비밀번호 수정 */
+function changePassword(user_no, user, success, fail) {
+  api.put(`/challympic/user/account/${user_no}/pwd`, JSON.stringify(user)).then(success).catch(fail);
+}
+
+/* 회원 탈퇴 */
+function deleteUser(user_no, success, fail) {
+  api.delete(`/challympic/user/account/${user_no}`).then(success).catch(fail);
+}
+
+/* 관심사 조회 */
+function getInterest(user_no, success, fail) {
+  api.get(`/challympic/user/interest/${user_no}`).then(success).catch(fail);
+}
+
+/* 관심사 삭제 */
+function deleteInterest(user_no, tag_no, success, fail) {
+  api.delete(`/challympic/user/interest/${user_no}/${tag_no}`).then(success).catch(fail);
+}
+
+/* 구독 삭제 */
+function deleteSubscription(challenge_no, user_no, success, fail) {
+  api.delete(`/challympic/challenge/${challenge_no}/subscribe/${user_no}`).then(success).catch(fail);
+}
+
+/* 문의하기 조회 */
+function getQnA(user_no, success, fail) {
+  api.get(`/challympic/user/${user_no}/qna`).then(success).catch(fail);
+}
+
+/* 문의하기 등록 */
+function registerQuestion(user_no, qna, success, fail) {
+  api.post(`/challympic/user/${user_no}/qna`, JSON.stringify(qna)).then(success).catch(fail);
+}
+
+export { 
+  join, 
+  login, 
+  confirmEmail, 
+  confirmNickname,
+   getUser, 
+   modifyUser,
+   changePassword, 
+   deleteUser,
+   getInterest,
+   deleteInterest,
+   deleteSubscription,
+   getQnA,
+   registerQuestion
+  };
