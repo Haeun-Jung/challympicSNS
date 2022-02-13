@@ -194,6 +194,7 @@ export default {
       } else {
         this.error = false;
       }
+      // formData 생성
       let formData = new FormData();
       console.log(this.post.file.length);
       formData.append("file", this.post.file[0]);
@@ -208,6 +209,11 @@ export default {
       // 업로드 로직
       // 챌린지 등록에서 넘어왔을 경우
       if (this.propChallenge) {
+        // 챌린저 처리
+        if (this.propChallenge.challengers.length > 1) {
+          this.propChallenge.challengers = this.propChallenge.challengers.split();
+        }
+        // 종료일 계산
         const propEndDate = this.propChallenge.endDate;
         if (propEndDate.length < 3) {
           const endDate = this.getEndDate(propEndDate);
