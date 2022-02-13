@@ -80,7 +80,7 @@ const challengeStore = {
           console.log("챌린지 생성!");
           if(response.data.code == 200){
             createPost(
-              response.data.data,
+              response.data.data.challenge_no,
               post,
               () => {
                 console.log("포스트 생성!");
