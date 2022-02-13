@@ -1,5 +1,6 @@
 <template>
   <!-- POST 등록 모달 -->
+  <v-app> <!-- v-app 태그 추가 -->
     <v-dialog v-model="dialog" persistent max-width="600px">
       <v-card>
         <v-card-title class="card-header" > 
@@ -7,63 +8,62 @@
           <v-btn class="cancel-btn" icon @click="$emit('close-modal')"> <v-icon>mdi-close</v-icon> </v-btn>
         </v-card-title>
         <v-card-text>
-          <v-row>
+          <v-row class="upload-area">
             <!-- 업로드 공간 -->
-            <v-col cols="12" sm="12" md="12" class="upload-area">
-              <div class="example-drag">
-              <div v-show="$refs.upload && $refs.upload.dropActive" class="drop-active">
-              </div>
-              <template v-if="post.file.length">
-                <v-data-table
-                  dense
-                  :headers="headers"
-                  :items="post.file"
-                  item-key="name"
-                  class="elevation-1"
-                  hide-default-footer
-                  hide-default-header
-                >
-                </v-data-table>
-              </template>
-              <template v-else>
-                <FileUpload
-                  class="btn btn-primary"
-                  :multiple="true"
-                  :drop="true"
-                  :drop-directory="true"
-                  v-model="post.file"
-                  ref="upload"
-                  @change="onDrop"
-                >
-                </FileUpload>
-                <v-row>
-                  <v-col cols="12" sm="12" md="12">
-                    <div class="text-center p-5">
-                      <div
-                        v-if="this.type === 'register'"
-                        class="start-challenge-head"
-                      >
-                        🎊챌린지에 처음으로 도전하세요🎊
+                <v-col cols="12" sm="12" md="12" style="position: relative; border:1px dashed #3396f4; border-style:dashed; ">
+                    <div class="example-drag">
+                      <div v-show="$refs.upload && $refs.upload.dropActive" class="drop-active">
+                        <h3>Drop files to upload</h3>
                       </div>
-                      <v-btn class="ma-2" color="#3396F4">
-                        <label for="file" class="upload-btn"
-                          >파일 업로드하기</label
+                      <!-- 파일 업로드 후 -->
+                      <template v-if="post.file.length">
+                        <v-data-table 
+                          dense 
+                          :headers="headers" 
+                          :items="post.file" 
+                          item-key="name" 
+                          class="elevation-1"
+                          hide-default-footer
                         >
-                      </v-btn>
-                      <h5>최대 업로드 파일 크기 : 50MB</h5>
-                      <h5>사진 : JPG, JPEG, PNG</h5>
-                      <h5>영상 : MP4, AVI</h5>
+                        </v-data-table>
+                      </template>
+                      <!-- 파일 업로드 전 -->
+                      <template v-else>
+                        <FileUpload
+                          class="btn btn-primary"
+                          :drop="true"
+                          :drop-directory="true"
+                          v-model="post.file"
+                          ref="upload"
+                        >
+                        </FileUpload>
+                        <v-row>
+                          <v-col cols="12" sm="12" md="12">
+                            <div class="text-center p-5">
+                              <div
+                                v-if="this.type === 'register'"
+                                class="start-challenge-head"
+                              >
+                                <h2>🎊챌린지에 처음으로 도전하세요!🎊</h2>
+                              </div>
+                                <h3><v-icon style="margin-right:5px;">mdi-arrow-up-bold-box-outline</v-icon>Drop or <label for="file" id="upload-text">upload</label> file to attach</h3>
+                              <h5>최대 업로드 파일 크기 : 50MB</h5>
+                              <h5>사진 : JPG, JPEG, PNG  / 영상 : MP4, AVI</h5>
+                            </div>
+                          </v-col>
+                        </v-row>
+                      </template>
                     </div>
-                  </v-col>
-                </v-row>
-              </template>
-            </div>
-          </v-col>
+                </v-col>
         </v-row>
+        <hr/>
+        <br/>
         <!-- 본문 -->
+        
         <v-row>
           <v-col class="input-title"># 챌린지 선택</v-col>
         </v-row>
+
         <v-row class="row-area">
           <v-col class="d-flex">
             <v-text-field
@@ -118,10 +118,12 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+  </v-app>
 </template>
 
 <script>
 import FileUpload from "vue-upload-component";
+
 
 export default {
   name: "PostUpload",
@@ -135,7 +137,7 @@ export default {
     propChallengeName: { type: Object },
   },
   data: () => ({
-    dialog: true, //true : Dialog열림, false : Dialog닫힘
+    dialog: true,
     // TODO: 임시 챌린지 목록 바꿔야 함
     challenges: ["미라클_모닝_챌린지", "싸피_챌린지"],
     post: {
@@ -151,9 +153,6 @@ export default {
     ],
   }),
   methods: {
-    onDrop(item) {
-      console.log(item);
-    },
     getEndDate(period) {
       const intPeriod = parseInt(period);
       const today = new Date();
@@ -195,15 +194,9 @@ export default {
         this.error = false;
       }
       let formData = new FormData();
-      console.log(this.post.file.length);
-      formData.append("file", this.post.file[0]);
-      console.log(this.post.file);
+      formData.append("file", this.post.file[0].file);
       formData.append("user_no", this.$store.state.userStore.userInfo.user_no);
       formData.append("post_content", this.post.description);
-      console.log(formData.get("file"));
-      for (var pair of formData.entries()) {
-            console.log(pair[0]+ ', ' + pair[1]);
-          }
 
       // 업로드 로직
       // 챌린지 등록에서 넘어왔을 경우
@@ -233,6 +226,11 @@ export default {
 </script>
 
 <style scoped>
+hr{
+  border: 3px solid #E3E3E3;
+  background: #E3E3E3;
+}
+
 .card-header {
   position: sticky;
   top: 0;
@@ -268,10 +266,21 @@ export default {
 }
 .upload-area {
   position: relative;
-  border-bottom: 1px solid #000;
-  padding-bottom: 60px;
+  padding: 12px;
+  /* padding-bottom: 60px; */
   margin-bottom: 10px;
 }
+
+#upload-text{
+  color: #3396f4;
+}
+
+#upload-text:hover{
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .upload-btn {
   color: #fff;
   cursor: pointer;

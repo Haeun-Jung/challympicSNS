@@ -30,27 +30,25 @@
             </v-list-item-content>
 
             <v-list-item-icon>
-              <v-col v-if="user.user_no != login_user">
-                <v-btn
-                  v-if="user.follow"
-                  @click="follow(user.user_no)"
-                  color="#3396F4"
-                  class="white--text rounded-xl"
-                  small
-                >
-                  팔로우
-                </v-btn>
-                <v-btn
-                  v-else
-                  @click="follow(user.user_no)"
-                  color="#3396F4"
-                  class="rounded-xl"
-                  small
-                  outlined
-                >
-                  팔로잉
-                </v-btn>
-              </v-col>
+              <v-btn
+                v-if="user.isFollowing"
+                @click="follow(user.user_no)"
+                color="#3396F4"
+                class="white--text rounded-xl"
+                small
+              >
+                팔로우
+              </v-btn>
+              <v-btn
+                v-else
+                @click="follow(user.user_no)"
+                color="#3396F4"
+                class="rounded-xl"
+                small
+                outlined
+              >
+                팔로잉
+              </v-btn>
             </v-list-item-icon>
           </v-list-item>
         </v-list>
@@ -69,20 +67,14 @@ export default {
   data() {
     return {
       dialog: true,
-      isFollow: false,
-      login_user: this.$store.state.userStore.userInfo.user_no,
     };
   },
   methods: {
     follow(userNo) {
       console.log(userNo);
-      console.log(this.login_user);
       // 팔로우 API 요청 보내기
       // 해당 유저에 대한 isFollowing 값 변경
     },
-  },
-  computed: {
-
   },
 };
 </script>
