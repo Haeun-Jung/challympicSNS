@@ -65,5 +65,31 @@ public class FollowService {
     }
 
 
+    public boolean isFollow(int following_no, int follower_no) {
+        Follow follow = followRepository.findOne(following_no, follower_no);
+        if(follow != null){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public int followingCnt(int user_no) {
+        List<Follow> userFollower = followRepository.findUserFollower(user_no);
+        if(!userFollower.isEmpty()){
+            return userFollower.size();
+        }else{
+            return 0;
+        }
+    }
+
+    public int followerCnt(int user_no) {
+        List<Follow> userFollowing = followRepository.findUserFollowing(user_no);
+        if(!userFollowing.isEmpty()){
+            return userFollowing.size();
+        }else{
+            return 0;
+        }
+    }
 }
 
