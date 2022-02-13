@@ -323,10 +323,7 @@
 				alert("저장되었습니다");
 				this.dialog = false;
 				this.disabledTrue = false;
-				save({
-					user_no: this.user_no, //이거 어케하나요..?
-					tag_no: this.selectedAllTags.tag_no,
-				});
+				save(this.userInfo.user_no, this.selectedAllTags.tag_no);
 				location.reload();
 			},
 			titleChange(title) {

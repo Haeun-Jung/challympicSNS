@@ -2,7 +2,9 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Main from "../views/Main.vue";
 /*검색 화면 */
-import Search from "../components/search/Search.vue";
+import Search from "../views/Search.vue";
+import ChallengeSearch from "../components/search/ChallengeRouter.vue";
+import PostSearch from "../components/search/PostRouter.vue";
 /*프로필 */
 import Account from "../components/account/Account.vue";
 /* Desktop */
@@ -59,6 +61,18 @@ const routes = [
         path: "/search/:keyword/",
         name: "Search",
         component: Search,
+        redirect: "/search/challenge/:keyword/",
+        children: [
+          {
+            path:  "/search/challenge/:keyword/",
+            name: "ChallengeSearch",
+            component:ChallengeSearch,
+          }, {
+            path: "/search/post/:keyword",
+            name: "PostSearch",
+            component:PostSearch,
+          },
+        ],
       }
     ]
   },

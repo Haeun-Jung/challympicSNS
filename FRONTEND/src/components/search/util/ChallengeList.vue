@@ -6,25 +6,40 @@
 		위에 바 없는게 더 이쁜거 같아서 캐러솔 밑에 이거 뺌 <v-system-bar lights-out> </v-system-bar>
     
      -->
-	<v-card elevation="2" max-width="444" class="mx-auto">
+	<v-skeleton-loader
+		v-if="!loaded"
+		max-width="444px"
+		height="360px"
+		type="image, list-item-two-line"
+		class="mx-auto"
+	></v-skeleton-loader>
+	<v-card
+		v-else
+		elevation="2"
+		max-width="444px"
+		class="mx-auto"
+		ref="videoContainer"
+	>
 		<v-carousel
 			hide-delimiter-background
 			delimiter-icon="mdi-minus"
-			height="280px"
+			height="auto"
+			width="444px"
 		>
 			<div class="holder">
 				<v-carousel-item v-for="(item, idx) in post" :key="item.id">
-					<!-- 동영상 재생 -->
-					<video
-						@click="hello"
-						ref="myvideo"
-						width="100%;!important"
-						height="280px;!important"
-						controls="controls"
-						preload="metadata"
-						:src="item.content"
-						controlsList="nodownload"
-					></video>
+					<div>
+						<!--	<video-player
+							class="video-player-box"
+							ref="videoPlayer"
+							height="280!important"
+							:playsinline="true"
+							:options="playerOptions(item.content)"
+						>
+						</video-player>-->
+						<video-component :videoinfo="item" />
+					</div>
+
 					<!-- 포스트 정보 -->
 					<div class="bar">
 						<v-card-title>
@@ -97,7 +112,9 @@
 </template>
 
 <script>
+	import VideoComponent from "./VideoComponent.vue";
 	export default {
+		components: { VideoComponent },
 		name: "ChallengeList",
 		props: {
 			challenge: Object,
@@ -106,64 +123,84 @@
 			return {
 				overlay: false,
 				playing: false,
-				post: [
-					{
-						post_no: 1,
-						post_like: true,
-						challenge_title: "챌린지 제목 1",
-						post_content: "내용에 태그가 포함??#프론트에서#분리해서뿌리나요?",
-						post_likes: 300,
-						post_comments: 3,
-						challenger: "김싸피",
-						challenger_no: 3, //challenger no ? 넘어오는거에 따라서 수정
-						content:
-							/*확장자로 받는 경우 : controls 썸네일은 0.8초로 하자..*/
-							"https://caiogondim.github.io/vertical-video-with-side-blur/example/vertical-video.mov",
-					},
-					{
-						post_no: 2,
-						post_like: false,
-						challenge_title: "아이스버킷챌린지",
-						post_content: "저도..참여해봤어요..#차가움#공익#공식",
-						challenger_no: 3, //challenger no ? 넘어오는거에 따라서 수정
-						post_likes: 0,
-						post_comments: 3,
-						challenger: "이싸피",
-						content:
-							"https://caiogondim.github.io/vertical-video-with-side-blur/example/vertical-video-1.mp4",
-					},
-					{
-						post_no: 3,
-						post_like: false,
-						challenge_title: "미라클모닝#미이라크을",
-						post_content: "#아침#ㅜㅜ",
-						post_likes: 15,
-						post_comments: 30,
-						challenger: "박싸피",
-						challenger_no: 3, //challenger no ? 넘어오는거에 따라서 수정
-						content:
-							/*확장자로 받는 경우 : controls 썸네일은 0.8초로 하자..*/
-							"https://caiogondim.github.io/vertical-video-with-side-blur/example/vertical-video.mov",
-					},
-					{
-						post_no: 4,
-						post_like: false,
-						challenge_title: "김싸피덤벼",
-						post_content: "얍얍#1대1",
-						challenger_no: 3, //challenger no ? 넘어오는거에 따라서 수정
-						post_likes: 3521565,
-						post_comments: 345465,
-						challenger: "오싸피",
-						content:
-							/*확장자로 받는 경우 : controls 썸네일은 0.8초로 하자..*/
-							"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-					},
-				],
+
+				post: [],
+				loaded: false,
 			};
 		},
+		mounted: function () {
+			var that = this;
+			if (document.readyState === "complete") this.$set(that, "loaded", true);
+			document.addEventListener("readystatechange", function () {
+				if (document.readyState === "complete") that.$set(that, "loaded", true);
+			});
+		},
+		created() {
+			this.post = [
+				//얘는 this.obj1 = response.data.data.challengeList.postList?이런식으로 가져오면되지 않을까?;
+				{
+					post_no: 1,
+					post_like: true,
+					challenge_title: "챌린지 제목 1",
+					post_content: "내용에 태그가 포함??#프론트에서#분리해서뿌리나요?",
+					post_likes: 300,
+					post_comments: 3,
+					challenger: "김싸피",
+					challenger_no: 3, //challenger no ? 넘어오는거에 따라서 수정
+					content:
+						/*확장자로 받는 경우 : controls 썸네일은 0.8초로 하자..*/
+						"http://d384sk7z91xokb.cloudfront.net/output/media/20220209/092119/video/c88b277171a94d9c3ac7e32f82bb9d93.m3u8",
+				},
+				{
+					post_no: 2,
+					post_like: false,
+					challenge_title: "아이스버킷챌린지",
+					post_content: "저도..참여해봤어요..#차가움#공익#공식",
+					challenger_no: 3, //challenger no ? 넘어오는거에 따라서 수정
+					post_likes: 0,
+					post_comments: 3,
+					challenger: "이싸피",
+					content:
+						"http://d384sk7z91xokb.cloudfront.net/output/media/20220209/092119/video/c88b277171a94d9c3ac7e32f82bb9d93.m3u8",
+				},
+				{
+					post_no: 3,
+					post_like: false,
+					challenge_title: "미라클모닝#미이라크을",
+					post_content: "#아침#ㅜㅜ",
+					post_likes: 15,
+					post_comments: 30,
+					challenger: "박싸피",
+					challenger_no: 3, //challenger no ? 넘어오는거에 따라서 수정
+					content:
+						/*확장자로 받는 경우 : controls 썸네일은 0.8초로 하자..*/
+						"http://d384sk7z91xokb.cloudfront.net/output/media/20220209/092119/video/c88b277171a94d9c3ac7e32f82bb9d93.m3u8",
+				},
+				{
+					post_no: 4,
+					post_like: false,
+					challenge_title: "김싸피덤벼",
+					post_content: "얍얍#1대1",
+					challenger_no: 3, //challenger no ? 넘어오는거에 따라서 수정
+					post_likes: 3521565,
+					post_comments: 345465,
+					challenger: "오싸피",
+					content:
+						/*확장자로 받는 경우 : controls 썸네일은 0.8초로 하자..*/
+						"http://d384sk7z91xokb.cloudfront.net/output/media/20220209/092119/video/c88b277171a94d9c3ac7e32f82bb9d93.m3u8",
+				},
+			];
+		},
 		methods: {
+			playerOptions(url) {
+				this.playerOptions.sources.src = url;
+				this.playerOptions.sources.type = "application/x-mpegURL";
+			},
+			makeUrl(original_url) {
+				return original_url + "#t=0.9";
+			},
 			hello() {
-				alert("hell");
+				alert(this.getWidth);
 			},
 			pushLike(postid, arrIdx) {
 				//arrInx는 화면 바로 바꾸는용도
@@ -206,21 +243,9 @@
 </script>
 
 <style>
-	/*	#app iframe {
-		padding-right: 50%;
-		position: relative;
+	video {
+		object-fit: fill;
 	}
-	#hello {
-		transition: opacity 0.4s ease-in-out;
-	}
-	.holder {
-		position: relative;
-	}
-	.play-box {
-		position: absolute; 
-		top: 43%;
-		left: 48%;
-	}*/
 	.bar {
 		position: absolute;
 		top: 1%;
@@ -235,12 +260,13 @@
 		display: inline-block;
 		cursor: pointer;
 	}
+
 	/*	#hello:not(.on-hover) {
 		opacity: 0.5;
 	}
 
 	.show-btns {
-	
+
 		color: rgba(255, 255, 255, 1) !important;
 			color: pink !important;
 		color: rgb(0, 4, 255) !important;

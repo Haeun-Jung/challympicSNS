@@ -38,6 +38,8 @@
 
 <script>
 	import TagSearchList from "../util/TagSearchList.vue";
+	import { searchTagList } from "@/api/search.js";
+
 	export default {
 		name: "TagSearchResult",
 		components: {
@@ -45,6 +47,17 @@
 		},
 		props: {
 			search: String,
+		},
+		created() {
+			searchTagList(
+				(response) => {
+					this.posts = response.data.data.postList;
+					console.log(this.posts);
+				},
+				(error) => {
+					if (error) console.log("er");
+				}
+			);
 		},
 		data() {
 			return {
@@ -56,7 +69,7 @@
 
 				itemsPerPage: 6,
 				posts: [
-					{
+					/*	{
 						post_no: 1,
 						post_like: true,
 						challenge_title: "챌린지 제목 1",
@@ -66,8 +79,7 @@
 						post_comments: 3,
 						challenger: "김싸피",
 						content:
-							/*확장자로 받는 경우 : controls 썸네일은 0.8초로 하자..*/
-							"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+							"https://moctobpltc-i.akamaihd.net/hls/live/571329/eight/playlist.m3u8",
 					},
 					{
 						post_no: 2,
@@ -79,7 +91,7 @@
 						post_comments: 3,
 						challenger: "이싸피",
 						content:
-							"https://caiogondim.github.io/vertical-video-with-side-blur/example/vertical-video-1.mp4",
+							"https://moctobpltc-i.akamaihd.net/hls/live/571329/eight/playlist.m3u8",
 					},
 					{
 						post_no: 3,
@@ -91,8 +103,7 @@
 						challenger: "박싸피",
 						challenge_no: 3,
 						content:
-							/*확장자로 받는 경우 : controls 썸네일은 0.8초로 하자..*/
-							"https://caiogondim.github.io/vertical-video-with-side-blur/example/vertical-video.mov",
+							"https://moctobpltc-i.akamaihd.net/hls/live/571329/eight/playlist.m3u8",
 					},
 					{
 						post_no: 4,
@@ -104,9 +115,8 @@
 						challenger: "오싸피",
 						challenge_no: 3,
 						content:
-							/*확장자로 받는 경우 : controls 썸네일은 0.8초로 하자..*/
-							"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-					},
+							"https://moctobpltc-i.akamaihd.net/hls/live/571329/eight/playlist.m3u8",
+					},*/
 				],
 			};
 		},

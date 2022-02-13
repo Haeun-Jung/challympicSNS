@@ -412,7 +412,8 @@
 				} else if (searchCategory === "#") {
 					this.mobileSearchInput = "";
 					this.dynamicArr = this.empty;
-					this.$router.push("/search/" + to);
+					//	this.$router.push("/search/" + to);
+					window.location.href = "search/" + to;
 				}
 			},
 			isMobile() {

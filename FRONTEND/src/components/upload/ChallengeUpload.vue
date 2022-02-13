@@ -80,6 +80,7 @@
               v-if="$vuetify.theme.dark"
               class="dark-mode input-box challenger-input"
               type="text"
+              v-model="challenge.challengers"
               :disabled="!selectChallenger"
               :class="{ disabled: !selectChallenger }"
               placeholder="@박싸피"
@@ -88,6 +89,7 @@
               v-else
               class="light-mode input-box challenger-input"
               type="text"
+              v-model="challenge.challengers"
               :disabled="!selectChallenger"
               :class="{ disabled: !selectChallenger }"
               placeholder="@박싸피"
@@ -185,7 +187,7 @@ export default {
     error: false,
     challenge: {
       challengeName: "",
-      challengers: "",
+      challengers: [],
       titleName: "",
       endDate: "",
       fileType: "",
