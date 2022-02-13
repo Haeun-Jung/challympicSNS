@@ -38,4 +38,16 @@ public class CommentLikeRepository {
         em.remove(commentLike);
         em.flush();
     }
+
+    public boolean findIsLikeByUser(int user_no, int comment_no) {
+        try{
+            CommentLike result = em.createQuery("select cl from CommentLike cl where cl.comment.comment_no = :comment_no and cl.user.user_no = :user_no", CommentLike.class)
+                    .setParameter("comment_no", comment_no)
+                    .setParameter("user_no", user_no)
+                    .getSingleResult();
+            return true;
+        }catch (NoResultException e){
+            return false;
+        }
+    }
 }
