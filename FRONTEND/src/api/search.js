@@ -6,8 +6,9 @@ const api = apiInstance();
 function getSearchList(success, fail) {
     api.get(`/challympic/search`).then(success).catch(fail); //hes saying remove this 
 }
-function searchTagList(tag,success,user_no, fail) { 
-    api.get(`/challympic/search/tag/${tag}`,{ user_no }).then(success).catch(fail);
+/*태그 검색 결과 */
+function searchTagList(searchKey,success, fail) { 
+    api.post(`/challympic/search/tag`,JSON.stringify(searchKey)).then(success).catch(fail);
 }
 
 
