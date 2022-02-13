@@ -1,10 +1,10 @@
 <template>
   <div>
     <v-img
-      height="500"
+      max-height="600"
       contain
       class="grey darken-4"
-      :src="require(`@/assets/${fileName}`)"
+      :src="`https://d384sk7z91xokb.cloudfront.net/${filePath}/${fileName}`"
     ></v-img>
   </div>
 </template>
@@ -14,6 +14,7 @@ export default {
   name: "PostImage",
   props: {
     fileName: String,
+    filePath: String
   },
 };
 </script>

@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import UserProfile from './UserProfile.vue';
-import FabButton from '../../button/FabButton.vue';
+import UserProfile from '@/components/feed/layout/UserProfile.vue';
+import FabButton from '@/components/button/FabButton.vue';
 
 export default {
   name: "UserFeed",
@@ -50,6 +50,7 @@ export default {
     margin-top: 40px;
 }
 .font-weight {
+  font-size: 16px;
   font-weight: bold;
 }
 </style>

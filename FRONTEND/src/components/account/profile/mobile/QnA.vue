@@ -1,6 +1,6 @@
 <template>
 	<v-card
-		height="90vh"
+		height="100vh"
 		width="100%"
 		class="justify-center mobile-profile-delete-user-container"
 	>
@@ -52,40 +52,30 @@
 		<v-divider />
 		<!-- 문의 내용 -->
 		<v-container class="mobile-profile-change-user-password-container">
-			<v-data-table
-				:headers="dessertHeaders"
-				:expanded.sync="expanded"
-				:items="desserts"
-				item-key="name"
-				show-expand
-				single-expand="true"
-				:items-per-page="5"
-				class="elevation-1"
-				mobile-breakpoint="0"
-			>
-				<template v-slot:top> </template>
-				<template v-slot:expanded-item="{ headers }">
-					<!-- 
-                            
-					<template v-slot:expanded-item="{ headers, item }">
-                            여기에 item.answer로 갈아끼기 : A. {{item.answer}}-->
-					<td :colspan="headers.length">
-						여기에.. item.question도 마저 넣고.. A. challympic@ssafy.com으로
-						연락주세요
-					</td>
-				</template>
-			</v-data-table>
+			<mobile-qn-a-table />
 		</v-container>
 	</v-card>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+	import MobileQnATable from "../util/MobileQnATable.vue";
+	const userStore = "userStore";
 	export default {
+		components: { MobileQnATable },
 		methods: {
+			...mapActions(userStore, ["registerQuestion", "getQnA"]),
 			onAsk() {
+				if (!this.questionTitle || !this.questionContent) {
+					return;
+				}
+				this.questionContent.replace(/(?:\r\n|\r|\n)/g, "<br />");
+				this.registerQuestion({ qna_title: this.questionTitle, qna_question: this.questionContent, token: localStorage.getItem('Authorization') })
+				this.getQnA(localStorage.getItem("Authorization"));
+				window.location.reload();
 				this.dialog = false;
-				//alert(this.questionContent);
-				//문의하기 api 연결
+				this.questionTitle = '';
+				this.questionContent = '';
 			},
 		},
 		data() {
@@ -98,43 +88,6 @@
 				pagination: {
 					rowsPerPage: 5,
 				},
-				dessertHeaders: [
-					{
-						text: "질문",
-						align: "start",
-						sortable: false,
-						value: "name",
-					},
-					{ text: "답변 여부", value: "answerStatus" },
-
-					{ text: "", value: "data-table-expand" },
-				],
-				desserts: [
-					{
-						name: "Q. 챌린지가 등록이 안되요1",
-						answerStatus: 159,
-					},
-					{
-						name: "Q. 챌린지가 등록이 안되요2",
-						answerStatus: 237,
-					},
-					{
-						name: "Q. 챌린지가 등록이 안되요3",
-						answerStatus: 262,
-					},
-					{
-						name: "Q. 챌린지가 등록이 안되요4",
-						answerStatus: 305,
-					},
-					{
-						name: "Q. 챌린지가 등록이 안되요5",
-						answerStatus: 356,
-					},
-					{
-						name: "Q. 챌린지가 등록이 안되요6",
-						answerStatus: 375,
-					},
-				],
 			};
 		},
 	};

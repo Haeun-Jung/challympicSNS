@@ -1,5 +1,6 @@
 package com.ssafy.challympic.api;
 
+import com.ssafy.challympic.api.Dto.CommentDto;
 import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.service.*;
 import com.ssafy.challympic.util.S3Uploader;
@@ -27,6 +28,7 @@ public class PostApiController {
     private final PostLikeService postLikeService;
     private final UserService userService;
     private final TagService tagService;
+    private final FollowService followService;
 
     private final S3Uploader s3Uploader;
 
@@ -58,8 +60,25 @@ public class PostApiController {
     @Data
     @AllArgsConstructor
     static class PostLikeUserDto{
-        private int userNo;
-        private String userName;
+        private int user_no;
+        private String user_nickname;
+        private String user_title;
+        private int file_no;
+        private String file_path;
+        private String file_savedname;
+        private Boolean isFollowing;
+
+        public PostLikeUserDto(User user, Media media, boolean isFollowing) {
+            this.user_no = user.getUser_no();
+            this.user_nickname = user.getUser_nickname();
+            this.user_title = user.getUser_title();
+            if(media != null){
+                this.file_no = media.getFile_no();
+                this.file_path = media.getFile_path();
+                this.file_savedname = media.getFile_savedname();
+            }
+            this.isFollowing = isFollowing;
+        }
     }
 
     @Data
@@ -76,6 +95,7 @@ public class PostApiController {
         private int user_no;
         private String user_nickname;
         private String user_title;
+        private String user_profile;
 
         // 챌린지 타입
         private String challenge_type;
@@ -87,22 +107,35 @@ public class PostApiController {
 
         // 좋아요 수
         private Integer LikeCnt;
+
+        // 이 유저가 좋아요를 눌렀는지
+        private boolean IsLike = false;
+
+        // 댓글 리스트
+        private List<CommentDto> commentList;
     }
+
+    @Data
+    static class ChallengePostRequest {
+        private int userNo;
+        private int challengeNo;
+    }
+
+    private final CommentService commentService;
 
     /**
      *  챌린지 번호로 포스트 가져오기(챌린지로 확인 예정
-     *
      * */
-    @GetMapping("/challenge/{challengeNo}/post")
-    public Result list(@PathVariable("challengeNo") int challengeNo){
+    @PostMapping("/challenge/post")
+    public Result list(@RequestBody ChallengePostRequest request){
         Result result = null;
 
         // 챌린지 정보
-        Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
+        Challenge challenge = challengeService.findChallengeByChallengeNo(request.getChallengeNo());
         if(challenge == null) return new Result(false, HttpStatus.BAD_REQUEST.value());
         String type = challenge.getChallenge_type().name().toLowerCase();
         // 포스트 리스트
-        List<Post> postList = postService.getPostList(challengeNo);
+        List<Post> postList = postService.getPostList(request.getChallengeNo());
 
         List<PostDto> collect = new ArrayList<>();
 
@@ -120,6 +153,11 @@ public class PostApiController {
             postDto.setUser_no(user.getUser_no());
             postDto.setUser_nickname(user.getUser_nickname());
             postDto.setUser_title(user.getUser_title());
+            if(user.getMedia() != null)
+                postDto.setUser_profile(user.getMedia().getFile_path() + "/" + user.getMedia().getFile_savedname());
+            else
+                postDto.setUser_profile(null);
+
 
             // 챌린지 타입
             postDto.setChallenge_type(type);
@@ -135,6 +173,24 @@ public class PostApiController {
             } else{
                 postDto.setLikeCnt(postLikeList.size());
             }
+
+            boolean isLike = postService.getPostLikeByUserNo(request.getUserNo());
+            postDto.setIsLike(isLike);
+
+            List<Comment> comments = commentService.findByPost(post.getPost_no());
+            List<CommentDto> commentList = comments.stream()
+                            .map(c -> new CommentDto(
+                                    c.getComment_no(),
+                                    c.getUser().getUser_no(),
+                                    c.getPost().getPost_no(),
+                                    c.getComment_content(),
+                                    c.getComment_regdate(),
+                                    c.getComment_update(),
+                                    c.getCommentLike().size(),
+                                    c.getComment_report()
+                                    ))
+                    .collect(Collectors.toList());
+            postDto.setCommentList(commentList);
 
             collect.add(postDto);
         }
@@ -154,8 +210,8 @@ public class PostApiController {
      *      - 유저 번호와 유저 닉네임만 전달받을 수도 있음
      *      - 현재 번호만 가져옴
      * */
-    @GetMapping("/post/{postNo}/like")
-    public Result likeList(@PathVariable("postNo") int postNo){
+    @GetMapping("/post/{postNo}/like/{userNo}")
+    public Result likeList(@PathVariable("postNo") int postNo, @PathVariable("userNo") int userNo){
 
         // PostLike에서 게시글이 post인 것 추출
 
@@ -166,7 +222,8 @@ public class PostApiController {
         List<PostLikeUserDto> userList = new ArrayList<>();
         for(PostLike postLike : postLikeList){
             User user = userService.findUser(postLike.getUser_no());
-            userList.add(new PostLikeUserDto(user.getUser_no(), user.getUser_nickname()));
+            boolean follow = followService.follow(userNo, user.getUser_no());
+            userList.add(new PostLikeUserDto(user, user.getMedia(), follow));
         }
 
         return new Result(true, HttpStatus.OK.value(), userList);
@@ -187,9 +244,32 @@ public class PostApiController {
 
         log.info("Create Post");
 
-        // 1. 플로우 시작
+        // 플로우 시작
         Media media = null;
         MultipartFile files = null;
+        Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
+
+        // 챌린저 목록 가져옴
+        List<Challenger> challengerList = challengeService.getChallengerByChallengeNo(challengeNo);
+        User _user = userService.findUser(postRequest.getUser_no());
+        boolean isChallenger = false;
+
+        // 챌린저 목록이 지정되어 있거나 포스트 작성자가 챌린지 작성자인 경우
+        if(!challengerList.isEmpty()){
+            for(Challenger challenger : challengerList){
+                if(challenger.getUser() == _user) {
+                    isChallenger = true;
+                    break;
+                }
+            }
+
+            if(postRequest.getUser_no() == challenge.getUser().getUser_no())
+                isChallenger = true;
+
+            if(!isChallenger)
+                return new Result(false, HttpStatus.OK.value());
+        }
+
 
         try {
 
@@ -203,6 +283,11 @@ public class PostApiController {
             if(fileType == null)
                 // 지원하지 않는 확장자
                 return new Result(false, HttpStatus.OK.value());
+            
+            if(!fileType.equals(challenge.getChallenge_type().name())){
+                // 챌린지와 확장자 명이 다름
+                return new Result(false, HttpStatus.OK.value());
+            }
 
             // png/jpg, mp4 <- 확장자
             media = s3Uploader.upload(files, fileType.toLowerCase(), "media");
@@ -282,6 +367,7 @@ public class PostApiController {
 
             // 기존 가지고 있던 데이터 삭제
             Post post = postService.getPost(postNo);
+            s3Uploader.deleteS3(post.getMedia().getFile_path());
             mediaService.delete(post.getMedia().getFile_no());
 
             String type = getFileType(postRequest.getFile());
@@ -322,7 +408,11 @@ public class PostApiController {
 
         Post post = postService.getPost(postNo);
 
-        mediaService.delete(post.getMedia().getFile_no());
+        Media media = post.getMedia();
+
+        s3Uploader.deleteS3(media.getFile_path());
+
+        mediaService.delete(media.getFile_no());
 
         postService.delete(postNo);
 
@@ -351,6 +441,7 @@ public class PostApiController {
 
             // 좋아요를 눌렀을때 알림 설정
             Alert alert = new Alert();
+            System.out.println(postNo);
             User writer = postService.getPost(postNo).getUser();
             alert.setUser(writer);
             alert.setAlert_content(writer.getUser_nickname() + "님이 포스트에 좋아요를 눌렀습니다.");

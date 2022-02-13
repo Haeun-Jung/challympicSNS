@@ -1,5 +1,5 @@
 <template>
-	<v-card width="100%" app>
+	<v-card width="100%" elevation="0" height="100vh" app>
 		<!--
 		<v-card-title class="text-h5 d-flex justify-center">
 	 -->
@@ -22,7 +22,7 @@
 
 		<v-divider></v-divider>
 
-		<v-card>
+		<v-card elevation="0">
 			<router-view />
 		</v-card>
 	</v-card>

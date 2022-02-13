@@ -1,6 +1,6 @@
 <template>
   <div class="container ma-auto">
-    <v-form>
+    <v-form ref="form">
       <v-row justify="center">
         <v-col cols="10" sm="6" md="3" class="pa-0">
           <h1 class="left-align mb-5">로그인</h1>
@@ -37,7 +37,7 @@
           <v-btn @click="openPwDialog" class="pr-0" plain>비밀번호 찾기</v-btn>
         </v-col>
       </v-row>
-      <v-row v-if="cantLogin" justify="center">
+      <v-row v-if="loginFailed" justify="center">
         <v-col cols="10" sm="6" md="3" class="pa-0">
           <p class="left-align red--text">사용자 정보가 일치하지 않습니다.</p>
         </v-col>
@@ -69,11 +69,14 @@
 </template>
 
 <script>
-import passwordFind from "../../components/passwordFind.vue";
+import { mapActions } from "vuex";
+import PasswordFind from "@/components/login/PasswordFind.vue";
+
+const userStore = "userStore";
 
 export default {
   name: "Login",
-  components: { passwordFind },
+  components: { PasswordFind },
   data() {
     return {
       dialog: false,
@@ -83,20 +86,30 @@ export default {
       emailRules: [(v) => !!v || "이메일을 입력해주세요."],
       pwRules: [(v) => !!v || "비밀번호를 입력해주세요."],
       emailSave: false,
-      cantLogin: false,
     };
   },
+  computed: {
+    loginFailed() {
+      return this.$store.state.userStore.loginFailed;
+    }
+  },
   methods: {
-    login() {
+    ...mapActions(userStore, ["getUserInfo", "getInterest"]),
+    async login(event) {
+      event.preventDefault();
+
+      const validation = this.$refs.form.validate();
+      if (!validation) {
+        return;
+      }
+
       if (this.emailSave) {
         this.$cookies.set("emailCookie", this.email);
       }
-      // api 요청 코드 작성할 부분
-      
-      // 로그인 실패 시
-      this.cantLogin = true;
-      this.email = this.$cookies.get("emailCookie");
-      this.password = "";
+
+      await this.$store.dispatch('userStore/login', { user_email: this.email, user_pwd: this.password });
+      this.getUserInfo(localStorage.getItem("Authorization"));
+      this.getInterest(localStorage.getItem("Authorization"));
     },
     clickJoinBtn() {
       this.$router.push("/join");

@@ -1,5 +1,5 @@
 <template>
-  <div class="my-sm-3 my-lg-auto">
+  <div class="container ma-auto">
     <v-form ref="form">
       <v-row justify="center">
         <v-col cols="10" sm="6" md="3" class="pa-0">
@@ -113,11 +113,11 @@ export default {
   data() {
     return {
       email: "",
+      emailValidation: false,
       duplicateEmailCheck: false,
-      possibleEmail: false,
       nickname: "",
+      nicknameValidation: false,
       duplicateNicknameCheck: false,
-      possibleNickname: false,
       password: "",
       pwShow: false,
       pwConfirmation: "",
@@ -140,6 +140,12 @@ export default {
     };
   },
   computed: {
+    possibleEmail() {
+      return this.$store.state.userStore.possibleEmail;
+    },
+    possibleNickname() {
+      return this.$store.state.userStore.possibleNickname;
+    },
     emailRules() {
       return [
         (v) => !!v || "이메일을 입력해주세요.",
@@ -173,27 +179,27 @@ export default {
   },
   methods: {
     checkEmail() {
-      // 이메일 중복 확인 API 요청
-      this.duplicateEmailCheck = true;
-      // 사용 가능한 이메일일 경우
-      // this.possibleEmail = true;
-      // 중복된 이메일일 경우
-      this.possibleEmail = false;
+      if (/.+@.+/.test(this.email)) this.emailValidation = true;
+      if (this.emailValidation) {
+        this.$store.dispatch('userStore/confirmEmail', this.email);
+        this.duplicateEmailCheck = true;
+      }
     },
     checkNickname() {
-      // 닉네임 중복 확인 API 요청
-      this.duplicateNicknameCheck = true;
-      // 사용 가능한 닉네임일 경우
-      // this.possibleNickname = true;
-      // 중복된 닉네임일 경우
-      this.possibleNickname = false;
+      if (/^[가-힣a-zA-Z0-9].{1,10}$/.test(this.nickname)) this.nicknameValidation = true;
+      if (this.nicknameValidation) {
+        this.$store.dispatch('userStore/confirmNickname', this.nickname);
+        this.duplicateNicknameCheck = true;
+      }
     },
-    join() {
-      const validation = this.$refs.form.validate();
-      if (!validation) {
+    join(event) {
+      event.preventDefault();
+
+      if (!this.emailValidation || !this.nicknameValidation || !this.possibleEmail || !this.possibleNickname) {
         return;
       }
-      // 회원가입 API 요청
+      this.$store.dispatch('userStore/join', { user_email: this.email, user_nickname: this.nickname, user_pwd: this.password});
+      
     },
   },
 };

@@ -3,6 +3,7 @@ package com.ssafy.challympic.service;
 import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.domain.defaults.UserActive;
 import com.ssafy.challympic.repository.*;
+import com.ssafy.challympic.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,9 @@ public class AdminService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final QnARepository qnaRepository;
+    private final MediaRepository mediaRepository;
+
+    private final S3Uploader s3Uploader;
 
     public List<User> userList(){
         return adminRepository.findAllUser();
@@ -48,12 +52,22 @@ public class AdminService {
     @Transactional
     public void deleteChallenge(int challenge_no){
         Title findTitle = titleRepository.findByChallenge(challenge_no);
-        Challenge findChallenge = challengeRepository.findOne(challenge_no);
-        List<ChallengeTag> challengeTags = tagRepository.findByChallengeNo(challenge_no);
-        for(ChallengeTag ct : challengeTags) {
-            tagRepository.deleteTags(ct);
-        }
         titleRepository.deleteTitle(findTitle);
+
+        List<ChallengeTag> challengeTags = tagRepository.findChallengeTagByChallengeNo(challenge_no);
+        if(!challengeTags.isEmpty()){
+            for(ChallengeTag ct : challengeTags) {
+                tagRepository.deleteChallengeTag(ct);
+            }
+        }
+
+        List<Challenger> challengerList = challengeRepository.findChallengerList(challenge_no);
+        if(!challengerList.isEmpty()){
+            for (Challenger challenger : challengerList) {
+                challengeRepository.deleteChallenger(challenger);
+            }
+        }
+        Challenge findChallenge = challengeRepository.findOne(challenge_no);
         adminRepository.deleteChallenge(findChallenge);
     }
 
@@ -81,6 +95,9 @@ public class AdminService {
         List<Post> postList = postRepository.findByChallengNo(challenge_no);
         if(!postList.isEmpty()){
             for (Post post : postList) {
+                Media media = post.getMedia();
+                s3Uploader.deleteS3(media.getFile_path());
+                mediaRepository.deleteMedia(media.getFile_no());
                 postRepository.deleteByPostNo(post.getPost_no());
             }
         }

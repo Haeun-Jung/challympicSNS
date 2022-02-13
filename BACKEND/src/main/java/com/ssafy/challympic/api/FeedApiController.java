@@ -1,12 +1,15 @@
 package com.ssafy.challympic.api;
 
 import com.ssafy.challympic.api.Dto.ChallengeDto;
+import com.ssafy.challympic.api.Dto.PostDto;
 import com.ssafy.challympic.domain.Challenge;
+import com.ssafy.challympic.domain.Post;
 import com.ssafy.challympic.domain.Result;
 import com.ssafy.challympic.domain.User;
 import com.ssafy.challympic.domain.defaults.ChallengeAccess;
 import com.ssafy.challympic.domain.defaults.ChallengeType;
 import com.ssafy.challympic.service.ChallengeService;
+import com.ssafy.challympic.service.PostService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +27,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FeedApiController {
 
-//    private final PostController postController;
+    private final PostService postService;
     private final ChallengeService challengeService;
-//    private final CommentService commentService;
 
     /**
      * 내가 만든 챌린지 목록
@@ -57,4 +59,27 @@ public class FeedApiController {
         return new Result(true, HttpStatus.OK.value(), collect);
     }
 
+    /**
+     * 내가 좋아요한 포스트 목록
+     */
+    @GetMapping("/feed/{userNo}/like")
+    public Result getLikePostList(@PathVariable int userNo) {
+        List<Post> posts = postService.getLikePostListByUserNo(userNo);
+        List<PostDto> postList = posts.stream()
+                .map(p -> new PostDto(p))
+                .collect(Collectors.toList());
+        return new Result(true, HttpStatus.OK.value(), postList);
+    }
+
+    /**
+     * 내가 만든 포스트 목록
+     */
+    @GetMapping("/feed/{userNo}/post")
+    public Result getPostLst(@PathVariable int userNo) {
+        List<Post> posts = postService.getPostListByUserNo(userNo);
+        List<PostDto> postList = posts.stream()
+                .map(p -> new PostDto(p))
+                .collect(Collectors.toList());
+        return new Result(true, HttpStatus.OK.value(), postList);
+    }
 }

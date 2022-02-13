@@ -36,6 +36,18 @@ public class ChallengeRepository {
         em.persist(challenger);
     }
 
+    public void deleteChallenger(Challenger challenger){
+        em.remove(challenger);
+//        em.flush();
+    }
+
+    public List<Challenger> findChallengerList(int challenge_no){
+        return em.createQuery("select cr from Challenger cr where cr.challenge.challenge_no = :challenge_no", Challenger.class)
+                .setParameter("challenge_no", challenge_no)
+                .getResultList();
+    }
+
+
     public List<Challenge> findByUserNo(int userNo) {
         return em.createQuery("select c from Challenge c where c.user.user_no = :userNo", Challenge.class)
                 .setParameter("userNo", userNo)
@@ -54,10 +66,22 @@ public class ChallengeRepository {
     }
 
     public Challenge findOne(int challengeNo){
-        return em.find(Challenge.class, challengeNo);
+        try{
+            return em.createQuery("select c from Challenge c where c.challenge_no = :challenge_no", Challenge.class)
+                    .setParameter("challenge_no", challengeNo)
+                    .getSingleResult();
+        }catch (NoResultException e) {
+            return null;
+        }
     }
 
     public void saveChallengeTag(ChallengeTag challengeTag) {
         em.persist(challengeTag);
+    }
+
+    public List<Challenger> findChallengerByChallengeNo(int challenge_no) {
+        return em.createQuery("select c from Challenger c where c.challenge.challenge_no = :challenge_no", Challenger.class)
+                .setParameter("challenge_no", challenge_no)
+                .getResultList();
     }
 }
