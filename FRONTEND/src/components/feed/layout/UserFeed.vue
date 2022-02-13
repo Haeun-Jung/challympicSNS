@@ -28,16 +28,18 @@ export default {
     UserProfile,
     FabButton
   },
-  data: ()=> ({
-    items: [
-      { title: "내가 참여한", link: "/feed/:userNo/post" },
-      { title: "내가 만든", link: "/feed/:userNo/challenge" },
-      { title: "좋아요", link: "/feed/:userNo/like" },
-      { title: "구독", link: "/feed/:userNo/subscription" },
-    ],
-    isFollow: false,
-    login_user: this.$store.state.userStore.userInfo.user_no,
-  }),
+  data() {
+    return {
+      items: [
+        { title: "내가 참여한", link: "/feed/:userNo/post" },
+        { title: "내가 만든", link: "/feed/:userNo/challenge" },
+        { title: "좋아요", link: "/feed/:userNo/like" },
+        { title: "구독", link: "/feed/:userNo/subscription" },
+      ],
+      isFollow: false,
+      login_user: this.$store.state.userStore.userInfo.user_no,
+    }
+  },
   computed: {
     who_no() {
       const temp = decodeURIComponent(this.$router.currentRoute.path);
