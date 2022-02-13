@@ -15,10 +15,10 @@
       <strong class="mr-auto nickname">{{ postList[1].user_nickname }}</strong>
     </div>
     <v-row>
-      <v-col>
+      <v-col cols="12" md="6">
         <post-item :post="postList[0]" :type="type" />
       </v-col>
-      <v-col>
+      <v-col cols="12" md="6">
         <post-item :post="postList[1]" :type="type" />
       </v-col>
     </v-row>

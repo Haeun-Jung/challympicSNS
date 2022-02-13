@@ -46,7 +46,8 @@ const challengeStore = {
       )
     },
     confirmChallengeName({ commit }, challengeName) {
-      if (challengeName.length === 1) {
+      if (challengeName.length < 1) {
+        commit('REFUSE_CHALLENGE_NAME');
         return;
       }
       confirmChallengeName(

@@ -140,7 +140,9 @@
 									</v-list-item-subtitle>
 
 									<v-card-subtitle>
-										{{ challenge.challenge_content }}
+										<span
+                      v-html="$options.filters.hashAnchor(challenge.challenge_content)"
+                    ></span>
 									</v-card-subtitle>
 								</v-main>
 							</v-layout>
@@ -263,6 +265,20 @@
 				}
 			},
 		},
+    filters: {
+    hashAnchor(str) {
+      // TODO: anchor 태그에서 href base url 주석 처리된 url로 변경!!!!!
+      str = str.replace(
+        /#[^\s]+/g,
+        '<a class="text-decoration-none" href="http://192.168.219.106:8080/search/$&">$&</a>'
+      );
+      // str = str.replace(
+      //   /#[^\s]+/g,
+      //   '<a class="text-decoration-none" href="http://i6b101.p.ssafy.io/search/$&">$&</a>'
+      // );
+      return str.replace(/\/#/g, "/");
+    },
+  },
 		computed: {
 			sortDesc() {
 				if (
