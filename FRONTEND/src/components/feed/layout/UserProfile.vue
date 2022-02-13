@@ -35,12 +35,12 @@
                         <v-col md="2" class="follow-wrapper" align-self="center">
                             <div class="font-weight">팔로워</div>
                             <div class="show-folllow-modal" @click="openFollowerDialog">{{followerCnt}}</div>
-                            <follow-like-modal v-if="follower" @close-modal="follower=false" type="follower" :users="followingList"></follow-like-modal>
+                            <follow-like-modal v-if="follower" @close-modal="follower=false" type="follower" :login_user="this.login_user" :who_no="who_no"></follow-like-modal>
                         </v-col>
                         <v-col md="2" class="follow-wrapper" align-self="center">
                             <div class="font-weight">팔로잉</div>
                             <div class="show-folllow-modal" @click="openFollowingDialog">{{followingCnt}}</div>
-                            <follow-like-modal v-if="following" @close-modal="following=false" type="following" :users="followerList"></follow-like-modal>
+                            <follow-like-modal v-if="following" @close-modal="following=false" type="following" :login_user="this.login_user" :who_no="who_no"></follow-like-modal>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -83,12 +83,12 @@
                             <v-col md="2" class="follow-wrapper" align-self="center">
                             <div class="font-weight">팔로워</div>
                             <div class="show-folllow-modal" @click="openFollowerDialog">3</div>
-                            <follow-like-modal v-if="follower" @close-modal="follower=false" type="follower" :users="follows"></follow-like-modal>
+                            <follow-like-modal v-if="follower" @close-modal="follower=false" type="follower" :users="follows" :login_user="this.login_user"></follow-like-modal>
                         </v-col>
                         <v-col md="2" class="follow-wrapper" align-self="center">
                             <div class="font-weight">팔로잉</div>
                             <div class="show-folllow-modal" @click="openFollowingDialog">3</div>
-                            <follow-like-modal v-if="following" @close-modal="following=false" type="following" :users="follows"></follow-like-modal>
+                            <follow-like-modal v-if="following" @close-modal="following=false" type="following" :users="follows" :login_user="this.login_user"></follow-like-modal>
                         </v-col>
                         </v-row>
 					</v-container>
@@ -100,7 +100,7 @@
 
 <script>
 import FollowLikeModal from "@/components/common/FollowLikeModal.vue";
-import { checkFollow, setFollow, getFollowCnt, getFollowerList, getFollowingList } from '@/api/feed.js';
+import { checkFollow, setFollow, getFollowCnt } from '@/api/feed.js';
 export default {
      name: "UserProfile",
     components: {
@@ -120,11 +120,11 @@ export default {
             following: false,
             followerCnt: 0,
             followingCnt: 0,
-            followerList: [],
-            followingList: [],
         }
     },
     created(){
+        console.log("this.login_user");
+        console.log(this.login_user);
         // 유저 번호와 로그인 한 사람의 팔로우 관계
         checkFollow(
             this.login_user, 
@@ -139,23 +139,6 @@ export default {
             (response) => {
                 this.followerCnt = response.data.data.followerCnt;
                 this.followingCnt = response.data.data.followingCnt;
-            }
-        )
-        // 유저가 팔로우한 목록
-        getFollowerList(
-            this.who_no,
-            (response) => {
-                // console.log(response.data);
-                this.followerList = response.data.data;
-            }
-        )
-
-        // // 유저를 팔로우한 목록
-        getFollowingList(
-            this.who_no,
-            (response) => {
-                // console.log(response.data)
-                this.followingList = response.data.data;
             }
         )
     },
@@ -189,6 +172,11 @@ export default {
                     this.isFollower = response.data.following;
                 }
             )
+            if(this.isFollower){
+                this.followerCnt--;
+            }else{
+                this.followerCnt++;
+            }
         }
     },
 }
