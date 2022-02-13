@@ -140,7 +140,7 @@ export default {
                 this.followerCnt = response.data.data.followerCnt;
                 this.followingCnt = response.data.data.followingCnt;
             }
-        ),
+        )
         // 유저가 팔로우한 목록
         getFollowerList(
             this.who_no,
@@ -150,7 +150,7 @@ export default {
             }
         )
 
-        // 유저를 팔로우한 목록
+        // // 유저를 팔로우한 목록
         getFollowingList(
             this.who_no,
             (response) => {
@@ -189,7 +189,6 @@ export default {
                     this.isFollower = response.data.following;
                 }
             )
-
         }
     },
 }
