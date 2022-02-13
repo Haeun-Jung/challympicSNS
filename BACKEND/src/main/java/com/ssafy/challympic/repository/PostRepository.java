@@ -1,5 +1,7 @@
 package com.ssafy.challympic.repository;
 
+import com.ssafy.challympic.domain.Comment;
+import com.ssafy.challympic.domain.CommentLike;
 import com.ssafy.challympic.domain.Post;
 import com.ssafy.challympic.domain.PostLike;
 import lombok.RequiredArgsConstructor;
@@ -54,5 +56,11 @@ public class PostRepository {
         }catch (NoResultException e) {
             return null;
         }
+    }
+
+    public List<CommentLike> findPostLikeByPostNo(int post_no) {
+        return em.createQuery("select cl from CommentLike cl where cl.comment.post.post_no = :post_no", CommentLike.class)
+                .setParameter("post_no", post_no)
+                .getResultList();
     }
 }

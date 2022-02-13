@@ -4,10 +4,7 @@ import com.ssafy.challympic.api.Dto.ChallengeDto;
 import com.ssafy.challympic.api.Dto.PostDto;
 import com.ssafy.challympic.api.Dto.SearchDto;
 import com.ssafy.challympic.domain.*;
-import com.ssafy.challympic.service.ChallengeService;
-import com.ssafy.challympic.service.SearchService;
-import com.ssafy.challympic.service.TagService;
-import com.ssafy.challympic.service.UserService;
+import com.ssafy.challympic.service.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +24,8 @@ public class SearchApiController {
     private final UserService userService;
     private final TagService tagService;
     private final ChallengeService challengeService;
+    private final PostService postService;
+    private final CommentService commentService;
 
     @GetMapping("/search")
     public Result getSearchList() {
@@ -52,7 +51,7 @@ public class SearchApiController {
     }
 
     /**
-     * 태그 검ㅅ색
+     * 태그 검색
      */
     @PostMapping("/search/tag")
     public Result searchTagList(@RequestBody TagSearchRequest request) {
@@ -63,7 +62,23 @@ public class SearchApiController {
                 .map(c -> new ChallengeDto(c))
                 .collect(Collectors.toList());
         List<PostDto> postList = posts.stream()
-                .map(p -> new PostDto(p))
+                .map(p -> new PostDto(
+                        p.getPost_no(),
+                        p.getUser().getUser_no(),
+                        p.getUser().getUser_nickname(),
+                        p.getUser().getUser_title(),
+                        p.getChallenge_no(),
+                        challengeService.findChallengeByChallengeNo(p.getChallenge_no()).getChallenge_title(),
+                        p.getMedia().getFile_no(),
+                        p.getMedia().getFile_path(),
+                        p.getMedia().getFile_savedname(),
+                        p.getPost_content(),
+                        p.getPost_report(),
+                        p.getPost_regdate(),
+                        p.getPost_update(),
+                        postService.getPostLikeCountByPostNo(p.getPost_no()),
+                        commentService.postCommentCnt(p.getPost_no())
+                ))
                 .collect(Collectors.toList());
 
         Map<String, List> data = new HashMap<>();
