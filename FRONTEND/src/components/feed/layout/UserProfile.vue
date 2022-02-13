@@ -2,10 +2,10 @@
     <v-container>
         <!-- PC -->
         <v-row v-if="!isMobile()" class="profile-wrapper">
-            <v-avatar size="150" v-if="userInfo.file_no == 0">
+            <v-avatar v-if="userInfo.file_no == 0" size="150">
                 <v-icon size="150">mdi-account-circle-outline</v-icon>
             </v-avatar>
-            <v-avatar size="150" v-else>
+            <v-avatar v-else size="150">
                 <img :src='"http://d384sk7z91xokb.cloudfront.net/"+this.userInfo.file_path+"/"+this.userInfo.file_savedname' alt="John" />
             </v-avatar>
             <v-col align-self="center">
@@ -20,7 +20,7 @@
                                 </v-col>
                                 <div class="header-title font-weight">{{userInfo.user_title}}</div>
                                 <div class="user-name font-weight">{{userInfo.user_nickname}}</div>
-                                <v-col v-if="who_no != login_user">
+                                <v-col v-if="this.who_no != this.login_user">
                                     <!-- 상대 프로필일 때 -->
                                     <v-btn v-if="isFollower" @click="follow" color="#3396F4"  class="white--text rounded-xl" small>
                                         팔로잉취소
@@ -115,7 +115,7 @@ export default {
         return {
             login_user: this.$store.state.userStore.userInfo.user_no,
             isFollower: false,
-            profileUrl: "http://d384sk7z91xokb.cloudfront.net/"+this.userInfo.file_path+"/"+this.userInfo.file_savedname,
+            profileUrl: "",
             follower: false,
             following: false,
             followerCnt: 0,
@@ -145,7 +145,7 @@ export default {
         getFollowerList(
             this.who_no,
             (response) => {
-                console.log(response.data);
+                // console.log(response.data);
                 this.followerList = response.data.data;
             }
         )
@@ -154,7 +154,7 @@ export default {
         getFollowingList(
             this.who_no,
             (response) => {
-                console.log(response.data)
+                // console.log(response.data)
                 this.followingList = response.data.data;
             }
         )

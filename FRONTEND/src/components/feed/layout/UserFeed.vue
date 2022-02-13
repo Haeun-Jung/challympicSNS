@@ -2,7 +2,7 @@
   <v-app>
     <v-main class="main-wrapper">
         <v-container class="user-wrapper">
-            <user-profile :who_no="decodeURIComponent(this.$router.currentRoute.path).split('/')[2]" :userInfo="this.userInfo"></user-profile>
+            <user-profile :who_no="Number(decodeURIComponent(this.$router.currentRoute.path).split('/')[2])" :userInfo="this.userInfo"></user-profile>
         </v-container>
         <v-container>
             <v-tabs :background-color="$vuetify.theme.dark ? '#121212' : '#fff'" show-arrows>
@@ -11,7 +11,7 @@
               </v-tab>
             </v-tabs>
         </v-container>
-        <router-view/>
+        <router-view :who_no="Number(decodeURIComponent(this.$router.currentRoute.path).split('/')[2])"/>
     </v-main>
     <fab-button></fab-button>
   </v-app>
@@ -31,24 +31,24 @@ export default {
   data() {
     return{
       items: [
-        { title: "내가 참여한", link: "/feed/"+this.who_no+"/post" },
-        { title: "내가 만든", link: "/feed/"+this.who_no+"/challenge" },
-        { title: "좋아요", link: "/feed/"+this.who_no+"/like" },
-        { title: "구독", link: "/feed/"+this.who_no+"/subscription" },
+        { title: "내가 참여한", link: "/feed/"+decodeURIComponent(this.$router.currentRoute.path).split('/')[2]+"/post" },
+        { title: "내가 만든", link: "/feed/"+decodeURIComponent(this.$router.currentRoute.path).split('/')[2]+"/challenge" },
+        { title: "좋아요", link: "/feed/"+decodeURIComponent(this.$router.currentRoute.path).split('/')[2]+"/like" },
+        { title: "구독", link: "/feed/"+decodeURIComponent(this.$router.currentRoute.path).split('/')[2]+"/subscription" },
       ],
       isFollow: false,
       login_user: this.$store.state.userStore.userInfo.user_no,
-      userInfo: [],
+      userInfo: {},
     }
   },
   created(){
-    console.log('decodeURIComponent(this.$router.currentRoute.path).split("/")[2]');
-    console.log(decodeURIComponent(this.$router.currentRoute.path).split("/")[2]);
+    // console.log('decodeURIComponent(this.$router.currentRoute.path).split("/")[2]');
+    // console.log(decodeURIComponent(this.$router.currentRoute.path).split("/")[2]);
     getFeedUserInfo(
       decodeURIComponent(this.$router.currentRoute.path).split("/")[2],
       (response) => {
-        console.log("userinfo");
-        console.log(response.data);
+        // console.log("userinfo");
+        // console.log(response.data);
         this.userInfo = response.data.data;
       }
     )
