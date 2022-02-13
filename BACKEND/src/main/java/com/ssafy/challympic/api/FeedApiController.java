@@ -80,15 +80,16 @@ public class FeedApiController {
     @GetMapping("/feed/{userNo}/post")
     public Result postByUser(@PathVariable("userNo") int user_no){
         List<Post> postListByUserNo = postService.getPostListByUserNo(user_no);
-        List<PostApiController.PostResponse> collect = new ArrayList<>();
+        List<PostResponse> collect = new ArrayList<>();
         if(!postListByUserNo.isEmpty()){
             collect = postListByUserNo.stream()
                     .map(p -> {
+                        System.out.println("왜.. 안들어가");
                         int challenge_no = p.getChallenge_no();
                         Challenge challenge = challengeService.findChallengeByChallengeNo(challenge_no);
                         int like_cnt = postLikeService.postLikeCnt(p.getPost_no());
                         int comment_cnt = commentService.postCommentCnt(p.getPost_no());
-                        return new PostApiController.PostResponse(p, challenge, like_cnt, comment_cnt);
+                        return new PostResponse(p, challenge, like_cnt, comment_cnt);
                     }).collect(Collectors.toList());
         }
         return new Result(true, HttpStatus.OK.value(), collect);
@@ -97,6 +98,7 @@ public class FeedApiController {
     @Data
     static class PostResponse{
         private int challenge_no;
+        private boolean isVideo;
         private int post_no;
         private int file_no;
         private String file_path;
@@ -107,6 +109,7 @@ public class FeedApiController {
 
         public PostResponse(Post post, Challenge challenge, int like_cnt, int comment_cnt) {
             this.challenge_no = post.getChallenge_no();
+            if(challenge.getChallenge_type() == ChallengeType.VIDEO) this.isVideo = true;
             this.post_no = post.getPost_no();
             this.file_no = post.getMedia().getFile_no();
             this.file_path = post.getMedia().getFile_path();
