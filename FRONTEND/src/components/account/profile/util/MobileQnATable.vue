@@ -66,7 +66,7 @@ import { mapState, mapActions } from "vuex";
 			...mapState(userStore, ["listQnA"]),
 		},
 		mounted() {
-			this.getQnA(localStorage.getItem("Authorization"));
+			this.getQnA(sessionStorage.getItem("Authorization"));
 		},
 		data() {
 			return {

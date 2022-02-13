@@ -82,7 +82,7 @@ const userStore = {
           if (data.success) {
             commit('LOGIN', data);
             commit('LOGIN_FAILED', false);
-            localStorage.setItem('Authorization', response.headers['authorization']);
+            sessionStorage.setItem('Authorization', response.headers['authorization']);
             router.push({ name: 'Main'});
           } else {
             commit('LOGIN_FAILED', true);
@@ -193,7 +193,7 @@ const userStore = {
          (response) => {
         if (response.data.code === 200) {
           commit("SET_USER_INFO", null);
-          localStorage.removeItem("Authorization");
+          sessionStorage.removeItem("Authorization");
           console.log('탈퇴 성공');
         } else {
           console.log("탈퇴 실패");

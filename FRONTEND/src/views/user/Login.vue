@@ -108,8 +108,8 @@ export default {
       }
 
       await this.$store.dispatch('userStore/login', { user_email: this.email, user_pwd: this.password });
-      this.getUserInfo(localStorage.getItem("Authorization"));
-      this.getInterest(localStorage.getItem("Authorization"));
+      this.getUserInfo(sessionStorage.getItem("Authorization"));
+      this.getInterest(sessionStorage.getItem("Authorization"));
     },
     clickJoinBtn() {
       this.$router.push("/join");
