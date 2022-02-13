@@ -25,6 +25,7 @@ const challengeStore = {
       state.confirmedButImpossibleName = false;
     },
     REFUSE_CHALLENGE_NAME(state) {
+      state.possibleChallengeName = false;
       state.confirmedButImpossibleName = true;
     },
     RESET_POSSIBLE_STATUS(state) {
@@ -52,6 +53,7 @@ const challengeStore = {
         challengeName,
         (response) => {
           const { data } = response;
+          console.log(data);
           if (data.success) {
             commit('CONFIRM_CHALLENGE_NAME');
           } else {
@@ -71,25 +73,24 @@ const challengeStore = {
         challenge_type: challenge.fileType,
         title_name: challenge.titleName
       }
+
       createChallenge(
         challengeItem,
         (response) => {
-          const { data } = response;
           console.log("챌린지 생성!");
-          for (var pair of post.entries()) {
-            console.log(pair[0]+ ', ' + pair[1]);
+          if(response.data.code == 200){
+            createPost(
+              response.data.data,
+              post,
+              () => {
+                console.log("포스트 생성!");
+              },
+              () => {
+                // 아직 백에서 challenge_no가 안 넘어와서 생성 실패하는 상태입니다.
+                console.log("포스트 생성 실패");
+              }
+            )
           }
-          createPost(
-            data.data.challenge_no,
-            post,
-            () => {
-              console.log("포스트 생성!");
-            },
-            () => {
-              // 아직 백에서 challenge_no가 안 넘어와서 생성 실패하는 상태입니다.
-              console.log("포스트 생성 실패");
-            }
-          )
         },
         () => { }
       )

@@ -113,8 +113,10 @@ export default {
   data() {
     return {
       email: "",
+      emailValidation: false,
       duplicateEmailCheck: false,
       nickname: "",
+      nicknameValidation: false,
       duplicateNicknameCheck: false,
       password: "",
       pwShow: false,
@@ -177,18 +179,23 @@ export default {
   },
   methods: {
     checkEmail() {
-      this.$store.dispatch('userStore/confirmEmail', this.email);
-      this.duplicateEmailCheck = true;
+      if (/.+@.+/.test(this.email)) this.emailValidation = true;
+      if (this.emailValidation) {
+        this.$store.dispatch('userStore/confirmEmail', this.email);
+        this.duplicateEmailCheck = true;
+      }
     },
     checkNickname() {
-      this.$store.dispatch('userStore/confirmNickname', this.nickname);
-      this.duplicateNicknameCheck = true;
+      if (/^[가-힣a-zA-Z0-9].{1,10}$/.test(this.nickname)) this.nicknameValidation = true;
+      if (this.nicknameValidation) {
+        this.$store.dispatch('userStore/confirmNickname', this.nickname);
+        this.duplicateNicknameCheck = true;
+      }
     },
     join(event) {
       event.preventDefault();
 
-      const validation = this.$refs.form.validate();
-      if (!validation || !this.possibleEmail || !this.possibleNickname) {
+      if (!this.emailValidation || !this.nicknameValidation || !this.possibleEmail || !this.possibleNickname) {
         return;
       }
       this.$store.dispatch('userStore/join', { user_email: this.email, user_nickname: this.nickname, user_pwd: this.password});

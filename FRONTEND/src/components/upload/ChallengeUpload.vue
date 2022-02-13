@@ -248,6 +248,7 @@ export default {
         this.error = "입력되지 않은 필수 항목이 있습니다.";
         return;
       }
+      this.dialog = false;
       this.postDialog = true;
     },
     DatePickMenu() {

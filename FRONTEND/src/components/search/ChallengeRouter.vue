@@ -1,6 +1,5 @@
 <template>
-	<!--이분 폐기시키는2중입니다-->
-	<v-app class="search-result-container">
+	<v-app>
 		<!-- 모바일은 사이드 바가 없기 때문에 패딩 조절해줘야함 & span주면 키워드 길때 내려감-->
 		<v-container fluid class="search-control-box-mobile hidden-sm-and-up">
 			<v-list-item-title id="search-keyword">
@@ -14,6 +13,9 @@
 				></v-radio>
 				<v-radio label="포스트" value="post"></v-radio>
 			</v-radio-group>
+			<div>
+				<challenge-search-result :search="keyword" />
+			</div>
 		</v-container>
 		<!--desktop-->
 		<v-container fluid class="search-control-box-desktop hidden-md-and-down">
@@ -23,36 +25,28 @@
 						{{ keyword }}
 					</v-list-item-title>
 				</span>
-				<v-radio
-					label="챌린지"
-					value="challenge"
-					@click="callChallengeRouter"
-				></v-radio>
+				<v-radio label="챌린지" value="challenge"></v-radio>
 				<v-radio label="포스트" value="post" @click="callPostRouter"></v-radio>
 			</v-radio-group>
+			<div>
+				<challenge-search-result :search="keyword" />
+			</div>
 		</v-container>
-
-		<router-view />
 	</v-app>
 </template>
 
 <script>
-	//	import ChallengeSearchResult from "./desktop/ChallengeSearchResult.vue";
-	//	import TagSearchResult from "./desktop/TagSearchResult.vue";
-
+	import ChallengeSearchResult from "./desktop/ChallengeSearchResult.vue";
 	export default {
-		name: "Search",
 		components: {
-			//	ChallengeSearchResult,
-			//	TagSearchResult,
+			ChallengeSearchResult,
 		},
-		props: { search: String },
 		data() {
 			return {
 				row: "challenge",
-				//	isChallenge: false,
 			};
 		},
+		props: { search: String },
 		watch: {
 			$route(to, from) {
 				if (to.path != from.path) {
@@ -67,47 +61,23 @@
 			},
 		},
 		computed: {
-			//somehow .... split does not work...
 			keyword() {
 				const temp = decodeURIComponent(this.$router.currentRoute.path);
-				return "#" + temp.substring(18).slice(0, -1);
+				const chars = temp.split("/");
+				return "#" + chars[3];
 			},
 		},
 		/* 페이지가 로딩되자마자 keyword 확인하기 */
-
 		methods: {
 			callPostRouter() {
 				var pathKey = this.keyword.replace("#", "");
-				alert(this.$router.currentRoute.path);
+				//alert(this.$router.currentRoute.path);
 				var newPath = "/search/post/" + pathKey;
-				alert(newPath);
+				//	alert(newPath);
 				window.location.replace(newPath);
-			},
-			callchallengeRouter() {
-				alert("move to challenge");
 			},
 		},
 	};
 </script>
 
-<style scoped>
-	.search-result-container {
-		padding-left: 0%;
-	}
-	.search-control-box-mobile {
-		font-weight: bold;
-	}
-	.search-control-box-desktop {
-		font-weight: bold;
-	}
-	.search-control-box-mobile #search-keyword {
-		color: #3396f4;
-		margin-right: 1.25em;
-		font-size: 1.5rem !important;
-	}
-	.search-control-box-desktop #search-keyword {
-		color: #3396f4;
-		margin-right: 1.25em;
-		font-size: 1.5rem !important;
-	}
-</style>
+<style></style>
