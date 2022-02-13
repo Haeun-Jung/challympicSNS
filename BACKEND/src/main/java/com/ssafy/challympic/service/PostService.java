@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -78,7 +80,16 @@ public class PostService {
     }
 
     public List<Post> getLikePostListByUserNo(int userNo) {
-        return postRepository.findLikePostByUserNo(userNo);
+        List<PostLike> userPostLike = postRepository.findUserPostLike(userNo);
+        List<Post> posts = new ArrayList<>();
+        if(!userPostLike.isEmpty()){
+            posts = userPostLike.stream()
+                    .map(pl -> {
+                        Post post = postRepository.findByPostNo(pl.getPost_no());
+                        return post;
+                    }).collect(Collectors.toList());
+        }
+        return posts;
     }
 
     public boolean getPostLikeByUserNo(int user_no) {

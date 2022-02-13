@@ -41,10 +41,66 @@ public class FeedApiController {
     @GetMapping("/feed/{userNo}/challenge")
     public Result getChallengeList(@PathVariable int userNo) {
         List<Challenge> challenges = challengeService.getChallengeByUserNo(userNo);
-        List<ChallengeDto> collect = challenges.stream()
-                .map(c -> new ChallengeDto(c))
+        List<ChallengeResponse> collect = challenges.stream()
+                .map(c -> {
+                    List<Post> postList = postService.getPostList(c.getChallenge_no());
+                    Post firstPost = postList.get(0);
+                    int post_cnt = challengeService.findPostCnt(c.getChallenge_no());
+                    int subscription_cnt = challengeService.findSubscriptionCnt(c.getChallenge_no());
+                    return new ChallengeResponse(firstPost, c, post_cnt, subscription_cnt);
+                })
                 .collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value() , collect);
+    }
+
+    @Data
+    static class ChallengeResponse{
+        private int challenge_no;
+        private boolean isVideo;
+        private int post_no;
+        private int file_no;
+        private String file_path;
+        private String file_savedname;
+        private String challenge_title;
+        private int post_cnt;
+        private int subscription_cnt;
+
+        public ChallengeResponse(Post post, Challenge challenge, int post_cnt, int subscription_cnt) {
+            this.challenge_no = post.getChallenge_no();
+            if(challenge.getChallenge_type() == ChallengeType.VIDEO) this.isVideo = true;
+            this.post_no = post.getPost_no();
+            this.file_no = post.getMedia().getFile_no();
+            this.file_path = post.getMedia().getFile_path();
+            this.file_savedname = post.getMedia().getFile_savedname();
+            this.challenge_title = challenge.getChallenge_title();
+            this.post_cnt = post_cnt;
+            this.subscription_cnt = subscription_cnt;
+        }
+    }
+
+    @Data
+    static class PostResponse{
+        private int challenge_no;
+        private boolean isVideo;
+        private int post_no;
+        private int file_no;
+        private String file_path;
+        private String file_savedname;
+        private String challenge_title;
+        private int like_cnt; //
+        private int comment_cnt;
+
+        public PostResponse(Post post, Challenge challenge, int like_cnt, int comment_cnt) {
+            this.challenge_no = post.getChallenge_no();
+            if(challenge.getChallenge_type() == ChallengeType.VIDEO) this.isVideo = true;
+            this.post_no = post.getPost_no();
+            this.file_no = post.getMedia().getFile_no();
+            this.file_path = post.getMedia().getFile_path();
+            this.file_savedname = post.getMedia().getFile_savedname();
+            this.challenge_title = challenge.getChallenge_title();
+            this.like_cnt = like_cnt;
+            this.comment_cnt = comment_cnt;
+        }
     }
 
     /**
@@ -56,8 +112,14 @@ public class FeedApiController {
     public Result getSubscriptionChallengeList(@PathVariable int userNo) {
         List<Challenge> challenges = challengeService.findChallengeBySubscription(userNo);
         if(challenges == null) return new Result(false, HttpStatus.NOT_FOUND.value());
-        List<ChallengeDto> collect = challenges.stream()
-                .map(c -> new ChallengeDto(c))
+        List<ChallengeResponse> collect = challenges.stream()
+                .map(c -> {
+                    List<Post> postList = postService.getPostList(c.getChallenge_no());
+                    Post firstPost = postList.get(0);
+                    int post_cnt = challengeService.findPostCnt(c.getChallenge_no());
+                    int subscription_cnt = challengeService.findSubscriptionCnt(c.getChallenge_no());
+                    return new ChallengeResponse(firstPost, c, post_cnt, subscription_cnt);
+                })
                 .collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), collect);
     }
@@ -68,10 +130,18 @@ public class FeedApiController {
     @GetMapping("/feed/{userNo}/like")
     public Result getLikePostList(@PathVariable int userNo) {
         List<Post> posts = postService.getLikePostListByUserNo(userNo);
-        List<PostDto> postList = posts.stream()
-                .map(p -> new PostDto(p))
-                .collect(Collectors.toList());
-        return new Result(true, HttpStatus.OK.value(), postList);
+        List<PostResponse> collect = new ArrayList<>();
+        if(!posts.isEmpty()){
+            collect = posts.stream()
+                    .map(p -> {
+                        int challenge_no = p.getChallenge_no();
+                        Challenge challenge = challengeService.findChallengeByChallengeNo(challenge_no);
+                        int like_cnt = postLikeService.postLikeCnt(p.getPost_no());
+                        int comment_cnt = commentService.postCommentCnt(p.getPost_no());
+                        return new PostResponse(p, challenge, like_cnt, comment_cnt);
+                    }).collect(Collectors.toList());
+        }
+        return new Result(true, HttpStatus.OK.value(), collect);
     }
 
     /**
@@ -93,31 +163,6 @@ public class FeedApiController {
                     }).collect(Collectors.toList());
         }
         return new Result(true, HttpStatus.OK.value(), collect);
-    }
-
-    @Data
-    static class PostResponse{
-        private int challenge_no;
-        private boolean isVideo;
-        private int post_no;
-        private int file_no;
-        private String file_path;
-        private String file_savedname;
-        private String challenge_title;
-        private int like_cnt;
-        private int comment_cnt;
-
-        public PostResponse(Post post, Challenge challenge, int like_cnt, int comment_cnt) {
-            this.challenge_no = post.getChallenge_no();
-            if(challenge.getChallenge_type() == ChallengeType.VIDEO) this.isVideo = true;
-            this.post_no = post.getPost_no();
-            this.file_no = post.getMedia().getFile_no();
-            this.file_path = post.getMedia().getFile_path();
-            this.file_savedname = post.getMedia().getFile_savedname();
-            this.challenge_title = challenge.getChallenge_title();
-            this.like_cnt = like_cnt;
-            this.comment_cnt = comment_cnt;
-        }
     }
 
     @GetMapping("/feed/{userNo}")

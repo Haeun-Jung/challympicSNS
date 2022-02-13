@@ -4,6 +4,7 @@ import com.ssafy.challympic.domain.Challenge;
 import com.ssafy.challympic.domain.ChallengeTag;
 import com.ssafy.challympic.domain.Challenger;
 import com.ssafy.challympic.repository.ChallengeRepository;
+import com.ssafy.challympic.repository.PostRepository;
 import com.ssafy.challympic.repository.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
     private final SubscriptionRepository subscriptionRepository;
+    private final PostRepository postRepository;
 
     public List<Challenge> getChallengeByUserNo(int userNo) {
         return challengeRepository.findByUserNo(userNo);
@@ -79,5 +81,13 @@ public class ChallengeService {
             reportCnt += challenge.getChallenge_report();
         }
         return reportCnt;
+    }
+
+    public int findSubscriptionCnt(int challenge_no) {
+        return subscriptionRepository.findSubscriptionByChallenge(challenge_no).size();
+    }
+
+    public int findPostCnt(int challenge_no) {
+        return postRepository.findByChallengNo(challenge_no).size();
     }
 }

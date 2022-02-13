@@ -41,9 +41,8 @@ public class PostRepository {
                 .getResultList();
     }
 
-    public List<Post> findLikePostByUserNo(int userNo) {
-        return em.createQuery("select p from Post p where p.post_no = " +
-                "(select pl.post_no from PostLike pl where pl.user_no = :userNo)", Post.class)
+    public List<PostLike>  findUserPostLike(int userNo){
+        return em.createQuery("select pl from PostLike pl where pl.user_no = :userNo", PostLike.class)
                 .setParameter("userNo", userNo)
                 .getResultList();
     }
