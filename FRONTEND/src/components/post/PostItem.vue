@@ -40,7 +40,7 @@
     <!-- 이미지/동영상 props 넘겨주기 -->
 
     <v-card-text class="px-0">
-      <span v-if="post.challenge_type.toUpperCase == 'VIDEO'">
+      <span v-if="post.challenge_type == 'video'">
         <player :fileName="post.file_savedname" :filePath="post.file_path" />
       </span>
       <span v-else>
