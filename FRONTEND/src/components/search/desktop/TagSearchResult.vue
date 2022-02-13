@@ -50,12 +50,13 @@
 		},
 		created() {
 			searchTagList(
+				this.searchKey,
 				(response) => {
 					this.posts = response.data.data.postList;
 					console.log(this.posts);
 				},
 				(error) => {
-					if (error) console.log("er");
+					console.log(error);
 				}
 			);
 		},
@@ -66,7 +67,10 @@
 				filter: {},
 				sortDesc: false,
 				page: 1,
-
+				searchKey: {
+					user_no: this.$store.state.userStore.userInfo.user_no,
+					tag_content: this.search.substring(1),
+				},
 				itemsPerPage: 6,
 				posts: [
 					/*	{

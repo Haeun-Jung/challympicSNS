@@ -1,13 +1,5 @@
 <template>
 	<v-container>
-		<!--
-		프롭스로 {{ search }} 가져옴 -> api (/search/tag/{tag})로 해당 결과 요청 ㄴ
-		해당 챌린지 목록이 리스트로 나옴 ㄴ 그리고 지금 가져오려는게 해당 챌린지
-		리스트 이름이 들어오는 껍데기 -> api(/challenge/{challengeNo}/post) 로
-		포스트정보만 또 가져옴. 그 가져온 리스트는 child component로 껍데기 안에
-		동영상으로 넣는다
-			:pagination.sync="pagination"
-		-->
 		<v-data-iterator
 			:items="challenges"
 			:footer-props="{
@@ -25,12 +17,6 @@
 						md="6"
 						lg="4"
 					>
-						<!--
-						<div id="moew">
-							:challenge="challenges[`{{ item.challenge_no }}`]"
-							{{ item.challenge_no }}dd
-						</div>
-						-->
 						<challenge-list :challenge="item" />
 					</v-col>
 				</v-row>
@@ -41,6 +27,8 @@
 
 <script>
 	import ChallengeList from "../util/ChallengeList.vue";
+	import { searchTagList } from "@/api/search.js";
+
 	export default {
 		name: "ChallengeSearchResult",
 		components: {
@@ -49,8 +37,31 @@
 		props: {
 			search: String,
 		},
+		created() {
+			console.log(
+				"user_no " +
+					this.$store.state.userStore.userInfo.user_no +
+					"tag_content: " +
+					this.search.substring(1)
+			);
+			searchTagList(
+				this.searchKey,
+
+				(response) => {
+					this.challenges = response;
+					console.log(this.challenges);
+				},
+				(error) => {
+					console.log(error);
+				}
+			);
+		},
 		data() {
 			return {
+				searchKey: {
+					user_no: this.$store.state.userStore.userInfo.user_no,
+					tag_content: this.search.substring(1),
+				},
 				itemsPerPageArray: [3, 6, 9],
 				searchProp: "",
 				filter: {},
@@ -60,7 +71,7 @@
 
 				itemsPerPage: 6,
 				challenges: [
-					{
+					/*{
 						challenge_no: 1,
 						challenge_subscribe: true, //해당 유저가 챌린지 구독햇는지안햇는지
 						challenge_title: "챌린지 제목 1",
@@ -108,23 +119,9 @@
 						challenge_tag: "#챌린지 #테그",
 						challenge_content: "챌린지 내용5",
 						challenge_subscribe: false, //해당 유저가 챌린지 구독햇는지안햇는지
-					},
+					},*/
 				],
 			};
 		},
 	};
 </script>
-
-<style>
-	#app iframe {
-		/*width: 60%;
-		height: 100%;
-		margin-left: 8%;
-		height: 500px;
-        */
-	}
-	#moew {
-		background-color: pink;
-		height: 600px;
-	}
-</style>
