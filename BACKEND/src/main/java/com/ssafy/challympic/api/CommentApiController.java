@@ -66,14 +66,27 @@ public class CommentApiController {
     @PutMapping("/comment")
     public Result update(@RequestBody CommentRequest request){
         commentService.update(request.comment_no, request.comment_content);
-        CommentDto comment = new CommentDto(commentService.findOne(request.comment_no));
-        return new Result(true, HttpStatus.OK.value(), comment);
+        List<Comment> commentList = commentService.findByPost(request.post_no);
+        List<CommentDto> comments = new ArrayList<>();
+        if(!commentList.isEmpty()){
+            comments = commentList.stream()
+                    .map(c -> new CommentDto(c))
+                    .collect(Collectors.toList());
+        }
+        return new Result(true, HttpStatus.OK.value(), comments);
     }
 
     @DeleteMapping("/comment")
     public Result delete(@RequestBody CommentRequest request){
         commentService.delete(request.comment_no);
-        return new Result(true, HttpStatus.OK.value());
+        List<Comment> commentList = commentService.findByPost(request.post_no);
+        List<CommentDto> comments = new ArrayList<>();
+        if(!commentList.isEmpty()){
+            comments = commentList.stream()
+                    .map(c -> new CommentDto(c))
+                    .collect(Collectors.toList());
+        }
+        return new Result(true, HttpStatus.OK.value(), comments);
     }
 
     @PostMapping("/comment/like")
