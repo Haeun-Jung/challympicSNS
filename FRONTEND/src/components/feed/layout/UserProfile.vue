@@ -134,21 +134,19 @@ export default {
                 this.followerCnt = response.data.data.followerCnt;
                 this.followingCnt = response.data.data.followingCnt;
             }
-        ),
+        )
         // 유저가 팔로우한 목록
         getFollowerList(
             this.who_no,
             (response) => {
-                console.log(response.data);
                 this.followerList = response.data.data;
             }
         )
 
-        // 유저를 팔로우한 목록
+        // // 유저를 팔로우한 목록
         getFollowingList(
             this.who_no,
             (response) => {
-                console.log(response.data)
                 this.followingList = response.data.data;
             }
         )
@@ -183,7 +181,6 @@ export default {
                     this.isFollower = response.data.following;
                 }
             )
-
         }
     },
 }
