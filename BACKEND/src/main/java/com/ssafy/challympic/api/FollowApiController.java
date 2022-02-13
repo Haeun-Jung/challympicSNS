@@ -56,7 +56,7 @@ public class FollowApiController {
         List<User> follower = followService.following(user_no);
         List<FollowResponse> collect = follower.stream()
                 .map(m ->{
-                    boolean follow = followService.follow(user_no, m.getUser_no());
+                    boolean follow = followService.isFollow(user_no, m.getUser_no());
                     return new FollowResponse(m, follow);
                 }).collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), collect);
@@ -67,7 +67,7 @@ public class FollowApiController {
         List<User> following = followService.follower(user_no);
         List<FollowResponse> collect = following.stream()
                 .map(m ->{
-                    boolean follow = followService.follow(user_no, m.getUser_no());
+                    boolean follow = followService.isFollow(user_no, m.getUser_no());
                     return new FollowResponse(m, follow);
                 }).collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), collect);
