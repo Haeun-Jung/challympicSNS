@@ -3,7 +3,7 @@
       <v-row dense>
         <v-col
           v-for="post in posts"
-          :key="post.challenge_no"
+          :key="post.post_no"
           :cols="4"
         >
           <v-hover>
@@ -47,8 +47,6 @@ export default {
   data: ()=> ({
     posts: [],
   }),
-  computed: {
-  },
   created() {
     // 유저가 만든 포스트 목록
     getUserMadePost(
