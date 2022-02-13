@@ -8,6 +8,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -312,6 +313,16 @@ public class PostApiController {
             // 포스트 등록
             Post post = new Post();
 
+            for(String str : splitSharp) {
+                if(str.startsWith("#")) {
+                    PostTag postTag = new PostTag();
+                    postTag.setPost(post);
+                    Tag tag = tagService.findTagByTagContent(str);
+                    postTag.setTag(tag);
+                    tagService.savePostTag(postTag);
+                }
+            }
+
             // 수정 필요
             post.setChallenge_no(challengeNo);  // 포스트가 속한 챌린지 정보
 
@@ -391,6 +402,20 @@ public class PostApiController {
 
         // 포스트 업데이트
         int postId = postService.update(postNo, _post);
+
+        String content = postRequest.getPost_content();
+        String[] splitSharp = content.split(" ");
+
+        for(String str : splitSharp){
+            if(str.startsWith("#")){
+                Tag tag = tagService.findTagByTagContent(str);
+                PostTag postTag = new PostTag();
+                postTag.setPost(_post);
+                postTag.setTag(tag);
+                tagService.savePostTag(postTag);
+            }
+        }
+
 
         if(postId != 0)
             return new Result(true, HttpStatus.OK.value());
