@@ -39,7 +39,7 @@
 				</v-card-title>
 
 				<v-card-subtitle class="primary--text">
-					좋아요 {{ post.post_likes }} 개 댓글 {{ post.post_comments }}개
+					좋아요 {{ post.post_like_count }} 개 댓글 {{ post.comment_count }}개
 				</v-card-subtitle>
 			</div>
 			<!-- 좋아요-->
@@ -57,7 +57,7 @@
 					<v-list-item-content>
 						<v-list-item-title>
 							<h3 class="title-block" @click="goChallenge">
-								{{ post.challenge_title }}
+								{{ post.chalenge_title }}
 							</h3>
 						</v-list-item-title>
 						<v-list-item-subtitle>
@@ -83,9 +83,9 @@
 			console.log(this.mediaType);
 			this.playerOptions = {
 				preload: "auto",
-				autoplay: true,
+				//autoplay: true,
 				muted: true,
-				loop: true,
+				//loop: true,
 				aspectRatio: "4:3",
 				sources: [
 					{
@@ -108,7 +108,6 @@
 					this.post.file_path +
 					"/" +
 					this.post.file_savedname,
-				//videoUrl ="http://d384sk7z91xokb.cloudfront.net/" +this.post.file_path +"/" +this.post.file_savedname+".m3u8",
 				loaded: false,
 				playerOptions: [],
 				postLike: false, //유저테이블에서 가져오기
@@ -153,10 +152,10 @@
 			pushLike() {
 				this.postLike = !this.postLike; //이건 유저의 변수이고
 				if (this.postLike) {
-					this.post.post_likes++; //이건 포스트의 변수이다
+					this.post.post_like_count++; //이건 포스트의 변수이다
 					//이쪽에서 포스트 라이크 api 호출시키고
 				} else {
-					this.post.post_likes--;
+					this.post.post_like_count--;
 					//이쪽에서 포스트 디스라이크  api 호출시켜야한다
 				}
 			},
@@ -190,14 +189,4 @@
 		display: inline-block;
 		cursor: pointer;
 	}
-	/*	#hello:not(.on-hover) {
-		opacity: 0.5;
-	}
-
-	.show-btns {
-
-		color: rgba(255, 255, 255, 1) !important;
-			color: pink !important;
-		color: rgb(0, 4, 255) !important;
-	}*/
 </style>
