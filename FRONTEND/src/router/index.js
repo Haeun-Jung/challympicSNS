@@ -61,10 +61,10 @@ const routes = [
         path: "/search/:keyword/",
         name: "Search",
         component: Search,
-        redirect: "/search/challenge/:keyword/",
+        redirect: "/search/challenge/:keyword",
         children: [
           {
-            path:  "/search/challenge/:keyword/",
+            path:  "/search/challenge/:keyword",
             name: "ChallengeSearch",
             component:ChallengeSearch,
           }, {

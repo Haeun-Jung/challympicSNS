@@ -138,7 +138,7 @@
 		created() {
 			this.post = [
 				//얘는 this.obj1 = response.data.data.challengeList.postList?이런식으로 가져오면되지 않을까?;
-				{
+				/*{
 					post_no: 1,
 					post_like: true,
 					challenge_title: "챌린지 제목 1",
@@ -148,7 +148,7 @@
 					challenger: "김싸피",
 					challenger_no: 3, //challenger no ? 넘어오는거에 따라서 수정
 					content:
-						/*확장자로 받는 경우 : controls 썸네일은 0.8초로 하자..*/
+					
 						"http://d384sk7z91xokb.cloudfront.net/output/media/20220209/092119/video/c88b277171a94d9c3ac7e32f82bb9d93.m3u8",
 				},
 				{
@@ -173,7 +173,7 @@
 					challenger: "박싸피",
 					challenger_no: 3, //challenger no ? 넘어오는거에 따라서 수정
 					content:
-						/*확장자로 받는 경우 : controls 썸네일은 0.8초로 하자..*/
+					
 						"http://d384sk7z91xokb.cloudfront.net/output/media/20220209/092119/video/c88b277171a94d9c3ac7e32f82bb9d93.m3u8",
 				},
 				{
@@ -186,9 +186,9 @@
 					post_comments: 345465,
 					challenger: "오싸피",
 					content:
-						/*확장자로 받는 경우 : controls 썸네일은 0.8초로 하자..*/
+					
 						"http://d384sk7z91xokb.cloudfront.net/output/media/20220209/092119/video/c88b277171a94d9c3ac7e32f82bb9d93.m3u8",
-				},
+				},*/
 			];
 		},
 		methods: {
