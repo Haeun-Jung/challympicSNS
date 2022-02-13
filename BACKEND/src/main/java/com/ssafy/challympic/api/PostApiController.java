@@ -31,7 +31,7 @@ public class PostApiController {
     private final TagService tagService;
     private final FollowService followService;
     private final CommentService commentService;
-
+    private final CommentLikeService commentLikeService;
     private final S3Uploader s3Uploader;
 
     @Data
@@ -179,16 +179,10 @@ public class PostApiController {
 
             List<Comment> comments = commentService.findByPost(post.getPost_no());
             List<CommentDto> commentList = comments.stream()
-                            .map(c -> new CommentDto(
-                                    c.getComment_no(),
-                                    c.getUser().getUser_no(),
-                                    c.getPost().getPost_no(),
-                                    c.getComment_content(),
-                                    c.getComment_regdate(),
-                                    c.getComment_update(),
-                                    c.getCommentLike().size(),
-                                    c.getComment_report()
-                                    ))
+                            .map(c -> {
+                                boolean IsLiked = commentLikeService.findIsLikeByUser(request.user_no, c.getComment_no());
+                                return new CommentDto(c, IsLiked);
+                            })
                     .collect(Collectors.toList());
             postDto.setCommentList(commentList);
 
