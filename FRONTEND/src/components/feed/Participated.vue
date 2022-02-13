@@ -14,7 +14,7 @@
               >
                 <v-img :src="post.src">
                   <!-- 비디오일때만 -->
-                  <i v-if="post.isVideo" class='fas fa-play play-btn'></i>
+                  <v-icon v-if="post.isVideo" icon class="play-btn">mdi-play</v-icon>
                 </v-img>
                 <v-fade-transition>
                   <v-overlay
@@ -23,8 +23,8 @@
                     color="#2E2E2E"
                   >
                   <div class="info-wrapper">
-                    <div class="challenge-info"><i class='fas fa-hashtag icon'></i>{{ post.challenge }}</div>
-                    <div><i class='fas fa-heart icon'></i>&nbsp;{{ post.like }} <i class='fas fa-comment-alt icon'></i> {{ post.comment }}</div>
+                    <div class="challenge-info"><v-icon icon class="icon hashtag-icon">mdi-pound</v-icon>{{ post.challenge }}</div>
+                    <div><v-icon icon class="icon">mdi-heart</v-icon>{{ post.like }} <v-icon icon class="icon comment-icon">mdi-comment</v-icon> {{ post.comment }}</div>
                   </div>
                   </v-overlay>
                 </v-fade-transition>
@@ -37,6 +37,8 @@
 </template>
 
 <script>
+import { getUserMadePost } from '@/api/feed.js';
+
 export default {
   name: "Participated",
   data: ()=> ({
@@ -78,6 +80,23 @@ export default {
       }
     ],
   }),
+  computed: {
+    who_no() {
+      const temp = decodeURIComponent(this.$router.currentRoute.path);
+      const chars = temp.split("/");
+        return chars[2];
+      },
+  },
+  created() {
+    // 유저가 만든 포스트 목록
+    getUserMadePost(
+      this.who_no,
+      (response) => {
+        console.log("포스트목록");
+        console.log(response.data);
+      }
+    )
+  }
 }
 </script>
 
@@ -90,16 +109,21 @@ export default {
 }
 .play-btn {
   float: right;
-  width: 22px;
+  width: 40px;
   color: #fff;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 .challenge-info {
   font-size: 20px;
 }
 .icon {
-  margin-top: 8px;
   margin-left: 6px;
   margin-right: 4px;
+}
+.hashtag-icon {
+  margin-top: -4px;
+}
+.comment-icon {
+  margin-right: -1px;
 }
 </style>

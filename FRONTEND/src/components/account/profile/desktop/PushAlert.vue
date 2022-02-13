@@ -22,7 +22,7 @@
 		name: "PasswordUpdate",
 		data() {
 			return {
-				switch1: true,
+				switch1: this.$store.state.userStore.pushAlert,
 			};
 		},
 		methods: {},

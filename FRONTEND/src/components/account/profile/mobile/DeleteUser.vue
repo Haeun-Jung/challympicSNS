@@ -41,6 +41,9 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
+
+const userStore = "userStore";
 	export default {
 		name: "PasswordUpdate",
 		data() {
@@ -53,15 +56,19 @@
 				},
 			};
 		},
+		computed: {
+			...mapState(userStore, ["userInfo"]),
+		},
 		methods: {
+			...mapActions(userStore, ["deleteUser"]),
 			onSubmit() {
-				//	alert(this.optOutText);
-				// api로 유저넘버 보내기
+				this.deleteUser(localStorage.getItem("Authorization"));
+				this.$store.commit('userStore/LOGOUT');
+				window.location.href="/";
 			},
 			checkOpt() {
 				if (this.optOutText === "탈퇴하겠습니다.") {
 					this.disabledTrue = false;
-					alert("eye");
 				} else {
 					this.disabledTrue = true;
 				}

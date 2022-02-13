@@ -49,12 +49,10 @@ public class SearchRepository {
                 .getResultList();
     }
 
-
     public List<Post> findPostByTagContent(String tag) {
         return em.createQuery(
-                "select p from Post p where p.post_no = " +
-                        "(select pt.post.post_no from PostTag pt where pt.tag = " +
-                        "(select t from Tag t where t.tag_content = :tag))", Post.class)
+                "select pt.post from PostTag pt where pt.tag = " +
+                        "(select t from Tag t where t.tag_content = :tag)", Post.class)
                 .setParameter("tag", tag)
                 .getResultList();
     }

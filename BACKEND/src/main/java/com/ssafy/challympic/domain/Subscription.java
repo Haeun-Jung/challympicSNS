@@ -13,11 +13,11 @@ public class Subscription {
     @Column(name = "subscription_no")
     private int subscription_no;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "challenge_no")
     private Challenge challenge;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_no")
     private User user;
 

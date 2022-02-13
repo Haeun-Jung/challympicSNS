@@ -57,4 +57,13 @@ public class CommentService {
         }
         return reportCnt;
     }
+
+    public int postCommentCnt(int post_no) {
+        List<Comment> postList = commentRepository.findByPost(post_no);
+        if(!postList.isEmpty()){
+            return postList.size();
+        }else{
+            return 0;
+        }
+    }
 }

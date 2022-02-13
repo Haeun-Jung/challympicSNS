@@ -53,16 +53,9 @@ public class UserApiController {
                     .map(i -> new interestDto(i))
                     .collect(Collectors.toList());
         }
-        List<Subscription> subscriptions = findUser.getSubscription();
-        List<subscriptionDto> userSubscription = new ArrayList<>();
-        if(!subscriptions.isEmpty()){
-            userSubscription = subscriptions.stream()
-                    .map(s -> new subscriptionDto(s))
-                    .collect(Collectors.toList());
-        }
 
         if(findUser != null) {
-            return new Result(true, HttpStatus.OK.value(), new UserDto(findUser, userTitles, userInterests, userSubscription));
+            return new Result(true, HttpStatus.OK.value(), new UserDto(findUser, userTitles, userInterests));
         }else{
             return new Result(false, HttpStatus.BAD_REQUEST.value(), new UserDto());
         }
@@ -126,33 +119,9 @@ public class UserApiController {
             }else{
                 userService.updateUser(user_no, request.getUser_nickname(), null, request.getUser_title());
             }
-
-            User findUser = userService.findUser(user_no);
-            List<Title> titles = titleService.findTitlesByUserNo(user_no);
-            List<titleDto> userTitles = new ArrayList<>();
-            if(!titles.isEmpty()){
-                userTitles = titles.stream()
-                        .map(t -> new titleDto(t))
-                        .collect(Collectors.toList());
-            }
-
-            List<Interest> interests = findUser.getInterest();
-            List<interestDto> userInterests = new ArrayList<>();
-            if(!interests.isEmpty()){
-                userInterests = interests.stream()
-                        .map(i -> new interestDto(i))
-                        .collect(Collectors.toList());
-            }
-            List<Subscription> subscriptions = findUser.getSubscription();
-            List<subscriptionDto> userSubscription = new ArrayList<>();
-            if(!subscriptions.isEmpty()){
-                userSubscription = subscriptions.stream()
-                        .map(s -> new subscriptionDto(s))
-                        .collect(Collectors.toList());
-            }
-
-            if(findUser != null) {
-                return new Result(true, HttpStatus.OK.value(), new UserDto(findUser, userTitles, userInterests, userSubscription));
+            User user = userService.findUser(user_no);
+            if(user != null) {
+                return new Result(true, HttpStatus.OK.value(), new UserDto(user));
             }else{
                 return new Result(false, HttpStatus.BAD_REQUEST.value(), new UserDto());
             }
@@ -190,7 +159,7 @@ public class UserApiController {
         User findUser = userService.findUser(user_no);
         System.out.println(bCryptPasswordEncoder.matches(request.getUser_pwd(), findUser.getUser_pwd()));
         if(!bCryptPasswordEncoder.matches(request.getUser_pwd(), findUser.getUser_pwd())){
-            return new Result(false, HttpStatus.NO_CONTENT.value(), new UserDto());
+            return new Result(false, HttpStatus.BAD_REQUEST.value(), new UserDto());
         }
 
         String newpwd = bCryptPasswordEncoder.encode(request.getUser_newpwd());
@@ -277,19 +246,6 @@ public class UserApiController {
     }
 
     @Data
-    static class subscriptionDto{
-        private int subscription_no;
-        private int challenge_no;
-        private String challenge_title;
-
-        public subscriptionDto(Subscription subscription) {
-            this.subscription_no = subscription.getSubscription_no();
-            this.challenge_no = subscription.getChallenge().getChallenge_no();
-            this.challenge_title = subscription.getChallenge().getChallenge_title();
-        }
-    }
-
-    @Data
     static class titleDto{
         private String title_name;
 
@@ -307,11 +263,8 @@ public class UserApiController {
         private String user_nickname;
         private String user_title;
         private int file_no;
-        private String file_path;
-        private String file_savedname;
         private List<titleDto> titles;
         private List<interestDto> interests;
-        private List<subscriptionDto> subscriptions;
 
         public UserDto(User user) {
             this.user_no = user.getUser_no();
@@ -322,27 +275,34 @@ public class UserApiController {
                 this.file_no = 0;
             }else{
                 this.file_no = user.getMedia().getFile_no();
-                this.file_path = user.getMedia().getFile_path();
-                this.file_savedname = user.getMedia().getFile_savedname();
             }
         }
 
-        public UserDto(User user, List<titleDto> titles, List<interestDto> interests, List<subscriptionDto> subscriptions) {
+        public UserDto(User user, List<titleDto> titles) {
+            this.user_no = user.getUser_no();
+            this.user_email = user.getUser_email();
+            this.user_nickname = user.getUser_nickname();
+            this.user_title = user.getUser_title();
+            this.titles = titles;
+            if(user.getMedia() == null){
+                this.file_no = 0;
+            }else{
+                this.file_no = user.getMedia().getFile_no();
+            }
+        }
+
+        public UserDto(User user, List<titleDto> titles, List<interestDto> interests) {
             this.user_no = user.getUser_no();
             this.user_email = user.getUser_email();
             this.user_nickname = user.getUser_nickname();
             this.user_title = user.getUser_title();
             this.titles = titles;
             this.interests = interests;
-            this.subscriptions = subscriptions;
             if(user.getMedia() == null){
                 this.file_no = 0;
             }else{
                 this.file_no = user.getMedia().getFile_no();
-                this.file_path = user.getMedia().getFile_path();
-                this.file_savedname = user.getMedia().getFile_savedname();
             }
-
         }
 
         @Data

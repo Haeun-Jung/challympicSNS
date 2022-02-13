@@ -1,32 +1,21 @@
 <template>
-	<!-- 하나의 챌린지 리스트
-			호버했을 때 : 해당 챌린지 바로가기 ㄱㄱ ? or 포스트 바로가기 ?
-     -->
-	<v-card elevation="2" max-width="444" class="mx-auto">
-		<v-system-bar lights-out>
-			<v-row class="justify-end">
-				<v-btn
-					color="blue lighten-2"
-					depressed
-					plain
-					tile
-					:ripple="false"
-					dense
-					@click="goChallenge"
-				>
-					<v-list-item-subtitle>챌린지 바로가기</v-list-item-subtitle>
-				</v-btn>
-			</v-row></v-system-bar
-		>
+	<v-skeleton-loader
+		v-if="!loaded"
+		max-width="444px"
+		height="360px"
+		type="image, list-item-two-line"
+		class="mx-auto"
+	></v-skeleton-loader>
+	<v-card v-else elevation="2" height="auto" width="444px">
 		<div class="holder">
-			<video
-				ref="myvideo"
-				width="100%;!important"
-				height="280px;!important"
-				controls="controls"
-				preload="metadata"
-				:src="videoUrl"
-			></video>
+			<video-player
+				class="video-player-box"
+				ref="videoPlayer"
+				height="280!important"
+				:playsinline="true"
+				:options="playerOptions"
+			>
+			</video-player>
 			<!-- 포스트 정보 -->
 			<div class="bar">
 				<v-card-title>
@@ -63,20 +52,15 @@
 				<v-list-item>
 					<v-list-item-content>
 						<v-list-item-title>
-							<h3>{{ post.challenge_title }}</h3>
+							<h3 class="title-block" @click="goChallenge">
+								{{ post.challenge_title }}
+							</h3>
 						</v-list-item-title>
-
 						<v-list-item-subtitle>
 							{{ splitContents }}
 						</v-list-item-subtitle>
 						<v-list-item-subtitle> {{ splitTags }}</v-list-item-subtitle>
 					</v-list-item-content>
-
-					<!--누르면 챌린지 상세 페이지로 이동
-							<span>
-
-							</span>
-						-->
 				</v-list-item>
 			</v-list>
 		</v-card>
@@ -89,9 +73,26 @@
 		props: {
 			post: Object,
 		},
+		created() {
+			this.playerOptions = {
+				preload: "auto",
+				autoplay: true,
+				muted: true,
+				loop: true,
+				aspectRatio: "4:3",
+				sources: [
+					{
+						type: "application/x-mpegURL",
+						src: this.post.content,
+					},
+				],
+			};
+		},
 		data() {
 			return {
-				videoUrl: this.post.content + "#t=0.9",
+				videoUrl: this.post.content,
+				loaded: false,
+				playerOptions: [],
 			};
 		},
 		computed: {
@@ -111,6 +112,15 @@
 				else return this.post.post_content.substring(0, i);
 			},
 		},
+		mounted: function () {
+			var that = this;
+			if (document.readyState === "complete") this.$set(that, "loaded", true);
+			document.addEventListener("readystatechange", function () {
+				if (document.readyState === "complete") that.$set(that, "loaded", true);
+			});
+			//	this.playerOptions.sources.src = this.post.content;
+			//console.log(this.playerOptions.sources.src);
+		},
 		methods: {
 			goPost() {
 				alert("상세 페이지로 이동 where postno = " + this.post.post_no);
@@ -118,6 +128,7 @@
 			goChallenge() {
 				const path = "/challenge/" + this.post.challenge_no;
 				this.$router.push(path);
+				this.$router.go();
 			},
 			pushLike() {
 				this.post.post_like = !this.post.post_like;
@@ -138,27 +149,10 @@
 </script>
 
 <style>
-	/*	#app iframe {
-		/*width: 60%;
-		height: 100%;
-		margin-left: 8%;
-		height: 500px;
-        */
-	/*padding-right: 45%
-		padding-right: 50%;
-		position: relative;
+	video {
+		object-fit: fill;
 	}
-	#hello {
-		transition: opacity 0.4s ease-in-out;
-	}
-	.holder {
-		position: relative;
-	}
-	.play-box {
-		position: absolute;
-		top: 43%;
-		left: 48%;
-	}*/
+
 	.bar {
 		position: absolute;
 		top: 1%;
@@ -168,6 +162,10 @@
 		position: absolute;
 		top: 7%;
 		right: 5%;
+	}
+	.title-block {
+		display: inline-block;
+		cursor: pointer;
 	}
 	/*	#hello:not(.on-hover) {
 		opacity: 0.5;

@@ -153,7 +153,6 @@ public class ChallengeApiController {
                 _challenge_no = chall.getChallenge_no();
             }
         }
-
         return new Result(true, HttpStatus.OK.value(), new ChallengeResponse(_challenge_no));
     }
 
@@ -177,6 +176,11 @@ public class ChallengeApiController {
     @PostMapping("/challenge/confirm")
     public Result ChallengeTitleCheck(@RequestBody ChallengeTitleCheckRequest request) {
         List<Challenge> challenges = challengeService.findChallengeByTitle(request.getChallenge_title());
+
+        if(challenges.size() != 0){
+            return new Result(false, HttpStatus.FORBIDDEN.value());
+        }
+
         for(Challenge c : challenges) {
             if(c.getChallenge_end().after(new Date())){
                 return new Result(false, HttpStatus.FORBIDDEN.value());
