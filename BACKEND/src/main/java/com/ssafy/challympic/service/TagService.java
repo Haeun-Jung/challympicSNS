@@ -62,11 +62,11 @@ public class TagService {
         return tagRepository.findPostTagListByPostNo(postNo);
     }
 
-    public int getMaxTag() {
-        return tagRepository.getMaxTag();
-    }
-
     public List<PostTag> findPostTagList(int post_no) {
         return tagRepository.findPostTagList(post_no);
+    }
+
+    public List<Tag> findAllTagList() {
+        return tagRepository.findAllTagList();
     }
 }

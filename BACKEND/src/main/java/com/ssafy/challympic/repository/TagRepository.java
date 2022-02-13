@@ -60,14 +60,14 @@ public class TagRepository {
                 .getResultList();
     }
 
-    public int getMaxTag() {
-        return em.createQuery("select count(t) from Tag t")
-                .getFirstResult();
-    }
-
     public List<PostTag> findPostTagList(int post_no) {
         return em.createQuery("select pt from PostTag pt where pt.post.post_no = :post_no", PostTag.class)
                 .setParameter("post_no", post_no)
+                .getResultList();
+    }
+
+    public List<Tag> findAllTagList() {
+        return em.createQuery("select t from Tag t", Tag.class)
                 .getResultList();
     }
 }

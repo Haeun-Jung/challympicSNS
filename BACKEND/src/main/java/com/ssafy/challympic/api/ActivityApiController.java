@@ -30,10 +30,24 @@ public class ActivityApiController {
         return new Result(true, HttpStatus.OK.value());
     }
 
-    private final int maxTag = 50;
-
     @GetMapping("/activity/{userNo}")
     public Result getActivity(@PathVariable int userNo) {
+        List<Tag> tagResponse = getTagsVer01(userNo);
+
+        List<Activity> mainUserActivityList = activityService.findActivityListByUserNo(userNo);
+
+//        Map<Integer, List<Activity>> activityMap = new HashMap<>();
+//        List<User> allUserList = userService.findAllUser();
+//        int[][] intersectionCount = new int[allUserList.size()][2];
+//        for(User user : allUserList) {
+//            List<Activity> activityList = activityService.findActivityListByUserNo(user.getUser_no());
+//            activityMap.put(user.getUser_no(), activityList);
+//        }
+
+        return new Result(true, HttpStatus.OK.value(), new ActivityResponse(tagResponse));
+    }
+
+    private List<Tag> getTagsVer01(int userNo) {
         List<Activity> activityList = activityService.findActivityListByUserNo(userNo);
         List<Tag> tagAll = new ArrayList<>();
         for(Activity activity : activityList) {
@@ -42,7 +56,8 @@ public class ActivityApiController {
                 tagAll.add(postTag.getTag());
             }
         }
-//        int maxTag = tagService.getMaxTag();
+        List<Tag> tempTagList = tagService.findAllTagList();
+        int maxTag = tempTagList.size();
         int[][] tagCount = new int[maxTag][2];
 
         for(int i = 0; i < maxTag; i++) tagCount[i][0] = i + 1;
@@ -58,8 +73,7 @@ public class ActivityApiController {
         for(int i = 0; i < 5; i++) {
             tagResponse.add(tagService.findOne(tagCount[i][0]));
         }
-
-        return new Result(true, HttpStatus.OK.value(), new ActivityResponse(tagResponse));
+        return tagResponse;
     }
 
     @Data
