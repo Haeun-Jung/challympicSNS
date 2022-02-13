@@ -15,18 +15,27 @@
                                 <img class="medal-icon" src="https://cdn-icons-png.flaticon.com/512/744/744922.png"/>
                                 <div class="header-title font-weight">스쿼트 왕</div>
                                 <div class="user-name font-weight">박싸피</div>
+                                <v-col v-if="who_no != login_user">
+                                    <!-- 상대 프로필일 때 -->
+                                    <v-btn v-if="isFollower" @click="follow" color="#3396F4"  class="white--text rounded-xl" small>
+                                        팔로잉취소
+                                    </v-btn>
+                                    <v-btn v-else @click="follow" color="#3396F4" class="rounded-xl" small outlined>
+                                        팔로잉하기
+                                    </v-btn>
+                                </v-col>
                             </v-list-item-title>
                         </v-col>
                         <!-- 팔로잉, 팔로우 명단 props로 잡기(post/FollowLikeModal) -->
                         <v-col md="2" class="follow-wrapper" align-self="center">
                             <div class="font-weight">팔로워</div>
-                            <div class="show-folllow-modal" @click="openFollowerDialog">3</div>
-                            <follow-like-modal v-if="follower" @close-modal="follower=false" type="follower" :users="follows"></follow-like-modal>
+                            <div class="show-folllow-modal" @click="openFollowerDialog">{{followerCnt}}</div>
+                            <follow-like-modal v-if="follower" @close-modal="follower=false" type="follower" :users="followingList"></follow-like-modal>
                         </v-col>
                         <v-col md="2" class="follow-wrapper" align-self="center">
                             <div class="font-weight">팔로잉</div>
-                            <div class="show-folllow-modal" @click="openFollowingDialog">3</div>
-                            <follow-like-modal v-if="following" @close-modal="following=false" type="following" :users="follows"></follow-like-modal>
+                            <div class="show-folllow-modal" @click="openFollowingDialog">{{followingCnt}}</div>
+                            <follow-like-modal v-if="following" @close-modal="following=false" type="following" :users="followerList"></follow-like-modal>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -53,14 +62,15 @@
                                     <div class="header-title font-weight">스쿼트 왕</div>
                                 </v-list-item-title>
                                 <div class="user-name bottom-blank font-weight">박싸피</div>
-                                <!-- 상대 프로필일 때
-                                <v-btn v-if="user.isFollowing" @click="follow(user.userNo)" color="#3396F4"  class="white--text rounded-xl" small>
-                                    팔로우
-                                </v-btn>
-                                <v-btn v-else @click="follow(user.userNo)" color="#3396F4" class="rounded-xl" small outlined>
-                                    팔로잉
-                                </v-btn>
-                                -->
+                                    <v-col v-if="who_no != login_user">
+                                        <!-- 상대 프로필일 때 -->
+                                        <v-btn v-if="isFollower" @click="follow" color="#3396F4"  class="white--text rounded-xl" small>
+                                            팔로우
+                                        </v-btn>
+                                        <v-btn v-else @click="follow" color="#3396F4" class="rounded-xl" small outlined>
+                                            팔로잉
+                                        </v-btn>
+                                    </v-col>
 							</v-col>
 						</v-row>
                         <!-- 팔로잉, 팔로우 명단 props로 잡기(post/FollowLikeModal) -->
@@ -85,6 +95,7 @@
 
 <script>
 import FollowLikeModal from "@/components/common/FollowLikeModal.vue";
+import { checkFollow, setFollow, getFollowCnt, getFollowerList, getFollowingList } from '@/api/feed.js';
 export default {
      name: "UserProfile",
     components: {
@@ -92,32 +103,55 @@ export default {
     },
     props: {
         type: String,
+        who_no: Number
     },
     data() {
         return {
+            login_user: this.$store.state.userStore.userInfo.user_no,
+            isFollower: false,
             profileUrl: "https://cdn.vuetifyjs.com/images/john.jpg",
             follower: false,
             following: false,
-            follows: [
-                {
-                follow: false,
-                avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-                name: 'Jason Oner',
-                title: '밥 잘먹는'
-                },
-                {
-                follow: false,
-                avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-                name: 'Mike Carlson',
-                title: '스쿼트 장인'
-                },
-                {
-                follow: false,
-                avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-                name: 'Cindy Baker',
-                },
-            ],
+            followerCnt: 0,
+            followingCnt: 0,
+            followerList: [],
+            followingList: [],
         }
+    },
+    created(){
+        // 유저 번호와 로그인 한 사람의 팔로우 관계
+        checkFollow(
+            this.login_user, 
+            this.who_no,
+            (response) => {
+                this.isFollower = response.data.following;
+            }
+        ),
+        // 유저의 팔로우, 팔로잉 cnt
+        getFollowCnt(
+            this.who_no,
+            (response) => {
+                this.followerCnt = response.data.data.followerCnt;
+                this.followingCnt = response.data.data.followingCnt;
+            }
+        ),
+        // 유저가 팔로우한 목록
+        getFollowerList(
+            this.who_no,
+            (response) => {
+                console.log(response.data);
+                this.followerList = response.data.data;
+            }
+        )
+
+        // 유저를 팔로우한 목록
+        getFollowingList(
+            this.who_no,
+            (response) => {
+                console.log(response.data)
+                this.followingList = response.data.data;
+            }
+        )
     },
     methods: {
         isMobile() {
@@ -139,8 +173,19 @@ export default {
         },
         openFollowingDialog() {
             this.following = !this.following;
+        },
+        follow(){
+            // 팔로우 취소 혹은 저장
+            setFollow(
+                this.login_user,
+                this.who_no,
+                (response) => {
+                    this.isFollower = response.data.following;
+                }
+            )
+
         }
-    }
+    },
 }
 </script>
 

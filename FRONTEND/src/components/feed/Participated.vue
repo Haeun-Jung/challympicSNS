@@ -37,6 +37,8 @@
 </template>
 
 <script>
+import { getUserMadePost } from '@/api/feed.js';
+
 export default {
   name: "Participated",
   data: ()=> ({
@@ -78,6 +80,23 @@ export default {
       }
     ],
   }),
+  computed: {
+    who_no() {
+      const temp = decodeURIComponent(this.$router.currentRoute.path);
+      const chars = temp.split("/");
+        return chars[2];
+      },
+  },
+  created() {
+    // 유저가 만든 포스트 목록
+    getUserMadePost(
+      this.who_no,
+      (response) => {
+        console.log("포스트목록");
+        console.log(response.data);
+      }
+    )
+  }
 }
 </script>
 

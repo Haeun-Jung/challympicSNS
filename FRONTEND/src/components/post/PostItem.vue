@@ -97,7 +97,7 @@
     <v-divider />
     <v-expand-transition>
       <div v-show="showComment">
-        <comment-list :comments="post.commentList" />
+        <comment-list :comments="post.commentList" :post_no="post.post" />
         <v-divider />
       </div>
     </v-expand-transition>
@@ -173,7 +173,7 @@ export default {
     toggleLikeDialog() {
       this.likeDialog = !this.likeDialog;
       if (this.likeDialog) {
-        this.$store.dispatch('postStore/getLikeList', this.post.post_no);
+        this.$store.dispatch('postStore/getLikeList', { postNo: this.post.post_no, userNo: this.$store.state.userStore.userInfo.user_no });
       }
     },
     editPost() {
