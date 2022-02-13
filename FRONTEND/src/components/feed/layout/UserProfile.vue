@@ -2,8 +2,11 @@
     <v-container>
         <!-- PC -->
         <v-row v-if="!isMobile()" class="profile-wrapper">
-            <v-avatar size="150">
-                <img :src="profileUrl" alt="John" />
+            <v-avatar size="150" v-if="userInfo.file_no == 0">
+                <v-icon size="150">mdi-account-circle-outline</v-icon>
+            </v-avatar>
+            <v-avatar size="150" v-else>
+                <img :src='"http://d384sk7z91xokb.cloudfront.net/"+this.userInfo.file_path+"/"+this.userInfo.file_savedname' alt="John" />
             </v-avatar>
             <v-col align-self="center">
                 <v-container>
@@ -12,9 +15,11 @@
                         <v-col align-self="center" class="name-wrapper">
                             <v-list-item-title class="title-wrapper">
                                 <!-- 타이틀이 있을 때만 -->
-                                <img class="medal-icon" src="https://cdn-icons-png.flaticon.com/512/744/744922.png"/>
-                                <div class="header-title font-weight">스쿼트 왕</div>
-                                <div class="user-name font-weight">박싸피</div>
+                                <v-col v-if="userInfo.user_title != null">
+                                    <img class="medal-icon" src="https://cdn-icons-png.flaticon.com/512/744/744922.png"/>
+                                </v-col>
+                                <div class="header-title font-weight">{{userInfo.user_title}}</div>
+                                <div class="user-name font-weight">{{userInfo.user_nickname}}</div>
                                 <v-col v-if="who_no != login_user">
                                     <!-- 상대 프로필일 때 -->
                                     <v-btn v-if="isFollower" @click="follow" color="#3396F4"  class="white--text rounded-xl" small>
@@ -103,13 +108,14 @@ export default {
     },
     props: {
         type: String,
-        who_no: Number
+        who_no: Number,
+        userInfo: Object,
     },
     data() {
         return {
             login_user: this.$store.state.userStore.userInfo.user_no,
             isFollower: false,
-            profileUrl: "https://cdn.vuetifyjs.com/images/john.jpg",
+            profileUrl: "http://d384sk7z91xokb.cloudfront.net/"+this.userInfo.file_path+"/"+this.userInfo.file_savedname,
             follower: false,
             following: false,
             followerCnt: 0,

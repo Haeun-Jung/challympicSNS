@@ -22,7 +22,13 @@ public class UserRepository {
             .setParameter("user_pwd", user_pwd)
             .getSingleResult(); }
 
-    public User findOne(int user_no){return em.find(User.class, user_no); }
+    public User findOne(int user_no){
+        try{
+            return em.find(User.class, user_no);
+        }catch (NoResultException e){
+            return null;
+        }
+    }
 
     public List<User> validateEmail(String user_email){
         return em.createQuery("select u from User u where u.user_email = :user_email", User.class)

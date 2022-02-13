@@ -300,13 +300,13 @@
 				profileMenu: [
 					{
 						title: "프로필 설정",
-						link1: "/user/account/:userNo/",
-						link2: "/mobile/user/account/:userNo/",
+						link1: "/user/account/"+this.$store.state.userStore.userInfo.user_no+"/",
+						link2: "/mobile/user/account/"+this.$store.state.userStore.userInfo.user_no+"/",
 					},
 					{
 						title: "내 피드",
-						link1: "/feed/:userNo/",
-						link2: "/feed/:userNo/",
+						link1: "/feed/"+this.$store.state.userStore.userInfo.user_no+"/",
+						link2: "/feed/"+this.$store.state.userStore.userInfo.user_no+"/",
 					},
 					{
 						title: "관리자 페이지",
@@ -429,6 +429,7 @@
 			},
 		},
 		created() {
+			console.log("user_no "+ this.$store.state.userStore.userInfo.user_no);
 			getSearchList(
 				(response) => {
 					this.obj1 = response.data.data.tagList;

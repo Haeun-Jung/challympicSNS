@@ -25,8 +25,12 @@ function getFollowingList(user_no, success, fail){
 }
 
 function getUserMadePost(user_no, success, fail){
-  api.get(`/challympic/post/${user_no}`).then(success).catch(fail);
+  api.get(`/challympic/feed/${user_no}/post`).then(success).catch(fail);
+}
+
+function getFeedUserInfo(user_no, success, fail){
+  api.get(`/challympic/feed/${user_no}`).then(success).catch(fail);
 }
 
 
-export { checkFollow, setFollow , getFollowCnt, getFollowerList, getFollowingList, getUserMadePost };
+export { checkFollow, setFollow , getFollowCnt, getFollowerList, getFollowingList, getUserMadePost, getFeedUserInfo };
