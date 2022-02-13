@@ -31,6 +31,10 @@ public class CommentLikeService {
         int cnt = commentLikeRepository.findLikeCntByComment(comment_no).size();
         return cnt;
     }
+
+    public boolean findIsLikeByUser(int user_no,int comment_no) {
+        return commentLikeRepository.findIsLikeByUser(user_no, comment_no);
+    }
 }
 
 
