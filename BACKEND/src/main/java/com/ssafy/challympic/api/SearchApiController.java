@@ -70,17 +70,19 @@ public class SearchApiController {
         data.put("challengeList", challengeList);
         data.put("postList", postList);
 
-        // 검색 기록 저장
-        User user = userService.findUser(request.user_no);
-        if(user != null) searchService.saveSearchRecord("#" + request.tag_content, user);
+        if(request.user_no != 0){
+            // 검색 기록 저장
+            User user = userService.findUser(request.user_no);
+            if(user != null) searchService.saveSearchRecord("#" + request.tag_content, user);
 
-        Tag findTag = tagService.findTagByTagContent("#" + request.tag_content);
+            Tag findTag = tagService.findTagByTagContent("#" + request.tag_content);
 
-        if(findTag.getIsChallenge() != null && findTag.getIsChallenge().equals("challenge")) {
-            SearchChallenge searchChallenge = new SearchChallenge();
-            searchChallenge.setChallenge(challengeService.findChallengeByTitle("#" + request.tag_content).get(0));
-            searchChallenge.setUser(user);
-            searchService.saveSearchChallenge(searchChallenge);
+            if(findTag.getIsChallenge() != null && findTag.getIsChallenge().equals("challenge")) {
+                SearchChallenge searchChallenge = new SearchChallenge();
+                searchChallenge.setChallenge(challengeService.findChallengeByTitle("#" + request.tag_content).get(0));
+                searchChallenge.setUser(user);
+                searchService.saveSearchChallenge(searchChallenge);
+            }
         }
 
         return new Result(true, HttpStatus.OK.value(), data);
