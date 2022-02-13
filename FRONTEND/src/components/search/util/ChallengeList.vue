@@ -23,6 +23,7 @@
 						controls="controls"
 						preload="metadata"
 						:src="item.content"
+						controlsList="nodownload"
 					></video>
 					<!-- 포스트 정보 -->
 					<div class="bar">
