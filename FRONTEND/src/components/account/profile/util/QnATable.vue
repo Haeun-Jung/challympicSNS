@@ -63,7 +63,7 @@ export default {
 		...mapState(userStore, ["listQnA"]),
 	},
 	mounted() {
-		this.getQnA(localStorage.getItem("Authorization"));
+		this.getQnA(sessionStorage.getItem("Authorization"));
 	},
 	data() {
 		return {

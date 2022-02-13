@@ -33,6 +33,27 @@
 			@close-modal="challenge = false"
 		></challenge-upload>
 		<post-upload v-if="post" @close-modal="post = false"></post-upload>
+		
+	  <v-snackbar
+      v-model="snackbar"
+      :timeout="timeout"
+      color="error"
+      outlined
+	  style="font-weight: bold; border: 2px solid"
+    >
+      {{ text }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="red"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
 	</div>
 </template>
 
@@ -47,6 +68,9 @@
 			PostUpload,
 		},
 		data: () => ({
+			snackbar: false,
+			text: '로그인이 필요한 서비스입니다.',
+			timeout: 1500,
 			challenge: false, //true : ChallengeDialog열림, false : ChallengeDialog닫힘
 			post: false, //true : PostDialog열림, false : PostDialog닫힘
 			hidden: false,
@@ -61,10 +85,17 @@
 		}),
 		methods: {
 			chooseDialog(item) {
+				let Auth = sessionStorage.getItem("Authorization");
 				if (item.title == "챌린지 참여") {
-					this.post = true;
+					if(Auth)
+						this.post = true;
+					else
+						this.snackbar = true;
 				} else {
-					this.challenge = true;
+					if(Auth)
+						this.challenge = true;
+					else
+						this.snackbar = true;
 				}
 			},
 		},

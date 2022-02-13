@@ -5,6 +5,7 @@
 		height="280!important"
 		:playsinline="true"
 		:options="playerOptions"
+		controlsList="nodownload"
 	>
 	</video-player>
 </template>

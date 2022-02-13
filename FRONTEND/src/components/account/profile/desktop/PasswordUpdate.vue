@@ -122,7 +122,7 @@
 			 onSubmit() {
 				 if (this.newPassword !== this.passwordCheck) return;
 				 if (!this.newPassword || !this.passwordCheck || !this.originalPassword) return;
-				this.$store.dispatch('userStore/changePassword', { user_pwd: this.originalPassword, user_newpwd: this.newPassword, token: localStorage.getItem('Authorization') })
+				this.$store.dispatch('userStore/changePassword', { user_pwd: this.originalPassword, user_newpwd: this.newPassword, token: sessionStorage.getItem('Authorization') })
 				setTimeout(() => {
 					if (this.$store.state.userStore.changePassword) {
 						this.alertMsg = '비밀번호가 성공적으로 변경되었습니다.';
