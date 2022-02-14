@@ -399,14 +399,11 @@ export default {
             endDate,
           };
 
-          console.log("point 1")
           this.$store.dispatch("challengeStore/createChallengeWithPost", {
             challenge,
             post: formData,
           });
         } else {
-                    console.log("point 2")
-
           this.$store.dispatch("challengeStore/createChallengeWithPost", {
             challenge: this.propChallenge,
             post: formData,
@@ -418,9 +415,9 @@ export default {
         let challengeNo = -1;
         if (this.propChallenge) {
           challengeNo = this.propChallenge.challengeNo;
-        }
-
-        if (this.selectedChallenge) {
+        }else if (this.propChallengeName) {
+          challengeNo = this.propChallengeName.challengeNo;
+        }else if (this.selectedChallenge) {
           challengeNo = this.selectedChallenge.challengeNo;
         }
         this.$store.dispatch("postStore/createPost", {
@@ -458,7 +455,7 @@ export default {
       // 챌린지 정보를 가지고 들어올 때
       if (this.propChallenge) {
         this.fileType = this.propChallenge.fileType;
-      } else if (!this.propChallengeName) {
+      } else if (this.propChallengeName) {
         this.fileType = this.propChallengeName.challangeType;
       }
     }
