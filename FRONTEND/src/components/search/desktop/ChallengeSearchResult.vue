@@ -39,7 +39,7 @@
 										<video-component
 											v-if="item.challenge_type === 'VIDEO'"
 											:video="
-												'http://d384sk7z91xokb.cloudfront.net/' +
+												'http://d3iu4sf4n4i2qf.cloudfront.net/' +
 												post.file_path +
 												'/video/' +
 												post.file_savedname +
@@ -173,8 +173,8 @@
 							challenge_no: 3,
 							chalenge_title: "#mockingbird",
 							file_no: 3,
-							file_path: "output/media/20220213/222545",
-							file_savedname: "5275796f4178151eaa83f4b0b6b712ff",
+							file_path: "output/media/20220214/133212",
+							file_savedname: "c88b277171a94d9c3ac7e32f82bb9d93",
 							post_content: "TestingTesting!!! #ice #life #warm",
 							post_report: 0,
 							post_regdate: "2022-02-13T13:25:47.000+00:00",
@@ -190,8 +190,8 @@
 							challenge_no: 4,
 							chalenge_title: "#mockingbird",
 							file_no: 4,
-							file_path: "output/media/20220213/225013",
-							file_savedname: "5275796f4178151eaa83f4b0b6b712ff",
+							file_path: "output/media/20220214/133212",
+							file_savedname: "c88b277171a94d9c3ac7e32f82bb9d93",
 							post_content: "Moose goes meow !!! #ice #life #warm",
 							post_report: 0,
 							post_regdate: "2022-02-13T13:50:15.000+00:00",
@@ -222,8 +222,8 @@
 							challenge_no: 4,
 							chalenge_title: "#singingdeer",
 							file_no: 4,
-							file_path: "output/media/20220213/225013",
-							file_savedname: "5275796f4178151eaa83f4b0b6b712ff",
+							file_path: "output/media/20220214/133212",
+							file_savedname: "c88b277171a94d9c3ac7e32f82bb9d93",
 							post_content: "Moose goes meow !!! #ice #life #warm",
 							post_report: 0,
 							post_regdate: "2022-02-13T13:50:15.000+00:00",
