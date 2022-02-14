@@ -14,12 +14,9 @@ function getPostList(challengeNo, userNo, success, fail) {
 
 /* 포스트 작성 */
 async function createPost(challengeNo, post, success, fail) {
-<<<<<<< HEAD
-=======
   
   console.log(post);
   
->>>>>>> 8521d55301c822229754e556ed6d15d02b0a4051
   api.post(`/challympic/challenge/${challengeNo}/post`, post,
   {
     headers: {
