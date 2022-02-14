@@ -27,7 +27,6 @@ export default {
       preload: "auto",
       muted: true,
       loop: true,
-      autoplay: true,
       sources: [
         {
           type: "application/x-mpegURL",
