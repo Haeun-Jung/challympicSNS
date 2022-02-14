@@ -2,7 +2,7 @@
   <v-img
   class="ad-width"
   @click="moveToAd"
-  src="https://vrthumb.imagetoday.co.kr/2021/05/21/tid288t001533.jpg">
+  src="../../assets/public-ad.png">
   </v-img>
 </template>
 
@@ -25,7 +25,7 @@ export default {
 
 <style scoped>
 .ad-width {
-    width: 100%;
+    /* width: 100%; */
     margin: 8px auto;
     cursor: pointer;
 }
