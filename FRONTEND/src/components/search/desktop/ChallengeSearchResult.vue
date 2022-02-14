@@ -85,14 +85,14 @@
 													<v-spacer />
 												</v-card-title>
 
-												<v-card-subtitle
-													style="
-														text-shadow: 1px 1px 3px #424242;
-														-webkit-text-stroke-width: 0.1px;
-														-webkit-text-stroke-color: #424242;
-													"
-												>
-													<strong>
+												<v-card-subtitle style="color: white">
+													<strong
+														style="
+															text-shadow: 1px 1px 3px #424242;
+															-webkit-text-stroke-width: 0.1px;
+															-webkit-text-stroke-color: #424242;
+														"
+													>
 														좋아요 {{ item.post_likes }} 개 댓글
 														{{ item.post_comments }}개</strong
 													>
@@ -136,16 +136,9 @@
 										<span>
 											<!-- v-if user_subscribe == true -> filled 된 애로 보여주기
 											지금 이게 없어서 작동 못함...-->
-											<v-btn
-												icon
-												@click="
-													setSubscribe(item)
-												"
-											>
+											<v-btn icon @click="setSubscribe(item)">
 												<v-icon
-													:color="
-														item.subscription ? 'blue' : 'grey lighten-3'
-													"
+													:color="item.subscription ? 'blue' : 'grey lighten-3'"
 													size="32"
 													>mdi-bookmark-outline</v-icon
 												>
@@ -189,7 +182,7 @@
 					(error) => {
 						console.log(error);
 					}
-				)
+				);
 			},
 			pushLike(post) {
 				console.log(post);
@@ -203,15 +196,15 @@
 					(error) => {
 						console.log(error);
 					}
-				)
-			}
+				);
+			},
 		},
 		created() {
 			searchTagList(
 				this.searchKey,
 				(response) => {
 					this.challenges = response.data.data.challengeList;
-					console.log(this.challenges)
+					console.log(this.challenges);
 				},
 				(error) => {
 					console.log(error);
