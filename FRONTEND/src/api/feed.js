@@ -3,13 +3,13 @@ import { apiInstance } from './index.js';
 const api = apiInstance();
 
 function checkFollow(user_no, follow_follower_no, success, fail) {
-    api.defaults.headers["Authorization"] = localStorage.getItem("Authorization");
+  api.defaults.headers["Authorization"] = sessionStorage.getItem("Authorization");
   api.get(`/challympic/user/${user_no}/follow/${follow_follower_no}`).then(success).catch(fail);
 }
 
 function setFollow(user_no, follow_follower_no, success, fail){
-    api.defaults.headers["Authorization"] = localStorage.getItem("Authorization");
-    api.post(`/challympic/user/${user_no}/follow`, {follow_follower_no}).then(success).catch(fail);
+  api.defaults.headers["Authorization"] = sessionStorage.getItem("Authorization");
+  api.post(`/challympic/user/${user_no}/follow`, {follow_follower_no}).then(success).catch(fail);
 }
 
 function getFollowCnt(user_no, success, fail){

@@ -54,7 +54,7 @@
 
 <script>
 	//	import VideoComponent from "./VideoComponent.vue";
-	import { list } from "@/api/search.js";
+	// import { list } from "@/api/search.js";
 
 	export default {
 		//		components: { VideoComponent },
@@ -95,7 +95,7 @@
 			if (document.readyState === "complete") this.$set(that, "loaded", true);
 			document.addEventListener("readystatechange", function () {
 				if (document.readyState === "complete") that.$set(that, "loaded", true);
-			});
+			});*/
 		},
 		methods: {
 			pushLike(postid, arrIdx) {
