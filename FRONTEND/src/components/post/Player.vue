@@ -31,8 +31,8 @@ export default {
       sources: [
         {
           type: "application/x-mpegURL",
-          // src: "http://d384sk7z91xokb.cloudfront.net/output/media/20220209/092119/video/c88b277171a94d9c3ac7e32f82bb9d93.m3u8",
-          src: `https://d384sk7z91xokb.cloudfront.net/${this.filePath}/video/${this.fileName}.m3u8`,
+          // src: "http://d3iu4sf4n4i2qf.cloudfront.net/output/media/20220209/092119/video/c88b277171a94d9c3ac7e32f82bb9d93.m3u8",
+          src: `https://d3iu4sf4n4i2qf.cloudfront.net/${this.filePath}/video/${this.fileName}.m3u8`,
         },
       ],
     }
