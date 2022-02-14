@@ -139,41 +139,8 @@
 		>
 
 		<div v-if="!isMobile() && isLoggedIn">
-			<v-menu bottom left offset-y max-height="260" width="300" display="block">
-				<template v-slot:activator="{ on, attrs }">
-					<v-btn icon v-bind="attrs" v-on="on">
-						<div v-if="activeAlert" id="alert-badge"></div>
-						<v-icon> mdi-bell-outline </v-icon>
-					</v-btn>
-				</template>
-
-				<v-card v-if="alertMenu.length > 1" width="300">
-					<v-list class="overflow-y-auto">
-						<v-list-item
-							v-for="(item, i) in alertMenu"
-							:key="i"
-							:to="item.link1"
-							class="px-3; mx-1;,my-2"
-						>
-							<v-list-item-title>
-								{{ item.title }}
-								<span class="date-text">{{ dayjsRegDate(item.regDate) }}</span>
-							</v-list-item-title>
-						</v-list-item>
-					</v-list>
-					<v-card-actions>
-						<v-spacer></v-spacer>
-						<v-btn text @click="deleteAlert"> 모두 읽음 </v-btn>
-					</v-card-actions>
-				</v-card>
-				<v-card v-else>
-					<v-list>
-						<v-list-item>
-							<v-list-item-title>새로운 알림이 없습니다.</v-list-item-title>
-						</v-list-item>
-					</v-list>
-				</v-card>
-			</v-menu>
+      <!-- 알림 버튼 위치 -->
+      <alert-button />
 			<v-menu bottom left offset-y display="block">
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn icon v-bind="attrs" v-on="on">
@@ -194,51 +161,7 @@
 			</v-menu>
 		</div>
 		<div v-if="isMobile() && isLoggedIn">
-			<v-menu
-				bottom
-				center
-				offset-y
-				max-height="260"
-				width="210"
-				display="block"
-			>
-				<template v-slot:activator="{ on, attrs }">
-					<v-btn icon v-bind="attrs" v-on="on">
-						<div v-if="activeAlert" id="alert-badge"></div>
-						<v-icon> mdi-bell-outline </v-icon>
-					</v-btn>
-				</template>
-
-				<v-card v-if="alertMenu.length > 1" width="210">
-					<v-list class="overflow-y-auto">
-						<v-list-item
-							v-for="(item, i) in alertMenu"
-							:key="i"
-							:to="item.link1"
-						>
-							<v-list-item-title class="text-caption">
-								{{ item.title }}
-								<span class="date-text-mobile">{{
-									dayjsRegDate(item.regDate)
-								}}</span>
-							</v-list-item-title>
-						</v-list-item>
-					</v-list>
-					<v-card-actions>
-						<v-spacer></v-spacer>
-						<v-btn text @click="deleteAlert"> 모두 읽음 </v-btn>
-					</v-card-actions>
-				</v-card>
-				<v-card v-else>
-					<v-list>
-						<v-list-item>
-							<v-list-item-title class="text-caption"
-								>새로운 알림이 없습니다.</v-list-item-title
-							>
-						</v-list-item>
-					</v-list>
-				</v-card>
-			</v-menu>
+			<alert-button />
 			<v-menu bottom left offset-y width="300px">
 				<template v-slot:activator="{ on, attrs }">
 					<v-btn icon v-bind="attrs" v-on="on">
@@ -280,12 +203,12 @@
 
 <script>
 	import SideContents from "@/components/layout/SideContents.vue";
-	import fromNow from "@/plugins/dayjs.js";
+  import AlertButton from "@/components/button/AlertButton.vue";
 	import { getSearchList } from "@/api/search.js";
 
 	export default {
 		name: "ToolBar",
-		components: { SideContents },
+		components: { SideContents, AlertButton },
 		data() {
 			return {
 				drawer: false,
@@ -298,27 +221,21 @@
 				active: false,
 				menu: false,
 				profileMenu: [
-					{
-						title: "프로필 설정",
-						link1: "/user/account/"+this.$store.state.userStore.userInfo.user_no+"/",
-						link2: "/mobile/user/account/"+this.$store.state.userStore.userInfo.user_no+"/",
-					},
-					{
-						title: "내 피드",
-						link1: "/feed/"+this.$store.state.userStore.userInfo.user_no+"/",
-						link2: "/feed/"+this.$store.state.userStore.userInfo.user_no+"/",
-					},
-					{
-						title: "관리자 페이지",
-						link1: "/admin/",
-						link2: "/admin/",
-					},
+          {
+            title: "프로필 설정",
+            link1: "/user/account/:userNo/",
+            link2: "/mobile/user/account/:userNo/",
+          },
+          {
+            title: "내 피드",
+            link1: "/feed/:userNo/",
+            link2: "/feed/:userNo/",
+          },
 					{
 						title: "로그아웃",
 					},
 					{ title: "Click Me 2" },
 				],
-				alertMenu: [],
 				tags: [],
 				empty: [],
 				dynamicArr: [],
@@ -333,15 +250,38 @@
 			},
 		},
 		computed: {
-			activeAlert() {
-				if (this.alertMenu.length > 1) {
-					return true;
-				}
-				return false;
-			},
 			isLoggedIn() {
 				return this.$store.state.userStore.isLoggedIn;
-			}
+			},
+      // getUser api 응답 user_auth 값 확인 후 주석 해제
+      // profileMenu() {
+      //   let menu = [
+      //     {
+      //       title: "프로필 설정",
+      //       link1: "/user/account/:userNo/",
+      //       link2: "/mobile/user/account/:userNo/",
+      //     },
+      //   ]
+      //   if (this.$store.state.userStore.userInfo.user_auth === "ADMIN") {
+      //     menu.push(
+      //       {
+      //         title: "관리자 페이지",
+      //         link1: "/admin/",
+      //         link2: "/admin/",
+      //       }
+      //     );
+      //   } else {
+      //     menu.push(
+      //       {
+      //         title: "내 피드",
+      //         link1: "/feed/:userNo/",
+      //         link2: "/feed/:userNo/",
+      //       }
+      //     );
+      //   }
+      //   menu.push({ title: "로그아웃" });
+      //   return menu;
+      // },
 		},
 		methods: {
 			test() {
@@ -351,9 +291,6 @@
 			mobiletest() {
 				if (this.mobileSearch.trim().length > 0) this.dynamicArr = this.tags;
 				else if (this.mobileSearch.length == 0) this.dynamicArr = this.empty;
-			},
-			dayjsRegDate(regDate) {
-				return fromNow(regDate);
 			},
 			menuItems() {
 				return this.menu;
@@ -377,12 +314,6 @@
 					this.$store.commit("userStore/LOGOUT");
 					this.$router.push("/login");
 				}
-			},
-			deleteAlert() {
-				this.menu = false;
-				setTimeout(() => {
-					this.alertMenu = [];
-				}, 500);
 			},
 			keywordSearch(val) {
 				var to = val.substring(1);
