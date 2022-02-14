@@ -6,85 +6,88 @@
 		type="image, list-item-two-line"
 		class="mx-auto"
 	></v-skeleton-loader>
-	<v-card v-else elevation="2" height="auto" width="444px">
-		<div
-			style="
-				background-color: black;
-				display: table-cell;
-				vertical-align: middle;
-			"
-		>
-			<div class="holder">
-				<video-player
-					v-if="!mediaType"
-					class="video-player-box py-2"
-					ref="videoPlayer"
-					height="280!important"
-					:playsinline="true"
-					:options="playerOptions"
-				>
-				</video-player>
-				<v-img
-					class="responsive-media"
-					v-else
-					max-width="100%"
-					max-height="100%"
-					:src="imageUrl"
-					height="280!important"
-				/>
-				<!-- 포스트 정보 -->
-				<div class="bar">
-					<v-card-title>
-						<router-link
-							:to="{ path: `/feed/${post.user_no}` }"
-							style="text-decoration: none"
+	<v-card v-else elevation="2" height="auto" width="444px" class="mx-auto">
+		<div class="holder">
+			<video-player
+				v-if="!mediaType"
+				ref="videoPlayer"
+				height="280!important"
+				:playsinline="true"
+				:options="playerOptions"
+			>
+			</video-player>
+			<v-img
+				v-else
+				max-width="100%"
+				max-height="100%"
+				:src="imageUrl"
+				height="282;!important"
+			/>
+			<!-- 포스트 정보 -->
+			<div class="bar">
+				<v-card-title>
+					<router-link
+						:to="{ path: `/feed/${post.user_no}` }"
+						style="text-decoration: none; color: white"
+					>
+						<h3
+							style="
+								text-shadow: 1px 1px 3px #424242;
+								-webkit-text-stroke-width: 0.1px;
+								-webkit-text-stroke-color: #424242;
+							"
 						>
-							<h3 class="#3396F4--text">
-								{{ post.user_nickname }}
-							</h3>
-						</router-link>
-						<v-spacer />
-					</v-card-title>
+							{{ post.user_nickname }}
+						</h3>
+					</router-link>
+					<v-spacer />
+				</v-card-title>
 
-					<v-card-subtitle class="primary--text">
-						좋아요 {{ post.post_like_count }} 개 댓글 {{ post.comment_count }}개
-					</v-card-subtitle>
-				</div>
-				<!-- 좋아요-->
-				<div class="bar-heart">
-					<v-btn @click="pushLike" icon>
-						<v-icon :color="postLike ? 'red' : 'grey lighten-3'" size="32">
-							mdi-heart-outline
-						</v-icon>
-					</v-btn>
-				</div>
+				<v-card-subtitle style="color: white">
+					<strong
+						style="
+							text-shadow: 1px 1px 3px #424242;
+							-webkit-text-stroke-width: 0.1px;
+							-webkit-text-stroke-color: #424242;
+						"
+					>
+						좋아요 {{ post.post_like_count }} 개 댓글
+						{{ post.comment_count }}개</strong
+					>
+				</v-card-subtitle>
+			</div>
+			<!-- 좋아요-->
+			<div class="bar-heart">
+				<v-btn @click="pushLike" icon>
+					<v-icon :color="postLike ? 'red' : 'grey lighten-3'" size="32">
+						mdi-heart-outline
+					</v-icon>
+				</v-btn>
 			</div>
 		</div>
-		<v-card>
-			<v-list two-line>
-				<v-list-item>
-					<v-list-item-content>
-						<v-list-item-title>
-							<h3 class="title-block" @click="goChallenge">
-								{{ post.chalenge_title }}
-							</h3>
-						</v-list-item-title>
-						<v-list-item-subtitle>
-							{{ splitContents }}
-						</v-list-item-subtitle>
-						<v-list-item-subtitle> {{ splitTags }}</v-list-item-subtitle>
-					</v-list-item-content>
-				</v-list-item>
-			</v-list>
-		</v-card>
+
+		<v-list two-line>
+			<v-list-item>
+				<v-list-item-content>
+					<v-list-item-title>
+						<h3 class="title-block" @click="goChallenge">
+							{{ post.chalenge_title }}
+						</h3>
+					</v-list-item-title>
+					<v-list-item-subtitle>
+						{{ splitContents }}
+					</v-list-item-subtitle>
+					<v-list-item-subtitle> {{ splitTags }}</v-list-item-subtitle>
+				</v-list-item-content>
+			</v-list-item>
+		</v-list>
 	</v-card>
 </template>
 
-
 <script>
-		export default {
-			name: "TagSearchList",
-			props: {
+	export default {
+		name: "TagSearchList",
+		props: {
 			post: Object,
 		},
 		created() {
