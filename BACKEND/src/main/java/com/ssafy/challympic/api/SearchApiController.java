@@ -129,7 +129,10 @@ public class SearchApiController {
 
     @GetMapping("/search/rank")
     public Result getRank() {
-        List<User> userList = searchService.findRank();
+        List<User> users = searchService.findRank();
+        List<UserDto> userList = users.stream()
+                .map(u -> new UserDto(u.getUser_no(), u.getUser_nickname()))
+                .collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), userList);
     }
 
