@@ -75,7 +75,9 @@ const userStore = {
         state.listQnA = qna;
       },
       SET_ALERT_LIST(state, alertList) {
-        state.alertList = alertList;
+        if (alertList.length > 0) {
+          state.alertList = alertList;
+        }
       },
       DELETE_ALERT(state) {
         state.alertList = null;
