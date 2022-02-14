@@ -119,7 +119,7 @@
 																</v-list-item-content>
 															</v-list-item>
 														</template>
-														<template v-slot:selection="data">
+														<template v-slot:selection="data" >
 															<v-chip
 																v-bind="data.attrs"
 																:search="data.selected"
@@ -158,6 +158,7 @@
 									outlined
 									close
 									@click:close="remove(tag.tag_no)"
+									class="tag-one"
 								>
 									{{ tag.tag_content }}
 								</v-chip>
@@ -380,5 +381,8 @@ input[type='file'] {
 	font-weight: bold;
 	padding-top: 10px;
 	margin-right: 20px;
+}
+.tag-one{
+	margin: 3px;
 }
 </style>

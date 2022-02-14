@@ -1,15 +1,19 @@
 <template>
 	<div>
 		<v-card-subtitle>
-			<h2>이달의 도전왕</h2>
+			<h2>👑도전왕👑</h2>
 		</v-card-subtitle>
 		<v-list-item-content>
-			<div v-for="champion in champions" class="rank-item" :key="champion.id">
+			<div v-for="(champion, idx) in champions" class="rank-item" :key="champion.id">
 				<span class="number black--text">{{
-					champions.indexOf(champion) + 1
+					idx + 1
 				}}</span>
-				<span class="nickname" @click="moveToFeed(champion)">{{
-					champion
+				<span class="nickname" @click="moveToFeed(champion.user_no)">
+				<span v-if="champion.user_title != null">
+				{{champion.user_title}}	
+				</span>
+				{{
+					champion.user_nickname
 				}}</span>
 			</div>
 		</v-list-item-content>
@@ -17,18 +21,26 @@
 </template>
 
 <script>
+import { getChampions } from '@/api/side.js';
 	export default {
 		name: "Ranking",
 		data() {
 			return {
-				champions: ["ox_zung", "official_kep1er", "enhypen"],
+				champions: [],
 			};
 		},
 		methods: {
-			moveToFeed(champion) {
-				this.$router.push("/feed/" + champion);
+			moveToFeed(champion_no) {
+				this.$router.push("/feed/" + champion_no+"/post");
 			},
 		},
+		created(){
+			getChampions(
+				(response) => {
+					this.champions = response.data.data;
+				}
+			)
+		}
 	};
 </script>
 

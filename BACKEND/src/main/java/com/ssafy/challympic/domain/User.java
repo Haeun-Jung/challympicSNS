@@ -50,6 +50,7 @@ public class User {
     @JoinColumn(name = "file_no")
     private Media media;
 
+    @Column(columnDefinition = "varchar(10) default '도전자'")
     private String user_title;
 
     @OneToMany(mappedBy = "user")

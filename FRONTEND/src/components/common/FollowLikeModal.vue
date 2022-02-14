@@ -65,11 +65,14 @@ export default {
     type: String,
     login_user: Number,
     who_no: Number,
+    followerCnt: Number,
+    followingCnt: Number,
   },
   data() {
     return {
       dialog: true,
       followList: [],
+      // followingCnt_p: this.followingCnt,
     };
   },
   methods: {
@@ -84,35 +87,59 @@ export default {
         (response) => {
           console.log("저장/취소");
           console.log(response.data);
+          console.log("who_no : "+this.who_no+"    login_user : "+this.login_user);
+          // 유저가 팔로우하는 사람들
+          if(this.type === "following"){
+            //내 화면이라면
+            if(this.who_no == this.$store.state.userStore.userInfo.user_no){
+              // 나를 팔로우 하는 사람들 => 취소
+              if(this.followList[idx].follow){
+                this.$emit("decrementFollowerCnt");
+                console.log("decrese")
+              }else{
+                // 나를 팔로우 하는 사람들 => 내가 팔로우
+                this.$emit("incrementFollowerCnt");
+                console.log("intcrese")
+              }
+            }
+          }else if(this.type === "follower"){
+            // follower
+            // 유저를 팔로우하는 사람들
+            
+            // 내 화면이라면
+            if(this.login_user == this.who_no){
+              // 내가 팔로우 했던 사람 => 취소 following 감소
+              if(this.followList[idx].follow){
+                this.$emit("decrementFollowingCnt");
+              }
+              else{
+                // 내가 팔로우 하기
+                this.$emit("incrementFollowingCnt");
+              }
+            }
+          } 
           this.followList[idx].follow = !this.followList[idx].follow
         }
       )
-      this.user
-      if(this.type === "following"){
-        getFollowerList(
-          this.who_no,
-          this.login_user,
-          (response) => {
-            if(this.type === 'following'){
-              console.log(response.data.data);
-              this.followList = response.data.data
-            }
-            console.log(this.followList);
-          }
-        )
-      }else if(this.type === "follower"){
-        getFollowingList(
-          this.who_no,
-          this.login_user,
-          (response) => {
-            // console.log(response.data)
-            if(this.type === 'follower'){
-              console.log(response.data.data);
-              this.followList = response.data.data
-            }
-          }
-        )   
-      }
+      // if(this.type === "following"){
+      //   getFollowerList(
+      //     this.who_no,
+      //     this.login_user,
+      //     (response) => {
+      //       console.log(response.data.data);
+      //       this.followList = response.data.data
+      //     }
+      //   )
+      // }else if(this.type === "follower"){
+      //   getFollowingList(
+      //     this.who_no,
+      //     this.login_user,
+      //     (response) => {
+      //       console.log(response.data.data);
+      //         this.followList = response.data.data
+      //     }
+      //   )   
+      // }
     },
   },
   created(){

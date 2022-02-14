@@ -20,7 +20,8 @@
 			</v-card-subtitle>
           </template>
           <v-chip
-			v-for="challenge in userInfo.subscriptions"
+		  	class="subscription-one"
+			v-for="challenge in listsubscription"
 			:key="challenge.challenge_no"
 			:value="challenge"
 			:to="{ path: '/challenge/' + challenge.id }"
@@ -37,7 +38,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-	
+import { getSubscription } from '@/api/user.js';
 const userStore = "userStore";
 export default {
   name: 'MySubscription',
@@ -50,6 +51,7 @@ export default {
 	},
   data() {
     return {
+		listsubscription : [],
     }
   },
   methods: {
@@ -72,6 +74,14 @@ export default {
             }
         },
 	},
+	created(){
+		getSubscription(
+			this.$store.state.userStore.userInfo.user_no,
+			(response) => {
+				this.listsubscription = response.data.data;
+			}
+		)
+  	}
 }
 </script>
 
@@ -86,5 +96,8 @@ export default {
 	margin: 1%;
 	padding-left: 5%;
 	padding-right: 7%;
+}
+.subscription-one{
+	margin: 3px;
 }
 </style>

@@ -1,10 +1,7 @@
 package com.ssafy.challympic.api;
 
 import com.ssafy.challympic.domain.*;
-import com.ssafy.challympic.service.InterestService;
-import com.ssafy.challympic.service.MediaService;
-import com.ssafy.challympic.service.TitleService;
-import com.ssafy.challympic.service.UserService;
+import com.ssafy.challympic.service.*;
 import com.ssafy.challympic.util.MD5Generator;
 import com.ssafy.challympic.util.S3Uploader;
 import lombok.AllArgsConstructor;
@@ -18,10 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -33,6 +27,7 @@ public class UserApiController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final S3Uploader s3Uploader;
     private final TitleService titleService;
+    private final PostService postService;
     private final InterestService interestService;
 
     @GetMapping("/user/account/{userNo}")
@@ -70,7 +65,6 @@ public class UserApiController {
 
     @PostMapping("/join")
     public Result join(@RequestBody joinUserRequest request){
-        System.out.println("test");
         User newUser = new User();
 
         newUser.setUser_email(request.getUser_email());
@@ -78,6 +72,7 @@ public class UserApiController {
         String rawPwd = request.getUser_pwd();
         String encPwd = bCryptPasswordEncoder.encode(rawPwd);
         newUser.setUser_pwd(encPwd);
+        newUser.setUser_title("도전자");
 
         int join_no = userService.join(newUser);
         if(join_no > 0){
@@ -233,6 +228,55 @@ public class UserApiController {
         }else{
             return new Result(true, HttpStatus.OK.value(), false);
         }
+    }
+
+    static class Kings implements Comparable<Kings> {
+        private int user_no;
+        private int post_cnt;
+
+        public Kings(int user_no, int post_cnt) {
+            this.user_no = user_no;
+            this.post_cnt = post_cnt;
+        }
+
+        @Override
+        public int compareTo(Kings o) {
+            return o.post_cnt - this.post_cnt;
+        }
+    }
+
+    /**
+     * 이달의 도전왕
+     */
+    @GetMapping("/champions")
+    public Result getChampions(){
+        List<User> allUser = userService.findAllUser();
+        List<Kings> kings = new ArrayList<>();
+        for (User user : allUser) {
+            kings.add(new Kings(user.getUser_no(), postService.getPostListByUserNo(user.getUser_no()).size() ));
+        }
+
+        Collections.sort(kings);
+
+        List<UserDto> userList = new ArrayList<>();
+        if(!kings.isEmpty()){
+            userList = kings.stream()
+                    .map(k -> {
+                        int user_no = k.user_no;
+                        User user = userService.findUser(user_no);
+                        return new UserDto(user);
+                    })
+                    .collect(Collectors.toList());
+        }
+
+        List<UserDto> collect = new ArrayList<>();
+        if(userList.size() < 5){
+            collect = userList;
+        }else {
+            collect = userList.subList(0,6);
+        }
+
+        return new Result(true, HttpStatus.OK.value(), collect);
     }
 
     @Data

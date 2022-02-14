@@ -168,6 +168,7 @@
 									outlined
 									close
 									@click:close="remove(tag.tag_no)"
+									class="tag-one"
 								>
 									{{ tag.tag_content }}
 								</v-chip>
@@ -285,14 +286,18 @@
 					let formData = new FormData();
 					formData.append("user_nickname", this.nickname);
 					formData.append("user_title", this.title);
-					this.modifyUser({file: formData, token: sessionStorage.getItem("Authorization")});
+					// if (this.nickname != null) this.formData.append("user_nickname", this.nickname);
+					// if (this.title != null) this.formData.append("user_title", this.title);
+					// this.modifyUser({file: formData, token: sessionStorage.getItem("Authorization")});
 				}
 				/* 사진 변경 O */ 
 				else {
 					if (this.nickname == null) this.nickname = this.userInfo.user_nickname;
-					if (this.title == null) this.title = this.userInfo.user_title;
+					if (this.title == null) this.title = null;
 					this.formData.append("user_nickname", this.nickname);
-					this.formData.append("user_title", this.title);
+					this.formData.append("user_title", "");
+					// if (this.nickname != null) this.formData.append("user_nickname", this.nickname);
+					// if (this.title != null) this.formData.append("user_title", this.title);
 					this.modifyUser({file: this.formData, token: sessionStorage.getItem("Authorization")});
 				}
 				this.duplicateNicknameCheck = true;
@@ -388,5 +393,8 @@
 }
 .page-bottom {
 	margin-bottom: 20px;
+}
+.tag-one{
+	margin: 3px;
 }
 </style>

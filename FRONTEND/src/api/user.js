@@ -45,12 +45,17 @@ function deleteUser(user_no, success, fail) {
 
 /* 관심사 조회 */
 function getInterest(user_no, success, fail) {
-  api.get(`/challympic/user/interest/${user_no}`).then(success).catch(fail);
+  api.get(`/challympic/interest/${user_no}`).then(success).catch(fail);
 }
 
 /* 관심사 삭제 */
 function deleteInterest(user_no, tag_no, success, fail) {
   api.delete(`/challympic/user/interest/${user_no}/${tag_no}`).then(success).catch(fail);
+}
+
+/* 구독 조회 */
+function getSubscription(user_no, success, fail) {
+  api.get(`/challympic/subscribe/${user_no}`).then(success).catch(fail);
 }
 
 /* 구독 삭제 */
@@ -83,6 +88,9 @@ function addAlert(user_no, alert_content, success, fail) {
   api.get(`/challympic/alert/${user_no}`, JSON.stringify({alert_content})).then(success).catch(fail);
 }
 
+
+
+
 export { 
   join, 
   login, 
@@ -94,6 +102,7 @@ export {
    deleteUser,
    getInterest,
    deleteInterest,
+   getSubscription,
    deleteSubscription,
    getQnA,
    registerQuestion,

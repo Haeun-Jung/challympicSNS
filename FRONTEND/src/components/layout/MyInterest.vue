@@ -9,6 +9,7 @@
 			</v-card-subtitle>
 		</template>
 		<v-chip
+			class="interest-one"
 			v-for="tag in listInterest"
 			:key="tag.tag_no"
 			:value="tag"
@@ -45,19 +46,21 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapActions } from "vuex";
+import { getInterest } from '@/api/user.js';
 	
 const userStore = "userStore";
 export default {
 	name: "MyInterest",
 	computed: {
-		...mapState(userStore, ["listInterest"]),
+		// ...mapState(userStore, ["listInterest"]),
 		isLoggedIn() {
 			return this.$store.state.userStore.isLoggedIn;
 		}
 	},
 	data() {
 		return {
+			listInterest: [],
 		};
 	},
 	methods: {
@@ -83,6 +86,14 @@ export default {
             }
         },
 	},
+	created(){
+		getInterest(
+			this.$store.state.userStore.userInfo.user_no,
+			(response) => {
+				this.listInterest = response.data.data;
+			}
+		)
+  	}
 };
 </script>
 
@@ -105,5 +116,9 @@ export default {
 	justify-content: space-between;
 	background: transparent;
 	padding-right: 0px;
+}
+
+.interest-one{
+	margin: 3px;
 }
 </style>
