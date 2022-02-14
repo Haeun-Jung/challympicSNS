@@ -34,7 +34,7 @@ public class TagService {
     @Transactional
     public void saveTag(String challenge_title, boolean isTitle){
         Tag isTag = tagRepository.validateTagContent(challenge_title);
-        if(isTag == null) return;
+        if(isTag != null) return;
         Tag tag = new Tag();
         tag.setTag_content(challenge_title);
         if(isTitle) tag.setIsChallenge("challenge");
@@ -49,9 +49,8 @@ public class TagService {
     }
 
     public Tag findTagByTagContent(String tagContent) {
-        List<Tag> tagList = tagRepository.findByTagContent(tagContent);
-        if(tagList.isEmpty()) return null;
-        return tagList.get(0);
+        Tag tag = tagRepository.findTagByTagContent(tagContent);
+        return tag;
     }
 
     public void savePostTag(PostTag postTag) {

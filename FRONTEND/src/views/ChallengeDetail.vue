@@ -80,72 +80,69 @@
                       </v-btn>
                     </v-card-title>
 
-                    <v-list-item-subtitle class="ml-5">
-                      {{
-                        `기간: ${challenge.challenge_start} ~ ${challenge.challenge_end}`
-                      }}
-                    </v-list-item-subtitle>
-                  </div>
-                  <!-- 모바일 환경일 경우-->
-                  <div v-else>
-                    <v-row>
-                      <v-col xs="2" />
-                      <v-card-title>
-                        <h2>{{ challenge.challenge_title }}</h2>
-                        <span v-if="challenge.challenge_official">✅</span>
-                      </v-card-title>
-                      <v-col xs2 />
-                    </v-row>
-                    <p style="text-align: center">
-                      {{
-                        `기간: ${challenge.challenge_start} ~ ${challenge.challenge_end}`
-                      }}
-                    </p>
-                    <v-row class="text-center">
-                      <v-card width="100%" elevation="0" color="transparent">
-                        <share-button />
-                        <v-btn
-                          v-if="isSubscribed"
-                          @click="subscribe"
-                          class="icon-margin"
-                          icon
-                        >
-                          <v-icon>mdi-bookmark</v-icon>
-                        </v-btn>
-                        <v-btn
-                          v-else
-                          @click="subscribe"
-                          class="icon-margin"
-                          icon
-                        >
-                          <v-icon>mdi-bookmark-outline</v-icon>
-                        </v-btn>
-                        <v-btn
-                          @click="confirmReportDialog = true"
-                          class="icon-margin"
-                          icon
-                        >
-                          <v-icon>mdi-alarm-light-outline</v-icon>
-                        </v-btn>
-                        <v-btn
-                          @click="postDialog = true"
-                          outlined
-                          color="#3396F4"
-                        >
-                          참여하기
-                        </v-btn>
-                      </v-card>
-                    </v-row>
-                  </div>
-                  <v-list-item-subtitle>
-                    <v-chip
-                      class="mt-6 ml-4 challenge-chip"
-                      color="#3396F4"
-                      text-color="white"
-                    >
-                      요리
-                    </v-chip>
-                  </v-list-item-subtitle>
+										<v-list-item-subtitle class="ml-5">
+											{{ `기간: ${challenge.challenge_start} ~ ${challenge.challenge_end}` }}
+										</v-list-item-subtitle>
+									</div>
+									<!-- 모바일 환경일 경우-->
+									<div v-else>
+										<v-row>
+											<v-col xs="2" />
+											<v-card-title>
+												<h2>{{ challenge.challenge_title }}</h2>
+												<span v-if="challenge.challenge_official">✅</span>
+											</v-card-title>
+											<v-col xs2 />
+										</v-row>
+										<p style="text-align: center">{{ `기간: ${challenge.challenge_start} ~ ${challenge.challenge_end}` }}</p>
+										<v-row class="text-center">
+											<v-card width="100%" elevation="0" color="transparent">
+												<share-button />
+												<v-btn
+													v-if="isSubscribed"
+													@click="subscribe"
+													class="icon-margin"
+													icon
+												>
+													<v-icon>mdi-bookmark</v-icon>
+												</v-btn>
+												<v-btn
+													v-else
+													@click="subscribe"
+													class="icon-margin"
+													icon
+												>
+													<v-icon>mdi-bookmark-outline</v-icon>
+												</v-btn>
+												<v-btn
+													@click="confirmReportDialog = true"
+													class="icon-margin"
+													icon
+												>
+													<v-icon>mdi-alarm-light-outline</v-icon>
+												</v-btn>
+												<v-btn
+													@click="postDialog = true"
+													outlined
+													color="#3396F4"
+												>
+													참여하기
+												</v-btn>
+											</v-card>
+										</v-row>
+									</div>
+									<v-list-item-subtitle>
+										<v-chip
+                      v-for="tag in tags"
+                      :key="tag.id"
+                      @click="clickTag(tag)"
+											class="mt-6 ml-4 challenge-chip"
+											color="#3396F4"
+											text-color="white"
+										>
+											{{ tag }}
+										</v-chip>
+									</v-list-item-subtitle>
 
                   <v-card-subtitle>
                     <span
@@ -232,85 +229,103 @@ import ShareButton from "@/components/button/ShareButton.vue";
 import ConfirmReport from "@/components/report/ConfirmReport.vue";
 import PostUpload from "@/components/upload/PostUpload.vue";
 
-export default {
-  name: "ChallengeDetail",
-  components: {
-    Side,
-    PostItem,
-    BattleItem,
-    ShareButton,
-    ConfirmReport,
-    PostUpload,
-  },
-  data() {
-    return {
-      confirmReportDialog: false,
-      alert: false,
-      isSubscribed: false,
-      postDialog: false,
-      linkInput: false,
-      itemsPerPage: -1,
-      // TODO: 기본 정렬 키 어떤 걸로 할지 결정
-      sortBy: "post_no",
-      sortKeys: [
-        { text: "등록 순", value: "post_no" },
-        { text: "최신 순", value: "post_regdate" },
-        { text: "인기 순", value: "likeCnt" },
-        // 댓글 목록 요청은 따로 보내므로 주석 처리 해두었습니다.
-        // { text: "댓글 순", value: "comments.length" },
-      ],
-    };
-  },
-  methods: {
-    showReportedAlert() {
-      // 챌린지 신고 API 호출
-      this.alert = true;
-      this.report = true;
-      setTimeout(() => {
-        this.alert = false;
-      }, 3000);
+	export default {
+		name: "ChallengeDetail",
+		components: { Side, PostItem, BattleItem, ShareButton, ConfirmReport, PostUpload },
+		data() {
+			return {
+				confirmReportDialog: false,
+				alert: false,
+				isSubscribed: false,
+				postDialog: false,
+				linkInput: false,
+				itemsPerPage: -1,
+				// TODO: 기본 정렬 키 어떤 걸로 할지 결정
+				sortBy: "post_no",
+				sortKeys: [
+					{ text: "등록 순", value: "post_no" },
+					{ text: "최신 순", value: "post_regdate" },
+					{ text: "인기 순", value: "likeCnt" },
+          // 댓글 목록 요청은 따로 보내므로 주석 처리 해두었습니다.
+					// { text: "댓글 순", value: "comments.length" },
+				],
+			};
+		},
+		methods: {
+			showReportedAlert() {
+				// 챌린지 신고 API 호출
+				this.alert = true;
+				this.report = true;
+				setTimeout(() => {
+					this.alert = false;
+				}, 3000);
+			},
+			subscribe() {
+				if (this.isSubscribed) {
+					// 챌린지 구독 delete 요청
+				} else {
+					// 챌린지 구독 post 요청
+				}
+				this.isSubscribed = !this.isSubscribed;
+			},
+      clickTag(tagContent) {
+        console.log(tagContent);
+        console.log(tagContent.split("#")[1]);
+        this.$router.push("/search/" + tagContent.split("#")[1]);
+      },
+			isMobile() {
+				if (
+					/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+						navigator.userAgent
+					)
+				) {
+					return true;
+				} else {
+					return false;
+				}
+			},
+		},
+    filters: {
+      hashAnchor(str) {
+        // TODO: anchor 태그에서 href base url 주석 처리된 url로 변경!!!!!
+        str = (str || "").replace(
+          /#[^\s]+/g,
+          '<a class="text-decoration-none" href="http://192.168.219.106:8080/search/$&">$&</a>'
+        );
+        // str = str.replace(
+        //   /#[^\s]+/g,
+        //   '<a class="text-decoration-none" href="http://i6b101.p.ssafy.io/search/$&">$&</a>'
+        // );
+        return str.replace(/\/#/g, "/");
+      },
     },
-    subscribe() {
-      if (this.isSubscribed) {
-        // 챌린지 구독 delete 요청
-      } else {
-        // 챌린지 구독 post 요청
-      }
-      this.isSubscribed = !this.isSubscribed;
-    },
-    isMobile() {
-      if (
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          navigator.userAgent
-        )
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-  },
-  filters: {
-    hashAnchor(str) {
-      // TODO: anchor 태그에서 href base url 주석 처리된 url로 변경!!!!!
-      str = str.replace(
-        /#[^\s]+/g,
-        '<a class="text-decoration-none" href="http://192.168.219.106:8080/search/$&">$&</a>'
-      );
-      // str = str.replace(
-      //   /#[^\s]+/g,
-      //   '<a class="text-decoration-none" href="http://i6b101.p.ssafy.io/search/$&">$&</a>'
-      // );
-      return str.replace(/\/#/g, "/");
-    },
-  },
-  computed: {
-    sortDesc() {
-      if (this.sortBy === "likeCnt" || this.sortBy === "post_regdate") {
-        return true;
-      }
-      return false;
-    },
+		computed: {
+			sortDesc() {
+				if (
+					this.sortBy === "likeCnt" ||
+					this.sortBy === "post_regdate"
+				) {
+					return true;
+				}
+				return false;
+			},
+      challenge() {
+        return this.$store.state.challengeStore.challenge;
+      },
+      postList() {
+        console.log(this.$store.state.postStore.postList);
+        return this.$store.state.postStore.postList;
+      },
+      tags() {
+        let splitedContent = (this.$store.state.challengeStore.challenge.challenge_content || "").split(" ").filter(word => {
+          return word.startsWith("#");
+        })
+        if (splitedContent.length > 0) {
+          return splitedContent;
+        } else {
+          return null;
+        }
+      },
     challenge() {
       return this.$store.state.challengeStore.challenge;
     },
@@ -356,7 +371,10 @@ export default {
 	.challenge-chip {
 		color: white;
 	}*/
-.select {
-  width: 120px;
-}
+	.select {
+		width: 120px;
+	}
+  .v-chip {
+    cursor: pointer;
+  }
 </style>

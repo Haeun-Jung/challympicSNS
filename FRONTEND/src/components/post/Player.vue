@@ -1,8 +1,8 @@
 <template>
-  <div id="videoContainer">
+  <div id="video-wrapper">
     <video-player
       id="player"
-      class="video-player-box"
+      class="video-player-box video-item"
       ref="videoPlayer"
       playsinline
       :options="playerOptions"
@@ -25,10 +25,8 @@ export default {
   created() {
     this.playerOptions = {
       preload: "auto",
-      autoplay: true,
       muted: true,
       loop: true,
-      aspectRatio: "16:9",
       sources: [
         {
           type: "application/x-mpegURL",
@@ -36,14 +34,23 @@ export default {
           src: `https://d3iu4sf4n4i2qf.cloudfront.net/${this.filePath}/video/${this.fileName}.m3u8`,
         },
       ],
-    };
-    console.log(this.playerOptions["sources"]);
-  },
+    }
+  }
 };
 </script>
 
 <style scoped>
-#player {
-  object-fit: cover;
+.video-player-box {
+  background-color: rgb(0, 0, 0);
+}
+::v-deep .video-js .vjs-big-play-button {
+  top: 45%;
+  left: 38%;
+}
+::v-deep .video-js {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 343px;
+  max-height: 550px;
 }
 </style>

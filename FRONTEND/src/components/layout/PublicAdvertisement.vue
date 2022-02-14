@@ -1,9 +1,8 @@
 <template>
   <v-img
-    class="ad-width"
-    @click="moveToAd"
-    src="https://vrthumb.imagetoday.co.kr/2021/05/21/tid288t001533.jpg"
-  >
+  class="ad-width"
+  @click="moveToAd"
+  src="../../assets/public-ad.png">
   </v-img>
 </template>
 
@@ -26,8 +25,8 @@ export default {
 
 <style scoped>
 .ad-width {
-  width: 100%;
-  margin: 8px auto;
-  cursor: pointer;
+    /* width: 100%; */
+    margin: 8px auto;
+    cursor: pointer;
 }
 </style>
