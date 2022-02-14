@@ -12,7 +12,7 @@
                 class="mx-auto img-frame"
                 max-width="344"
               >
-                <v-img :src='"http://d384sk7z91xokb.cloudfront.net/"+challenge.file_path+"/"+challenge.file_savedname'>
+                <v-img :src='"http://d3iu4sf4n4i2qf.cloudfront.net/"+challenge.file_path+"/"+challenge.file_savedname'>
                   <!-- 비디오일때만 -->
                   <v-icon v-if="challenge.video" icon class="play-btn">mdi-play</v-icon>
                 </v-img>
