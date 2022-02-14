@@ -1,9 +1,10 @@
 <template>
-  <div>
+  <div id="videoContainer">
     <video-player
+      id="player"
       class="video-player-box"
       ref="videoPlayer"
-      :playsinline="true"
+      playsinline
       :options="playerOptions"
     ></video-player>
   </div>
@@ -27,7 +28,7 @@ export default {
       autoplay: true,
       muted: true,
       loop: true,
-      aspectRatio: "4:3",
+      aspectRatio: "16:9",
       sources: [
         {
           type: "application/x-mpegURL",
@@ -41,5 +42,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+#player {
+  object-fit: cover;
+}
 </style>
