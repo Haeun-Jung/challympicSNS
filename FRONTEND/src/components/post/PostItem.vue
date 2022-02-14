@@ -90,14 +90,14 @@
       </span>
       <span
         :class="[$vuetify.theme.dark ? 'dark-mode-text' : 'black-text']"
-        v-html="$options.filters.hashAnchor(post.post_content)"
+        v-html="$options.filters.hashAnchor(this.post.post_content)"
       ></span>
       <p>{{ post.post_regdate }}</p>
     </v-card-text>
     <v-divider />
     <v-expand-transition>
       <div v-show="showComment">
-        <comment-list :comments="post.commentList" :post_no="post.post" />
+        <comment-list :comments="post.commentList" :post_no="this.post.post" />
         <v-divider />
       </div>
     </v-expand-transition>
@@ -140,6 +140,10 @@ export default {
   props: {
     type: String,
     post: Object,
+  },
+  created(){
+    console.log("postitem")
+    console.log(this.post);
   },
   data() {
     return {
@@ -205,9 +209,12 @@ export default {
   filters: {
     hashAnchor(str) {
       // TODO: anchor 태그에서 href base url 주석 처리된 url로 변경!!!!!
+      if(!str.includes('#') && !str.includes('@')){
+        return str;
+      }
       str = str.replace(
         /#[^\s]+/g,
-        '<a class="text-decoration-none" href="http://192.168.219.106:8080/search/$&">$&</a>'
+        '<a class="text-decoration-none" href="http://192.168.0.8:8080/search/$&">$&</a>'
       );
       // str = str.replace(
       //   /#[^\s]+/g,

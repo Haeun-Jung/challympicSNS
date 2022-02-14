@@ -35,10 +35,11 @@ const postStore = {
     }
   },
   actions: {
-    getRecentPostList({ commit }, userNo) {
-      getRecentPostList(
+    async getRecentPostList({ commit }, userNo) {
+      await getRecentPostList(
         userNo,
         (response) => {
+          console.log(response.data.data);
           commit('SET_RECENT_POST_LIST', response.data.data);
         },
         () => {

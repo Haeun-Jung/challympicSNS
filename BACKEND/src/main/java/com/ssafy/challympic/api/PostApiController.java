@@ -135,6 +135,8 @@ public class PostApiController {
             Challenge challenge = challengeService.findChallengeByChallengeNo(post.getChallenge_no());
             User user = post.getUser();
 
+            log.info(post.getPost_content());
+
             // 기본 포스트 정보
             PostDto postDto = new PostDto();
             postDto.setPost_no(post.getPost_no());
