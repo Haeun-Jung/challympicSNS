@@ -8,6 +8,8 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
+import org.springframework.lang.Nullable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,7 +31,8 @@ public class PostApiController {
     private final UserService userService;
     private final TagService tagService;
     private final FollowService followService;
-
+    private final CommentService commentService;
+    private final CommentLikeService commentLikeService;
     private final S3Uploader s3Uploader;
 
     @Data
@@ -117,25 +120,88 @@ public class PostApiController {
 
     @Data
     static class ChallengePostRequest {
-        private int userNo;
-        private int challengeNo;
+        private int user_no;
+        private int challenge_no;
     }
 
-    private final CommentService commentService;
+    @GetMapping("/main/recent/post")
+    public Result getRecentPosts(@RequestParam @Nullable Integer userNo){
+        // 최대 50개 가져오기
+        List<Post> postList = postService.getRecentPostList(50);
+        List<PostDto> collect = new ArrayList<>();
+
+        for(Post post : postList){
+            List<PostLike> postLikeList = postLikeService.getPostLikeListByPostNo(post.getPost_no());
+            Challenge challenge = challengeService.findChallengeByChallengeNo(post.getChallenge_no());
+            User user = post.getUser();
+
+            // 기본 포스트 정보
+            PostDto postDto = new PostDto();
+            postDto.setPost_no(post.getPost_no());
+            postDto.setPost_content(post.getPost_content());
+            postDto.setPost_report(post.getPost_report());
+            postDto.setPost_regdate(post.getPost_regdate());
+
+            // 유저 타입
+            postDto.setUser_no(user.getUser_no());
+            postDto.setUser_nickname(user.getUser_nickname());
+            postDto.setUser_title(user.getUser_title());
+            if(user.getMedia() != null)
+                postDto.setUser_profile(user.getMedia().getFile_path() + "/" + user.getMedia().getFile_savedname());
+            else
+                postDto.setUser_profile(null);
+
+
+            // 챌린지 타입
+            postDto.setChallenge_type(challenge.getChallenge_type().name().toLowerCase());
+
+            // 미디어 정보
+            postDto.setFile_no(post.getMedia().getFile_no());
+            postDto.setFile_path(post.getMedia().getFile_path());
+            postDto.setFile_savedname(post.getMedia().getFile_savedname());
+
+            // 좋아요 수
+            if(postLikeList == null){
+                postDto.setLikeCnt(0);
+            } else{
+                postDto.setLikeCnt(postLikeList.size());
+            }
+
+            if(userNo != null) {
+                boolean isLike = postService.getPostLikeByUserNo(user.getUser_no());
+                postDto.setIsLike(isLike);
+
+                List<Comment> comments = commentService.findByPost(post.getPost_no());
+                List<CommentDto> commentList = comments.stream()
+                        .map(c -> {
+                            boolean IsLiked = commentLikeService.findIsLikeByUser(userNo, c.getComment_no());
+                            return new CommentDto(c, IsLiked);
+                        })
+                        .collect(Collectors.toList());
+                postDto.setCommentList(commentList);
+            } else {
+                postDto.setCommentList(null);
+            }
+
+            collect.add(postDto);
+        }
+
+        return new Result(true, HttpStatus.OK.value(), collect);
+    }
 
     /**
-     *  챌린지 번호로 포스트 가져오기(챌린지로 확인 예정
+     *  챌린지 번호로 포스트 가져오기(챌린지로 확인 예정)
      * */
     @PostMapping("/challenge/post")
     public Result list(@RequestBody ChallengePostRequest request){
         Result result = null;
 
         // 챌린지 정보
-        Challenge challenge = challengeService.findChallengeByChallengeNo(request.getChallengeNo());
+        Challenge challenge = challengeService.findChallengeByChallengeNo(request.getChallenge_no());
         if(challenge == null) return new Result(false, HttpStatus.BAD_REQUEST.value());
         String type = challenge.getChallenge_type().name().toLowerCase();
         // 포스트 리스트
-        List<Post> postList = postService.getPostList(request.getChallengeNo());
+        List<Post> postList = postService.getPostList(request.getChallenge_no());
 
         List<PostDto> collect = new ArrayList<>();
 
@@ -174,21 +240,15 @@ public class PostApiController {
                 postDto.setLikeCnt(postLikeList.size());
             }
 
-            boolean isLike = postService.getPostLikeByUserNo(request.getUserNo());
+            boolean isLike = postService.getPostLikeByUserNo(request.getUser_no());
             postDto.setIsLike(isLike);
 
             List<Comment> comments = commentService.findByPost(post.getPost_no());
             List<CommentDto> commentList = comments.stream()
-                            .map(c -> new CommentDto(
-                                    c.getComment_no(),
-                                    c.getUser().getUser_no(),
-                                    c.getPost().getPost_no(),
-                                    c.getComment_content(),
-                                    c.getComment_regdate(),
-                                    c.getComment_update(),
-                                    c.getCommentLike().size(),
-                                    c.getComment_report()
-                                    ))
+                            .map(c -> {
+                                boolean IsLiked = commentLikeService.findIsLikeByUser(request.user_no, c.getComment_no());
+                                return new CommentDto(c, IsLiked);
+                            })
                     .collect(Collectors.toList());
             postDto.setCommentList(commentList);
 
@@ -313,6 +373,16 @@ public class PostApiController {
             // 포스트 등록
             Post post = new Post();
 
+            for(String str : splitSharp) {
+                if(str.startsWith("#")) {
+                    PostTag postTag = new PostTag();
+                    postTag.setPost(post);
+                    Tag tag = tagService.findTagByTagContent(str);
+                    postTag.setTag(tag);
+                    tagService.savePostTag(postTag);
+                }
+            }
+
             // 수정 필요
             post.setChallenge_no(challengeNo);  // 포스트가 속한 챌린지 정보
 
@@ -393,6 +463,20 @@ public class PostApiController {
         // 포스트 업데이트
         int postId = postService.update(postNo, _post);
 
+        String content = postRequest.getPost_content();
+        String[] splitSharp = content.split(" ");
+
+        for(String str : splitSharp){
+            if(str.startsWith("#")){
+                Tag tag = tagService.findTagByTagContent(str);
+                PostTag postTag = new PostTag();
+                postTag.setPost(_post);
+                postTag.setTag(tag);
+                tagService.savePostTag(postTag);
+            }
+        }
+
+
         if(postId != 0)
             return new Result(true, HttpStatus.OK.value());
 
@@ -449,6 +533,46 @@ public class PostApiController {
         }
 
         return new Result(true, HttpStatus.OK.value());
+    }
+
+    @GetMapping("/post/{userNo}")
+    public Result postByUser(@PathVariable("userNo") int user_no){
+        List<Post> postListByUserNo = postService.getPostListByUserNo(user_no);
+        List<PostResponse> collect = new ArrayList<>();
+        if(!postListByUserNo.isEmpty()){
+            collect = postListByUserNo.stream()
+                    .map(p -> {
+                        int challenge_no = p.getChallenge_no();
+                        Challenge challenge = challengeService.findChallengeByChallengeNo(challenge_no);
+                        int like_cnt = postLikeService.postLikeCnt(p.getPost_no());
+                        int comment_cnt = commentService.postCommentCnt(p.getPost_no());
+                        return new PostResponse(p, challenge, like_cnt, comment_cnt);
+                    }).collect(Collectors.toList());
+        }
+        return new Result(true, HttpStatus.OK.value(), collect);
+    }
+
+    @Data
+    static class PostResponse{
+        private int challenge_no;
+        private int post_no;
+        private int file_no;
+        private String file_path;
+        private String file_savedname;
+        private String challenge_title;
+        private int like_cnt;
+        private int comment_cnt;
+
+        public PostResponse(Post post, Challenge challenge, int like_cnt, int comment_cnt) {
+            this.challenge_no = post.getChallenge_no();
+            this.post_no = post.getPost_no();
+            this.file_no = post.getMedia().getFile_no();
+            this.file_path = post.getMedia().getFile_path();
+            this.file_savedname = post.getMedia().getFile_savedname();
+            this.challenge_title = challenge.getChallenge_title();
+            this.like_cnt = like_cnt;
+            this.comment_cnt = comment_cnt;
+        }
     }
 
     /**

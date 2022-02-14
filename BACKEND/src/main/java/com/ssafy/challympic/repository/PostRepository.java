@@ -1,5 +1,7 @@
 package com.ssafy.challympic.repository;
 
+import com.ssafy.challympic.domain.Comment;
+import com.ssafy.challympic.domain.CommentLike;
 import com.ssafy.challympic.domain.Post;
 import com.ssafy.challympic.domain.PostLike;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,12 @@ public class PostRepository {
                 .getResultList();
     }
 
+    public List<Post> findRecentPostList(int limit){
+        return em.createQuery("select p from Post p order by p.post_regdate desc", Post.class)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
     public Post findByPostNo(int post_no){
         return em.find(Post.class, post_no);
     }
@@ -39,9 +47,8 @@ public class PostRepository {
                 .getResultList();
     }
 
-    public List<Post> findLikePostByUserNo(int userNo) {
-        return em.createQuery("select p from Post p where p.post_no = " +
-                "(select pl.post_no from PostLike pl where pl.user_no = :userNo)", Post.class)
+    public List<PostLike>  findUserPostLike(int userNo){
+        return em.createQuery("select pl from PostLike pl where pl.user_no = :userNo", PostLike.class)
                 .setParameter("userNo", userNo)
                 .getResultList();
     }
@@ -54,5 +61,11 @@ public class PostRepository {
         }catch (NoResultException e) {
             return null;
         }
+    }
+
+    public List<CommentLike> findPostLikeByPostNo(int post_no) {
+        return em.createQuery("select cl from CommentLike cl where cl.comment.post.post_no = :post_no", CommentLike.class)
+                .setParameter("post_no", post_no)
+                .getResultList();
     }
 }

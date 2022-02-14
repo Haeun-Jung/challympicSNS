@@ -41,15 +41,15 @@
 			</div>
 			<div>
 				<span v-if="comment.user_nickname === nickname">
-					<v-btn @click="editComment" icon>
+					<v-btn @click="editComment(comment.comment_no, comment.comment_content)" icon>
 						<v-icon small>mdi-pencil-outline</v-icon>
 					</v-btn>
-					<v-btn @click="deleteComment" icon>
+					<v-btn @click="deleteComment(comment.comment_no)" icon>
 						<v-icon small>mdi-close</v-icon>
 					</v-btn>
 				</span>
 				<span v-else>
-					<v-btn @click="likeComment" icon>
+					<v-btn @click="likeComment(comment.comment_no)" icon>
 						<v-icon :class="{ 'active-like-btn': comment.isLiked }" small>
 							mdi-heart-outline
 						</v-icon>
@@ -67,11 +67,13 @@
 
 <script>
 	import ConfirmReport from "../report/ConfirmReport.vue";
+	import { updateComment, deleteComment, commentLike, commentReport } from '@/api/comment.js';
 	export default {
 		components: { ConfirmReport },
 		name: "CommentList",
 		props: {
 			comments: Array,
+			post_no: Number,
 		},
 		data() {
 			return {
@@ -82,24 +84,52 @@
 		},
 		watch: {},
 		methods: {
-			editComment() {
+			editComment(comment_no, comment_content) {
 				// 댓글 수정 API 호출
 				// emit event => 현재 comment에 대한 content 값 수정
+				updateComment(
+					comment_no,
+					comment_content,
+					this.post_no,
+					(response) => {
+						this.comments = response.data
+					}
+				)
 			},
-			deleteComment() {
+			deleteComment(comment_no) {
 				// 댓글 삭제 API 호출
 				// emit event => 현재 comment 삭제?
+				deleteComment(
+					comment_no,
+					this.post_no,
+					(response) => {
+						this.comments = response.data
+					}
+				)
 			},
-			likeComment() {
+			likeComment(comment_no) {
 				// 댓글 좋아요 API 호출
 				// emit event => 현재 comment에 대한 isLiked 값 수정
+				commentLike(
+					this.$store.state.userStore.userInfo.user_no,
+					comment_no,
+					(response) => {
+						console.log(response)
+					}
+				)
 			},
-			showReportedAlert() {
+			showReportedAlert(comment_no) {
 				this.alert = true;
 				setTimeout(() => {
 					this.alert = false;
 				}, 3000);
 				// 댓글 신고 API 호출
+				commentReport(
+					comment_no,
+					(response) => {
+						console.log(response)
+					}
+				)
 			},
 		},
 	};

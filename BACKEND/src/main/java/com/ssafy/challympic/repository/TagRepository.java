@@ -1,11 +1,13 @@
 package com.ssafy.challympic.repository;
 
 import com.ssafy.challympic.domain.ChallengeTag;
+import com.ssafy.challympic.domain.PostTag;
 import com.ssafy.challympic.domain.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 @Repository
@@ -14,7 +16,7 @@ public class TagRepository {
 
     private final EntityManager em;
 
-    public void save(Tag tag){ em.persist(tag); }
+    public void saveTag(Tag tag){ em.persist(tag); }
 
     public Tag findOne(int tag_no){
         return em.find(Tag.class, tag_no);
@@ -26,10 +28,14 @@ public class TagRepository {
                 .getResultList();
     }
 
-    public List<Tag> validateTagContent(String tagContent) {
-        return em.createQuery("select t from Tag t where t.tag_content = :tagContent", Tag.class)
-                .setParameter("tagContent", tagContent)
-                .getResultList();
+    public Tag validateTagContent(String tagContent) {
+        try{
+            return em.createQuery("select t from Tag t where t.tag_content = :tagContent", Tag.class)
+                    .setParameter("tagContent", tagContent)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     public List<ChallengeTag> findChallengeTagByChallengeNo(int challenge_no) {
@@ -41,5 +47,27 @@ public class TagRepository {
     public void deleteChallengeTag(ChallengeTag ct) {
         em.remove(ct);
 //        em.flush();
+    }
+
+    public void savePostTag(PostTag postTag) {
+        em.persist(postTag);
+    }
+
+    public List<Tag> findPostTagListByPostNo(int postNo) {
+        return em.createQuery("select t from Tag t where t.tag_no = " +
+                "(select pt.tag.tag_no from PostTag pt where pt.post.post_no = :postNo)", Tag.class)
+                .setParameter("postNo", postNo)
+                .getResultList();
+    }
+
+    public List<PostTag> findPostTagList(int post_no) {
+        return em.createQuery("select pt from PostTag pt where pt.post.post_no = :post_no", PostTag.class)
+                .setParameter("post_no", post_no)
+                .getResultList();
+    }
+
+    public List<Tag> findAllTagList() {
+        return em.createQuery("select t from Tag t", Tag.class)
+                .getResultList();
     }
 }

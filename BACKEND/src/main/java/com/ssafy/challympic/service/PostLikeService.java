@@ -29,4 +29,9 @@ public class PostLikeService {
     public void save(PostLike postLike){
         postLikeRepository.save(postLike);
     }
+
+    public int postLikeCnt(int post_no) {
+        int postLikeCnt = postLikeRepository.postLikeCnt(post_no);
+        return postLikeCnt;
+    }
 }

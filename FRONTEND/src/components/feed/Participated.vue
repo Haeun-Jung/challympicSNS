@@ -3,7 +3,7 @@
       <v-row dense>
         <v-col
           v-for="post in posts"
-          :key="post.challenge"
+          :key="post.post_no"
           :cols="4"
         >
           <v-hover>
@@ -12,9 +12,9 @@
                 class="mx-auto img-frame"
                 max-width="344"
               >
-                <v-img :src="post.src">
+                <v-img :src='"http://d3iu4sf4n4i2qf.cloudfront.net/"+post.file_path+"/"+post.file_savedname'>
                   <!-- 비디오일때만 -->
-                  <v-icon v-if="post.isVideo" icon class="play-btn">mdi-play</v-icon>
+                  <v-icon v-if="post.video" icon class="play-btn">mdi-play</v-icon>
                 </v-img>
                 <v-fade-transition>
                   <v-overlay
@@ -23,8 +23,8 @@
                     color="#2E2E2E"
                   >
                   <div class="info-wrapper">
-                    <div class="challenge-info"><v-icon icon class="icon hashtag-icon">mdi-pound</v-icon>{{ post.challenge }}</div>
-                    <div><v-icon icon class="icon">mdi-heart</v-icon>{{ post.like }} <v-icon icon class="icon comment-icon">mdi-comment</v-icon> {{ post.comment }}</div>
+                    <div class="challenge-info"><v-icon icon class="icon hashtag-icon">mdi-pound</v-icon>{{ post.challenge_title }}</div>
+                    <div><v-icon icon class="icon">mdi-heart</v-icon>{{ post.like_cnt }} <v-icon icon class="icon comment-icon">mdi-comment</v-icon> {{ post.comment_cnt }}</div>
                   </div>
                   </v-overlay>
                 </v-fade-transition>
@@ -37,47 +37,27 @@
 </template>
 
 <script>
+import { getUserMadePost } from '@/api/feed.js';
+
 export default {
   name: "Participated",
+  props: {
+    who_no: Number,
+  },
   data: ()=> ({
-    posts: [
-      {
-        challenge: '운동_챌린지',
-        isVideo: true,
-        like: 20,
-        comment: 130,
-        src: 'https://randomuser.me/api/portraits/women/1.jpg'
-      },
-      {
-        challenge: '코딩_챌린지',
-        isVideo: true,
-        like: 25,
-        comment: 100,
-        src: 'https://randomuser.me/api/portraits/women/2.jpg'
-      },
-      {
-        challenge: '음식_챌린지',
-        isVideo: false,
-        like: 30,
-        comment: 40,
-        src: 'https://randomuser.me/api/portraits/women/3.jpg'
-      },
-      {
-        challenge: '술_챌린지',
-        isVideo: false,
-        like: 10,
-        comment: 30,
-        src: 'https://randomuser.me/api/portraits/women/4.jpg'
-      },
-      {
-        challenge: '아무노래_챌린지',
-        isVideo: true,
-        like: 13,
-        comment: 220,
-        src: 'https://randomuser.me/api/portraits/women/5.jpg'
-      }
-    ],
+    posts: [],
   }),
+  created() {
+    // 유저가 만든 포스트 목록
+    getUserMadePost(
+      this.who_no,
+      (response) => {
+        console.log("포스트목록");
+        console.log(response.data.data);
+        this.posts = response.data.data;
+      }
+    )
+  }
 }
 </script>
 
