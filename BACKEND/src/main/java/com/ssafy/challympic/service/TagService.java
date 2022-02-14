@@ -49,9 +49,8 @@ public class TagService {
     }
 
     public Tag findTagByTagContent(String tagContent) {
-        List<Tag> tagList = tagRepository.findByTagContent(tagContent);
-        if(tagList.isEmpty()) return null;
-        return tagList.get(0);
+        Tag tag = tagRepository.findTagByTagContent(tagContent);
+        return tag;
     }
 
     public void savePostTag(PostTag postTag) {

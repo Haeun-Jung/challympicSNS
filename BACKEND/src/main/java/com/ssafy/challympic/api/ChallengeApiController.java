@@ -37,7 +37,9 @@ public class ChallengeApiController {
             System.out.println(c);
         }
         List<ChallengeDto> collect = findChallenges.stream()
-                .map(c -> new ChallengeDto(c))
+                .map(c -> {
+                    return new ChallengeDto(c);
+                })
                 .collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), collect);
     }

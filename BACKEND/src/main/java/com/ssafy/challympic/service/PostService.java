@@ -1,7 +1,6 @@
 package com.ssafy.challympic.service;
 
 
-import com.ssafy.challympic.domain.Comment;
 import com.ssafy.challympic.domain.CommentLike;
 import com.ssafy.challympic.domain.Post;
 import com.ssafy.challympic.domain.PostLike;
@@ -97,9 +96,9 @@ public class PostService {
         return posts;
     }
 
-    public boolean getPostLikeByUserNo(int user_no) {
-        PostLike pl = postRepository.findPostLikeByUserNo(user_no);
-        if(pl == null) return false;
+    public boolean getPostLikeByPostNoAndUserNo(int post_no, int user_no) {
+        PostLike postLike = postRepository.findPostLikeByPostNoAndUserNo(post_no, user_no);
+        if(postLike == null) return false;
         else return true;
     }
 

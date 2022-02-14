@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.lang.Nullable;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -168,7 +167,7 @@ public class PostApiController {
             }
 
             if(userNo != null) {
-                boolean isLike = postService.getPostLikeByUserNo(user.getUser_no());
+                boolean isLike = postService.getPostLikeByPostNoAndUserNo(post.getPost_no(), user.getUser_no());
                 postDto.setIsLike(isLike);
 
                 List<Comment> comments = commentService.findByPost(post.getPost_no());
@@ -240,7 +239,7 @@ public class PostApiController {
                 postDto.setLikeCnt(postLikeList.size());
             }
 
-            boolean isLike = postService.getPostLikeByUserNo(request.getUser_no());
+            boolean isLike = postService.getPostLikeByPostNoAndUserNo(post.getPost_no(), request.getUser_no());
             postDto.setIsLike(isLike);
 
             List<Comment> comments = commentService.findByPost(post.getPost_no());

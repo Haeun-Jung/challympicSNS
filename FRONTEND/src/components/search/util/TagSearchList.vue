@@ -6,11 +6,10 @@
 		type="image, list-item-two-line"
 		class="mx-auto"
 	></v-skeleton-loader>
-	<v-card v-else elevation="2" height="auto" width="444px">
+	<v-card v-else elevation="2" height="auto" width="444px" class="mx-auto">
 		<div class="holder">
 			<video-player
 				v-if="!mediaType"
-				class="video-player-box"
 				ref="videoPlayer"
 				height="280!important"
 				:playsinline="true"
@@ -19,27 +18,42 @@
 			</video-player>
 			<v-img
 				v-else
+				max-width="100%"
+				max-height="100%"
 				:src="imageUrl"
-				class="video-player-box"
-				height="280!important"
+				height="282;!important"
 			/>
-
 			<!-- 포스트 정보 -->
 			<div class="bar">
 				<v-card-title>
 					<router-link
 						:to="{ path: `/feed/${post.user_no}` }"
-						style="text-decoration: none"
+						style="text-decoration: none; color: white"
 					>
-						<h3 class="#3396F4--text">
+						<h3
+							style="
+								text-shadow: 1px 1px 3px #424242;
+								-webkit-text-stroke-width: 0.1px;
+								-webkit-text-stroke-color: #424242;
+							"
+						>
 							{{ post.user_nickname }}
 						</h3>
 					</router-link>
 					<v-spacer />
 				</v-card-title>
 
-				<v-card-subtitle class="primary--text">
-					좋아요 {{ post.post_like_count }} 개 댓글 {{ post.comment_count }}개
+				<v-card-subtitle style="color: white">
+					<strong
+						style="
+							text-shadow: 1px 1px 3px #424242;
+							-webkit-text-stroke-width: 0.1px;
+							-webkit-text-stroke-color: #424242;
+						"
+					>
+						좋아요 {{ post.post_like_count }} 개 댓글
+						{{ post.comment_count }}개</strong
+					>
 				</v-card-subtitle>
 			</div>
 			<!-- 좋아요-->
@@ -51,23 +65,22 @@
 				</v-btn>
 			</div>
 		</div>
-		<v-card>
-			<v-list two-line>
-				<v-list-item>
-					<v-list-item-content>
-						<v-list-item-title>
-							<h3 class="title-block" @click="goChallenge">
-								{{ post.chalenge_title }}
-							</h3>
-						</v-list-item-title>
-						<v-list-item-subtitle>
-							{{ splitContents }}
-						</v-list-item-subtitle>
-						<v-list-item-subtitle> {{ splitTags }}</v-list-item-subtitle>
-					</v-list-item-content>
-				</v-list-item>
-			</v-list>
-		</v-card>
+
+		<v-list two-line>
+			<v-list-item>
+				<v-list-item-content>
+					<v-list-item-title>
+						<h3 class="title-block" @click="goChallenge">
+							{{ post.chalenge_title }}
+						</h3>
+					</v-list-item-title>
+					<v-list-item-subtitle>
+						{{ splitContents }}
+					</v-list-item-subtitle>
+					<v-list-item-subtitle> {{ splitTags }}</v-list-item-subtitle>
+				</v-list-item-content>
+			</v-list-item>
+		</v-list>
 	</v-card>
 </template>
 
@@ -79,7 +92,6 @@
 		},
 		created() {
 			this.mediaType = this.post.file_savedname.split(".")[1];
-
 			console.log(this.mediaType);
 			this.playerOptions = {
 				preload: "auto",
@@ -91,7 +103,7 @@
 					{
 						type: "application/x-mpegURL",
 						src:
-							"http://d3iu4sf4n4i2qf.cloudfront.net/" +
+							"https://d3iu4sf4n4i2qf.cloudfront.net/" +
 							this.post.file_path +
 							"/video/" +
 							this.post.file_savedname +
@@ -104,13 +116,13 @@
 			return {
 				//http://d3iu4sf4n4i2qf.cloudfront.net/output/media/20220213/175935/undefined
 				imageUrl:
-					"http://d3iu4sf4n4i2qf.cloudfront.net/" +
+					"https://d3iu4sf4n4i2qf.cloudfront.net/" +
 					this.post.file_path +
 					"/" +
 					this.post.file_savedname,
 				loaded: false,
 				playerOptions: [],
-				postLike: false, //유저테이블에서 가져오기
+				postLike: this.post.isLike, //유저테이블에서 가져오기
 				mediaType: "",
 			};
 		},
@@ -171,10 +183,6 @@
 </script>
 
 <style>
-	video {
-		object-fit: fill;
-	}
-
 	.bar {
 		position: absolute;
 		top: 1%;
@@ -188,5 +196,13 @@
 	.title-block {
 		display: inline-block;
 		cursor: pointer;
+	}
+	.responsive-media {
+		position: absolute;
+		margin: auto;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
 	}
 </style>

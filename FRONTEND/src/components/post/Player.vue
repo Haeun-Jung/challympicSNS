@@ -1,9 +1,10 @@
 <template>
-  <div>
+  <div id="video-wrapper">
     <video-player
-      class="video-player-box"
+      id="player"
+      class="video-player-box video-item"
       ref="videoPlayer"
-      :playsinline="true"
+      playsinline
       :options="playerOptions"
     ></video-player>
   </div>
@@ -24,10 +25,8 @@ export default {
   created() {
     this.playerOptions = {
       preload: "auto",
-      autoplay: true,
       muted: true,
       loop: true,
-      aspectRatio: "4:3",
       sources: [
         {
           type: "application/x-mpegURL",
@@ -36,10 +35,22 @@ export default {
         },
       ],
     }
-     console.log(this.playerOptions["sources"]);
   }
 };
 </script>
 
-<style>
+<style scoped>
+.video-player-box {
+  background-color: rgb(0, 0, 0);
+}
+::v-deep .video-js .vjs-big-play-button {
+  top: 45%;
+  left: 38%;
+}
+::v-deep .video-js {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 343px;
+  max-height: 550px;
+}
 </style>
