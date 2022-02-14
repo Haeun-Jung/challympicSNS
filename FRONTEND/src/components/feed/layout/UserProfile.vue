@@ -6,7 +6,7 @@
                 <v-icon size="150">mdi-account-circle-outline</v-icon>
             </v-avatar>
             <v-avatar v-else size="150">
-                <img :src='"http://d384sk7z91xokb.cloudfront.net/"+this.userInfo.file_path+"/"+this.userInfo.file_savedname' alt="John" />
+                <img :src='"http://d3iu4sf4n4i2qf.cloudfront.net/"+this.userInfo.file_path+"/"+this.userInfo.file_savedname' alt="John" />
             </v-avatar>
             <v-col align-self="center">
                 <v-container>

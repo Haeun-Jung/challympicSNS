@@ -81,6 +81,16 @@ function save(user_no, tag_no, success, fail) {
   api.post(`/challympic/user/interest/${user_no}`, { tag_no }).then(success).catch(fail);
 }
 
+/* 알림 목록 조회 */
+function getAlertList(user_no, success, fail) {
+  api.get(`/challympic/alert/${user_no}`).then(success).catch(fail);
+}
+
+/* 알림 추가 */
+function addAlert(user_no, alert_content, success, fail) {
+  api.get(`/challympic/alert/${user_no}`, JSON.stringify({alert_content})).then(success).catch(fail);
+}
+
 export { 
   join, 
   login, 
@@ -96,4 +106,6 @@ export {
    getQnA,
    registerQuestion,
    save,
+   getAlertList,
+   addAlert,
   };

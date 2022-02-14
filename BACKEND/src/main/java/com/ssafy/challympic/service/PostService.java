@@ -30,6 +30,11 @@ public class PostService {
         return postRepository.findByChallengNo(challengeNo);
     }
 
+    @Transactional(readOnly = true)
+    public List<Post> getRecentPostList(int limit){
+        return postRepository.findRecentPostList(limit);
+    }
+
     @Transactional
     public int save(Post post) {
         postRepository.save(post);
