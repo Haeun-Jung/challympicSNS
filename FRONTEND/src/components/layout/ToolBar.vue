@@ -220,22 +220,6 @@
 				mobileSearchInput: "",
 				active: false,
 				menu: false,
-				profileMenu: [
-          {
-            title: "프로필 설정",
-            link1: "/user/account/:userNo/",
-            link2: "/mobile/user/account/:userNo/",
-          },
-          {
-            title: "내 피드",
-            link1: "/feed/:userNo/",
-            link2: "/feed/:userNo/",
-          },
-					{
-						title: "로그아웃",
-					},
-					{ title: "Click Me 2" },
-				],
 				tags: [],
 				empty: [],
 				dynamicArr: [],
@@ -253,35 +237,33 @@
 			isLoggedIn() {
 				return this.$store.state.userStore.isLoggedIn;
 			},
-      // getUser api 응답 user_auth 값 확인 후 주석 해제
-      // profileMenu() {
-      //   let menu = [
-      //     {
-      //       title: "프로필 설정",
-      //       link1: "/user/account/:userNo/",
-      //       link2: "/mobile/user/account/:userNo/",
-      //     },
-      //   ]
-      //   if (this.$store.state.userStore.userInfo.user_auth === "ADMIN") {
-      //     menu.push(
-      //       {
-      //         title: "관리자 페이지",
-      //         link1: "/admin/",
-      //         link2: "/admin/",
-      //       }
-      //     );
-      //   } else {
-      //     menu.push(
-      //       {
-      //         title: "내 피드",
-      //         link1: "/feed/:userNo/",
-      //         link2: "/feed/:userNo/",
-      //       }
-      //     );
-      //   }
-      //   menu.push({ title: "로그아웃" });
-      //   return menu;
-      // },
+      profileMenu() {
+        let menu = []
+        if (this.$store.state.userStore.userInfo.auth === "USER") {
+          menu.push(
+            {
+              title: "내 피드",
+              link1: "/feed/:userNo/",
+              link2: "/feed/:userNo/",
+            },
+            {
+              title: "프로필 설정",
+              link1: "/user/account/:userNo/",
+              link2: "/mobile/user/account/:userNo/",
+            },
+          );
+        } else {
+          menu.push(
+            {
+              title: "관리자 페이지",
+              link1: "/admin/",
+              link2: "/admin/",
+            }
+          );
+        }
+        menu.push({ title: "로그아웃" });
+        return menu;
+      },
 		},
 		methods: {
 			test() {
