@@ -54,11 +54,7 @@
 
 <script>
 	//	import VideoComponent from "./VideoComponent.vue";
-<<<<<<< HEAD
-	//import { list } from "@/api/search.js";
-=======
 	// import { list } from "@/api/search.js";
->>>>>>> 1ed51192c43b7ec5ec46a13888bf783a7ba1434e
 
 	export default {
 		//		components: { VideoComponent },
@@ -100,13 +96,8 @@
 			if (document.readyState === "complete") this.$set(that, "loaded", true);
 			document.addEventListener("readystatechange", function () {
 				if (document.readyState === "complete") that.$set(that, "loaded", true);
-<<<<<<< HEAD
 			});
 		},*/
-=======
-			});*/
-		},
->>>>>>> 1ed51192c43b7ec5ec46a13888bf783a7ba1434e
 		methods: {
 			pushLike(postid, arrIdx) {
 				//arrInx는 화면 바로 바꾸는용도
