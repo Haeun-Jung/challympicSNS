@@ -7,9 +7,6 @@ function getPostList(challengeNo, userNo, success, fail) {
 }
 
 async function createPost(challengeNo, post, success, fail) {
-
-  console.log(post);
-
   api.post(`/challympic/challenge/${challengeNo}/post`, post,
     {
       headers: {
