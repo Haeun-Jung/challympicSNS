@@ -192,7 +192,7 @@
 							/>
 							<post-upload
 								v-if="postDialog"
-								:propChallengeName="{ challengeName: challenge.challenge_title, challengeNo: challenge.challenge_no }"
+								:propChallengeName="{ challengeName: challenge.challenge_title, challengeNo: challenge.challenge_no, challangeType: challenge.challenge_type }"
 								@close-modal="postDialog = false"
 							/>
 						</v-flex>

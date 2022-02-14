@@ -32,7 +32,8 @@
 			v-if="challenge"
 			@close-modal="challenge = false"
 		></challenge-upload>
-		<post-upload v-if="post" @close-modal="post = false"></post-upload>
+		<post-upload 
+ v-if="post" @close-modal="post = false" ></post-upload>
 		
 	  <v-snackbar
       v-model="snackbar"
@@ -85,6 +86,7 @@
 		}),
 		methods: {
 			chooseDialog(item) {
+				console.log(item.title);
 				let Auth = sessionStorage.getItem("Authorization");
 				if (item.title == "챌린지 참여") {
 					if(Auth)
