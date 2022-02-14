@@ -1,6 +1,5 @@
 package com.ssafy.challympic.repository;
 
-import com.ssafy.challympic.domain.Comment;
 import com.ssafy.challympic.domain.CommentLike;
 import com.ssafy.challympic.domain.Post;
 import com.ssafy.challympic.domain.PostLike;
@@ -53,12 +52,13 @@ public class PostRepository {
                 .getResultList();
     }
 
-    public PostLike findPostLikeByUserNo(int user_no) {
+    public PostLike findPostLikeByPostNoAndUserNo(int post_no, int user_no) {
         try{
-            return em.createQuery("select pl from PostLike pl where pl.user_no = :user_no", PostLike.class)
+            return em.createQuery("select pl from PostLike pl where pl.user_no = :user_no and pl.post_no = :post_no", PostLike.class)
                     .setParameter("user_no", user_no)
+                    .setParameter("post_no", post_no)
                     .getSingleResult();
-        }catch (NoResultException e) {
+        } catch (NoResultException e) {
             return null;
         }
     }

@@ -97,7 +97,7 @@ public class SearchApiController {
                     String challengeTitle = challengeService.findChallengeByChallengeNo(p.getChallenge_no()).getChallenge_title();
                     int postLikeCount = postService.getPostLikeCountByPostNo(p.getPost_no());
                     int commentCount = commentService.postCommentCnt(p.getPost_no());
-                    boolean isLike = postService.getPostLikeByUserNo(p.getUser().getUser_no());
+                    boolean isLike = postService.getPostLikeByPostNoAndUserNo(p.getPost_no(), p.getUser().getUser_no());
                     return new PostDto(p,challengeTitle, postLikeCount, commentCount, isLike);
                 })
                 .collect(Collectors.toList());
