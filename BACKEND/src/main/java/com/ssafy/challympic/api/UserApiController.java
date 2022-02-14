@@ -265,6 +265,7 @@ public class UserApiController {
         private int file_no;
         private List<titleDto> titles;
         private List<interestDto> interests;
+        private String auth;
 
         public UserDto(User user) {
             this.user_no = user.getUser_no();
@@ -303,6 +304,7 @@ public class UserApiController {
             }else{
                 this.file_no = user.getMedia().getFile_no();
             }
+            this.auth = user.getUser_auth().toString();
         }
 
         @Data
