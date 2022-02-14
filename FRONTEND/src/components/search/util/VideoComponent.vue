@@ -4,7 +4,6 @@
 			vjs-default-skin
 			class="video-player-box"
 			ref="videoPlayer"
-			height="280!important"
 			:playsinline="true"
 			:options="playerOptions"
 			controlsList="nodownload"
@@ -16,7 +15,7 @@
 <script>
 	export default {
 		props: {
-			video: String,
+			post: Object,
 		},
 		data() {
 			return {
@@ -34,12 +33,17 @@
 				sources: [
 					{
 						type: "application/x-mpegURL",
-						src: this.video,
+						src:
+							"https://d3iu4sf4n4i2qf.cloudfront.net/" +
+							this.post.file_path +
+							"/video/" +
+							this.post.file_savedname +
+							".m3u8",
 					},
 				],
 			};
 
-			console.log(this.playerOptions.sources.src);
+			//console.log(this.playerOptions.sources.src);
 		},
 	};
 </script>

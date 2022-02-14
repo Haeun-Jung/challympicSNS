@@ -3,18 +3,29 @@ import { apiInstance } from './index.js';
 const api = apiInstance();
 
 /* 최신 포스트 목록 */
+<<<<<<< HEAD
 async function getRecentPostList(user_no, success, fail) {
   // --------------------------
   api.get(`/challympic/main/recent/post`, JSON.stringify({user_no})).then(await success).catch(fail);
+=======
+function getRecentPostList(user_no, success, fail) {
+  api.get('/challympic/main/recent/post', JSON.stringify({user_no})).then(success).catch(fail);
+>>>>>>> 0a096243828c9d6e78199c8100ffe916f65e242a
 }
 
 /* 챌린지에 대한 포스트 목록 */
-function getPostList(challengeNo, userNo, success, fail) {
-  api.post(`/challympic/challenge/post`, JSON.stringify({challengeNo, userNo})).then(success).catch(fail);
+function getPostList(challenge_no, user_no, success, fail) {
+  api.post(`/challympic/challenge/post`, JSON.stringify({challenge_no, user_no})).then(success).catch(fail);
 }
 
 /* 포스트 작성 */
 async function createPost(challengeNo, post, success, fail) {
+<<<<<<< HEAD
+=======
+  
+  console.log(post);
+  
+>>>>>>> 0a096243828c9d6e78199c8100ffe916f65e242a
   api.post(`/challympic/challenge/${challengeNo}/post`, post,
   {
     headers: {
