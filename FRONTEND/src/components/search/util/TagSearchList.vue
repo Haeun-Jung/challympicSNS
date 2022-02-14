@@ -101,7 +101,11 @@
 					{
 						type: "application/x-mpegURL",
 						src:
+<<<<<<< HEAD
 							"https://d3iu4sf4n4i2qf.cloudfront.net/" +
+=======
+							"http://d3iu4sf4n4i2qf.cloudfront.net/" +
+>>>>>>> 1ed51192c43b7ec5ec46a13888bf783a7ba1434e
 							this.post.file_path +
 							"/video/" +
 							this.post.file_savedname +
@@ -112,9 +116,13 @@
 		},
 		data() {
 			return {
-				//http://d384sk7z91xokb.cloudfront.net/output/media/20220213/175935/undefined
+				//http://d3iu4sf4n4i2qf.cloudfront.net/output/media/20220213/175935/undefined
 				imageUrl:
+<<<<<<< HEAD
 					"https://d3iu4sf4n4i2qf.cloudfront.net/" +
+=======
+					"http://d3iu4sf4n4i2qf.cloudfront.net/" +
+>>>>>>> 1ed51192c43b7ec5ec46a13888bf783a7ba1434e
 					this.post.file_path +
 					"/" +
 					this.post.file_savedname,

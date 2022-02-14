@@ -12,7 +12,7 @@
 
       <div>
         <v-list class="overflow-y-auto">
-          <v-list-item v-for="user in users" :key="user.user_no">
+          <v-list-item v-for="(user, idx) in followList" :key="user.user_no">
               <img v-if="user.user_title" class="medal-icon" src="https://cdn-icons-png.flaticon.com/512/744/744922.png"/>
             <v-list-item-avatar class="user-image">
               <v-img v-if="user.file_savedname" :alt="`${user.user_nickname} avatar`" :src="`https://d384sk7z91xokb.cloudfront.net/${user.file_path}/${user.file_savedname}`"></v-img>
@@ -29,10 +29,10 @@
               <v-list-item-title v-text="user.user_nickname"></v-list-item-title>
             </v-list-item-content>
 
-            <v-list-item-icon>
+            <v-list-item-icon v-show="login_user != user.user_no">
               <v-btn
-                v-if="user.isFollowing"
-                @click="follow(user.user_no)"
+                v-if="!user.follow"
+                @click="follow(user.user_no, idx)"
                 color="#3396F4"
                 class="white--text rounded-xl"
                 small
@@ -41,7 +41,7 @@
               </v-btn>
               <v-btn
                 v-else
-                @click="follow(user.user_no)"
+                @click="follow(user.user_no, idx)"
                 color="#3396F4"
                 class="rounded-xl"
                 small
@@ -58,24 +58,89 @@
 </template>
 
 <script>
+import { getFollowerList, getFollowingList, setFollow } from '@/api/feed.js';
 export default {
   name: "FollowLikeModal",
   props: {
     type: String,
-    users: Array,
+    login_user: Number,
+    who_no: Number,
   },
   data() {
     return {
       dialog: true,
+      followList: [],
     };
   },
   methods: {
-    follow(userNo) {
+    follow(userNo, idx) {
       console.log(userNo);
+      console.log(this.login_user);
       // 팔로우 API 요청 보내기
       // 해당 유저에 대한 isFollowing 값 변경
+      setFollow(
+        this.login_user,
+        userNo,
+        (response) => {
+          console.log("저장/취소");
+          console.log(response.data);
+          this.followList[idx].follow = !this.followList[idx].follow
+        }
+      )
+      this.user
+      if(this.type === "following"){
+        getFollowerList(
+          this.who_no,
+          this.login_user,
+          (response) => {
+            if(this.type === 'following'){
+              console.log(response.data.data);
+              this.followList = response.data.data
+            }
+            console.log(this.followList);
+          }
+        )
+      }else if(this.type === "follower"){
+        getFollowingList(
+          this.who_no,
+          this.login_user,
+          (response) => {
+            // console.log(response.data)
+            if(this.type === 'follower'){
+              console.log(response.data.data);
+              this.followList = response.data.data
+            }
+          }
+        )   
+      }
     },
   },
+  created(){
+    // 유저가 팔로우한 목록
+    getFollowerList(
+      this.who_no,
+      this.login_user,
+      (response) => {
+        if(this.type === 'following'){
+          console.log(response.data.data);
+          this.followList = response.data.data
+        }
+        console.log(this.followList);
+      }
+    )
+    // // 유저를 팔로우한 목록
+    getFollowingList(
+      this.who_no,
+      this.login_user,
+      (response) => {
+        // console.log(response.data)
+        if(this.type === 'follower'){
+          console.log(response.data.data);
+          this.followList = response.data.data
+        }
+      }
+    )
+  }
 };
 </script>
 
