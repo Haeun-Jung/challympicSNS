@@ -26,6 +26,7 @@ public class SearchApiController {
     private final ChallengeService challengeService;
     private final PostService postService;
     private final CommentService commentService;
+    private final SubscriptionService subscriptionService;
 
     @GetMapping("/search")
     public Result getSearchList() {
@@ -62,7 +63,8 @@ public class SearchApiController {
                 .map(c -> {
                     List<Post> postListByChallengeNo = postService.getPostList(c.getChallenge_no());
                     List<PostDto> postList = postToDto(postListByChallengeNo);
-                    return new ChallengeDto(c, postList);
+                    boolean isSubscription = subscriptionService.findSubscriptionByChallengeAndUser(c.getChallenge_no(), c.getUser().getUser_no()) != null;
+                    return new ChallengeDto(c, postList, isSubscription);
                 })
                 .collect(Collectors.toList());
         List<PostDto> postList = postToDto(posts);
@@ -95,7 +97,8 @@ public class SearchApiController {
                     String challengeTitle = challengeService.findChallengeByChallengeNo(p.getChallenge_no()).getChallenge_title();
                     int postLikeCount = postService.getPostLikeCountByPostNo(p.getPost_no());
                     int commentCount = commentService.postCommentCnt(p.getPost_no());
-                    return new PostDto(p,challengeTitle, postLikeCount, commentCount);
+                    boolean isLike = postService.getPostLikeByUserNo(p.getUser().getUser_no());
+                    return new PostDto(p,challengeTitle, postLikeCount, commentCount, isLike);
                 })
                 .collect(Collectors.toList());
     }

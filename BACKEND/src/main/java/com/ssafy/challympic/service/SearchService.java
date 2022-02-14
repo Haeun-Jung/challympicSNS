@@ -16,7 +16,6 @@ import java.util.List;
 public class SearchService {
 
     private final SearchRepository searchRepository;
-    private final ChallengeRepository challengeRepository;
     private final TagRepository tagRepository;
 
     public List<Tag> findTagList() {
@@ -49,7 +48,7 @@ public class SearchService {
 
     @Transactional
     public void saveSearchRecord(String search_content, User user) {
-        Tag tag = tagRepository.findByTagContent(search_content).get(0);
+        Tag tag = tagRepository.findTagByTagContent(search_content);
         Search search = new Search();
         search.setSearch_content(search_content);
         search.setUser(user);
