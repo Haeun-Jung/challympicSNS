@@ -92,10 +92,7 @@ const userStore = {
             commit('LOGIN_FAILED', false);
             dispatch('getAlertList', data.data.user_no);
             sessionStorage.setItem('Authorization', response.headers['authorization']);
-            // router.push({ name: 'Main'});
-            window.location.href = '/recent';
-            // var prev = history.back();
-            // window.location = prev;
+            router.push({ name: 'Main'});
           } else {
             commit('LOGIN_FAILED', true);
           }
@@ -128,6 +125,7 @@ const userStore = {
           if (response.data.code === 200) {
             console.log(response.data.data);
             commit("SET_USER_INFO", response.data.data);
+            window.location.href = '/recent';
           } else {
             console.log("유저 정보 없음!!");
           }

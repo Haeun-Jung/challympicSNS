@@ -241,16 +241,16 @@
         let menu = []
         if (this.$store.state.userStore.userInfo.auth === "USER") {
           menu.push(
-            {
-              title: "내 피드",
-              link1: "/feed/:userNo/",
-              link2: "/feed/:userNo/",
-            },
-            {
-              title: "프로필 설정",
-              link1: "/user/account/:userNo/",
-              link2: "/mobile/user/account/:userNo/",
-            },
+			{
+				title: "프로필 설정",
+				link1: "/user/account/"+this.$store.state.userStore.userInfo.user_no+"/",
+				link2: "/mobile/user/account/"+this.$store.state.userStore.userInfo.user_no+"/",
+			},
+			{
+				title: "내 피드",
+				link1: "/feed/"+this.$store.state.userStore.userInfo.user_no+"/",
+				link2: "/feed/"+this.$store.state.userStore.userInfo.user_no+"/",
+			},
           );
         } else {
           menu.push(
