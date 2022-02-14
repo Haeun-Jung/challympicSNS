@@ -27,6 +27,12 @@ public class PostRepository {
                 .getResultList();
     }
 
+    public List<Post> findRecentPostList(int limit){
+        return em.createQuery("select p from Post p order by p.post_regdate desc", Post.class)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
     public Post findByPostNo(int post_no){
         return em.find(Post.class, post_no);
     }

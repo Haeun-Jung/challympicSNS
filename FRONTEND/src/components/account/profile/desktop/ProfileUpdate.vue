@@ -245,7 +245,7 @@
 				return;
 			}
 			this.profile  = 
-			"http://d384sk7z91xokb.cloudfront.net/" + 
+			"http://d3iu4sf4n4i2qf.cloudfront.net/" + 
 			this.$store.state.userStore.filePath + "/" + 
 			this.$store.state.userStore.fileSavedName;
 		},
@@ -261,11 +261,11 @@
 					return;
 				}
 				/* 사진 변경 X */
-				if (this.profile == "http://d384sk7z91xokb.cloudfront.net/" + 
+				if (this.profile == "http://d3iu4sf4n4i2qf.cloudfront.net/" + 
 									this.$store.state.userStore.filePath + "/" + 
 									this.$store.state.userStore.fileSavedName) {
 					if (this.nickname == null && this.title == null) {
-						this.profile  = "http://d384sk7z91xokb.cloudfront.net/" + 
+						this.profile  = "http://d3iu4sf4n4i2qf.cloudfront.net/" + 
 										this.$store.state.userStore.filePath + "/" + 
 										this.$store.state.userStore.fileSavedName;
 						return;
