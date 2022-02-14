@@ -73,6 +73,11 @@ function save(user_no, tag_no, success, fail) {
   api.post(`/challympic/user/interest/${user_no}`, { tag_no }).then(success).catch(fail);
 }
 
+/* 알림 목록 조회 */
+function getAlertList(user_no, success, fail) {
+  api.get(`/challympic/user/${user_no}/alert`).then(success).catch(fail);
+}
+
 export { 
   join, 
   login, 
@@ -88,4 +93,5 @@ export {
    getQnA,
    registerQuestion,
    save,
+   getAlertList,
   };
