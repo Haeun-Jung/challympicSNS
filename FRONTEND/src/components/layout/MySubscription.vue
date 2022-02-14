@@ -51,13 +51,18 @@ export default {
 	},
   data() {
     return {
-		listsubscription : [],
+		listsubscription : [""],
     }
   },
   methods: {
 	  	...mapActions(userStore, ["getUserInfo"]),
 		remove(no) {
-			this.$store.dispatch('userStore/deleteSubscription', { no, token: sessionStorage.getItem('Authorization') })
+			this.listsubscription.splice(no - this.index, 1);
+			this.index++; //카운트 해줘야 다음 태그 제대로 지워짐
+			// 이렇게 하고, 페이지 refresh 해서 태그 다시 받아와야함.....
+			this.listsubscription = [...this.listsubscription];
+			this.disabledTrue = false;
+			this.$store.dispatch('userStore/deleteInterest', { no, token: sessionStorage.getItem('Authorization') })
 			setTimeout(() => {
 				this.getUserInfo(sessionStorage.getItem("Authorization"));
 			}, 300);

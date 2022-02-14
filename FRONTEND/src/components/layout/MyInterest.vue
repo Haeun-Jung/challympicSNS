@@ -2,25 +2,25 @@
 	<!-- 로그인 O -->
 	<v-list v-if="isLoggedIn" class="title-width">
 		<v-list-group>
-		<template v-slot:activator>
-			<v-card-subtitle class="title-width">
-				<h4 v-if="isMobile()">내 관심사</h4>
-				<h2 v-else>내 관심사</h2>
-			</v-card-subtitle>
-		</template>
-		<v-chip
-			class="interest-one"
-			v-for="tag in listInterest"
-			:key="tag.tag_no"
-			:value="tag"
-			:to="{ path: '/search/' + tag.name }"
-			v-model="tag.isOpen"
-			color="primary"
-			outlined
-			close
-			@click:close="remove(tag.tag_no)">
-			{{ tag.tag_content }}
-		</v-chip>
+			<template v-slot:activator>
+				<v-card-subtitle class="title-width">
+					<h4 v-if="isMobile()">내 관심사</h4>
+					<h2 v-else>내 관심사</h2>
+				</v-card-subtitle>
+			</template>
+			<v-chip
+				class="interest-one"
+				v-for="tag in listInterest"
+				:key="tag.tag_no"
+				:value="tag"
+				:to="{ path: '/search/' + tag.name }"
+				v-model="tag.isOpen"
+				color="primary"
+				outlined
+				close
+				@click:close="remove(tag.tag_no)">
+				{{ tag.tag_content }}
+			</v-chip>
 		</v-list-group>
 	</v-list>
 	<!-- 로그인 X -->	
@@ -60,7 +60,7 @@ export default {
 	},
 	data() {
 		return {
-			listInterest: [],
+			listInterest: [""],
 		};
 	},
 	methods: {
@@ -69,11 +69,19 @@ export default {
 			this.$router.push("/login");
 		},
 		remove(no) {
-			this.$store.dispatch('userStore/deleteInterest', { no, token: sessionStorage.getItem('Authorization') })
-			setTimeout(() => {
-				this.getInterest(sessionStorage.getItem("Authorization"));
-			}, 300);
-		},
+                this.listInterest.splice(no - this.index, 1);
+                this.index++; //카운트 해줘야 다음 태그 제대로 지워짐
+                // 이렇게 하고, 페이지 refresh 해서 태그 다시 받아와야함.....
+                this.listInterest = [...this.listInterest];
+                this.disabledTrue = false;
+                this.$store.dispatch("userStore/deleteInterest", {
+                    no,
+                    token: sessionStorage.getItem("Authorization"),
+                });
+                setTimeout(() => {
+                    this.getInterest(sessionStorage.getItem("Authorization"));
+                }, 300);
+            },
 		isMobile() {
             if (
                 /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(

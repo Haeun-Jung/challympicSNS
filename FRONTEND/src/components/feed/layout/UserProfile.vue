@@ -88,7 +88,7 @@
                                 <v-col md="2" class="follow-wrapper" align-self="center">
                                 <div class="font-weight">팔로워</div>
                                 <div class="show-folllow-modal" @click="openFollowerDialog">{{followerCnt}}</div>
-                                <follow-like-modal v-if="follower" @close-modal="follower=false;followerCnt='followerCnt'" type="follower" :login_user="this.login_user" :who_no="who_no" v-on:editFollwerCnt="editFollowerCnt" v-on:incrementFollowerCnt="incrementFollowerCnt"></follow-like-modal>
+                                <follow-like-modal v-if="follower" @close-modal="follower=false;followerCnt='followerCnt'" type="follower" :login_user="this.login_user" :who_no="who_no" v-on:decrementFollowerCnt="decrementFollowerCnt" v-on:incrementFollowerCnt="incrementFollowerCnt"></follow-like-modal>
                             </v-col>
                             <v-col md="2" class="follow-wrapper" align-self="center">
                                 <div class="font-weight">팔로잉</div>
@@ -203,14 +203,6 @@ export default {
             console.log(followingCnt);
             this.followingCnt = ++followingCnt;
         },
-        editFollowerCnt(message){
-            console.log(message+"!!!!!!!!!!!!!!");
-            if(message == "decrease"){
-                this.followerCnt -= 1;
-            }else{
-                this.followerCnt += 1;
-            }
-        }
     },
 }
 </script>
