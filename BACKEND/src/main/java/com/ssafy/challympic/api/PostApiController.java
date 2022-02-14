@@ -8,6 +8,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -123,8 +124,73 @@ public class PostApiController {
         private int challenge_no;
     }
 
+    @GetMapping("/main/recent/post")
+    public Result getRecentPosts(@RequestParam @Nullable Integer userNo){
+        // 최대 50개 가져오기
+        List<Post> postList = postService.getRecentPostList(50);
+        List<PostDto> collect = new ArrayList<>();
+
+        for(Post post : postList){
+            List<PostLike> postLikeList = postLikeService.getPostLikeListByPostNo(post.getPost_no());
+            Challenge challenge = challengeService.findChallengeByChallengeNo(post.getChallenge_no());
+            User user = post.getUser();
+
+            // 기본 포스트 정보
+            PostDto postDto = new PostDto();
+            postDto.setPost_no(post.getPost_no());
+            postDto.setPost_content(post.getPost_content());
+            postDto.setPost_report(post.getPost_report());
+            postDto.setPost_regdate(post.getPost_regdate());
+
+            // 유저 타입
+            postDto.setUser_no(user.getUser_no());
+            postDto.setUser_nickname(user.getUser_nickname());
+            postDto.setUser_title(user.getUser_title());
+            if(user.getMedia() != null)
+                postDto.setUser_profile(user.getMedia().getFile_path() + "/" + user.getMedia().getFile_savedname());
+            else
+                postDto.setUser_profile(null);
+
+
+            // 챌린지 타입
+            postDto.setChallenge_type(challenge.getChallenge_type().name().toLowerCase());
+
+            // 미디어 정보
+            postDto.setFile_no(post.getMedia().getFile_no());
+            postDto.setFile_path(post.getMedia().getFile_path());
+            postDto.setFile_savedname(post.getMedia().getFile_savedname());
+
+            // 좋아요 수
+            if(postLikeList == null){
+                postDto.setLikeCnt(0);
+            } else{
+                postDto.setLikeCnt(postLikeList.size());
+            }
+
+            if(userNo != null) {
+                boolean isLike = postService.getPostLikeByUserNo(user.getUser_no());
+                postDto.setIsLike(isLike);
+
+                List<Comment> comments = commentService.findByPost(post.getPost_no());
+                List<CommentDto> commentList = comments.stream()
+                        .map(c -> {
+                            boolean IsLiked = commentLikeService.findIsLikeByUser(userNo, c.getComment_no());
+                            return new CommentDto(c, IsLiked);
+                        })
+                        .collect(Collectors.toList());
+                postDto.setCommentList(commentList);
+            } else {
+                postDto.setCommentList(null);
+            }
+
+            collect.add(postDto);
+        }
+
+        return new Result(true, HttpStatus.OK.value(), collect);
+    }
+
     /**
-     *  챌린지 번호로 포스트 가져오기(챌린지로 확인 예정
+     *  챌린지 번호로 포스트 가져오기(챌린지로 확인 예정)
      * */
     @PostMapping("/challenge/post")
     public Result list(@RequestBody ChallengePostRequest request){

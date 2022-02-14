@@ -7,11 +7,11 @@
 				<!-- v-if="isVideo === 'VIDEO'"-->
 				<!--
 				<video-component
-					:VideoUrl="`https://d384sk7z91xokb.cloudfront.net/${item.file_path}/video/${item.file_savedame}.m3u8`"
+					:VideoUrl="`https://d3iu4sf4n4i2qf.cloudfront.net/${item.file_path}/video/${item.file_savedame}.m3u8`"
 				/>
 						<v-img
 							v-else
-							:src="`https://d384sk7z91xokb.cloudfront.net/${item.file_path}/${item.file_savedame}`"
+							:src="`https://d3iu4sf4n4i2qf.cloudfront.net/${item.file_path}/${item.file_savedame}`"
 							class="video-player-box"
 							height="280!important"
 						/>
@@ -54,7 +54,7 @@
 
 <script>
 	//	import VideoComponent from "./VideoComponent.vue";
-	import { list } from "@/api/search.js";
+	// import { list } from "@/api/search.js";
 
 	export default {
 		//		components: { VideoComponent },
@@ -95,7 +95,7 @@
 			if (document.readyState === "complete") this.$set(that, "loaded", true);
 			document.addEventListener("readystatechange", function () {
 				if (document.readyState === "complete") that.$set(that, "loaded", true);
-			});
+			});*/
 		},
 		methods: {
 			pushLike(postid, arrIdx) {
