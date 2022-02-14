@@ -37,14 +37,17 @@
 										:key="post.post_no"
 									>
 										<video-component
-											v-if="item.challenge_type === 'VIDEO'"
-											:video="
-												'http://d384sk7z91xokb.cloudfront.net/' +
-												post.file_path +
-												'/video/' +
-												post.file_savedname +
-												'.m3u8'
-											"
+												v-if="item.challenge_type === 'VIDEO'"
+												:post="post"
+										/>
+										<v-img
+												v-else
+												:src="
+														'https://d3iu4sf4n4i2qf.cloudfront.net/' +
+														post.file_path +
+														'/' +
+														post.file_savedname
+												"
 										/>
 										<!--포스트 정보 -->
 										<div class="bar">
@@ -61,17 +64,16 @@
 											</v-card-title>
 
 											<v-card-subtitle>
-												<!--좋아요 {{ item.post_likes }} 개 댓글 {{ item.post_comments }}개
-					-->
+												<!--좋아요 {{ item.post_likes }} 개 댓글 {{ item.post_comments }}개-->
 											</v-card-subtitle>
 										</div>
 										<!-- 좋아요-->
 										<div class="bar-heart">
 											<v-btn @click="pushLike(post.post_no, idx)" icon>
 												<!-- <v-icon :class="{ 'show-btns': hover }" :color="transparent">
-								v-if 문 추가해서 이미 하트 눌렀으면 빨갛게 표시
-								:class="{ 'show-btns': hover }"
-								-->
+													v-if 문 추가해서 이미 하트 눌렀으면 빨갛게 표시
+													:class="{ 'show-btns': hover }"
+												-->
 												<v-icon
 													:color="post.post_like ? 'red' : 'grey lighten-3'"
 													size="32"
@@ -111,12 +113,12 @@
 										<v-btn
 											icon
 											@click="
-												item.challenge_subscribe = !item.challenge_subscribe
+												setSubscribe(item.challenge)
 											"
 										>
 											<v-icon
 												:color="
-													item.challenge_subscribe ? 'blue' : 'grey lighten-3'
+													item.subscription ? 'blue' : 'grey lighten-3'
 												"
 												size="32"
 												>mdi-bookmark-outline</v-icon
@@ -134,116 +136,44 @@
 </template>
 
 <script>
-	//	import ChallengeList from "../util/ChallengeList.vue";
-	//	import { searchTagList } from "@/api/search.js";
+	// import ChallengeList from "../util/ChallengeList.vue";
+	import { searchTagList } from "@/api/search.js";
+	import { setSubscription } from "@/api/challenge.js"
 	import VideoComponent from "../util/VideoComponent.vue";
 	export default {
 		name: "ChallengeSearchResult",
 		components: {
-			//			ChallengeList,
 			VideoComponent,
 		},
 		props: {
 			search: String,
 		},
 		methods: {
-			pushSubscribe() {},
-		},
-		created() {
-			this.challenges = [
-				//data.	challengeList: 에 한번 들어갔다고 치고 data뺌->challengelist만
-				{
-					challenge_no: 3,
-					user_no: 3,
-					challenge_start: "2022-02-13T13:25:25.000+00:00",
-					challenge_end: "2022-02-22T00:00:00.000+00:00",
-					challenge_access: "PUBLIC",
-					challenge_type: "VIDEO",
-					challenge_title: "#mockingbird",
-					challenge_content: "chirp chirp :D #meow",
-					challenge_official: false,
-					challenge_report: 0,
-					//여기서 postList 담아서 부르는거 가능한건가..?
-					postList: [
-						{
-							post_no: 3,
-							user_no: 3,
-							user_nickname: "m1",
-							user_title: null,
-							challenge_no: 3,
-							chalenge_title: "#mockingbird",
-							file_no: 3,
-							file_path: "output/media/20220213/222545",
-							file_savedname: "5275796f4178151eaa83f4b0b6b712ff",
-							post_content: "TestingTesting!!! #ice #life #warm",
-							post_report: 0,
-							post_regdate: "2022-02-13T13:25:47.000+00:00",
-							post_update: "2022-02-13T13:25:47.000+00:00",
-							post_like_count: 0,
-							comment_count: 0,
-						},
-						{
-							post_no: 4,
-							user_no: 3,
-							user_nickname: "m1",
-							user_title: null,
-							challenge_no: 4,
-							chalenge_title: "#mockingbird",
-							file_no: 4,
-							file_path: "output/media/20220213/225013",
-							file_savedname: "5275796f4178151eaa83f4b0b6b712ff",
-							post_content: "Moose goes meow !!! #ice #life #warm",
-							post_report: 0,
-							post_regdate: "2022-02-13T13:50:15.000+00:00",
-							post_update: "2022-02-13T13:50:15.000+00:00",
-							post_like_count: 0,
-							comment_count: 0,
-						},
-					],
-				},
-				{
-					challenge_no: 4,
-					user_no: 3,
-					challenge_start: "2022-02-13T13:49:48.000+00:00",
-					challenge_end: "2022-02-22T00:00:00.000+00:00",
-					challenge_access: "PUBLIC",
-					challenge_type: "VIDEO",
-					challenge_title: "#singingdeer",
-					challenge_content: "blah blah #meow",
-					challenge_official: false,
-					challenge_report: 0,
-
-					postList: [
-						{
-							post_no: 4,
-							user_no: 3,
-							user_nickname: "m1",
-							user_title: null,
-							challenge_no: 4,
-							chalenge_title: "#singingdeer",
-							file_no: 4,
-							file_path: "output/media/20220213/225013",
-							file_savedname: "5275796f4178151eaa83f4b0b6b712ff",
-							post_content: "Moose goes meow !!! #ice #life #warm",
-							post_report: 0,
-							post_regdate: "2022-02-13T13:50:15.000+00:00",
-							post_update: "2022-02-13T13:50:15.000+00:00",
-							post_like_count: 0,
-							comment_count: 0,
-						},
-					],
-				},
-			];
-
-			/*		searchTagList(
-					this.searchKey,
+			setSubscribe(challenge) {
+				challenge.subscription = !challenge.subscription;
+				setSubscription(
+					challenge,
+					this.user_no,
 					(response) => {
-						this.challenges = response.data.data.challengeList;
+						console.log(response);
 					},
 					(error) => {
 						console.log(error);
 					}
-				);*/
+				)
+			},
+		},
+		created() {
+			searchTagList(
+				this.searchKey,
+				(response) => {
+					this.challenges = response.data.data.challengeList;
+					console.log(this.challenges)
+				},
+				(error) => {
+					console.log(error);
+				}
+			);
 		},
 		data() {
 			return {
