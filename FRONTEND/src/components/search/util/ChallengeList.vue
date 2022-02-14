@@ -54,13 +54,17 @@
 
 <script>
 	//	import VideoComponent from "./VideoComponent.vue";
+<<<<<<< HEAD
+	//import { list } from "@/api/search.js";
+=======
 	// import { list } from "@/api/search.js";
+>>>>>>> 1ed51192c43b7ec5ec46a13888bf783a7ba1434e
 
 	export default {
 		//		components: { VideoComponent },
 		name: "ChallengeList",
 		props: {
-			post:Object,
+			post: Object,
 			isVideo: String,
 		},
 		data() {
@@ -76,8 +80,9 @@
 				},
 			};
 		},
+		/*
 		created() {
-		/*	console.log("몇번찍히나?" + this.challengeNo);
+			console.log("몇번찍히나?" + this.challengeNo);
 			list(
 				this.challenges,
 				(response) => {
@@ -95,8 +100,13 @@
 			if (document.readyState === "complete") this.$set(that, "loaded", true);
 			document.addEventListener("readystatechange", function () {
 				if (document.readyState === "complete") that.$set(that, "loaded", true);
+<<<<<<< HEAD
+			});
+		},*/
+=======
 			});*/
 		},
+>>>>>>> 1ed51192c43b7ec5ec46a13888bf783a7ba1434e
 		methods: {
 			pushLike(postid, arrIdx) {
 				//arrInx는 화면 바로 바꾸는용도
@@ -110,10 +120,10 @@
 				}
 			},
 			goChallenge() {
-				/*alert(
+				alert(
 					"챌린지 상세 페이지로 이동 where challenge_no:" +
 						this.challenge.challenge_no
-				);*/
+				);
 				const path = "/challenge/" + this.challenge.challenge_no;
 				this.$router.push(path);
 			},
