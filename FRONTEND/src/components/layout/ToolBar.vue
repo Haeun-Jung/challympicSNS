@@ -435,12 +435,6 @@
 		border-radius: 50%;
 		z-index: 1;
 	}
-	::v-deep .v-list-item {
-		padding: 2px 16px;
-	}
-	::v-deep .v-list-item__title {
-		white-space: normal;
-	}
 	.v-menu__content::-webkit-scrollbar-track {
 		-webkit-box-shadow: inset 0 0 6px #5d5d5d;
 		background-color: #5d5d5d;

@@ -7,17 +7,17 @@
       </v-btn>
     </template>
 
-    <v-card v-if="alertMenu.length > 1" width="300">
+    <v-card v-if="alertList" width="300">
       <v-list class="overflow-y-auto">
         <v-list-item
-          v-for="(item, i) in alertMenu"
+          v-for="(item, i) in alertList"
           :key="i"
           :to="item.link1"
           class="px-3; mx-1;,my-2"
         >
           <v-list-item-title>
-            {{ item.title }}
-            <span class="date-text">{{ dayjsRegDate(item.regDate) }}</span>
+            {{ item.alert_content.split('"')[3] }}
+            <span class="date-text">{{ dayjsRegDate(item.alert_regDate) }}</span>
           </v-list-item-title>
         </v-list-item>
       </v-list>
@@ -62,14 +62,15 @@ export default {
       return this.$store.state.userStore.alertList;
     }
   },
-  method: {
+  methods: {
     dayjsRegDate(regDate) {
-      return fromNow(regDate);
+      const parsedRegDate = regDate.split("T")[0].replace(/-/g, ".");
+      return fromNow(parsedRegDate);
 		},
     deleteAlert() {
       this.menu = false;
       setTimeout(() => {
-        this.$store.commit('DELETE_ALERT');
+        this.$store.commit('userStore/DELETE_ALERT');
       }, 500);
     },
     isMobile() {
@@ -87,6 +88,11 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+::v-deep .v-list-item {
+  padding: 2px 16px;
+}
+::v-deep .v-list-item__title {
+  white-space: normal;
+}
 </style>
