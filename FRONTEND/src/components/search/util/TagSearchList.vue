@@ -7,48 +7,58 @@
 		class="mx-auto"
 	></v-skeleton-loader>
 	<v-card v-else elevation="2" height="auto" width="444px">
-		<div class="holder">
-			<video-player
-				v-if="!mediaType"
-				class="video-player-box"
-				ref="videoPlayer"
-				height="280!important"
-				:playsinline="true"
-				:options="playerOptions"
-			>
-			</video-player>
-			<v-img
-				v-else
-				:src="imageUrl"
-				class="video-player-box"
-				height="280!important"
-			/>
+		<div
+			style="
+				background-color: black;
+				display: table-cell;
+				vertical-align: middle;
+			"
+		>
+			<div class="holder">
+				<video-player
+					v-if="!mediaType"
+					class="video-player-box py-2"
+					ref="videoPlayer"
+					height="280!important"
+					:playsinline="true"
+					:options="playerOptions"
+				>
+				</video-player>
+				<v-img
+					class="responsive-media"
+					v-else
+					max-width="100%"
+					max-height="100%"
+					:src="imageUrl"
+					height="280!important"
+				/>
 
-			<!-- 포스트 정보 -->
-			<div class="bar">
-				<v-card-title>
-					<router-link
-						:to="{ path: `/feed/${post.user_no}` }"
-						style="text-decoration: none"
-					>
-						<h3 class="#3396F4--text">
-							{{ post.user_nickname }}
-						</h3>
-					</router-link>
-					<v-spacer />
-				</v-card-title>
+				<!-- 포스트 정보 -->
+				<div class="bar">
+					<v-card-title>
+						<router-link
+							:to="{ path: `/feed/${post.user_no}` }"
+							style="text-decoration: none"
+						>
+							<h3 class="#3396F4--text">
+								{{ post.user_nickname }}
+							</h3>
+						</router-link>
+						<v-spacer />
+					</v-card-title>
 
-				<v-card-subtitle class="primary--text">
-					좋아요 {{ post.post_like_count }} 개 댓글 {{ post.comment_count }}개
-				</v-card-subtitle>
-			</div>
-			<!-- 좋아요-->
-			<div class="bar-heart">
-				<v-btn @click="pushLike" icon>
-					<v-icon :color="postLike ? 'red' : 'grey lighten-3'" size="32">
-						mdi-heart-outline
-					</v-icon>
-				</v-btn>
+					<v-card-subtitle class="primary--text">
+						좋아요 {{ post.post_like_count }} 개 댓글 {{ post.comment_count }}개
+					</v-card-subtitle>
+				</div>
+				<!-- 좋아요-->
+				<div class="bar-heart">
+					<v-btn @click="pushLike" icon>
+						<v-icon :color="postLike ? 'red' : 'grey lighten-3'" size="32">
+							mdi-heart-outline
+						</v-icon>
+					</v-btn>
+				</div>
 			</div>
 		</div>
 		<v-card>
@@ -91,7 +101,7 @@
 					{
 						type: "application/x-mpegURL",
 						src:
-							"http://d384sk7z91xokb.cloudfront.net/" +
+							"https://d3iu4sf4n4i2qf.cloudfront.net/" +
 							this.post.file_path +
 							"/video/" +
 							this.post.file_savedname +
@@ -104,7 +114,7 @@
 			return {
 				//http://d384sk7z91xokb.cloudfront.net/output/media/20220213/175935/undefined
 				imageUrl:
-					"http://d384sk7z91xokb.cloudfront.net/" +
+					"https://d3iu4sf4n4i2qf.cloudfront.net/" +
 					this.post.file_path +
 					"/" +
 					this.post.file_savedname,
@@ -188,5 +198,13 @@
 	.title-block {
 		display: inline-block;
 		cursor: pointer;
+	}
+	.responsive-media {
+		position: absolute;
+		margin: auto;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
 	}
 </style>
