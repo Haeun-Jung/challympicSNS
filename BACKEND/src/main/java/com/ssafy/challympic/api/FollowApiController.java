@@ -37,23 +37,39 @@ public class FollowApiController {
         return new Result(true, HttpStatus.OK.value(), null, follow);
     }
 
-    @GetMapping("/user/{userNo}/follower")
-    public Result follower(@PathVariable("userNo") int user_no){
+    @GetMapping("/user/{userNo}/follow/{followerNo}")
+    public Result isFollow(@PathVariable("userNo") int user_no, @PathVariable("followerNo") int follow_follower_no){
+        boolean follow = followService.isFollow(user_no, follow_follower_no);
+        return new Result(true, HttpStatus.OK.value(), null, follow);
+    }
+
+    @GetMapping("/{userNo}/follow")
+    public Result followCnt(@PathVariable("userNo") int user_no){
+        int followerCnt = followService.followingCnt(user_no); // 나를 팔로우한
+        int followingCnt = followService.followerCnt(user_no); // 내가 팔로우한
+
+        return new Result(true, HttpStatus.OK.value(), new FollowCnt(followerCnt, followingCnt));
+    }
+
+    @GetMapping("/{userNo}/follower/{loginUser}")
+    public Result follower(@PathVariable("userNo") int user_no, @PathVariable("loginUser") int login_user){
         List<User> follower = followService.following(user_no);
         List<FollowResponse> collect = follower.stream()
-                .map(m ->
-                    new FollowResponse(m)
-                ).collect(Collectors.toList());
+                .map(m ->{
+                    boolean follow = followService.isFollow(login_user, m.getUser_no());
+                    return new FollowResponse(m, follow);
+                }).collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), collect);
     }
 
-    @GetMapping("/user/{userNo}/following")
-    public Result following(@PathVariable("userNo") int user_no){
+    @GetMapping("/{userNo}/following/{loginUser}")
+    public Result following(@PathVariable("userNo") int user_no, @PathVariable("loginUser") int login_user){
         List<User> following = followService.follower(user_no);
         List<FollowResponse> collect = following.stream()
-                .map(m ->
-                        new FollowResponse(m)
-                ).collect(Collectors.toList());
+                .map(m ->{
+                    boolean follow = followService.isFollow(login_user, m.getUser_no());
+                    return new FollowResponse(m, follow);
+                }).collect(Collectors.toList());
         return new Result(true, HttpStatus.OK.value(), collect);
     }
 
@@ -67,11 +83,20 @@ public class FollowApiController {
     static class FollowResponse{
         private int user_no;
         private String user_nickname;
+        private boolean isFollow;
 
-        public FollowResponse(User user) {
+        public FollowResponse(User user, boolean isFollow) {
             this.user_no = user.getUser_no();
             this.user_nickname = user.getUser_nickname();
+            this.isFollow = isFollow;
         }
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class FollowCnt{
+        private int followerCnt;
+        private int followingCnt;
     }
 
     @Data
@@ -81,6 +106,7 @@ public class FollowApiController {
         private int code;
         private T data;
         private boolean isFollowing;
+        private int cnt;
 
         public Result(boolean isSuccess, int code) {
             this.isSuccess = isSuccess;
@@ -91,6 +117,13 @@ public class FollowApiController {
             this.isSuccess = isSuccess;
             this.code = code;
             this.data = data;
+        }
+
+        public Result(boolean isSuccess, int code, T data, boolean isFollowing) {
+            this.isSuccess = isSuccess;
+            this.code = code;
+            this.data = data;
+            this.isFollowing = isFollowing;
         }
     }
 }

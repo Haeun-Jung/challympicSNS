@@ -45,4 +45,14 @@ public class PostLikeRepository {
         em.persist(postLike);
     }
 
+    public int postLikeCnt(int post_no) {
+        List<PostLike> postLikeByPost = em.createQuery("select pl from PostLike pl where pl.post_no = :post_no", PostLike.class)
+                .setParameter("post_no", post_no)
+                .getResultList();
+        if(!postLikeByPost.isEmpty()){
+            return postLikeByPost.size();
+        }else{
+            return 0;
+        }
+    }
 }

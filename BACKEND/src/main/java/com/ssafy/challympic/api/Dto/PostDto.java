@@ -15,6 +15,7 @@ public class PostDto{
     private String user_nickname;
     private String user_title;
     private int challenge_no;
+    private String chalenge_title;
     private int file_no;
     private String file_path;
     private String file_savedname;
@@ -22,6 +23,8 @@ public class PostDto{
     private int post_report;
     private Date post_regdate;
     private Date post_update;
+    private int post_like_count;
+    private int comment_count;
 
     public PostDto(Post post) {
         this.post_no = post.getPost_no();

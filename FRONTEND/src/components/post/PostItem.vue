@@ -97,7 +97,7 @@
     <v-divider />
     <v-expand-transition>
       <div v-show="showComment">
-        <comment-list :comments="post.commentList" />
+        <comment-list :comments="post.commentList" :post_no="post.post" />
         <v-divider />
       </div>
     </v-expand-transition>
