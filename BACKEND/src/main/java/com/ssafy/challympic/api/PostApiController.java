@@ -102,6 +102,8 @@ public class PostApiController {
 
         // 챌린지 타입
         private String challenge_type;
+        private String challenge_name;
+        private int challenge_no;
 
         // 미디어 정보
         private int file_no;
@@ -125,10 +127,12 @@ public class PostApiController {
     }
 
     @GetMapping("/main/recent/post")
-    public Result getRecentPosts(@RequestParam @Nullable Integer userNo){
+    public Result getRecentPosts(@RequestParam(required = false) Integer userNo){
         // 최대 50개 가져오기
         List<Post> postList = postService.getRecentPostList(50);
         List<PostDto> collect = new ArrayList<>();
+
+        log.info("userNo : " + userNo);
 
         for(Post post : postList){
             List<PostLike> postLikeList = postLikeService.getPostLikeListByPostNo(post.getPost_no());
@@ -156,6 +160,8 @@ public class PostApiController {
 
             // 챌린지 타입
             postDto.setChallenge_type(challenge.getChallenge_type().name().toLowerCase());
+            postDto.setChallenge_no(post.getChallenge_no());
+            postDto.setChallenge_name(challengeService.findChallengeByChallengeNo(post.getChallenge_no()).getChallenge_title());
 
             // 미디어 정보
             postDto.setFile_no(post.getMedia().getFile_no());
@@ -187,6 +193,8 @@ public class PostApiController {
 
             collect.add(postDto);
         }
+
+        log.info("size : "+collect.size());
 
         return new Result(true, HttpStatus.OK.value(), collect);
     }
@@ -433,6 +441,9 @@ public class PostApiController {
 
         Post _post = new Post();
         log.info("postNo : " + postNo);
+        log.info("challengNo : " + challengNo);
+
+        log.info("getPost_content : " + postRequest.getPost_content());
 
         // 새로 저장
         if(postRequest.getFile() != null){
@@ -461,23 +472,10 @@ public class PostApiController {
                 }
             }
         }
+        int postId = 0;
 
         // 포스트 업데이트
-        int postId = postService.update(postNo, _post);
-
-        String content = postRequest.getPost_content();
-        String[] splitSharp = content.split(" ");
-
-        for(String str : splitSharp){
-            if(str.startsWith("#")){
-                Tag tag = tagService.findTagByTagContent(str);
-                PostTag postTag = new PostTag();
-                postTag.setPost(_post);
-                postTag.setTag(tag);
-                tagService.savePostTag(postTag);
-            }
-        }
-
+        postId = postService.update(postNo, _post);
 
         if(postId != 0)
             return new Result(true, HttpStatus.OK.value());
