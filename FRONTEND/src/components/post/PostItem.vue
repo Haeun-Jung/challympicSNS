@@ -28,13 +28,15 @@
         </a>
       </div>
       <!-- 'nickname'을 현재 로그인한 유저의 닉네임으로 수정 -->
-      <div v-if="post.user_nickname == $store.state.userStore.userNickname">
-        <v-btn @click="editPost" icon>
-          <v-icon>mdi-pencil-outline</v-icon>
-        </v-btn>
-        <v-btn @click="deletePost" icon>
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
+      <div v-if="this.user">
+        <div v-if="post.user_no == this.user.user_no">
+          <v-btn  @click="editPost" icon>
+            <v-icon>mdi-pencil-outline</v-icon>
+          </v-btn>
+          <v-btn @click="doDeletePost" icon>
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </div>
       </div>
     </v-card-title>
     <!-- 이미지/동영상 props 넘겨주기 -->
@@ -44,7 +46,10 @@
         <player :fileName="post.file_savedname" :filePath="post.file_path" />
       </span>
       <span v-else>
-        <post-image :fileName="post.file_savedname" :filePath="post.file_path" />
+        <post-image
+          :fileName="post.file_savedname"
+          :filePath="post.file_path"
+        />
       </span>
     </v-card-text>
     <v-card-text class="d-flex justify-space-between pt-0 pl-0 pb-0">
@@ -117,11 +122,20 @@
         @click:append-outer="addComment"
       ></v-text-field>
     </v-card-text>
+
+    <post-upload
+      v-if="postDialog"
+      :propChallenge="challengePost"
+      @close-modal="postDialog = false"
+      type="modify"
+    ></post-upload>
+
     <follow-like-modal
       v-if="likeDialog"
       :users="likeList"
       :type="dialogType"
       @close-dialog="toggleLikeDialog"
+      :propChallenge="challenge"
     />
   </v-card>
 </template>
@@ -132,18 +146,17 @@ import Player from "./Player.vue";
 import FollowLikeModal from "../common/FollowLikeModal.vue";
 import CommentList from "./CommentList.vue";
 import ShareButton from "../button/ShareButton.vue";
-import { createComment } from '@/api/comment.js';
+import { createComment } from "@/api/comment.js";
+import PostUpload from "@/components/upload/PostUpload.vue";
+import { deletePost, postLikeList } from "@/api/post.js";
 
 export default {
   name: "PostItem",
-  components: { PostImage, Player, FollowLikeModal, CommentList, ShareButton },
+  components: { PostImage, Player, FollowLikeModal, CommentList, ShareButton, PostUpload },
   props: {
     type: String,
     post: Object,
-  },
-  created(){
-    console.log("postitem")
-    console.log(this.post);
+    user: Object,
   },
   data() {
     return {
@@ -151,22 +164,55 @@ export default {
       showComment: false,
       likeDialog: false,
       dialogType: "like",
+      postDialog: false,
+      challengePost: {
+        challengeName: "",
+        fileType: "",
+        challengeNo: "",
+        fileNo: "",
+      },
     };
+  },
+  created(){
+    console.log("debug");
+    console.log(!this.user);
+    console.log("debug-post");
+    console.log(this.post);
+    console.log("debug-challengePost");
+    console.log(this.challengePost);
   },
   computed: {
     likeList() {
       return this.$store.state.postStore.likeList;
-    }
+    },
   },
   methods: {
     like(post) {
+
+      if(!this.user){
+        alert("로그인이 필요한 서비스입니다.");
+        return ;
+      }
+
       // 좋아요 API 요청
-      post.isLike = !post.isLike;
       if (post.isLike) {
         post.likeCnt += 1;
       } else {
         post.likeCnt -= 1;
       }
+
+      postLikeList(
+        this.post.post_no,
+        this.user.user_no,
+        (response) => {
+          console.log(response);
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+
+
     },
     toggleCommentShow() {
       this.showComment = !this.showComment;
@@ -177,25 +223,56 @@ export default {
     toggleLikeDialog() {
       this.likeDialog = !this.likeDialog;
       if (this.likeDialog) {
-        this.$store.dispatch('postStore/getLikeList', { postNo: this.post.post_no, userNo: this.$store.state.userStore.userInfo.user_no });
+        this.$store.dispatch("postStore/getLikeList", {
+          postNo: this.post.post_no,
+          userNo: this.$store.state.userStore.userInfo.user_no,
+        });
       }
     },
     editPost() {
       // 포스트 수정 API 요청
+      console.log("edit");
+      this.challengePost.challengeName = this.post.challenge_name;
+      this.challengePost.fileType = this.post.challenge_type.toUpperCase();
+      this.challengePost.post_content = this.post.post_content
+      this.challengePost.challengeNo = this.post.challenge_no;
+      this.challengePost.fileNo = this.post.file_no;
+      this.challengePost.postNo = this.post.post_no;
+
+      this.postDialog = true;
+      // type modify로 전송
     },
-    deletePost() {
+    doDeletePost() {
       // 포스트 삭제 API 요청
+      if(!confirm("정말 삭제하시겠습니까?")){
+        return;
+      }
+
+      deletePost(this.post.post_no,
+        (response) => {
+          console.log(response);
+          window.location.href = "/recent";
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
     exportPost() {
       // 공유하기 dialog 열기
       return;
     },
     addComment() {
+      console.log("댓글 등록 호출")
+      let post_no =  this.post.post_no;
+      let user_no = this.user.user_no;
+      let comment_content = this.commentInput;
+
       // 댓글 작성 API 호출
       createComment(
-        this.post.post_no,
-        this.$store.state.userStore.userNo,
-        this.commentInput,
+        post_no,
+        user_no,
+        comment_content,
         (response) => {
           const { data } = response;
           // TODO: 리턴받은 댓글 정보에 + user_no, user_nickname, user_profile 추가해서 this.post.commentList에 append
@@ -209,7 +286,7 @@ export default {
   filters: {
     hashAnchor(str) {
       // TODO: anchor 태그에서 href base url 주석 처리된 url로 변경!!!!!
-      if(!str.includes('#') && !str.includes('@')){
+      if (!str.includes("#") && !str.includes("@")) {
         return str;
       }
       str = str.replace(
@@ -228,7 +305,7 @@ export default {
 
 <style scoped>
 .dark-mode-text {
-  color: rgb(255, 255, 255, 0.6);;
+  color: rgb(255, 255, 255, 0.6);
 }
 .black-text {
   color: black;
