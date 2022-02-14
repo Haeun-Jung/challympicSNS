@@ -22,10 +22,14 @@ public class TagRepository {
         return em.find(Tag.class, tag_no);
     }
 
-    public List<Tag> findByTagContent(String tagContent) {
-        return em.createQuery("select t from Tag t where t.tag_content = :tagContent", Tag.class)
-                .setParameter("tagContent", tagContent)
-                .getResultList();
+    public Tag findTagByTagContent(String tagContent) {
+        try{
+            return em.createQuery("select t from Tag t where t.tag_content = :tagContent", Tag.class)
+                    .setParameter("tagContent", tagContent)
+                    .getSingleResult();
+        }catch (NoResultException e) {
+            return null;
+        }
     }
 
     public Tag validateTagContent(String tagContent) {

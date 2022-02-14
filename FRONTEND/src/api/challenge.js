@@ -19,4 +19,8 @@ async function createChallenge(challenge, success, fail) {
   api.post('/challympic/challenge', JSON.stringify(challenge)).then(await success).catch(fail);
 }
 
-export { getChallengeList, getChallenge, confirmChallengeName, createChallenge };
+async function setSubscription(challengeNo, userNo, success, fail) {
+  api.post(`/challympic/challenge/${challengeNo}/subscribe/${userNo}`, JSON.stringify({challengeNo, userNo})).then(await success).catch(fail);
+}
+
+export { getChallengeList, getChallenge, confirmChallengeName, createChallenge, setSubscription };
