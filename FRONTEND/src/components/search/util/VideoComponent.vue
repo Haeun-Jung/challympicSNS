@@ -1,23 +1,25 @@
 <template>
-	<video-player
-		class="video-player-box"
-		ref="videoPlayer"
-		height="280!important"
-		:playsinline="true"
-		:options="playerOptions"
-		controlsList="nodownload"
-	>
-	</video-player>
+	<div>
+		<video-player
+			vjs-default-skin
+			class="video-player-box"
+			ref="videoPlayer"
+			height="280!important"
+			:playsinline="true"
+			:options="playerOptions"
+			controlsList="nodownload"
+		>
+		</video-player>
+	</div>
 </template>
 
 <script>
 	export default {
 		props: {
-			videoinfo: Object,
+			video: String,
 		},
 		data() {
 			return {
-				videoUrl: this.videoinfo.content,
 				loaded: false,
 				playerOptions: [],
 			};
@@ -25,14 +27,14 @@
 		created() {
 			this.playerOptions = {
 				preload: "auto",
-				autoplay: true,
+
 				muted: true,
-				loop: true,
+
 				aspectRatio: "4:3",
 				sources: [
 					{
 						type: "application/x-mpegURL",
-						src: this.videoinfo.content,
+						src: this.video,
 					},
 				],
 			};
@@ -42,4 +44,26 @@
 	};
 </script>
 
-<style></style>
+<style>
+	.vjs-afterglow-skin .vjs-big-play-button:before {
+		display: none;
+	}
+	.vjs-default-skin {
+		display: none;
+	}
+	.vjs-default-skin.vjs-paused .vjs-big-play-button {
+		display: none;
+	}
+	.vjs-default-skin.vjs-paused .vjs-control-bar {
+		display: block;
+	}
+	/* Hide if the video is playing*/
+	.vjs-has-started .vjs-big-play-button {
+		display: none;
+	}
+
+	/* Show if the video is paused*/
+	.vjs-paused .vjs-big-play-button {
+		display: none;
+	}
+</style>
