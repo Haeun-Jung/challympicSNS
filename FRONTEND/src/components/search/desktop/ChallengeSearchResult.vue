@@ -51,7 +51,6 @@
 												v-if="item.challenge_type === 'VIDEO'"
 												:post="post"
 											/>
-
 											<!-- 이미지 비율때매 넣은겁니당 -->
 											<v-img
 												class="responsive-media"

@@ -32,7 +32,6 @@
 					:src="imageUrl"
 					height="280!important"
 				/>
-
 				<!-- 포스트 정보 -->
 				<div class="bar">
 					<v-card-title>
@@ -101,7 +100,7 @@
 					{
 						type: "application/x-mpegURL",
 						src:
-							"http://d3iu4sf4n4i2qf.cloudfront.net/" +
+							"https://d3iu4sf4n4i2qf.cloudfront.net/" +
 							this.post.file_path +
 							"/video/" +
 							this.post.file_savedname +
@@ -114,13 +113,13 @@
 			return {
 				//http://d3iu4sf4n4i2qf.cloudfront.net/output/media/20220213/175935/undefined
 				imageUrl:
-					"http://d3iu4sf4n4i2qf.cloudfront.net/" +
+					"https://d3iu4sf4n4i2qf.cloudfront.net/" +
 					this.post.file_path +
 					"/" +
 					this.post.file_savedname,
 				loaded: false,
 				playerOptions: [],
-				postLike: false, //유저테이블에서 가져오기
+				postLike: this.post.isLike, //유저테이블에서 가져오기
 				mediaType: "",
 			};
 		},
