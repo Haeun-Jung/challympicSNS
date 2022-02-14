@@ -1,66 +1,109 @@
 <template>
 	<!-- Post List for each ChallengeList -->
-
-	<div class="holder">
-		<v-carousel-item v-for="(item, idx) in post" :key="item.post_no">
-			<div>
-				<!-- v-if="isVideo === 'VIDEO'"-->
-				<!--
-				<video-component
-					:VideoUrl="`https://d384sk7z91xokb.cloudfront.net/${item.file_path}/video/${item.file_savedame}.m3u8`"
-				/>
+	<v-card elevation="2" max-width="444px" class="mx-auto" ref="videoContainer">
+		<v-carousel
+			hide-delimiter-background
+			delimiter-icon="mdi-minus"
+			height="auto"
+			width="444px"
+		>
+			<div class="holder">
+				<v-carousel-item v-for="(item, idx) in post" :key="item.post_no">
+					<div>
+						<!-- v-if="isVideo === 'VIDEO'"-->
+						<video-component :video="item.post" />
+						<!--
 						<v-img
 							v-else
 							:src="`https://d384sk7z91xokb.cloudfront.net/${item.file_path}/${item.file_savedame}`"
 							class="video-player-box"
 							height="280!important"
 						/>
-						--></div>
+						-->
+					</div>
 
-			<!-- 포스트 정보 -->
-			<div class="bar">
-				<v-card-title>
-					<router-link
-						:to="{ path: `/feed/${item.user_no}` }"
-						style="text-decoration: none; color: inherit"
-					>
-						<h3>
-							{{ item.user_nickname }}
-						</h3>
-					</router-link>
-					<v-spacer />
-				</v-card-title>
+					<!-- 포스트 정보 -->
+					<div class="bar">
+						<v-card-title>
+							<router-link
+								:to="{ path: `/feed/${item.user_no}` }"
+								style="text-decoration: none; color: inherit"
+							>
+								<h3>
+									{{ item.user_nickname }}
+								</h3>
+							</router-link>
+							<v-spacer />
+						</v-card-title>
 
-				<v-card-subtitle>
-					<!--좋아요 {{ item.post_likes }} 개 댓글 {{ item.post_comments }}개
+						<v-card-subtitle>
+							<!--좋아요 {{ item.post_likes }} 개 댓글 {{ item.post_comments }}개
 					-->
-				</v-card-subtitle>
-			</div>
-			<!-- 좋아요-->
-			<div class="bar-heart">
-				<v-btn @click="pushLike(item.post_no, idx)" icon>
-					<!-- <v-icon :class="{ 'show-btns': hover }" :color="transparent">
+						</v-card-subtitle>
+					</div>
+					<!-- 좋아요-->
+					<div class="bar-heart">
+						<v-btn @click="pushLike(item.post_no, idx)" icon>
+							<!-- <v-icon :class="{ 'show-btns': hover }" :color="transparent">
 								v-if 문 추가해서 이미 하트 눌렀으면 빨갛게 표시
 								:class="{ 'show-btns': hover }"
 								-->
-					<v-icon :color="item.post_like ? 'red' : 'grey lighten-3'" size="32">
-						mdi-heart-outline
-					</v-icon>
-				</v-btn>
+							<v-icon
+								:color="item.post_like ? 'red' : 'grey lighten-3'"
+								size="32"
+							>
+								mdi-heart-outline
+							</v-icon>
+						</v-btn>
+					</div>
+				</v-carousel-item>
 			</div>
-		</v-carousel-item>
-	</div>
+		</v-carousel>
+
+		<v-list two-line>
+			<v-list-item>
+				<v-list-item-content>
+					<v-list-item-title>
+						<h3 class="title-block" @click="goChallenge">
+							{{ challenge.challenge_title }}
+						</h3>
+					</v-list-item-title>
+					<v-list-item-subtitle>
+						{{ challenge.challenge_content }}
+					</v-list-item-subtitle>
+					<v-list-item-subtitle>
+						{{ challenge.challenge_tag }}
+					</v-list-item-subtitle>
+				</v-list-item-content>
+				<v-list-item-action>
+					<span>
+						<!-- v-if user_subscribe == true -> filled 된 애로 보여주기-->
+						<v-btn icon @click="pushSubscribe">
+							<v-icon
+								:color="
+									challenge.challenge_subscribe ? 'blue' : 'grey lighten-3'
+								"
+								size="32"
+								>mdi-bookmark-outline</v-icon
+							>
+						</v-btn>
+					</span>
+				</v-list-item-action>
+			</v-list-item>
+		</v-list>
+	</v-card>
 </template>
 
 <script>
-	//	import VideoComponent from "./VideoComponent.vue";
+	import VideoComponent from "./VideoComponent.vue";
 	import { list } from "@/api/search.js";
 
 	export default {
-		//		components: { VideoComponent },
+		components: { VideoComponent },
 		name: "ChallengeList",
 		props: {
-			post:Object,
+			challenge: Object,
+			challengeNo: Number,
 			isVideo: String,
 		},
 		data() {
@@ -77,7 +120,7 @@
 			};
 		},
 		created() {
-		/*	console.log("몇번찍히나?" + this.challengeNo);
+			console.log("몇번찍히나?" + this.challengeNo);
 			list(
 				this.challenges,
 				(response) => {

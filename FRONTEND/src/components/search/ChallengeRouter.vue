@@ -6,12 +6,8 @@
 				{{ keyword }}
 			</v-list-item-title>
 			<v-radio-group v-model="row" row>
-				<v-radio
-					label="챌린지"
-					value="challenge"
-					:disabled="isChallenge"
-				></v-radio>
-				<v-radio label="포스트" value="post"></v-radio>
+				<v-radio label="챌린지" value="challenge"></v-radio>
+				<v-radio label="포스트" value="post" @click="callPostRouter"></v-radio>
 			</v-radio-group>
 			<div>
 				<challenge-search-result :search="keyword" />
