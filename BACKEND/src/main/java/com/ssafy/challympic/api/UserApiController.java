@@ -311,6 +311,7 @@ public class UserApiController {
         private String file_savedname;
         private List<titleDto> titles;
         private List<interestDto> interests;
+        private String auth;
         private List<subscriptionDto> subscriptions;
 
         public UserDto(User user) {
@@ -342,7 +343,7 @@ public class UserApiController {
                 this.file_path = user.getMedia().getFile_path();
                 this.file_savedname = user.getMedia().getFile_savedname();
             }
-
+            this.auth = user.getUser_auth().toString();
         }
 
         @Data
