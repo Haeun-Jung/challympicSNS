@@ -3,20 +3,13 @@ package com.ssafy.challympic.api;
 import com.ssafy.challympic.api.Dto.ChallengeDto;
 import com.ssafy.challympic.api.Dto.PostDto;
 import com.ssafy.challympic.api.Dto.SearchDto;
-import com.ssafy.challympic.api.Dto.UserDto;
 import com.ssafy.challympic.domain.*;
-import com.ssafy.challympic.service.ChallengeService;
-import com.ssafy.challympic.service.SearchService;
-import com.ssafy.challympic.service.TagService;
-import com.ssafy.challympic.service.UserService;
+import com.ssafy.challympic.service.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +24,8 @@ public class SearchApiController {
     private final UserService userService;
     private final TagService tagService;
     private final ChallengeService challengeService;
+    private final PostService postService;
+    private final CommentService commentService;
 
     @GetMapping("/search")
     public Result getSearchList() {
@@ -56,46 +51,62 @@ public class SearchApiController {
     }
 
     /**
-     * 태그 PathVar 말고 requestbody
-     * @param tag
-     * @param request
-     * @return
+     * 태그 검색
      */
-    @GetMapping("/search/tag/{tag}")
-    public Result searchTagList(@PathVariable String tag, @RequestBody UserRequest request) {
-        List<Challenge> challenges = searchService.findChallengeListByTagContent("#" + tag);
-        List<Post> posts = searchService.findPostListByTagContent("#" + tag);
+    @PostMapping("/search/tag")
+    public Result searchTagList(@RequestBody TagSearchRequest request) {
+        List<Challenge> challenges = searchService.findChallengeListByTagContent("#" + request.tag_content);
+        List<Post> posts = searchService.findPostListByTagContent("#" + request.tag_content);
 
         List<ChallengeDto> challengeList = challenges.stream()
                 .map(c -> new ChallengeDto(c))
                 .collect(Collectors.toList());
         List<PostDto> postList = posts.stream()
-                .map(p -> new PostDto(p))
+                .map(p -> new PostDto(
+                        p.getPost_no(),
+                        p.getUser().getUser_no(),
+                        p.getUser().getUser_nickname(),
+                        p.getUser().getUser_title(),
+                        p.getChallenge_no(),
+                        challengeService.findChallengeByChallengeNo(p.getChallenge_no()).getChallenge_title(),
+                        p.getMedia().getFile_no(),
+                        p.getMedia().getFile_path(),
+                        p.getMedia().getFile_savedname(),
+                        p.getPost_content(),
+                        p.getPost_report(),
+                        p.getPost_regdate(),
+                        p.getPost_update(),
+                        postService.getPostLikeCountByPostNo(p.getPost_no()),
+                        commentService.postCommentCnt(p.getPost_no())
+                ))
                 .collect(Collectors.toList());
 
         Map<String, List> data = new HashMap<>();
         data.put("challengeList", challengeList);
         data.put("postList", postList);
 
-        // 검색 기록 저장
-        User user = userService.findUser(request.user_no);
-        if(user != null) searchService.saveSearchRecord("#" + tag, user);
+        if(request.user_no != 0){
+            // 검색 기록 저장
+            User user = userService.findUser(request.user_no);
+            if(user != null) searchService.saveSearchRecord("#" + request.tag_content, user);
 
-        Tag findTag = tagService.findTagByTagContent("#" + tag);
+            Tag findTag = tagService.findTagByTagContent("#" + request.tag_content);
 
-        if(findTag.getIsChallenge() != null && findTag.getIsChallenge().equals("challenge")) {
-            SearchChallenge searchChallenge = new SearchChallenge();
-            searchChallenge.setChallenge(challengeService.findChallengeByTitle("#" + tag).get(0));
-            searchChallenge.setUser(user);
-            searchService.saveSearchChallenge(searchChallenge);
+            if(findTag.getIsChallenge() != null && findTag.getIsChallenge().equals("challenge")) {
+                SearchChallenge searchChallenge = new SearchChallenge();
+                searchChallenge.setChallenge(challengeService.findChallengeByTitle("#" + request.tag_content).get(0));
+                searchChallenge.setUser(user);
+                searchService.saveSearchChallenge(searchChallenge);
+            }
         }
 
         return new Result(true, HttpStatus.OK.value(), data);
     }
 
     @Data
-    static class UserRequest {
+    static class TagSearchRequest {
         private int user_no;
+        private String tag_content;
     }
 
     @GetMapping("/search/recent/user/{userNo}")

@@ -6,7 +6,7 @@
         <img
           v-if="post.user_profile"
           class="profile mr-3"
-          :src="`https://d384sk7z91xokb.cloudfront.net/${post.user_profile}`"
+          :src="`https://d3iu4sf4n4i2qf.cloudfront.net/${post.user_profile}`"
           alt="profile img"
         />
         <img
@@ -97,7 +97,7 @@
     <v-divider />
     <v-expand-transition>
       <div v-show="showComment">
-        <comment-list :comments="post.commentList" />
+        <comment-list :comments="post.commentList" :post_no="post.post" />
         <v-divider />
       </div>
     </v-expand-transition>

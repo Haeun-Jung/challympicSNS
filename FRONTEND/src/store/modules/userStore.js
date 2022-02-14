@@ -13,7 +13,8 @@ import {
    deleteInterest,
    deleteSubscription,
    getQnA,
-   registerQuestion
+   registerQuestion,
+   getAlertList,
  } from '@/api/user.js';
 
 const userStore = {
@@ -34,6 +35,7 @@ const userStore = {
       pushAlert: true,
       listInterest: null,
       listQnA: null,
+      alertList: null,
   },
   getters: {
       
@@ -71,10 +73,18 @@ const userStore = {
       },
       SET_QNA(state, qna) {
         state.listQnA = qna;
+      },
+      SET_ALERT_LIST(state, alertList) {
+        if (alertList.length > 0) {
+          state.alertList = alertList;
+        }
+      },
+      DELETE_ALERT(state) {
+        state.alertList = null;
       }
   },
   actions: {
-    async login({ commit }, user) {
+    async login({ commit, dispatch }, user) {
       await login(
         user,
         (response) => {
@@ -82,6 +92,7 @@ const userStore = {
           if (data.success) {
             commit('LOGIN', data);
             commit('LOGIN_FAILED', false);
+            dispatch('getAlertList', data.data.user_no);
             sessionStorage.setItem('Authorization', response.headers['authorization']);
             router.push({ name: 'Main'});
           } else {
@@ -297,6 +308,18 @@ const userStore = {
           console.log(error);
         }
       );
+    },
+    getAlertList({ commit }, userNo) {
+      getAlertList(
+        userNo,
+        (response) => {
+          commit('SET_ALERT_LIST', response.data.data);
+          console.log("알림 가져오기 성공");
+        },
+        () => {
+          console.log("알림 가져오기 오류");
+        }
+      )
     }
   }
 }

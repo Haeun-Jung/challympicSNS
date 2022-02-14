@@ -4,7 +4,7 @@
       max-height="600"
       contain
       class="grey darken-4"
-      :src="`https://d384sk7z91xokb.cloudfront.net/${filePath}/${fileName}`"
+      :src="`https://d3iu4sf4n4i2qf.cloudfront.net/${filePath}/${fileName}`"
     ></v-img>
   </div>
 </template>

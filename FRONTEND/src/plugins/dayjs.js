@@ -7,7 +7,6 @@ dayjs.extend(relativeTime);
 
 const fromNow = (dateTime) => {
   const diff = dayjs().diff(dateTime,'days');
-  console.log(dayjs(dateTime).fromNow());
   if (diff < 7) {
     return dayjs(dateTime).fromNow();
   }
