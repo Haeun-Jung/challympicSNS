@@ -83,12 +83,12 @@
                             <v-col md="2" class="follow-wrapper" align-self="center">
                             <div class="font-weight">팔로워</div>
                             <div class="show-folllow-modal" @click="openFollowerDialog">3</div>
-                            <follow-like-modal v-if="follower" @close-modal="follower=false" type="follower" :users="follows" :login_user="this.login_user"></follow-like-modal>
+                            <follow-like-modal v-if="follower" @close-modal="follower=false" type="follower" :login_user="this.login_user"></follow-like-modal>
                         </v-col>
                         <v-col md="2" class="follow-wrapper" align-self="center">
                             <div class="font-weight">팔로잉</div>
                             <div class="show-folllow-modal" @click="openFollowingDialog">3</div>
-                            <follow-like-modal v-if="following" @close-modal="following=false" type="following" :users="follows" :login_user="this.login_user"></follow-like-modal>
+                            <follow-like-modal v-if="following" @close-modal="following=false" type="following" :login_user="this.login_user"></follow-like-modal>
                         </v-col>
                         </v-row>
 					</v-container>

@@ -83,7 +83,10 @@ const userStore = {
             commit('LOGIN', data);
             commit('LOGIN_FAILED', false);
             sessionStorage.setItem('Authorization', response.headers['authorization']);
-            router.push({ name: 'Main'});
+            // router.push({ name: 'Main'});
+            window.location.href = '/recent';
+            // var prev = history.back();
+            // window.location = prev;
           } else {
             commit('LOGIN_FAILED', true);
           }

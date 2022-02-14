@@ -30,26 +30,31 @@ async function getUser(user_no, success, fail) {
 
 /* 회원 정보 수정 */
 function modifyUser(user_no, user, success, fail) {
+  api.defaults.headers["Authorization"] = sessionStorage.getItem("Authorization");
   api.put(`/challympic/user/account/${user_no}`, user, { headers: { 'Content-Type': 'multipart/form-data' } }).then(success).catch(fail);
 }
 
 /* 회원 비밀번호 수정 */
 function changePassword(user_no, user, success, fail) {
+  api.defaults.headers["Authorization"] = sessionStorage.getItem("Authorization");
   api.put(`/challympic/user/account/${user_no}/pwd`, JSON.stringify(user)).then(success).catch(fail);
 }
 
 /* 회원 탈퇴 */
 function deleteUser(user_no, success, fail) {
+  api.defaults.headers["Authorization"] = sessionStorage.getItem("Authorization");
   api.delete(`/challympic/user/account/${user_no}`).then(success).catch(fail);
 }
 
 /* 관심사 조회 */
 function getInterest(user_no, success, fail) {
+  api.defaults.headers["Authorization"] = sessionStorage.getItem("Authorization");
   api.get(`/challympic/user/interest/${user_no}`).then(success).catch(fail);
 }
 
 /* 관심사 삭제 */
 function deleteInterest(user_no, tag_no, success, fail) {
+  api.defaults.headers["Authorization"] = sessionStorage.getItem("Authorization");
   api.delete(`/challympic/user/interest/${user_no}/${tag_no}`).then(success).catch(fail);
 }
 
@@ -60,16 +65,19 @@ function deleteSubscription(challenge_no, user_no, success, fail) {
 
 /* 문의하기 조회 */
 function getQnA(user_no, success, fail) {
+  api.defaults.headers["Authorization"] = sessionStorage.getItem("Authorization");
   api.get(`/challympic/user/${user_no}/qna`).then(success).catch(fail);
 }
 
 /* 문의하기 등록 */
 function registerQuestion(user_no, qna, success, fail) {
+  api.defaults.headers["Authorization"] = sessionStorage.getItem("Authorization");
   api.post(`/challympic/user/${user_no}/qna`, JSON.stringify(qna)).then(success).catch(fail);
 }
 
 /* 관심사 추가 */
 function save(user_no, tag_no, success, fail) {
+  api.defaults.headers["Authorization"] = sessionStorage.getItem("Authorization");
   api.post(`/challympic/user/interest/${user_no}`, { tag_no }).then(success).catch(fail);
 }
 
