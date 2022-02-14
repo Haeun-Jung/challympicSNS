@@ -15,7 +15,7 @@
 						<!--
 						<v-img
 							v-else
-							:src="`https://d3iu4sf4n4i2qf.cloudfront.net/${item.file_path}/${item.file_savedame}`"
+							:src="`https://d384sk7z91xokb.cloudfront.net/${item.file_path}/${item.file_savedame}`"
 							class="video-player-box"
 							height="280!important"
 						/>

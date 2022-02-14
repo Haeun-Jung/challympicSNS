@@ -125,6 +125,7 @@ const userStore = {
           if (response.data.code === 200) {
             console.log(response.data.data);
             commit("SET_USER_INFO", response.data.data);
+            window.location.href = '/recent';
           } else {
             console.log("유저 정보 없음!!");
           }
