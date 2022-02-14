@@ -80,8 +80,8 @@
             ></v-text-field>
             <v-select
               v-else
-              v-model="post.challengeName"
-              :items="challenges"
+              v-model="post.challengeNo"
+              :items="challengeList"
               dense
               outlined
             ></v-select>
@@ -122,6 +122,7 @@
 </template>
 
 <script>
+import { getChallengeList } from '@/api/challenge.js';
 import FileUpload from "vue-upload-component";
 
 
@@ -139,9 +140,10 @@ export default {
   data: () => ({
     dialog: true,
     // TODO: 임시 챌린지 목록 바꿔야 함
-    challenges: ["미라클_모닝_챌린지", "싸피_챌린지"],
+    challengeList: [],
     post: {
       file: [],
+      challengeNo: "",
       challengeName: "",
       description: "",
     },
@@ -186,13 +188,14 @@ export default {
       // 항목들 입력 여부 확인
       if (
         !this.post.file[0] ||
-        this.post.challengeName.length == 0 ||
+        this.post.challengeNo < 0 ||
         this.post.description.length == 0
       ) {
         this.error = "입력되지 않은 항목이 있습니다.";
       } else {
         this.error = false;
       }
+      // formData 생성
       let formData = new FormData();
       formData.append("file", this.post.file[0].file);
       formData.append("user_no", this.$store.state.userStore.userInfo.user_no);
@@ -201,6 +204,11 @@ export default {
       // 업로드 로직
       // 챌린지 등록에서 넘어왔을 경우
       if (this.propChallenge) {
+        // 챌린저 처리
+        if (this.propChallenge.challengers.length > 1) {
+          this.propChallenge.challengers = this.propChallenge.challengers.split();
+        }
+        // 종료일 계산
         const propEndDate = this.propChallenge.endDate;
         if (propEndDate.length < 3) {
           const endDate = this.getEndDate(propEndDate);
@@ -213,7 +221,7 @@ export default {
           this.$store.dispatch('challengeStore/createChallengeWithPost', { challenge: this.propChallenge, post: formData });
         }
       } else {
-        // 포스트 업로드
+        // 포스트 업로드: challenge name만 받았거나 모달에서 챌린지를 선택했을 경우
         const challengeNo = this.propChallenge.challengeNo || this.propChallengeName.challengeNo;
         this.$store.dispatch('postStore/createPost', { challengeNo, post: formData });
       }
@@ -222,6 +230,26 @@ export default {
       this.$emit('close-challenge-modal');
     },
   },
+  created() {
+    if (!this.propChallenge && !this.propChallengeName) {
+      getChallengeList(
+        (response) => {
+          const { data } = response;
+          this.challengeList = data.data.map(challenge => {
+            return {
+              text: challenge.challenge_title,
+              value: challenge.challenge_no,
+              challengeNo: challenge.challenge_no
+            }
+          });
+          console.log(this.challengeList);
+        },
+        () => {
+          console.log("챌린지 목록 가져오기 실패");
+        }
+      )
+    }
+  }
 };
 </script>
 

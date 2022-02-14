@@ -40,7 +40,7 @@
     <!-- 이미지/동영상 props 넘겨주기 -->
 
     <v-card-text class="px-0">
-      <span v-if="post.challenge_type.toUpperCase == 'VIDEO'">
+      <span v-if="post.challenge_type == 'video'">
         <player :fileName="post.file_savedname" :filePath="post.file_path" />
       </span>
       <span v-else>
@@ -204,15 +204,16 @@ export default {
   },
   filters: {
     hashAnchor(str) {
-      // TODO: anchor 태그에서 href 주소 검색창 url로 변경
+      // TODO: anchor 태그에서 href base url 주석 처리된 url로 변경!!!!!
       str = str.replace(
-        /@[^\s]+/g,
-        '<a class="text-decoration-none" href="$&">$&</a>'
-      );
-      return str.replace(
         /#[^\s]+/g,
-        '<a class="text-decoration-none" href="$&">$&</a>'
+        '<a class="text-decoration-none" href="http://192.168.219.106:8080/search/$&">$&</a>'
       );
+      // str = str.replace(
+      //   /#[^\s]+/g,
+      //   '<a class="text-decoration-none" href="http://i6b101.p.ssafy.io/search/$&">$&</a>'
+      // );
+      return str.replace(/\/#/g, "/");
     },
   },
 };

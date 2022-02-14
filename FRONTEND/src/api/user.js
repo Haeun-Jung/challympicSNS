@@ -24,7 +24,7 @@ function confirmNickname(user_nickname, success, fail) {
 
 /* 회원 정보 가져오기(토큰 헤더에 보내기) */
 async function getUser(user_no, success, fail) {
-  api.defaults.headers["Authorization"] = localStorage.getItem("Authorization");
+  api.defaults.headers["Authorization"] = sessionStorage.getItem("Authorization");
   await api.get(`/challympic/user/account/${user_no}`).then(success).catch(fail);
 }
 

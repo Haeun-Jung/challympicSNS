@@ -1,37 +1,6 @@
 <template>
 	<!--이분 폐기시키는2중입니다-->
-	<v-app class="search-result-container">
-		<!-- 모바일은 사이드 바가 없기 때문에 패딩 조절해줘야함 & span주면 키워드 길때 내려감-->
-		<v-container fluid class="search-control-box-mobile hidden-sm-and-up">
-			<v-list-item-title id="search-keyword">
-				{{ keyword }}
-			</v-list-item-title>
-			<v-radio-group v-model="row" row>
-				<v-radio
-					label="챌린지"
-					value="challenge"
-					:disabled="isChallenge"
-				></v-radio>
-				<v-radio label="포스트" value="post"></v-radio>
-			</v-radio-group>
-		</v-container>
-		<!--desktop-->
-		<v-container fluid class="search-control-box-desktop hidden-md-and-down">
-			<v-radio-group v-model="row" row>
-				<span>
-					<v-list-item-title id="search-keyword">
-						{{ keyword }}
-					</v-list-item-title>
-				</span>
-				<v-radio
-					label="챌린지"
-					value="challenge"
-					@click="callChallengeRouter"
-				></v-radio>
-				<v-radio label="포스트" value="post" @click="callPostRouter"></v-radio>
-			</v-radio-group>
-		</v-container>
-
+	<v-app>
 		<router-view />
 	</v-app>
 </template>

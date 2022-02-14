@@ -6,9 +6,15 @@ const api = apiInstance();
 function getSearchList(success, fail) {
     api.get(`/challympic/search`).then(success).catch(fail); //hes saying remove this 
 }
-function searchTagList(tag,success,user_no, fail) { 
-    api.get(`/challympic/search/tag/${tag}`,{ user_no }).then(success).catch(fail);
+/*태그 검색 결과 */
+function searchTagList(searchKey,success, fail) { 
+    api.post(`/challympic/search/tag`,JSON.stringify(searchKey)).then(success).catch(fail);
 }
 
+/*최신 api 확인해보니까 challengeno로 챌린지 가져오는게 그냥 list이던데 혹시 위에거랑 같은거면 한번 확인해주세여! */
+function list(challenges, success, fail) { 
+    api.post(`/challympic/challenge/post`, JSON.stringify(challenges)).then(success).catch(fail);
+  }
+  
 
-export { getSearchList , searchTagList };
+export { getSearchList , searchTagList , list };

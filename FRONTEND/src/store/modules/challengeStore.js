@@ -12,6 +12,14 @@ const challengeStore = {
 
   },
   mutations: {
+    SET_CHALLENGE_LIST(state, challengeList) {
+      state.challengeList = challengeList.map(challenge => {
+        return {
+          text: challenge.challenge_title,
+          value: challenge.challenge_no
+        }
+      });
+    },
     SET_CHALLENGE(state, challenge) {
 
       state.challenge = {
@@ -46,7 +54,8 @@ const challengeStore = {
       )
     },
     confirmChallengeName({ commit }, challengeName) {
-      if (challengeName.length === 1) {
+      if (challengeName.length < 1) {
+        commit('REFUSE_CHALLENGE_NAME');
         return;
       }
       confirmChallengeName(
@@ -80,7 +89,7 @@ const challengeStore = {
           console.log("챌린지 생성!");
           if(response.data.code == 200){
             createPost(
-              response.data.data,
+              response.data.data.challenge_no,
               post,
               () => {
                 console.log("포스트 생성!");

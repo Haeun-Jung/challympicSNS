@@ -16,7 +16,7 @@ const store = new Vuex.Store({
   },
   plugins: [
     createPersistedState({
-      storage: localStorage,
+      storage: sessionStorage,
       paths: ['userStore'],
     })
   ]

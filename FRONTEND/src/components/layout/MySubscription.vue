@@ -55,9 +55,9 @@ export default {
   methods: {
 	  	...mapActions(userStore, ["getUserInfo"]),
 		remove(no) {
-			this.$store.dispatch('userStore/deleteSubscription', { no, token: localStorage.getItem('Authorization') })
+			this.$store.dispatch('userStore/deleteSubscription', { no, token: sessionStorage.getItem('Authorization') })
 			setTimeout(() => {
-				this.getUserInfo(localStorage.getItem("Authorization"));
+				this.getUserInfo(sessionStorage.getItem("Authorization"));
 			}, 300);
 		},
 		isMobile() {
