@@ -429,7 +429,6 @@
 			},
 		},
 		created() {
-			console.log("user_no "+ this.$store.state.userStore.userInfo.user_no);
 			getSearchList(
 				(response) => {
 					this.obj1 = response.data.data.tagList;
