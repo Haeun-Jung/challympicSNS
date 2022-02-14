@@ -12,6 +12,14 @@ const challengeStore = {
 
   },
   mutations: {
+    SET_CHALLENGE_LIST(state, challengeList) {
+      state.challengeList = challengeList.map(challenge => {
+        return {
+          text: challenge.challenge_title,
+          value: challenge.challenge_no
+        }
+      });
+    },
     SET_CHALLENGE(state, challenge) {
 
       state.challenge = {
