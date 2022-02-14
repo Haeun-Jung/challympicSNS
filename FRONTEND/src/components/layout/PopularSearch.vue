@@ -1,10 +1,17 @@
 <template>
   <div>
     <v-card-subtitle>
-        <h2>인기 급상승<v-icon icon class="chart-icon">mdi-chart-line</v-icon></h2>
+      <h2>
+        인기 급상승<v-icon icon class="chart-icon">mdi-chart-line</v-icon>
+      </h2>
     </v-card-subtitle>
     <v-list-item-content class="side-contents-trend-container">
-      <div v-for="keyword in keywords" class="search-item" :key="keyword.id"  @click="goChallengePage(keyword.challengeNo)">
+      <div
+        v-for="keyword in keywords"
+        class="search-item"
+        :key="keyword.id"
+        @click="goChallengePage(keyword.challengeNo)"
+      >
         <span class="word-blank">{{ keywords.indexOf(keyword) + 1 }}</span>
         <span>{{ keyword.title }}</span>
       </div>
@@ -19,22 +26,22 @@
 
 <script>
 export default {
-  name: 'PopularSearch',
+  name: "PopularSearch",
   data() {
     return {
       keywords: [
-        {challengeNo: 1, title: "아이스_버킷_챌린지"},
-        {challengeNo: 2, title: "미라클_모닝"},
-        {challengeNo: 3, title: "요리"},
-      ]
-    }
+        { challengeNo: 1, title: "아이스_버킷_챌린지" },
+        { challengeNo: 2, title: "미라클_모닝" },
+        { challengeNo: 3, title: "요리" },
+      ],
+    };
   },
   methods: {
     goChallengePage(challengeNo) {
       this.$router.push(`/challenge/${challengeNo}`);
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -51,9 +58,9 @@ export default {
   margin-bottom: 2px;
 }
 .chart-icon::before {
-  color: #DC143C;
+  color: #dc143c;
 }
-.side-contents-trend-container{
+.side-contents-trend-container {
   margin: 0 auto;
   width: 86%;
   cursor: pointer;
