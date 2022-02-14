@@ -59,27 +59,13 @@ public class SearchApiController {
         List<Post> posts = searchService.findPostListByTagContent("#" + request.tag_content);
 
         List<ChallengeDto> challengeList = challenges.stream()
-                .map(c -> new ChallengeDto(c))
+                .map(c -> {
+                    List<Post> postListByChallengeNo = postService.getPostList(c.getChallenge_no());
+                    List<PostDto> postList = postToDto(postListByChallengeNo);
+                    return new ChallengeDto(c, postList);
+                })
                 .collect(Collectors.toList());
-        List<PostDto> postList = posts.stream()
-                .map(p -> new PostDto(
-                        p.getPost_no(),
-                        p.getUser().getUser_no(),
-                        p.getUser().getUser_nickname(),
-                        p.getUser().getUser_title(),
-                        p.getChallenge_no(),
-                        challengeService.findChallengeByChallengeNo(p.getChallenge_no()).getChallenge_title(),
-                        p.getMedia().getFile_no(),
-                        p.getMedia().getFile_path(),
-                        p.getMedia().getFile_savedname(),
-                        p.getPost_content(),
-                        p.getPost_report(),
-                        p.getPost_regdate(),
-                        p.getPost_update(),
-                        postService.getPostLikeCountByPostNo(p.getPost_no()),
-                        commentService.postCommentCnt(p.getPost_no())
-                ))
-                .collect(Collectors.toList());
+        List<PostDto> postList = postToDto(posts);
 
         Map<String, List> data = new HashMap<>();
         data.put("challengeList", challengeList);
@@ -101,6 +87,17 @@ public class SearchApiController {
         }
 
         return new Result(true, HttpStatus.OK.value(), data);
+    }
+
+    private List<PostDto> postToDto(List<Post> posts) {
+        return posts.stream()
+                .map(p -> {
+                    String challengeTitle = challengeService.findChallengeByChallengeNo(p.getChallenge_no()).getChallenge_title();
+                    int postLikeCount = postService.getPostLikeCountByPostNo(p.getPost_no());
+                    int commentCount = commentService.postCommentCnt(p.getPost_no());
+                    return new PostDto(p,challengeTitle, postLikeCount, commentCount);
+                })
+                .collect(Collectors.toList());
     }
 
     @Data
