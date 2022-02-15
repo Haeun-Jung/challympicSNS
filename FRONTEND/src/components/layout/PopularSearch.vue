@@ -1,11 +1,18 @@
 <template>
   <div>
     <v-card-subtitle>
-        <h2>인기 급상승<v-icon icon class="chart-icon">mdi-chart-line</v-icon></h2>
+      <h2>
+        인기 급상승<v-icon icon class="chart-icon">mdi-chart-line</v-icon>
+      </h2>
     </v-card-subtitle>
     <v-list-item-content class="side-contents-trend-container">
-      <div v-for="(keyword, idx) in keywords" class="search-item" :key="keyword.id"  @click="goChallengePage(keyword.challenge_no)">
-        <span class="word-blank">{{ idx+ 1 }}</span>
+      <div
+        v-for="(keyword, idx) in keywords"
+        class="search-item"
+        :key="keyword.id"
+        @click="goChallengePage(keyword.challenge_no)"
+      >
+        <span class="word-blank">{{ idx + 1 }}</span>
         <span>{{ keyword.challenge_title }}</span>
       </div>
     </v-list-item-content>
@@ -18,27 +25,27 @@
 </template>
 
 <script>
-import { getTrend } from '@/api/side.js';
+import { getTrend } from "@/api/side.js";
 export default {
-  name: 'PopularSearch',
+  name: "PopularSearch",
   data() {
     return {
-      keywords: []
-    }
+      keywords: [""],
+    };
   },
   methods: {
     goChallengePage(challengeNo) {
       this.$router.push(`/challenge/${challengeNo}`);
-    }
+    },
   },
-  created(){
-    getTrend(
-      (response) => {
-        this.keywords = response.data.data;
-      }
-    )
-  }
-}
+  created() {
+    getTrend((response) => {
+      console.log("인기 급상승")
+      console.log(response.data.data)
+      this.keywords = response.data.data;
+    });
+  },
+};
 </script>
 
 <style scoped>
@@ -55,9 +62,9 @@ export default {
   margin-bottom: 2px;
 }
 .chart-icon::before {
-  color: #DC143C;
+  color: #dc143c;
 }
-.side-contents-trend-container{
+.side-contents-trend-container {
   margin: 0 auto;
   width: 86%;
   cursor: pointer;

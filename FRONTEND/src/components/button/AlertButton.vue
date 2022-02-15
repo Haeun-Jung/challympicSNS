@@ -1,5 +1,12 @@
 <template>
-  <v-menu bottom left offset-y max-height="260" :width="menuWidth" display="block">
+  <v-menu
+    bottom
+    left
+    offset-y
+    max-height="260"
+    :width="menuWidth"
+    display="block"
+  >
     <template v-slot:activator="{ on, attrs }">
       <v-btn icon v-bind="attrs" v-on="on">
         <div v-if="activeAlert" id="alert-badge"></div>
@@ -17,7 +24,9 @@
         >
           <v-list-item-title>
             {{ item.alert_content.split('"')[3] }}
-            <span class="date-text">{{ dayjsRegDate(item.alert_regDate) }}</span>
+            <span class="date-text">{{
+              dayjsRegDate(item.alert_regDate)
+            }}</span>
           </v-list-item-title>
         </v-list-item>
       </v-list>
@@ -43,14 +52,14 @@ export default {
   data() {
     return {
       alertMenu: [],
-    }
+    };
   },
   computed: {
     menuWidth() {
       if (this.isMobile) {
-        return 210
+        return 210;
       }
-      return 300
+      return 300;
     },
     activeAlert() {
       if (this.alertMenu.length > 1) {
@@ -60,17 +69,17 @@ export default {
     },
     alertList() {
       return this.$store.state.userStore.alertList;
-    }
+    },
   },
   methods: {
     dayjsRegDate(regDate) {
       const parsedRegDate = regDate.split("T")[0].replace(/-/g, ".");
       return fromNow(parsedRegDate);
-		},
+    },
     deleteAlert() {
       this.menu = false;
       setTimeout(() => {
-        this.$store.commit('userStore/DELETE_ALERT');
+        this.$store.commit("userStore/DELETE_ALERT");
       }, 500);
     },
     isMobile() {
@@ -84,8 +93,8 @@ export default {
         return false;
       }
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>

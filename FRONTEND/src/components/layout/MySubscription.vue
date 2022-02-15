@@ -1,108 +1,110 @@
 <template>
-	<!-- 로그인 X -->	
-	<div v-if="!isLoggedIn" class="title-width">
-		<v-card-subtitle>
-			<h2>구독</h2>
-		</v-card-subtitle>
-		<v-list-item-content>
-			<h4 class="main-side-menu-contents">
-				챌린지를 구독해보세요!
-			</h4>
-		</v-list-item-content>
-	</div>
-	<!-- 로그인 O -->
-    <v-list v-else class="title-width">
-        <v-list-group>
-          <template v-slot:activator class="title-background">
-            <v-card-subtitle class="title-width">
-				<h2 v-if="!isMobile()">구독</h2>
-				<h4 v-else>구독</h4>
-			</v-card-subtitle>
-          </template>
-          <v-chip
-		  	class="subscription-one"
-			v-for="challenge in listsubscription"
-			:key="challenge.challenge_no"
-			:value="challenge"
-			:to="{ path: '/challenge/' + challenge.id }"
-			v-model="challenge.isOpen"
-			color="primary"
-			outlined
-			close
-			@click:close="remove(challenge.challenge_no)">
-			{{ challenge.challenge_title }}
-			</v-chip>
-        </v-list-group>
-    </v-list>
+  <!-- 로그인 X -->
+  <div v-if="!isLoggedIn" class="title-width">
+    <v-card-subtitle>
+      <h2>구독</h2>
+    </v-card-subtitle>
+    <v-list-item-content>
+      <h4 class="main-side-menu-contents">챌린지를 구독해보세요!</h4>
+    </v-list-item-content>
+  </div>
+  <!-- 로그인 O -->
+  <v-list v-else class="title-width">
+    <v-list-group>
+      <template v-slot:activator class="title-background">
+        <v-card-subtitle class="title-width">
+          <h2 v-if="!isMobile()">구독</h2>
+          <h4 v-else>구독</h4>
+        </v-card-subtitle>
+      </template>
+      <v-chip
+        class="subscription-one"
+        v-for="challenge in listsubscription"
+        :key="challenge.challenge_no"
+        :value="challenge"
+        :to="{ path: '/challenge/' + challenge.id }"
+        v-model="challenge.isOpen"
+        color="primary"
+        outlined
+        close
+        @click:close="remove(challenge.challenge_no)"
+      >
+        {{ challenge.challenge_title }}
+      </v-chip>
+    </v-list-group>
+  </v-list>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
-import { getSubscription } from '@/api/user.js';
+import { getSubscription } from "@/api/user.js";
 const userStore = "userStore";
 export default {
-  name: 'MySubscription',
+  name: "MySubscription",
   props: { search: String },
   computed: {
-		...mapState(userStore, ["userInfo"]),
-		isLoggedIn() {
-			return this.$store.state.userStore.isLoggedIn;
-		}
-	},
+    ...mapState(userStore, ["userInfo"]),
+    isLoggedIn() {
+      return this.$store.state.userStore.isLoggedIn;
+    },
+  },
   data() {
     return {
-		listsubscription : [""],
-    }
+      listsubscription: [""],
+    };
   },
   methods: {
-	  	...mapActions(userStore, ["getUserInfo"]),
-		remove(no) {
-			this.listsubscription.splice(no - this.index, 1);
-			this.index++; //카운트 해줘야 다음 태그 제대로 지워짐
-			// 이렇게 하고, 페이지 refresh 해서 태그 다시 받아와야함.....
-			this.listsubscription = [...this.listsubscription];
-			this.disabledTrue = false;
-			this.$store.dispatch('userStore/deleteInterest', { no, token: sessionStorage.getItem('Authorization') })
-			setTimeout(() => {
-				this.getUserInfo(sessionStorage.getItem("Authorization"));
-			}, 300);
-		},
-		isMobile() {
-            if (
-                /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-                    navigator.userAgent
-                )
-            ) {
-                return true;
-            } else {
-                return false;
-            }
-        },
-	},
-	created(){
-		getSubscription(
-			this.$store.state.userStore.userInfo.user_no,
-			(response) => {
-				this.listsubscription = response.data.data;
-			}
-		)
-  	}
-}
+    ...mapActions(userStore, ["getUserInfo"]),
+    remove(no) {
+      this.listsubscription.splice(no - this.index, 1);
+      this.index++; //카운트 해줘야 다음 태그 제대로 지워짐
+      // 이렇게 하고, 페이지 refresh 해서 태그 다시 받아와야함.....
+      this.listsubscription = [...this.listsubscription];
+      this.disabledTrue = false;
+      this.$store.dispatch("userStore/deleteInterest", {
+        no,
+        token: sessionStorage.getItem("Authorization"),
+      });
+      setTimeout(() => {
+        this.getUserInfo(sessionStorage.getItem("Authorization"));
+      }, 300);
+    },
+    isMobile() {
+      if (
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        )
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  },
+  created() {
+    getSubscription(
+      this.$store.state.userStore.userInfo.user_no,
+      (response) => {
+        this.listsubscription = response.data.data;
+      }
+    );
+  },
+};
 </script>
 
 <style scoped>
 .title-width {
-	width: 100%;
-	background: transparent;
-	padding-right: 0px;
+  width: 100%;
+  background: transparent;
+  padding-right: 0px;
 }
 .main-side-menu-contents {
-	text-align: center;
-	margin: 1%;
-	padding-left: 5%;
-	padding-right: 7%;
+  text-align: center;
+  margin: 1%;
+  padding-left: 5%;
+  padding-right: 7%;
 }
-.subscription-one{
-	margin: 3px;
+.subscription-one {
+  margin: 3px;
 }
 </style>

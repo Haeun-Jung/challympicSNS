@@ -44,7 +44,10 @@
         <player :fileName="post.file_savedname" :filePath="post.file_path" />
       </span>
       <span v-else>
-        <post-image :fileName="post.file_savedname" :filePath="post.file_path" />
+        <post-image
+          :fileName="post.file_savedname"
+          :filePath="post.file_path"
+        />
       </span>
     </v-card-text>
     <v-card-text class="d-flex justify-space-between pt-0 pl-0 pb-0">
@@ -132,7 +135,7 @@ import Player from "./Player.vue";
 import FollowLikeModal from "../common/FollowLikeModal.vue";
 import CommentList from "./CommentList.vue";
 import ShareButton from "../button/ShareButton.vue";
-import { createComment } from '@/api/comment.js';
+import { createComment } from "@/api/comment.js";
 
 export default {
   name: "PostItem",
@@ -152,7 +155,7 @@ export default {
   computed: {
     likeList() {
       return this.$store.state.postStore.likeList;
-    }
+    },
   },
   methods: {
     like(post) {
@@ -173,7 +176,10 @@ export default {
     toggleLikeDialog() {
       this.likeDialog = !this.likeDialog;
       if (this.likeDialog) {
-        this.$store.dispatch('postStore/getLikeList', { postNo: this.post.post_no, userNo: this.$store.state.userStore.userInfo.user_no });
+        this.$store.dispatch("postStore/getLikeList", {
+          postNo: this.post.post_no,
+          userNo: this.$store.state.userStore.userInfo.user_no,
+        });
       }
     },
     editPost() {
@@ -221,7 +227,7 @@ export default {
 
 <style scoped>
 .dark-mode-text {
-  color: rgb(255, 255, 255, 0.6);;
+  color: rgb(255, 255, 255, 0.6);
 }
 .black-text {
   color: black;

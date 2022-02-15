@@ -6,9 +6,9 @@ spring:
     password: ssafy
   jpa:
     hibernate:
-#      ddl-auto: update
-      ddl-auto: create
-    properties:
+      ddl-auto: update
+#      ddl-auto: create
+    properties:A
       hibernate:
 #        show_sql: true
         format_sql: true

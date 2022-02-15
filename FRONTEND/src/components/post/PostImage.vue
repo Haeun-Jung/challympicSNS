@@ -14,10 +14,9 @@ export default {
   name: "PostImage",
   props: {
     fileName: String,
-    filePath: String
+    filePath: String,
   },
 };
 </script>
 
-<style>
-</style>
+<style></style>
