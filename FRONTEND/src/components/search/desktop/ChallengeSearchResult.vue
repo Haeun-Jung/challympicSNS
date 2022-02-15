@@ -93,8 +93,8 @@
 													"
 												>
 													<strong>
-														좋아요 {{ item.post_likes }} 개 댓글
-														{{ item.post_comments }}개</strong
+														좋아요 {{ post.post_like_count }} 개 댓글
+														{{ post.comment_count }}개</strong
 													>
 												</v-card-subtitle>
 											</div>
