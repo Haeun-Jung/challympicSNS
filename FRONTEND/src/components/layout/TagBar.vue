@@ -38,21 +38,6 @@ import { getRecommend } from "@/api/search.js";
 export default {
   name: "TagBar",
   created() {
-<<<<<<< HEAD
-	if(this.$store.state.userStore.userInfo){
-		const userNo = this.$store.state.userStore.userInfo.user_no;
-		getRecommend(
-		userNo,
-		(response) => {
-			console.log(response);
-			this.tagList = response.data.data.tagList;
-		},
-		(error) => {
-			console.log(error);
-		}
-		);
-	}
-=======
 		if(this.$store.state.userStore.userInfo) {
       console.log("추천태그 유저 번호");
       console.log(this.$store.state.userStore.userInfo.user_no);
@@ -82,7 +67,6 @@ export default {
         }
       );
     }
->>>>>>> f76ce1b16c1f9fe5031bfef83a77b1836fb6e0a0
   },
   methods: {
     moveTag(tag_content) {
