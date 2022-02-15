@@ -160,6 +160,7 @@
 	import { setSubscription } from "@/api/challenge.js";
 	import { setLike } from "@/api/post.js";
 	import VideoComponent from "../util/VideoComponent.vue";
+
 	export default {
 		name: "ChallengeSearchResult",
 		components: {
@@ -199,22 +200,28 @@
 			},
 		},
 		created() {
+			const user_no = this.$store.state.userStore.userInfo.user_no;
+			const tag_content = this.search.substring(1);
+			console.log("user_no : " + this.$store.state.userStore.userInfo.user_no);
 			searchTagList(
-				this.searchKey,
+				{user_no, tag_content},
 				(response) => {
 					this.challenges = response.data.data.challengeList;
 					console.log(this.challenges);
+					console.log("created")
+					console.log(this.searchKey);
 				},
 				(error) => {
 					console.log(error);
-				}
+					console.log("create false");
+				},
 			);
 		},
 		data() {
 			return {
 				overlay: false,
 				user_no: !this.$store.state.userStore.userInfo
-					? ""
+					? 0
 					: this.$store.state.userStore.userInfo.user_no,
 				searchKey: {
 					user_no: this.user_no,

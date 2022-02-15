@@ -43,11 +43,15 @@
 			search: String,
 		},
 		created() {
+			const user_no = this.$store.state.userStore.userInfo.user_no;
+			const tag_content = this.search.substring(1);
+			console.log("user_no : " + this.$store.state.userStore.userInfo.user_no);
 			searchTagList(
-				this.searchKey,
+				{user_no, tag_content},
 				(response) => {
 					this.posts = response.data.data.postList;
 					console.log(this.posts);
+					console.log(this.searchKey)
 				},
 				(error) => {
 					console.log(error);
