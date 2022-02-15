@@ -154,7 +154,6 @@
 		</v-data-iterator>
 	</v-container>
 </template>
-
 <script>
 	// import ChallengeList from "../util/ChallengeList.vue";
 	import { searchTagList } from "@/api/search.js";
@@ -214,10 +213,11 @@
 		data() {
 			return {
 				overlay: false,
+				user_no: !this.$store.state.userStore.userInfo
+					? ""
+					: this.$store.state.userStore.userInfo.user_no,
 				searchKey: {
-					user_no: this.$store.state.userStore.userInfo.user_no
-						? this.$store.state.userStore.usreInfo.user_no
-						: "",
+					user_no: this.user_no,
 					tag_content: this.search.substring(1),
 				},
 				itemsPerPageArray: [3, 6, 9],
@@ -259,7 +259,9 @@
 		right: 0;
 		bottom: 0;
 	}
-
+	.v-data-footer__select {
+		display: none;
+	}
 	/*	#hello:not(.on-hover) {
 		opacity: 0.5;
 	}
