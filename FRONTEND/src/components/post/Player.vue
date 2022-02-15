@@ -34,8 +34,8 @@ export default {
           src: `https://d3iu4sf4n4i2qf.cloudfront.net/${this.filePath}/video/${this.fileName}.m3u8`,
         },
       ],
-    }
-  }
+    };
+  },
 };
 </script>
 

@@ -1,8 +1,5 @@
 <template>
-  <v-img
-  class="ad-width"
-  @click="moveToAd"
-  src="../../assets/public-ad.png">
+  <v-img class="ad-width" @click="moveToAd" src="../../assets/public-ad.png">
   </v-img>
 </template>
 
@@ -25,8 +22,8 @@ export default {
 
 <style scoped>
 .ad-width {
-    /* width: 100%; */
-    margin: 8px auto;
-    cursor: pointer;
+  /* width: 100%; */
+  margin: 8px auto;
+  cursor: pointer;
 }
 </style>

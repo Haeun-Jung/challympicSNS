@@ -304,9 +304,9 @@ export default {
         }
       }
     },
-    modifyStart(){
+    modifyStart() {
       if (this.post.challengeName.length == 0) {
-          this.post.challengeName = this.propChallenge.challengeName;
+        this.post.challengeName = this.propChallenge.challengeName;
       }
 
       if (
@@ -321,16 +321,16 @@ export default {
       }
 
       let formData = new FormData();
-      
-      if(this.post.file.length != 0){
+
+      if (this.post.file.length != 0) {
         formData.append("file", this.post.file[0].file);
       }
       formData.append("user_no", this.$store.state.userStore.userInfo.user_no);
-      
+
       formData.append("post_content", this.post.description);
 
-      console.log(this.post.description)
-      
+      console.log(this.post.description);
+
       let challenge_no = this.propChallenge.challengeNo;
       let post_no = this.propChallenge.postNo;
 
@@ -339,10 +339,10 @@ export default {
         post_no,
         formData,
         (response) => {
-          console.log(response)
+          console.log(response);
         },
-        (error) =>{
-          console.log(error)
+        (error) => {
+          console.log(error);
         }
       );
 
@@ -350,7 +350,6 @@ export default {
       this.$emit("close-challenge-modal");
       this.$emit("close-modal");
       // window.location.href = "/recent";
-
     },
     uploadStart() {
       // 챌린지명이 prop으로 넘어왔을 경우 처리
@@ -415,9 +414,9 @@ export default {
         let challengeNo = -1;
         if (this.propChallenge) {
           challengeNo = this.propChallenge.challengeNo;
-        }else if (this.propChallengeName) {
+        } else if (this.propChallengeName) {
           challengeNo = this.propChallengeName.challengeNo;
-        }else if (this.selectedChallenge) {
+        } else if (this.selectedChallenge) {
           challengeNo = this.selectedChallenge.challengeNo;
         }
         this.$store.dispatch("postStore/createPost", {

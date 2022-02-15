@@ -30,7 +30,7 @@
       <!-- 'nickname'을 현재 로그인한 유저의 닉네임으로 수정 -->
       <div v-if="this.user">
         <div v-if="post.user_no == this.user.user_no">
-          <v-btn  @click="editPost" icon>
+          <v-btn @click="editPost" icon>
             <v-icon>mdi-pencil-outline</v-icon>
           </v-btn>
           <v-btn @click="doDeletePost" icon>
@@ -152,7 +152,14 @@ import { deletePost, postLikeList } from "@/api/post.js";
 
 export default {
   name: "PostItem",
-  components: { PostImage, Player, FollowLikeModal, CommentList, ShareButton, PostUpload },
+  components: {
+    PostImage,
+    Player,
+    FollowLikeModal,
+    CommentList,
+    ShareButton,
+    PostUpload,
+  },
   props: {
     type: String,
     post: Object,
@@ -173,7 +180,7 @@ export default {
       },
     };
   },
-  created(){
+  created() {
     console.log("debug");
     console.log(!this.user);
     console.log("debug-post");
@@ -188,10 +195,9 @@ export default {
   },
   methods: {
     like(post) {
-
-      if(!this.user){
+      if (!this.user) {
         alert("로그인이 필요한 서비스입니다.");
-        return ;
+        return;
       }
 
       // 좋아요 API 요청
@@ -210,9 +216,7 @@ export default {
         (error) => {
           console.log(error);
         }
-      )
-
-
+      );
     },
     toggleCommentShow() {
       this.showComment = !this.showComment;
@@ -234,7 +238,7 @@ export default {
       console.log("edit");
       this.challengePost.challengeName = this.post.challenge_name;
       this.challengePost.fileType = this.post.challenge_type.toUpperCase();
-      this.challengePost.post_content = this.post.post_content
+      this.challengePost.post_content = this.post.post_content;
       this.challengePost.challengeNo = this.post.challenge_no;
       this.challengePost.fileNo = this.post.file_no;
       this.challengePost.postNo = this.post.post_no;
@@ -244,11 +248,12 @@ export default {
     },
     doDeletePost() {
       // 포스트 삭제 API 요청
-      if(!confirm("정말 삭제하시겠습니까?")){
+      if (!confirm("정말 삭제하시겠습니까?")) {
         return;
       }
 
-      deletePost(this.post.post_no,
+      deletePost(
+        this.post.post_no,
         (response) => {
           console.log(response);
           window.location.href = "/recent";
@@ -263,8 +268,8 @@ export default {
       return;
     },
     addComment() {
-      console.log("댓글 등록 호출")
-      let post_no =  this.post.post_no;
+      console.log("댓글 등록 호출");
+      let post_no = this.post.post_no;
       let user_no = this.user.user_no;
       let comment_content = this.commentInput;
 

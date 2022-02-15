@@ -39,8 +39,8 @@ const postStore = {
   },
   actions: {
     getRecentPostList({ commit }, userNo) {
-      if(!userNo){
-        userNo = '';
+      if (!userNo) {
+        userNo = "";
         console.log(userNo);
       }
       getRecentPostList(

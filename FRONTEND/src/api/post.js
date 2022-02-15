@@ -38,16 +38,12 @@ async function createPost(challengeNo, post, success, fail) {
 // update, delete는 api만 있고 호출은 아직 작성 안 된 상태입니다.
 /* 포스트 수정 */
 function updatePost(challengeNo, postNo, post, success, fail) {
-
   api
-    .put(
-      `/challympic/challenge/${challengeNo}/post/${postNo}`,
-      post, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    )
+    .put(`/challympic/challenge/${challengeNo}/post/${postNo}`, post, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
     .then(success)
     .catch(fail);
 }
@@ -64,12 +60,22 @@ function getLikeList(postNo, userNo, success, fail) {
 
 /* 포스트 좋아요한 유저 목록 */
 function postLikeList(postNo, userNo, success, fail) {
-  api.post(`challympic/post/${postNo}/like/${userNo}`).then(success).catch(fail);
+  api
+    .post(`challympic/post/${postNo}/like/${userNo}`)
+    .then(success)
+    .catch(fail);
+}
 
 /* 포스트 좋아요/취소 */
 function setLike(postNo, userNo, success, fail) {
   console.log("주석 처리되어있음 해제할 필요");
-  // api.post(`challympic/post/${postNo}/like/${userNo}`, JSON.stringify({postNo, userNo})).then(success).catch(fail);
+  api
+    .post(
+      `challympic/post/${postNo}/like/${userNo}`,
+      JSON.stringify({ postNo, userNo })
+    )
+    .then(success)
+    .catch(fail);
 }
 
 export {
@@ -79,7 +85,6 @@ export {
   updatePost,
   deletePost,
   getLikeList,
-  postLikeList
-  // setLike
-}
+  postLikeList,
+  setLike,
 };

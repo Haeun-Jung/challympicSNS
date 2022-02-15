@@ -1,10 +1,10 @@
 <template>
   <div>
-      <v-btn @click="copyChallengeLink" class="icon-margin" icon>
-        <v-icon large class="hidden-md-and-down"> mdi-export-variant</v-icon>
-        <v-icon class="hidden-sm-and-up"> mdi-export-variant</v-icon>
-      </v-btn>    
-      <v-snackbar
+    <v-btn @click="copyChallengeLink" class="icon-margin" icon>
+      <v-icon large class="hidden-md-and-down"> mdi-export-variant</v-icon>
+      <v-icon class="hidden-sm-and-up"> mdi-export-variant</v-icon>
+    </v-btn>
+    <v-snackbar
       v-model="snackbar"
       :timeout="timeout"
       color="success"
@@ -33,7 +33,7 @@ export default {
       snackbar: false,
       text: "URL이 복사되었습니다.",
       timeout: 1500,
-    }
+    };
   },
   methods: {
     copyChallengeLink() {
