@@ -3,7 +3,7 @@
     <!-- PC -->
     <v-row v-if="!isMobile()" class="profile-wrapper">
       <v-avatar v-if="userInfo.file_no == 0" size="150">
-        <v-icon size="150">mdi-account-circle-outline</v-icon>
+        <v-icon size="150">mdi-account-circle</v-icon>
       </v-avatar>
       <v-avatar v-else size="150">
         <img
@@ -23,12 +23,10 @@
             <v-col align-self="center" class="name-wrapper">
               <v-list-item-title class="title-wrapper">
                 <!-- 타이틀이 있을 때만 -->
-                <v-col v-if="userInfo.file_no == 0">
-                  <img
-                    class="medal-icon"
-                    src="https://cdn-icons-png.flaticon.com/512/744/744922.png"
-                  />
-                </v-col>
+                <img
+                  class="medal-icon"
+                  src="https://cdn-icons-png.flaticon.com/512/744/744922.png"
+                />
                 <div class="header-title font-weight">
                   {{ userInfo.user_title }}
                 </div>
@@ -93,7 +91,6 @@
     <!-- Mobile -->
     <v-row v-else>
       <!-- 이름 -->
-      <v-row>
         <v-col md="6" class="profile-setting-avatar-container">
           <v-avatar v-if="userInfo.file_no == 0" size="150">
             <v-icon size="150">mdi-account-circle-outline</v-icon>
@@ -110,7 +107,6 @@
             />
           </v-avatar>
         </v-col>
-      </v-row>
       <v-row>
         <v-col>
           <v-container>
@@ -118,12 +114,10 @@
             <v-row class="name-content">
               <v-col>
                 <v-list-item-title class="title-wrapper">
-                  <v-col v-if="userInfo.file_no == 0">
-                    <img
-                      class="medal-icon"
-                      src="https://cdn-icons-png.flaticon.com/512/744/744922.png"
-                    />
-                  </v-col>
+                  <img
+                    class="medal-icon"
+                    src="https://cdn-icons-png.flaticon.com/512/744/744922.png"
+                  />
                   <div class="header-title font-weight">
                     {{ userInfo.user_title }}
                   </div>
