@@ -92,7 +92,7 @@ const userStore = {
         (response) => {
           const { data } = response;
           if (data.success) {
-            commit("LOGIN", data);
+            commit("LOGIN", data.data);
             commit("LOGIN_FAILED", false);
             dispatch("getAlertList", data.data.user_no);
             sessionStorage.setItem(
