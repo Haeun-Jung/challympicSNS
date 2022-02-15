@@ -21,7 +21,7 @@ spring:
 server:
   port: 7777
   servlet:
-    context-path: /challympic/api
+    context-path: /challympic
   ssl:
     key-store: classpath:keystore.p12
     key-store-type: PKCS12
