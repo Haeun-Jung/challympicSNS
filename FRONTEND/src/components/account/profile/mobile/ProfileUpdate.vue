@@ -111,11 +111,11 @@
                             :search-input.sync="search"
                             hide-selected
                             label=""
-                            multiple
-                            item-text="tag_content"
-                            item-value="tag_content"
                             persistent-hint
                             small-chips
+                            item-text="tag_content"
+                            item-value="tag_content"
+                            return-object
                           >
                             <template v-slot:no-data>
                               <v-list-item>
@@ -161,14 +161,15 @@
               <v-col>
                 <!-- 템플릿으로 chips 뿌림-->
                 <v-chip
-                  v-for="tag in listInterest"
+                  v-for="(tag, idx) in listInterest"
                   :key="tag.tag_no"
-                  :value="tag"
+                  :value="tag.tag_content"
+                  :to="{ path: '/search/' + (tag.tag_content || '').slice(1) }"
                   v-model="tag.isOpen"
                   color="primary"
                   outlined
                   close
-                  @click:close="remove(tag.tag_no)"
+                  @click:close="remove(idx, tag.tag_no)"
                   class="tag-one"
                 >
                   {{ tag.tag_content }}
@@ -202,10 +203,11 @@
 import { mapState, mapActions } from "vuex";
 import { getSearchList } from "@/api/search.js";
 import { save } from "@/api/user.js";
+import { getInterest } from "@/api/user.js"
 const userStore = "userStore";
 export default {
   computed: {
-    ...mapState(userStore, ["userInfo", "listInterest"]),
+    ...mapState(userStore, ["userInfo"]),
     possibleNickname() {
       return this.$store.state.userStore.possibleNickname;
     },
@@ -234,6 +236,7 @@ export default {
       profile: null,
       title: null,
       dialog: false,
+      search: "",
       AllTags: [], //전체 태그
       model: [],
       file: {}, //업로드용 파일
@@ -242,7 +245,7 @@ export default {
       formData: new FormData(),
       alertMsg: "",
       selectedAllTags: "",
-      search: "",
+      listInterest:[""],
     };
   },
   /* 프로필 이미지 설정 */
@@ -258,7 +261,7 @@ export default {
       this.$store.state.userStore.fileSavedName;
   },
   methods: {
-    ...mapActions(userStore, ["getUserInfo", "modifyUser"]),
+    ...mapActions(userStore, ["getUserInfo", "modifyUser", "getInterest"]),
     onSubmit() {
       if (this.nickname == null && this.title == null && this.profile === `http://d3iu4sf4n4i2qf.cloudfront.net/${this.$store.state.userStore.filePath}/${this.$store.state.userStore.fileSavedName}`) {
         this.alertMsg = "변경사항이 없습니다.";
@@ -294,7 +297,11 @@ export default {
       // 	window.location.reload();
       // }, 300);
     },
-    remove(no) {
+    remove(idx, no) {
+      this.listInterest.splice(idx, 1);
+      // this.index++; //카운트 해줘야 다음 태그 제대로 지워짐
+      // 이렇게 하고, 페이지 refresh 해서 태그 다시 받아와야함.....
+      this.listInterest = [...this.listInterest];
       this.$store.dispatch("userStore/deleteInterest", {
         no,
         token: sessionStorage.getItem("Authorization"),
@@ -313,7 +320,6 @@ export default {
       if (this.nicknameValidation) {
         this.$store.dispatch("userStore/confirmNickname", this.nickname);
         this.duplicateNicknameCheck = true;
-        //if (this.possibleNickname) // this.disabledTrue = false;
       }
     },
     saveInterest() {
@@ -355,6 +361,9 @@ export default {
         console.log(error);
       }
     );
+    getInterest(this.$store.state.userStore.userInfo.user_no, (response) => {
+      this.listInterest = response.data.data;
+    });
   },
 };
 </script>
