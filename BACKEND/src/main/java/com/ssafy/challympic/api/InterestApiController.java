@@ -2,9 +2,13 @@ package com.ssafy.challympic.api;
 
 import com.ssafy.challympic.domain.Interest;
 import com.ssafy.challympic.domain.Result;
+import com.ssafy.challympic.domain.Tag;
+import com.ssafy.challympic.domain.User;
 import com.ssafy.challympic.service.InterestService;
+import com.ssafy.challympic.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +22,7 @@ import java.util.stream.Collectors;
 public class InterestApiController {
 
     private final InterestService interestService;
+    private final UserService userService;
 
     @PostMapping("/user/interest/{userNo}")
     public Result save(@PathVariable("userNo") int user_no, @RequestBody interestRequest request){
@@ -35,6 +40,24 @@ public class InterestApiController {
         }else{
             return new Result(false, HttpStatus.BAD_REQUEST.value());
         }
+    }
+
+    @Data
+    static class JoinAfterInterest{
+        private String user_email;
+        private List<Integer> interests;
+    }
+
+    @PostMapping("/setInterests")
+    public Result saves(@RequestBody JoinAfterInterest request){
+        System.out.println(request.getUser_email());
+
+        User user = userService.findByEmail(request.getUser_email());
+
+        for (Integer t : request.getInterests()) {
+            interestService.save(user.getUser_no(), t);
+        }
+        return new Result(true, HttpStatus.OK.value());
     }
 
     @GetMapping("/interest/{userNo}")
