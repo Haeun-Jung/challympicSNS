@@ -279,11 +279,11 @@ export default {
        if (this.nickname == null) {
         this.nickname = this.userInfo.user_nickname;
       }
-      else this.formData.append("user_nickname", this.nickname);
+      else this.formData.set("user_nickname", this.nickname);
       if (this.title == null) {
         this.title = this.userInfo.user_title;
       }
-      else this.formData.append("user_title", this.title);
+      else this.formData.set("user_title", this.title);
       this.modifyUser({
         file: this.formData,
         token: sessionStorage.getItem("Authorization"),
