@@ -15,6 +15,7 @@ import {
   getQnA,
   registerQuestion,
   getAlertList,
+  setInterests
 } from "@/api/user.js";
 
 const userStore = {
@@ -27,6 +28,7 @@ const userStore = {
     userNickname: "",
     userEmail: "",
     userInfo: null,
+    tempUserEmail: "", 
     filePath: "",
     fileSavedName: "",
     possibleEmail: false,
@@ -79,6 +81,9 @@ const userStore = {
     DELETE_ALERT(state) {
       state.alertList = null;
     },
+    TEMP_USER_EMAIL(state, tempUserEmail){
+      state.tempUserEmail = tempUserEmail;
+    }
   },
   actions: {
     async login({ commit, dispatch }, user) {
@@ -104,18 +109,39 @@ const userStore = {
         }
       );
     },
-    async join(state, user) {
+    async join({ commit }, user) {
       await join(
         user,
         (response) => {
           const { data } = response;
           if (data.success) {
-            router.push({ name: "Login" });
+            commit("TEMP_USER_EMAIL", user.user_email);
+            router.push({ name: "SetInterests" });
           }
         },
         (err) => {
           console.log(err);
           console.log("회원가입 실패");
+        }
+      );
+    },
+    async setInterests( state, info){
+      // console.log("스토어");
+      // console.log(info.user_email);
+      // console.log(info.interests);
+
+      await setInterests(
+        info.user_email,
+        info.interests,
+        (response) => {
+          console.log("조인 후 인터레스트");
+          console.log(response);
+          router.push({ name: "Login" });
+        },
+        (err) => {
+          console.log("조인후 인터레스트 불가")
+          console.log(err);
+        
         }
       );
     },
