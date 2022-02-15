@@ -34,10 +34,28 @@ async function setSubscription(challengeNo, userNo, success, fail) {
     .catch(fail);
 }
 
+function removeSubscription(challengeNo, userNo, success, fail){
+  api.delete(`/challympic/challenge/${challengeNo}/subscribe/${userNo}`,
+      JSON.stringify({ challengeNo, userNo })
+    )
+    .then(success)
+    .catch(fail);
+}
+
+function isSubscribe(challengeNo, userNo, success, fail){
+  api.get(`/challympic/challenge/${challengeNo}/subscribe/${userNo}`,
+      JSON.stringify({ challengeNo, userNo })
+    )
+    .then(success)
+    .catch(fail);
+}
+
 export {
   getChallengeList,
   getChallenge,
   confirmChallengeName,
   createChallenge,
   setSubscription,
+  removeSubscription,
+  isSubscribe
 };
