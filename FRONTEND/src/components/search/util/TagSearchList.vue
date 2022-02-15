@@ -14,6 +14,7 @@
         height="280!important"
         :playsinline="true"
         :options="playerOptions"
+        class="vjs-big-play-centered"
       >
       </video-player>
       <v-img
@@ -59,13 +60,12 @@
       <!-- 좋아요-->
       <div class="bar-heart">
         <v-btn @click="pushLike" icon>
-          <v-icon :color="postLike ? 'red' : 'grey lighten-3'" size="32">
+          <v-icon :color="post.isLike ? 'red' : 'grey lighten-3'" size="32">
             mdi-heart-outline
           </v-icon>
         </v-btn>
       </div>
     </div>
-
     <v-list two-line>
       <v-list-item>
         <v-list-item-content>
@@ -85,6 +85,8 @@
 </template>
 
 <script>
+import {postLikeList } from "@/api/post.js"
+
 export default {
   name: "TagSearchList",
   props: {
@@ -111,6 +113,8 @@ export default {
         },
       ],
     };
+
+      this.user = this.$store.state.userStore.userInfo;
   },
   data() {
     return {
@@ -124,6 +128,7 @@ export default {
       playerOptions: [],
       postLike: this.post.isLike, //유저테이블에서 가져오기
       mediaType: "",
+      user: null,
     };
   },
   computed: {
@@ -162,14 +167,31 @@ export default {
       this.$router.go();
     },
     pushLike() {
-      this.postLike = !this.postLike; //이건 유저의 변수이고
-      if (this.postLike) {
-        this.post.post_like_count++; //이건 포스트의 변수이다
-        //이쪽에서 포스트 라이크 api 호출시키고
-      } else {
-        this.post.post_like_count--;
-        //이쪽에서 포스트 디스라이크  api 호출시켜야한다
+           if (!this.user) {
+        alert("로그인이 필요한 서비스입니다.");
+        return;
       }
+
+      // 좋아요 API 요청
+      if (this.post.isLike && this.post.post_like_count > 0) {
+        // 클릭된 상태
+        this.post.post_like_count -= 1;
+      } else {
+        this.post.post_like_count += 1;
+      }
+
+      this.post.isLike = !this.post.isLike;
+
+      postLikeList(
+        this.post.post_no,
+        this.user.user_no,
+        (response) => {
+          console.log(response);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
     pushSubscribe() {
       alert("???");
