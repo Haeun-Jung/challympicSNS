@@ -24,11 +24,7 @@ function list(challenges, success, fail) {
 
 function getRecommend(userNo, success, fail) {
   api
-<<<<<<< HEAD
-    .get(`/challympic/activity/${userNo}`, JSON.stringify(userNo))
-=======
     .get(`/challympic/activity/${userNo}`)
->>>>>>> f76ce1b16c1f9fe5031bfef83a77b1836fb6e0a0
     .then(success)
     .catch(fail);
 }
