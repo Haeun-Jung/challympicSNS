@@ -205,16 +205,16 @@ export default {
   },
   props: {
     type: String,
-    who_no: Number,
+    who_no: Number, // 피드의 주인장
     userInfo: Object,
   },
   data() {
     return {
       login_user: this.$store.state.userStore.userInfo.user_no,
-      isFollower: false,
+      isFollower: false, // 내가 피드 주인을 팔로우 하는지 true면 한다.
       profileUrl: "",
-      follower: false,
-      following: false,
+      follower: false, // 피드 주인을 팔로우 하는 사람들
+      following: false, // 피드 주인이 팔로우 하는 사람들
       followerCnt: 0,
       followingCnt: 0,
     };
@@ -222,13 +222,15 @@ export default {
   created() {
     console.log("this.login_user");
     console.log(this.login_user);
-    if(!this.$store.state.userStore.userInfo){
+    if(this.$store.state.userStore.userInfo.user_no > 0){
       // 유저 번호와 로그인 한 사람의 팔로우 관계
       checkFollow(this.login_user, this.who_no, (response) => {
         this.isFollower = response.data.following;
+        console.log(this.isFollower);
+        console.log("여기");
       })
     }
-    // 유저의 팔로우, 팔로잉 cnt
+    // 피드 주인의 팔로우, 팔로잉 cnt
     getFollowCnt(this.who_no, (response) => {
       this.followerCnt = response.data.data.followerCnt;
       this.followingCnt = response.data.data.followingCnt;

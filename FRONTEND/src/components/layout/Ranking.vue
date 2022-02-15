@@ -37,8 +37,8 @@ export default {
   },
   created() {
     getChampions((response) => {
-      console.log("getChampions")
-      console.log(response.data.data)
+      // console.log("getChampions")
+      // console.log(response.data.data)
       this.champions = response.data.data;
     });
   },

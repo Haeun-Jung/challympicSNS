@@ -29,6 +29,7 @@ import Subscribe from "../components/feed/Subscribe.vue";
 
 /*로그인 및 회원가입*/
 import Join from "../views/user/Join.vue";
+import SetInterests from "../views/user/SetInterests";
 import Login from "../views/user/Login.vue";
 import ChallengeDetail from "../views/ChallengeDetail.vue";
 
@@ -168,6 +169,11 @@ const routes = [
     path: "/join",
     name: "Join",
     component: Join,
+  },
+  {
+    path: "/setInterests",
+    name: "SetInterests",
+    component: SetInterests,
   },
   {
     path: "/login",
