@@ -136,16 +136,9 @@
 										<span>
 											<!-- v-if user_subscribe == true -> filled 된 애로 보여주기
 											지금 이게 없어서 작동 못함...-->
-											<v-btn
-												icon
-												@click="
-													setSubscribe(item)
-												"
-											>
+											<v-btn icon @click="setSubscribe(item)">
 												<v-icon
-													:color="
-														item.subscription ? 'blue' : 'grey lighten-3'
-													"
+													:color="item.subscription ? 'blue' : 'grey lighten-3'"
 													size="32"
 													>mdi-bookmark-outline</v-icon
 												>
@@ -189,7 +182,7 @@
 					(error) => {
 						console.log(error);
 					}
-				)
+				);
 			},
 			pushLike(post) {
 				console.log(post);
@@ -203,15 +196,15 @@
 					(error) => {
 						console.log(error);
 					}
-				)
-			}
+				);
+			},
 		},
 		created() {
 			searchTagList(
 				this.searchKey,
 				(response) => {
 					this.challenges = response.data.data.challengeList;
-					console.log(this.challenges)
+					console.log(this.challenges);
 				},
 				(error) => {
 					console.log(error);

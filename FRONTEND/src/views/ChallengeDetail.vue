@@ -131,11 +131,14 @@
 									</div>
 									<v-list-item-subtitle>
 										<v-chip
+                      v-for="tag in tags"
+                      :key="tag.id"
+                      @click="clickTag(tag)"
 											class="mt-6 ml-4 challenge-chip"
 											color="#3396F4"
 											text-color="white"
 										>
-											요리
+											{{ tag }}
 										</v-chip>
 									</v-list-item-subtitle>
 
@@ -253,6 +256,11 @@
 				}
 				this.isSubscribed = !this.isSubscribed;
 			},
+      clickTag(tagContent) {
+        console.log(tagContent);
+        console.log(tagContent.split("#")[1]);
+        this.$router.push("/search/" + tagContent.split("#")[1]);
+      },
 			isMobile() {
 				if (
 					/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -266,19 +274,19 @@
 			},
 		},
     filters: {
-    hashAnchor(str) {
-      // TODO: anchor 태그에서 href base url 주석 처리된 url로 변경!!!!!
-      str = str.replace(
-        /#[^\s]+/g,
-        '<a class="text-decoration-none" href="http://192.168.219.106:8080/search/$&">$&</a>'
-      );
-      // str = str.replace(
-      //   /#[^\s]+/g,
-      //   '<a class="text-decoration-none" href="http://i6b101.p.ssafy.io/search/$&">$&</a>'
-      // );
-      return str.replace(/\/#/g, "/");
+      hashAnchor(str) {
+        // TODO: anchor 태그에서 href base url 주석 처리된 url로 변경!!!!!
+        str = (str || "").replace(
+          /#[^\s]+/g,
+          '<a class="text-decoration-none" href="http://192.168.219.106:8080/search/$&">$&</a>'
+        );
+        // str = str.replace(
+        //   /#[^\s]+/g,
+        //   '<a class="text-decoration-none" href="http://i6b101.p.ssafy.io/search/$&">$&</a>'
+        // );
+        return str.replace(/\/#/g, "/");
+      },
     },
-  },
 		computed: {
 			sortDesc() {
 				if (
@@ -295,6 +303,16 @@
       postList() {
         console.log(this.$store.state.postStore.postList);
         return this.$store.state.postStore.postList;
+      },
+      tags() {
+        let splitedContent = (this.$store.state.challengeStore.challenge.challenge_content || "").split(" ").filter(word => {
+          return word.startsWith("#");
+        })
+        if (splitedContent.length > 0) {
+          return splitedContent;
+        } else {
+          return null;
+        }
       }
 		},
 		created() {
@@ -331,4 +349,7 @@
 	.select {
 		width: 120px;
 	}
+  .v-chip {
+    cursor: pointer;
+  }
 </style>
