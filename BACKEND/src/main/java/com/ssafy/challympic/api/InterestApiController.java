@@ -37,7 +37,7 @@ public class InterestApiController {
         }
     }
 
-    @GetMapping("/user/interest/{userNo}")
+    @GetMapping("/interest/{userNo}")
     public Result interestList(@PathVariable("userNo") int user_no){
         List<Interest> interestList = interestService.findByUser(user_no);
         List<InterestDto> collect = interestList.stream()

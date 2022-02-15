@@ -21,13 +21,13 @@ public class TagApiController {
     /**
      * 개인 정보 태그 추가
      */
-    @PostMapping("/user/{userNo}/tag")
-    public void userTag(@PathVariable("userNo") int user_no, @RequestBody List<Integer> request){
-        request.forEach(tag_no -> {
-            Tag findTag = tagService.findOne(tag_no);
-//            interestService
-        });
-    }
+//    @PostMapping("/user/{userNo}/tag")
+//    public void userTag(@PathVariable("userNo") int user_no, @RequestBody List<Integer> request){
+//        request.forEach(tag_no -> {
+//            Tag findTag = tagService.findOne(tag_no);
+////            interestService
+//        });
+//    }
 
     @Data
     @AllArgsConstructor

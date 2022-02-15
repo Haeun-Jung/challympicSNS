@@ -243,7 +243,6 @@ public class ChallengeApiController {
 
 
     /**
-     * !!!! 폐기 !!!!
      * 구독 취소
      */
     @DeleteMapping("/challenge/{challengeNo}/subscribe/{userNo}")
@@ -256,5 +255,20 @@ public class ChallengeApiController {
 
         subscriptionService.deleteSubscription(Subscription.setSubscription(challenge, user));
         return new Result(true, HttpStatus.OK.value());
+    }
+
+    /**
+     * 구독 취소
+     */
+    @GetMapping("/subscribe/{userNo}")
+    public Result getSubscription(@PathVariable int userNo) {
+        List<Subscription> subscriptionByUser = subscriptionService.findSubscriptionByUser(userNo);
+        List<SubscriptionDto> subscriptions = new ArrayList<>();
+        if(!subscriptionByUser.isEmpty()){
+            subscriptions = subscriptionByUser.stream()
+                    .map(s -> new SubscriptionDto(s))
+                    .collect(Collectors.toList());
+        }
+        return new Result(true, HttpStatus.OK.value(), subscriptions);
     }
 }
