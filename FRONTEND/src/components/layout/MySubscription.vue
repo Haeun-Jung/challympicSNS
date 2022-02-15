@@ -18,7 +18,8 @@
         </v-card-subtitle>
       </template>
       <v-chip
-        v-for="challenge in userInfo.subscriptions"
+        class="subscription-one"
+        v-for="challenge in listsubscription"
         :key="challenge.challenge_no"
         :value="challenge"
         :to="{ path: '/challenge/' + challenge.id }"
@@ -36,7 +37,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-
+import { getSubscription } from "@/api/user.js";
 const userStore = "userStore";
 export default {
   name: "MySubscription",
@@ -48,12 +49,19 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      listsubscription: [""],
+    };
   },
   methods: {
     ...mapActions(userStore, ["getUserInfo"]),
     remove(no) {
-      this.$store.dispatch("userStore/deleteSubscription", {
+      this.listsubscription.splice(no - this.index, 1);
+      this.index++; //카운트 해줘야 다음 태그 제대로 지워짐
+      // 이렇게 하고, 페이지 refresh 해서 태그 다시 받아와야함.....
+      this.listsubscription = [...this.listsubscription];
+      this.disabledTrue = false;
+      this.$store.dispatch("userStore/deleteInterest", {
         no,
         token: sessionStorage.getItem("Authorization"),
       });
@@ -73,6 +81,16 @@ export default {
       }
     },
   },
+  created() {
+    if(this.$store.state.userStore.userInfo){
+      getSubscription(
+        this.$store.state.userStore.userInfo.user_no,
+        (response) => {
+          this.listsubscription = response.data.data;
+        }
+      );
+    }
+  },
 };
 </script>
 
@@ -87,5 +105,8 @@ export default {
   margin: 1%;
   padding-left: 5%;
   padding-right: 7%;
+}
+.subscription-one {
+  margin: 3px;
 }
 </style>

@@ -7,13 +7,13 @@
     </v-card-subtitle>
     <v-list-item-content class="side-contents-trend-container">
       <div
-        v-for="keyword in keywords"
+        v-for="(keyword, idx) in keywords"
         class="search-item"
         :key="keyword.id"
-        @click="goChallengePage(keyword.challengeNo)"
+        @click="goChallengePage(keyword.challenge_no)"
       >
-        <span class="word-blank">{{ keywords.indexOf(keyword) + 1 }}</span>
-        <span>{{ keyword.title }}</span>
+        <span class="word-blank">{{ idx + 1 }}</span>
+        <span>{{ keyword.challenge_title }}</span>
       </div>
     </v-list-item-content>
     <!-- 급상승 아이콘
@@ -25,21 +25,25 @@
 </template>
 
 <script>
+import { getTrend } from "@/api/side.js";
 export default {
   name: "PopularSearch",
   data() {
     return {
-      keywords: [
-        { challengeNo: 1, title: "아이스_버킷_챌린지" },
-        { challengeNo: 2, title: "미라클_모닝" },
-        { challengeNo: 3, title: "요리" },
-      ],
+      keywords: [""],
     };
   },
   methods: {
     goChallengePage(challengeNo) {
       this.$router.push(`/challenge/${challengeNo}`);
     },
+  },
+  created() {
+    getTrend((response) => {
+      console.log("인기 급상승")
+      console.log(response.data.data)
+      this.keywords = response.data.data;
+    });
   },
 };
 </script>

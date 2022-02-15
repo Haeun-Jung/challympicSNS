@@ -160,6 +160,7 @@
                   outlined
                   close
                   @click:close="remove(tag.tag_no)"
+                  class="tag-one"
                 >
                   {{ tag.tag_content }}
                 </v-chip>
@@ -186,6 +187,7 @@ import { mapState, mapActions } from "vuex";
 // import ProfileUploadButton from "@/components/button/ProfilelUploadButton.vue";
 import { getSearchList } from "@/api/search.js";
 import { save } from "@/api/user.js";
+import { getInterest } from "@/api/user.js"
 
 const userStore = "userStore";
 
@@ -233,6 +235,7 @@ export default {
       formData: "",
       alertMsg: "",
       selectedAllTags: "",
+      listInterest:[""],
     };
   },
   /* 프로필 이미지 설정 */
@@ -248,7 +251,7 @@ export default {
       this.$store.state.userStore.fileSavedName;
   },
   methods: {
-    ...mapActions(userStore, ["getUserInfo", "getInterest", "modifyUser"]),
+    ...mapActions(userStore, ["getUserInfo", "modifyUser"]),
     onSubmit() {
       if (this.nickname != null && !this.duplicateNicknameCheck) {
         this.alertMsg = "닉네임 중복체크를 해주세요.";
@@ -355,13 +358,6 @@ export default {
       // console.log(this.filesPreview);
     },
   },
-  watch: {
-    model(val) {
-      if (val.length > 5) {
-        this.$nextTick(() => this.model.pop());
-      }
-    },
-  },
   created() {
     getSearchList(
       (response) => {
@@ -371,6 +367,9 @@ export default {
         console.log(error);
       }
     );
+    getInterest(this.$store.state.userStore.userInfo.user_no, (response) => {
+      this.listInterest = response.data.data;
+    });
   },
 };
 </script>
@@ -395,5 +394,8 @@ input[type="file"] {
   font-weight: bold;
   padding-top: 10px;
   margin-right: 20px;
+}
+.tag-one {
+  margin: 3px;
 }
 </style>

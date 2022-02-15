@@ -11,9 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -121,10 +119,29 @@ public class SearchApiController {
     @GetMapping("/search/trending")
     public Result searchTrending() {
         List<Challenge> challenges = searchService.findTrendChallenge();
-        List<ChallengeDto> challengeList = challenges.stream()
-                .map(c -> new ChallengeDto(c))
-                .collect(Collectors.toList());
-        return new Result(true, HttpStatus.OK.value(), challengeList);
+        HashMap<Integer, Integer> t = new HashMap<>();
+        for (Challenge challenge : challenges) {
+            if(t.containsKey(challenge.getChallenge_no())){
+                int cnt = t.get(challenge.getChallenge_no());
+                t.put(challenge.getChallenge_no(), cnt+1);
+            }else {
+                t.put(challenge.getChallenge_no(), 0);
+            }
+        }
+        List<Integer> keySetList = new ArrayList<>(t.keySet());
+        Collections.sort(keySetList, (o1, o2) -> (t.get(o2).compareTo(t.get(o1))));
+        List<ChallengeDto> challengeList = new LinkedList<>();
+        for (Integer k : keySetList) {
+            Challenge c = challengeService.findChallengeByChallengeNo(k);
+            challengeList.add(new ChallengeDto(c));
+        }
+        List<ChallengeDto> collect = new ArrayList<>();
+        if(challengeList.size() < 5){
+            collect = challengeList;
+        }else{
+            collect = challengeList.subList(0,6);
+        }
+        return new Result(true, HttpStatus.OK.value(), collect);
     }
 
     @GetMapping("/search/rank")
