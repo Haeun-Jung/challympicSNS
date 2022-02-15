@@ -323,7 +323,6 @@ export default {
       return this.$store.state.challengeStore.challenge;
     },
     postList() {
-      console.log(this.$store.state.postStore.postList);
       return this.$store.state.postStore.postList;
     },
     tags() {
@@ -339,13 +338,6 @@ export default {
       } else {
         return null;
       }
-    },
-    challenge() {
-      return this.$store.state.challengeStore.challenge;
-    },
-    postList() {
-      console.log(this.$store.state.postStore.postList);
-      return this.$store.state.postStore.postList;
     },
   },
   created() {

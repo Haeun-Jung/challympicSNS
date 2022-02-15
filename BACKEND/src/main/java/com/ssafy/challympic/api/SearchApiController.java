@@ -80,9 +80,9 @@ public class SearchApiController {
 
             Tag findTag = tagService.findTagByTagContent("#" + request.tag_content);
 
-            if(findTag.getIsChallenge() != null && "challenge".equals(findTag.getIsChallenge())) {
+            if(findTag.getIsChallenge() != null) {
                 SearchChallenge searchChallenge = new SearchChallenge();
-                searchChallenge.setChallenge(challengeService.findChallengeByTitle("#" + request.tag_content).get(0));
+                searchChallenge.setChallenge(challengeService.findChallengeByTitle("#" + request.tag_content).get(0)); //TODO
                 searchChallenge.setUser(user);
                 searchService.saveSearchChallenge(searchChallenge);
             }
