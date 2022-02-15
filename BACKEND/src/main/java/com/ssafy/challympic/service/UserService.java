@@ -80,4 +80,8 @@ public class UserService {
     public List<User> findAllUser() {
         return userRepository.findAllUser();
     }
+
+    public User findByEmail(String user_email) {
+        return userRepository.findByEmail(user_email);
+    }
 }

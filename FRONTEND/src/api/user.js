@@ -83,6 +83,14 @@ function deleteInterest(user_no, tag_no, success, fail) {
     .catch(fail);
 }
 
+/* 관심사 한번에 추가 */
+function setInterests(user_email, interests, success, fail) {
+  api
+    .post(`/challympic/setInterests`, JSON.stringify({user_email: user_email, interests: interests}))
+    .then(success)
+    .catch(fail);
+}
+
 /* 구독 조회 */
 function getSubscription(user_no, success, fail) {
   api.get(`/challympic/subscribe/${user_no}`).then(success).catch(fail);
@@ -141,6 +149,7 @@ export {
   deleteUser,
   getInterest,
   deleteInterest,
+  setInterests,
   getSubscription,
   deleteSubscription,
   getQnA,
