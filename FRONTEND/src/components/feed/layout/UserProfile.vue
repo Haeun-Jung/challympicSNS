@@ -237,7 +237,7 @@ export default {
   created() {
     console.log("this.login_user");
     console.log(this.login_user);
-    if(!this.$store.state.userStore.userInfo){
+    if(this.$store.state.userStore.userInfo.user_no > 0){
       // 유저 번호와 로그인 한 사람의 팔로우 관계
       checkFollow(this.login_user, this.who_no, (response) => {
         this.isFollower = response.data.following;
