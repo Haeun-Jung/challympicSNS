@@ -23,7 +23,7 @@
           class="px-3; mx-1;,my-2"
         >
           <v-list-item-title>
-            {{ item.alert_content.split('"')[3] }}
+            {{ item.alert_content }}
             <span class="date-text">{{
               dayjsRegDate(item.alert_regDate)
             }}</span>
