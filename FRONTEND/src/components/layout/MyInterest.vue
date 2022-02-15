@@ -96,9 +96,11 @@ export default {
     },
   },
   created() {
-    getInterest(this.$store.state.userStore.userInfo.user_no, (response) => {
-      this.listInterest = response.data.data;
-    });
+    if(this.$store.state.userStore.userInfo){
+      getInterest(this.$store.state.userStore.userInfo.user_no, (response) => {
+        this.listInterest = response.data.data;
+      });
+    }
   },
 };
 </script>

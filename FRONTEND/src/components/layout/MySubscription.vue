@@ -82,12 +82,14 @@ export default {
     },
   },
   created() {
-    getSubscription(
-      this.$store.state.userStore.userInfo.user_no,
-      (response) => {
-        this.listsubscription = response.data.data;
-      }
-    );
+    if(this.$store.state.userStore.userInfo){
+      getSubscription(
+        this.$store.state.userStore.userInfo.user_no,
+        (response) => {
+          this.listsubscription = response.data.data;
+        }
+      );
+    }
   },
 };
 </script>
