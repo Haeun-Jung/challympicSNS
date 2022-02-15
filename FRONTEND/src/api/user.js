@@ -43,6 +43,8 @@ async function getUser(user_no, success, fail) {
 
 /* 회원 정보 수정 */
 function modifyUser(user_no, user, success, fail) {
+  api.defaults.headers["Authorization"] =
+    sessionStorage.getItem("Authorization");
   api
     .put(`/challympic/user/account/${user_no}`, user, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -53,6 +55,8 @@ function modifyUser(user_no, user, success, fail) {
 
 /* 회원 비밀번호 수정 */
 function changePassword(user_no, user, success, fail) {
+  api.defaults.headers["Authorization"] =
+    sessionStorage.getItem("Authorization");
   api
     .put(`/challympic/user/account/${user_no}/pwd`, JSON.stringify(user))
     .then(success)
@@ -66,15 +70,22 @@ function deleteUser(user_no, success, fail) {
 
 /* 관심사 조회 */
 function getInterest(user_no, success, fail) {
-  api.get(`/challympic/user/interest/${user_no}`).then(success).catch(fail);
+  api.get(`/challympic/interest/${user_no}`).then(success).catch(fail);
 }
 
 /* 관심사 삭제 */
 function deleteInterest(user_no, tag_no, success, fail) {
+  api.defaults.headers["Authorization"] =
+    sessionStorage.getItem("Authorization");
   api
     .delete(`/challympic/user/interest/${user_no}/${tag_no}`)
     .then(success)
     .catch(fail);
+}
+
+/* 구독 조회 */
+function getSubscription(user_no, success, fail) {
+  api.get(`/challympic/subscribe/${user_no}`).then(success).catch(fail);
 }
 
 /* 구독 삭제 */
@@ -130,6 +141,7 @@ export {
   deleteUser,
   getInterest,
   deleteInterest,
+  getSubscription,
   deleteSubscription,
   getQnA,
   registerQuestion,
