@@ -21,10 +21,7 @@ spring:
 server:
   port: 7777
   servlet:
-    context-path: /challympic
-  tomcat:
-    remoteip:
-      protocol-header: x-forwarded-proto
+    context-path: /challympic/api
 
 logging:
   level:
