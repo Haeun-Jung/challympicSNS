@@ -3,7 +3,7 @@
     <!-- PC -->
     <v-row v-if="!isMobile()" class="profile-wrapper">
       <v-avatar v-if="userInfo.file_no == 0" size="150">
-        <v-icon size="150">mdi-account-circle-outline</v-icon>
+        <v-icon size="150">mdi-account-circle</v-icon>
       </v-avatar>
       <v-avatar v-else size="150">
         <img
@@ -23,12 +23,10 @@
             <v-col align-self="center" class="name-wrapper">
               <v-list-item-title class="title-wrapper">
                 <!-- 타이틀이 있을 때만 -->
-                <v-col v-if="userInfo.user_title != null">
-                  <img
-                    class="medal-icon"
-                    src="https://cdn-icons-png.flaticon.com/512/744/744922.png"
-                  />
-                </v-col>
+                <img
+                  class="medal-icon"
+                  src="https://cdn-icons-png.flaticon.com/512/744/744922.png"
+                />
                 <div class="header-title font-weight">
                   {{ userInfo.user_title }}
                 </div>
@@ -93,13 +91,22 @@
     <!-- Mobile -->
     <v-row v-else>
       <!-- 이름 -->
-      <v-row>
         <v-col md="6" class="profile-setting-avatar-container">
-          <v-avatar size="150" class="avatar-wrapper">
-            <img :src="profileUrl" alt="John" />
+          <v-avatar v-if="userInfo.file_no == 0" size="150">
+            <v-icon size="150">mdi-account-circle-outline</v-icon>
+          </v-avatar>
+          <v-avatar v-else size="150">
+            <img
+              :src="
+                'http://d3iu4sf4n4i2qf.cloudfront.net/' +
+                this.userInfo.file_path +
+                '/' +
+                this.userInfo.file_savedname
+              "
+              alt="John"
+            />
           </v-avatar>
         </v-col>
-      </v-row>
       <v-row>
         <v-col>
           <v-container>
@@ -111,10 +118,14 @@
                     class="medal-icon"
                     src="https://cdn-icons-png.flaticon.com/512/744/744922.png"
                   />
-                  <div class="header-title font-weight">스쿼트 왕</div>
+                  <div class="header-title font-weight">
+                    {{ userInfo.user_title }}
+                  </div>
                 </v-list-item-title>
-                <div class="user-name bottom-blank font-weight">박싸피</div>
-                <v-col v-if="who_no != login_user">
+                <div class="user-name bottom-blank font-weight">
+                  {{ userInfo.user_nickname }}
+                </div>
+                <v-col v-if="this.who_no != this.login_user">
                   <!-- 상대 프로필일 때 -->
                   <v-btn
                     v-if="isFollower"
@@ -123,7 +134,7 @@
                     class="white--text rounded-xl"
                     small
                   >
-                    팔로우
+                    팔로잉취소
                   </v-btn>
                   <v-btn
                     v-else
@@ -133,7 +144,7 @@
                     small
                     outlined
                   >
-                    팔로잉
+                    팔로잉하기
                   </v-btn>
                 </v-col>
               </v-col>
@@ -143,27 +154,37 @@
               <v-col md="2" class="follow-wrapper" align-self="center">
                 <div class="font-weight">팔로워</div>
                 <div class="show-folllow-modal" @click="openFollowerDialog">
-                  3
+                  {{ followerCnt }}
                 </div>
                 <follow-like-modal
                   v-if="follower"
-                  @close-modal="follower = false"
+                  @close-modal="
+                    follower = false;
+                    followerCnt = 'followerCnt';
+                  "
                   type="follower"
-                  :users="follows"
                   :login_user="this.login_user"
+                  :who_no="who_no"
+                  v-on:decrementFollowerCnt="decrementFollowerCnt"
+                  v-on:incrementFollowerCnt="incrementFollowerCnt"
                 ></follow-like-modal>
               </v-col>
               <v-col md="2" class="follow-wrapper" align-self="center">
                 <div class="font-weight">팔로잉</div>
                 <div class="show-folllow-modal" @click="openFollowingDialog">
-                  3
+                  {{ followingCnt }}
                 </div>
                 <follow-like-modal
                   v-if="following"
-                  @close-modal="following = false"
+                  @close-modal="
+                    following = false;
+                    followingCnt = 'followingCnt';
+                  "
                   type="following"
-                  :users="follows"
                   :login_user="this.login_user"
+                  :who_no="who_no"
+                  v-on:decrementFollowingCnt="decrementFollowingCnt"
+                  v-on:incrementFollowingCnt="incrementFollowingCnt"
                 ></follow-like-modal>
               </v-col>
             </v-row>
@@ -201,15 +222,17 @@ export default {
   created() {
     console.log("this.login_user");
     console.log(this.login_user);
-    // 유저 번호와 로그인 한 사람의 팔로우 관계
-    checkFollow(this.login_user, this.who_no, (response) => {
-      this.isFollower = response.data.following;
-    }),
-      // 유저의 팔로우, 팔로잉 cnt
-      getFollowCnt(this.who_no, (response) => {
-        this.followerCnt = response.data.data.followerCnt;
-        this.followingCnt = response.data.data.followingCnt;
-      });
+    if(!this.$store.state.userStore.userInfo){
+      // 유저 번호와 로그인 한 사람의 팔로우 관계
+      checkFollow(this.login_user, this.who_no, (response) => {
+        this.isFollower = response.data.following;
+      })
+    }
+    // 유저의 팔로우, 팔로잉 cnt
+    getFollowCnt(this.who_no, (response) => {
+      this.followerCnt = response.data.data.followerCnt;
+      this.followingCnt = response.data.data.followingCnt;
+    });
   },
   methods: {
     isMobile() {
@@ -242,6 +265,26 @@ export default {
       } else {
         this.followerCnt++;
       }
+    },
+    decrementFollowerCnt(followerCnt) {
+      console.log("decrementFollowerCnt");
+      console.log(followerCnt);
+      this.followerCnt = --followerCnt;
+    },
+    incrementFollowerCnt(followerCnt) {
+      console.log("incrementFollowerCnt");
+      console.log(followerCnt);
+      this.followerCnt = ++followerCnt;
+    },
+    decrementFollowingCnt(followingCnt) {
+      console.log("decrementFollowingCnt");
+      console.log(followingCnt);
+      this.followingCnt = --followingCnt;
+    },
+    incrementFollowingCnt(followingCnt) {
+      console.log("incrementFollowingCnt");
+      console.log(followingCnt);
+      this.followingCnt = ++followingCnt;
     },
   },
 };

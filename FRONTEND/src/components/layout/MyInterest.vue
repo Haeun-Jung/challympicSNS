@@ -9,6 +9,7 @@
         </v-card-subtitle>
       </template>
       <v-chip
+        class="interest-one"
         v-for="tag in listInterest"
         :key="tag.tag_no"
         :value="tag"
@@ -46,19 +47,22 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapActions } from "vuex";
+import { getInterest } from "@/api/user.js";
 
 const userStore = "userStore";
 export default {
   name: "MyInterest",
   computed: {
-    ...mapState(userStore, ["listInterest"]),
+    // ...mapState(userStore, ["listInterest"]),
     isLoggedIn() {
       return this.$store.state.userStore.isLoggedIn;
     },
   },
   data() {
-    return {};
+    return {
+      listInterest: [""],
+    };
   },
   methods: {
     ...mapActions(userStore, ["getInterest"]),
@@ -66,6 +70,11 @@ export default {
       this.$router.push("/login");
     },
     remove(no) {
+      this.listInterest.splice(no - this.index, 1);
+      this.index++; //카운트 해줘야 다음 태그 제대로 지워짐
+      // 이렇게 하고, 페이지 refresh 해서 태그 다시 받아와야함.....
+      this.listInterest = [...this.listInterest];
+      this.disabledTrue = false;
       this.$store.dispatch("userStore/deleteInterest", {
         no,
         token: sessionStorage.getItem("Authorization"),
@@ -85,6 +94,13 @@ export default {
         return false;
       }
     },
+  },
+  created() {
+    if(this.$store.state.userStore.userInfo){
+      getInterest(this.$store.state.userStore.userInfo.user_no, (response) => {
+        this.listInterest = response.data.data;
+      });
+    }
   },
 };
 </script>
@@ -108,5 +124,9 @@ export default {
   justify-content: space-between;
   background: transparent;
   padding-right: 0px;
+}
+
+.interest-one {
+  margin: 3px;
 }
 </style>

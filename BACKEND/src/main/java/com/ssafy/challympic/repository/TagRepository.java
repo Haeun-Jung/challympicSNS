@@ -74,4 +74,9 @@ public class TagRepository {
         return em.createQuery("select t from Tag t", Tag.class)
                 .getResultList();
     }
+
+    public List<Tag> findRecentAllTagList() {
+        return em.createQuery("select t from Tag t order by t.tag_no DESC ", Tag.class)
+                .getResultList();
+    }
 }

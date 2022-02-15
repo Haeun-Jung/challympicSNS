@@ -284,7 +284,7 @@ export default {
     clickTag(tagContent) {
       console.log(tagContent);
       console.log(tagContent.split("#")[1]);
-      this.$router.push("/search/" + tagContent.split("#")[1]);
+      this.$router.push(`/search/${encodeURIComponent(tagContent.split("#")[1])}`);
     },
     isMobile() {
       if (

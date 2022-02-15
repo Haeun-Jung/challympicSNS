@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,11 +31,21 @@ public class ActivityApiController {
         return new Result(true, HttpStatus.OK.value());
     }
 
+    @Data
+    static class TagDto{
+        private int tag_no;
+        private String tag_content;
+
+        public TagDto(Tag tag) {
+            this.tag_no = tag.getTag_no();
+            this.tag_content = tag.getTag_content();
+        }
+    }
+
     @GetMapping("/activity/{userNo}")
     public Result getActivity(@PathVariable int userNo) {
-        List<Tag> tagResponse = getTagsVer01(userNo);
 
-        List<Activity> mainUserActivityList = activityService.findActivityListByUserNo(userNo);
+//        List<Activity> mainUserActivityList = activityService.findActivityListByUserNo(userNo);
 
 //        Map<Integer, List<Activity>> activityMap = new HashMap<>();
 //        List<User> allUserList = userService.findAllUser();
@@ -44,7 +55,48 @@ public class ActivityApiController {
 //            activityMap.put(user.getUser_no(), activityList);
 //        }
 
-        return new Result(true, HttpStatus.OK.value(), new ActivityResponse(tagResponse));
+        // 최신 태그 5개 불러오기
+        List<Tag> allTagList = tagService.findRecentAllTagList();
+
+        if(userNo == 0){
+            System.out.println("userNo가 0");
+            List<TagDto> tagDtos = new ArrayList<>();
+            if(allTagList.size() == 0){
+                System.out.println("태그가 없어");
+                return new Result(true, HttpStatus.OK.value(), null);
+            }
+            System.out.println("태그가 있어");
+
+            for (Tag tag : allTagList) {
+                if(tag.getIsChallenge() == null){
+                    System.out.println("================================================================");
+
+                    System.out.println(tag.getTag_content());
+                    tagDtos.add(new TagDto(tag));
+                }
+            }
+
+            if(tagDtos.size() < 5){
+                System.out.println("태그가 5개보다 적어");
+                return new Result(true, HttpStatus.OK.value(), new ActivityResponse(tagDtos));
+            }else{
+                System.out.println("태그가 5개보다 많아");
+                return new Result(true, HttpStatus.OK.value(), new ActivityResponse(tagDtos.subList(0,5)));
+            }
+        }else {
+            List<Tag> tagResponse = getTagsVer01(userNo);
+            List<TagDto> tagDtoResponse = new ArrayList<>();
+
+            if (!tagResponse.isEmpty()) {
+                tagDtoResponse = tagResponse.stream()
+                        .map(t -> new TagDto(t))
+                        .collect(Collectors.toList());
+                return new Result(true, HttpStatus.OK.value(), new ActivityResponse(tagDtoResponse));
+            } else {
+                return new Result(true, HttpStatus.OK.value(), null);
+            }
+        }
+
     }
 
     private List<Tag> getTagsVer01(int userNo) {
@@ -53,7 +105,9 @@ public class ActivityApiController {
         for(Activity activity : activityList) {
             List<PostTag> postTagList = tagService.findPostTagList(activity.getPost_no());
             for(PostTag postTag : postTagList) {
-                tagAll.add(postTag.getTag());
+                if(postTag.getTag().getIsChallenge() == null){
+                    tagAll.add(postTag.getTag());
+                }
             }
         }
         List<Tag> tempTagList = tagService.findAllTagList();
@@ -79,7 +133,7 @@ public class ActivityApiController {
     @Data
     @AllArgsConstructor
     static class ActivityResponse {
-        List<Tag> tagList;
+        List<TagDto> tagList;
     }
 
     @Data
