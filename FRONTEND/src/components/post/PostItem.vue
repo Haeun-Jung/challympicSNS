@@ -181,12 +181,12 @@ export default {
     };
   },
   created() {
-    console.log("debug");
-    console.log(!this.user);
-    console.log("debug-post");
-    console.log(this.post);
-    console.log("debug-challengePost");
-    console.log(this.challengePost);
+    // console.log("debug");
+    // console.log(!this.user);
+    // console.log("debug-post");
+    // console.log(this.post);
+    // console.log("debug-challengePost");
+    // console.log(this.challengePost);
   },
   computed: {
     likeList() {

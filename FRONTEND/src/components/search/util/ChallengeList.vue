@@ -66,7 +66,6 @@ export default {
     return {
       overlay: false,
       playing: false,
-      post: [],
       temp: [],
       loaded: false,
       challenges: {

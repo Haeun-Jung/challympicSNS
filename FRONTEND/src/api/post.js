@@ -25,13 +25,13 @@ function getPostList(challenge_no, user_no, success, fail) {
 async function createPost(challengeNo, post, success, fail) {
   console.log(post);
 
-  api
+  await api
     .post(`/challympic/challenge/${challengeNo}/post`, post, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     })
-    .then(await success)
+    .then(success)
     .catch(fail);
 }
 

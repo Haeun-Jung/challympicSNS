@@ -15,12 +15,18 @@ function searchTagList(searchKey, success, fail) {
 }
 
 /*최신 api 확인해보니까 challengeno로 챌린지 가져오는게 그냥 list이던데 혹시 위에거랑 같은거면 한번 확인해주세여! */
-function list(challenges, success, fail) { 
-    api.post(`/challympic/challenge/post`, JSON.stringify(challenges)).then(success).catch(fail);
+function list(challenges, success, fail) {
+  api
+    .post(`/challympic/challenge/post`, JSON.stringify(challenges))
+    .then(success)
+    .catch(fail);
 }
 
 function getRecommend(userNo, success, fail) {
-    api.get(`/challympic/activity/${userNo}`, JSON.stringify(userNo)).then(success).catch(fail);
+  api
+    .get(`/challympic/activity/${userNo}`, JSON.stringify(userNo))
+    .then(success)
+    .catch(fail);
 }
 
-export { getSearchList , searchTagList , list, getRecommend };
+export { getSearchList, searchTagList, list, getRecommend };
