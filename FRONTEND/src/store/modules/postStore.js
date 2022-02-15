@@ -69,7 +69,8 @@ const postStore = {
       createPost(
         challengeNo,
         post,
-        () => {},
+        () => {
+        },
         () => {}
       );
     },

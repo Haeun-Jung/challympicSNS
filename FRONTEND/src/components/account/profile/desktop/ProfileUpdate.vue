@@ -193,7 +193,7 @@ const userStore = "userStore";
 export default {
   // components: { ProfileUploadButton },
   computed: {
-    ...mapState(userStore, ["userInfo", "listInterest"]),
+    ...mapState(userStore, ["userInfo"]),
     possibleNickname() {
       return this.$store.state.userStore.possibleNickname;
     },

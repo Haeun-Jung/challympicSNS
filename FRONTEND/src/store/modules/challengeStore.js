@@ -1,9 +1,7 @@
 import {
   getChallenge,
   confirmChallengeName,
-  createChallenge,
 } from "@/api/challenge.js";
-import { createPost } from "../../api/post";
 
 const challengeStore = {
   namespaced: true,
@@ -11,6 +9,7 @@ const challengeStore = {
     challenge: {},
     possibleChallengeName: false,
     confirmedButImpossibleName: false,
+    currentChallengeNo: 0,
   },
   getters: {},
   mutations: {
@@ -70,39 +69,6 @@ const challengeStore = {
             commit("CONFIRM_CHALLENGE_NAME");
           } else {
             commit("REFUSE_CHALLENGE_NAME");
-          }
-        },
-        () => {}
-      );
-    },
-    createChallengeWithPost({ rootState }, { challenge, post }) {
-      const challengeItem = {
-        user_no: rootState.userStore.userInfo.user_no,
-        challengers:
-          challenge.challengers.length > 1 ? challenge.challengers.split() : [],
-        challenge_title: challenge.challengeName,
-        challenge_content: challenge.description,
-        challenge_end: challenge.endDate,
-        challenge_type: challenge.fileType,
-        title_name: challenge.titleName,
-      };
-
-      createChallenge(
-        challengeItem,
-        (response) => {
-          console.log("챌린지 생성!");
-          if (response.data.code == 200) {
-            createPost(
-              response.data.data.challenge_no,
-              post,
-              () => {
-                console.log("포스트 생성!");
-              },
-              () => {
-                // 아직 백에서 challenge_no가 안 넘어와서 생성 실패하는 상태입니다.
-                console.log("포스트 생성 실패");
-              }
-            );
           }
         },
         () => {}

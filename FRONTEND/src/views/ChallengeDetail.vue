@@ -319,12 +319,6 @@ export default {
       }
       return false;
     },
-    challenge() {
-      return this.$store.state.challengeStore.challenge;
-    },
-    postList() {
-      return this.$store.state.postStore.postList;
-    },
     tags() {
       let splitedContent = (
         this.$store.state.challengeStore.challenge.challenge_content || ""
@@ -339,6 +333,26 @@ export default {
         return null;
       }
     },
+    challenge() {
+      return this.$store.state.challengeStore.challenge;
+    },
+    postList() {
+      if(this.$route.query.postNo){
+        let org = this.$store.state.postStore.postList;
+        let list = [];
+        
+        for(let i = 0; i < org.length; i++){
+          if(org[i].post_no == this.$route.query.postNo){
+            list.unshift(org[i]);
+          } else {
+            list.push(org[i]);
+          }
+        }
+
+        return list;
+      }
+      return this.$store.state.postStore.postList;
+    },
   },
   created() {
     this.$store.dispatch(
@@ -349,6 +363,10 @@ export default {
       challengeNo: this.$route.params.challengeNo,
       userNo: this.$store.state.userStore.userNo,
     });
+
+    if(this.$route.query.postNo){
+      this.sortBy = 'post_regdate';
+    }
   },
 };
 </script>
