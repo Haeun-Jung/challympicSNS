@@ -80,7 +80,6 @@
         >
           비밀번호 수정</v-btn
         >
-        <v-col md="1" />
       </v-row>
     </v-container>
   </v-card>
@@ -147,5 +146,8 @@ export default {
   font-weight: bold;
   padding-top: 10px;
   margin-right: 20px;
+}
+.row-bottom {
+  flex-wrap: nowrap;
 }
 </style>

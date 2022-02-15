@@ -1,6 +1,6 @@
 <template>
-  <v-main>
-    <!--
+	<v-main>
+		<!--
 		<tag-bar />
 		<fab-button />
 		-->
@@ -150,81 +150,82 @@
                     </v-chip>
                   </v-list-item-subtitle>
 
-                  <v-card-subtitle>
-                    <span
-                      v-html="
-                        $options.filters.hashAnchor(challenge.challenge_content)
-                      "
-                    ></span>
-                  </v-card-subtitle>
-                </v-main>
-              </v-layout>
-              <div>
-                <!-- End of Mobile -->
-                <!--Data Iterator -->
-                <v-data-iterator
-                  v-if="postList.length != 2"
-                  :items="postList"
-                  :items-per-page.sync="itemsPerPage"
-                  :sort-by="sortBy"
-                  :sort-desc="sortDesc"
-                  hide-default-footer
-                >
-                  <template v-slot:header>
-                    <v-row class="justify-end">
-                      <v-col class="col-5 col-sm-3 col-lg-2">
-                        <v-select
-                          v-model="sortBy"
-                          :items="sortKeys"
-                          :sort-desc="sortDesc"
-                          class="align-end"
-                          flat
-                          solo-inverted
-                          hide-details
-                          label="정렬"
-                        ></v-select>
-                      </v-col>
-                    </v-row>
-                  </template>
-                  <!-- props로 포스트 목록 내려주기 -->
-                  <template v-slot:default="props">
-                    <post-item
-                      v-for="post in props.items"
-                      :post="post"
-                      :type="challenge.challenge_type"
-                      :key="post.post_no"
-                    ></post-item>
-                  </template>
-                </v-data-iterator>
-                <battle-item
-                  v-else
-                  :postList="postList"
-                  :type="challenge.challenge_type"
-                />
-              </div>
-              <confirm-report
-                :confirm-report-dialog="confirmReportDialog"
-                @close-dialog="confirmReportDialog = false"
-                @reported="showReportedAlert"
-              />
-              <post-upload
-                v-if="postDialog"
-                :propChallengeName="{
-                  challengeName: challenge.challenge_title,
-                  challengeNo: challenge.challenge_no,
-                  challangeType: challenge.challenge_type,
-                }"
-                @close-modal="postDialog = false"
-              />
-            </v-flex>
-          </v-layout>
-        </v-flex>
-      </v-layout>
+									<v-card-subtitle>
+										<span
+											v-html="
+												$options.filters.hashAnchor(challenge.challenge_content)
+											"
+										></span>
+									</v-card-subtitle>
+								</v-main>
+							</v-layout>
+							<div>
+								<!-- End of Mobile -->
+								<!--Data Iterator -->
+								<v-data-iterator
+									v-if="postList.length != 2"
+									:items="postList"
+									:items-per-page.sync="itemsPerPage"
+									:sort-by="sortBy"
+									:sort-desc="sortDesc"
+									hide-default-footer
+								>
+									<template v-slot:header>
+										<v-row class="justify-end">
+											<v-col class="col-5 col-sm-3 col-lg-2">
+												<v-select
+													v-model="sortBy"
+													:items="sortKeys"
+													:sort-desc="sortDesc"
+													class="align-end"
+													flat
+													solo-inverted
+													hide-details
+													label="정렬"
+												></v-select>
+											</v-col>
+										</v-row>
+									</template>
+									<!-- props로 포스트 목록 내려주기 -->
+									<template v-slot:default="props">
+										<post-item
+											v-for="post in props.items"
+											:post="post"
+											:type="challenge.challenge_type"
+											:key="post.post_no"
+										></post-item>
+									</template>
+								</v-data-iterator>
+								<battle-item
+									v-else
+									:postList="postList"
+									:type="challenge.challenge_type"
+								/>
+							</div>
+							<confirm-report
+								:confirm-report-dialog="confirmReportDialog"
+								@close-dialog="confirmReportDialog = false"
+								@reported="showReportedAlert"
+							/>
+							<post-upload
+								v-if="postDialog"
+								:propChallengeName="{
+									challengeName: challenge.challenge_title,
+									challengeNo: challenge.challenge_no,
+									challangeType: challenge.challenge_type,
+								}"
+								@close-modal="postDialog = false"
+							/>
+						</v-flex>
+					</v-layout>
+				</v-flex>
+				<v-flex xs2 class="hidden-md-and-down" />
+			</v-layout>
 
-      <!--
+			<!--
       -->
-    </v-container>
-  </v-main>
+		</v-container>
+	</v-main>
 </template>
 
 <script>
@@ -364,66 +365,63 @@ export default {
       if(this.$route.query.postNo){
         let org = this.$store.state.postStore.postList;
         let list = [];
-        
-        for(let i = 0; i < org.length; i++){
-          if(org[i].post_no == this.$route.query.postNo){
+        for (let i = 0; i < org.length; i++) {
+          if (org[i].post_no == this.$route.query.postNo) {
             list.unshift(org[i]);
           } else {
             list.push(org[i]);
           }
         }
-
         return list;
       }
       return this.$store.state.postStore.postList;
-    },
-  },
-  created() {
-    this.$store.dispatch(
-      "challengeStore/getChallenge",
-      this.$route.params.challengeNo
-    );
-    this.$store.dispatch("postStore/getPostList", {
-      challengeNo: this.$route.params.challengeNo,
-      userNo: this.$store.state.userStore.userNo,
-    });
+			},
+		},
+		created() {
+			this.$store.dispatch(
+				"challengeStore/getChallenge",
+				this.$route.params.challengeNo
+			);
+			this.$store.dispatch("postStore/getPostList", {
+				challengeNo: this.$route.params.challengeNo,
+				userNo: this.$store.state.userStore.userNo,
+			});
 
-    if(this.$route.query.postNo){
-      this.sortBy = 'post_regdate';
-    }
-
-  },
-};
+			if (this.$route.query.postNo) {
+				this.sortBy = "post_regdate";
+			}
+		},
+	};
 </script>
 
 <style scoped>
-.challenge-detail-button-container {
-  padding: 0;
-}
-.alert-position {
-  position: absolute;
-  width: 100%;
-  z-index: 1;
-  /*top: 3.3rem;*/
-}
-.detail-page {
-  margin-top: 5rem;
-}
-.icon-margin {
-  margin: 0 0.5rem;
-}
-.side-and-main {
-  justify-content: space-evenly;
-}
-/*
+	.challenge-detail-button-container {
+		padding: 0;
+	}
+	.alert-position {
+		position: absolute;
+		width: 100%;
+		z-index: 1;
+		/*top: 3.3rem;*/
+	}
+	.detail-page {
+		margin-top: 5rem;
+	}
+	.icon-margin {
+		margin: 0 0.5rem;
+	}
+	.side-and-main {
+		justify-content: space-evenly;
+	}
+	/*
   (수정)v-chip에 직접 주었습니다.
 	.challenge-chip {
 		color: white;
 	}*/
-.select {
-  width: 120px;
-}
-.v-chip {
-  cursor: pointer;
-}
+	.select {
+		width: 120px;
+	}
+	.v-chip {
+		cursor: pointer;
+	}
 </style>

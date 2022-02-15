@@ -10,15 +10,15 @@
       </template>
       <v-chip
         class="interest-one"
-        v-for="tag in listInterest"
+        v-for="(tag, idx) in listInterest"
         :key="tag.tag_no"
         :value="tag"
-        :to="{ path: '/search/' + tag.name }"
+        :to="{ path: '/search/' + (tag.tag_content || '').slice(1) }"
         v-model="tag.isOpen"
         color="primary"
         outlined
         close
-        @click:close="remove(tag.tag_no)"
+        @click:close="remove(idx, tag.tag_no)"
       >
         {{ tag.tag_content }}
       </v-chip>
@@ -69,9 +69,9 @@ export default {
     clickLoginBtn() {
       this.$router.push("/login");
     },
-    remove(no) {
-      this.listInterest.splice(no - this.index, 1);
-      this.index++; //카운트 해줘야 다음 태그 제대로 지워짐
+    remove(idx, no) {
+      this.listInterest.splice(idx, 1);
+      // this.index++; //카운트 해줘야 다음 태그 제대로 지워짐
       // 이렇게 하고, 페이지 refresh 해서 태그 다시 받아와야함.....
       this.listInterest = [...this.listInterest];
       this.disabledTrue = false;

@@ -19,15 +19,15 @@
       </template>
       <v-chip
         class="subscription-one"
-        v-for="challenge in listsubscription"
+        v-for="(challenge, idx) in listsubscription"
         :key="challenge.challenge_no"
         :value="challenge"
-        :to="{ path: '/challenge/' + challenge.id }"
+        :to="{ path: '/challenge/' + challenge.challenge_no }"
         v-model="challenge.isOpen"
         color="primary"
         outlined
         close
-        @click:close="remove(challenge.challenge_no)"
+        @click:close="remove(challenge.challenge_no, idx)"
       >
         {{ challenge.challenge_title }}
       </v-chip>
@@ -55,13 +55,13 @@ export default {
   },
   methods: {
     ...mapActions(userStore, ["getUserInfo"]),
-    remove(no) {
-      this.listsubscription.splice(no - this.index, 1);
+    remove(no, idx) {
+      this.listsubscription.splice(idx, 1);
       this.index++; //카운트 해줘야 다음 태그 제대로 지워짐
       // 이렇게 하고, 페이지 refresh 해서 태그 다시 받아와야함.....
       this.listsubscription = [...this.listsubscription];
       this.disabledTrue = false;
-      this.$store.dispatch("userStore/deleteInterest", {
+      this.$store.dispatch("userStore/deleteSubscription", {
         no,
         token: sessionStorage.getItem("Authorization"),
       });

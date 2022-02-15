@@ -12,4 +12,9 @@ function getTrend(success, fail) {
   api.get(`/challympic/search/trending`).then(success).catch(fail);
 }
 
-export { getChampions, getTrend };
+/* 회원 가입시 태그 추천 */
+function getAllInterest(success, fail) {
+  api.get(`/challympic/allTags`).then(success).catch(fail);
+}
+
+export { getChampions, getTrend, getAllInterest };
