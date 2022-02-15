@@ -4,8 +4,7 @@
     <v-list-group>
       <template v-slot:activator>
         <v-card-subtitle class="title-width">
-          <h4 v-if="isMobile()">내 관심사</h4>
-          <h2 v-else>내 관심사</h2>
+          <h2>내 관심사</h2>
         </v-card-subtitle>
       </template>
       <v-chip
@@ -74,7 +73,6 @@ export default {
       // this.index++; //카운트 해줘야 다음 태그 제대로 지워짐
       // 이렇게 하고, 페이지 refresh 해서 태그 다시 받아와야함.....
       this.listInterest = [...this.listInterest];
-      this.disabledTrue = false;
       this.$store.dispatch("userStore/deleteInterest", {
         no,
         token: sessionStorage.getItem("Authorization"),
@@ -82,17 +80,6 @@ export default {
       setTimeout(() => {
         this.getInterest(sessionStorage.getItem("Authorization"));
       }, 300);
-    },
-    isMobile() {
-      if (
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          navigator.userAgent
-        )
-      ) {
-        return true;
-      } else {
-        return false;
-      }
     },
   },
   created() {

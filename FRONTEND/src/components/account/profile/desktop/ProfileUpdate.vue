@@ -3,8 +3,8 @@
     <v-card-title>개인 정보 수정</v-card-title>
     <v-divider />
     <v-container>
-      <v-row md="2">
-        <v-col md="4" class="profile-setting-avatar-container">
+      <v-row>
+        <v-col cols="3" class="profile-setting-avatar-container">
           <v-avatar size="150">
             <img v-if="profile" :src="profile" alt="profile" />
             <div v-else>이미지를 <br />업로드하세요!</div>
@@ -20,7 +20,6 @@
               @change="imageUpload"
               multiple
             />
-            <!--<profile-upload-button />-->
           </v-container>
         </v-col>
         <v-col>
@@ -34,10 +33,12 @@
                 <!--label에는 후에 selected 에 user.title로 가져오기-->
                 <v-select
                   :items="userInfo.titles"
+                  item-text="title_name"
+                  item-value="title_name"
                   :label="userInfo.user_title"
                   dense
                   outlined
-                  @click="titleChange(item)"
+                  v-model=title
                 ></v-select>
               </v-col>
             </v-row>
@@ -77,7 +78,7 @@
             </v-row>
             <!-- 내 관심사 -->
             <v-row>
-              <v-col cols="4">
+              <v-col cols="3">
                 <v-list-item-title
                   >내 관심사
                   <!-- icon 누를 시 모달 창 pop up-->
@@ -151,14 +152,15 @@
               <v-col>
                 <!-- 템플릿으로 chips 뿌림-->
                 <v-chip
-                  v-for="tag in listInterest"
+                  v-for="(tag, idx) in listInterest"
                   :key="tag.tag_no"
                   :value="tag.tag_content"
+                  :to="{ path: '/search/' + (tag.tag_content || '').slice(1) }"
                   v-model="tag.isOpen"
                   color="primary"
                   outlined
                   close
-                  @click:close="remove(tag.tag_no)"
+                 @click:close="remove(idx, tag.tag_no)"
                   class="tag-one"
                 >
                   {{ tag.tag_content }}
@@ -175,7 +177,6 @@
         <v-btn class="text-none" depressed color="primary" @click="onSubmit">
           회원 정보 수정</v-btn
         >
-        <v-col cols="1" />
       </v-row>
     </v-container>
   </v-card>
@@ -183,7 +184,6 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-// import ProfileUploadButton from "@/components/button/ProfilelUploadButton.vue";
 import { getSearchList } from "@/api/search.js";
 import { save } from "@/api/user.js";
 import { getInterest } from "@/api/user.js"
@@ -191,7 +191,6 @@ import { getInterest } from "@/api/user.js"
 const userStore = "userStore";
 
 export default {
-  // components: { ProfileUploadButton },
   computed: {
     ...mapState(userStore, ["userInfo"]),
     possibleNickname() {
@@ -214,18 +213,15 @@ export default {
       return "사용 가능한 닉네임입니다.";
     },
   },
-  //props: [selectedFile],
   data() {
     return {
       nickname: null,
       nicknameValidation: false,
       duplicateNicknameCheck: false,
       profile: null,
-      titles: ["밥 잘먹는", "타이틀2"],
       title: null,
       dialog: false,
       search: "",
-      disabledTrue: false,
       AllTags: [], //전체 태그
       model: [],
       file: {}, //업로드용 파일
@@ -239,6 +235,7 @@ export default {
   },
   /* 프로필 이미지 설정 */
   mounted() {
+    /* 이미지 없을 때 */
     if (this.$store.state.userStore.filePath == null) {
       this.profile = false;
       return;
@@ -250,9 +247,13 @@ export default {
       this.$store.state.userStore.fileSavedName;
   },
   methods: {
-    ...mapActions(userStore, ["getUserInfo", "modifyUser"]),
+    ...mapActions(userStore, ["getUserInfo", "modifyUser", "getInterest"]),
     onSubmit() {
-      if (!this.nickname && !this.title && this.profile === `http://d3iu4sf4n4i2qf.cloudfront.net/${this.$store.state.userStore.filePath}/${this.$store.state.userStore.fileSavedName}`) {
+      if (this.nickname == null && this.title == null && this.profile === `http://d3iu4sf4n4i2qf.cloudfront.net/${this.$store.state.userStore.filePath}/${this.$store.state.userStore.fileSavedName}`) {
+        this.alertMsg = "변경사항이 없습니다.";
+        return;
+      }
+      if (this.nickname == null && this.title == null && !this.profile) {
         this.alertMsg = "변경사항이 없습니다.";
         return;
       }
@@ -267,11 +268,11 @@ export default {
       if (this.nickname == null) {
         this.nickname = this.userInfo.user_nickname;
       }
+      else this.formData.set("user_nickname", this.nickname);
       if (this.title == null) {
         this.title = this.userInfo.user_title;
       }
-      this.formData.append("user_nickname", this.nickname);
-      this.formData.append("user_title", this.title);
+      else this.formData.set("user_title", this.title);
       this.modifyUser({
         file: this.formData,
         token: sessionStorage.getItem("Authorization"),
@@ -282,7 +283,11 @@ export default {
       // 	window.location.reload();
       // }, 300);
     },
-    remove(no) {
+    remove(idx, no) {
+      this.listInterest.splice(idx, 1);
+      // this.index++; //카운트 해줘야 다음 태그 제대로 지워짐
+      // 이렇게 하고, 페이지 refresh 해서 태그 다시 받아와야함.....
+      this.listInterest = [...this.listInterest];
       this.$store.dispatch("userStore/deleteInterest", {
         no,
         token: sessionStorage.getItem("Authorization"),
@@ -301,22 +306,16 @@ export default {
       if (this.nicknameValidation) {
         this.$store.dispatch("userStore/confirmNickname", this.nickname);
         this.duplicateNicknameCheck = true;
-        //if (this.possibleNickname) // this.disabledTrue = false;
       }
     },
     saveInterest() {
       //테그 추가 api 연결!
-      alert("저장되었습니다");
+      console.log("저장되었습니다");
       this.dialog = false;
-      this.disabledTrue = false;
       save(this.userInfo.user_no, this.selectedAllTags.tag_no);
       location.reload();
 
       //console.log(this.selectedAllTags.tag_no); -> 괄호 안에 들어간게 tagNo 입니다 !
-    },
-    titleChange(title) {
-      this.title = title;
-      // this.disabledTrue = false;
     },
     imageUpload() {
       this.formData.append("file", this.$refs.file.files[0]);
@@ -367,11 +366,11 @@ input[type="file"] {
   overflow: hidden;
   border: 0;
 }
-.alert-message {
+div.alert-message {
   color: #db3425;
   font-weight: bold;
-  padding-top: 10px;
-  margin-right: 20px;
+  margin-top: 4px;
+  margin-right: 10px;
 }
 .tag-one {
   margin: 3px;
