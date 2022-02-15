@@ -65,6 +65,6 @@ export default {
 
     / Show if the video is paused*/
 .vjs-paused .vjs-big-play-button {
-  display: none;
+  display: none !important;
 }
 </style>
