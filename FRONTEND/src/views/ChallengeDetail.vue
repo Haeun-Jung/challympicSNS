@@ -53,7 +53,7 @@
                       >
                       <share-button size="x-large" />
                       <v-btn
-                        v-if="isSubscribed"
+                        v-if="challenge.subscription"
                         @click="subscribe"
                         class="icon-margin"
                         icon
@@ -105,7 +105,7 @@
                       <v-card width="100%" elevation="0" color="transparent">
                         <share-button />
                         <v-btn
-                          v-if="isSubscribed"
+                          v-if="challenge.subscription"
                           @click="subscribe"
                           class="icon-margin"
                           icon
@@ -234,6 +234,7 @@ import BattleItem from "@/components/post/BattleItem.vue";
 import ShareButton from "@/components/button/ShareButton.vue";
 import ConfirmReport from "@/components/report/ConfirmReport.vue";
 import PostUpload from "@/components/upload/PostUpload.vue";
+import {setSubscription, removeSubscription, isSubscribe} from "@/api/challenge.js";
 
 export default {
   name: "ChallengeDetail",
@@ -249,7 +250,6 @@ export default {
     return {
       confirmReportDialog: false,
       alert: false,
-      isSubscribed: false,
       postDialog: false,
       linkInput: false,
       itemsPerPage: -1,
@@ -274,16 +274,29 @@ export default {
       }, 3000);
     },
     subscribe() {
-      if (this.isSubscribed) {
+      let challenge = this.$store.state.challengeStore.challenge;
+      if (challenge.subscription) {
         // 챌린지 구독 delete 요청
+        removeSubscription(challenge.challenge_no, challenge.user_no,
+          () => {
+            this.$store.state.challengeStore.challenge.subscription = false;
+          },
+          (error) => {
+            console.log(error);
+        })
       } else {
         // 챌린지 구독 post 요청
+        setSubscription(challenge.challenge_no, challenge.user_no,
+        () => {
+          this.$store.state.challengeStore.challenge.subscription = true;
+        },
+        (error) => {
+          console.log(error);
+        })
       }
-      this.isSubscribed = !this.isSubscribed;
+
     },
     clickTag(tagContent) {
-      console.log(tagContent);
-      console.log(tagContent.split("#")[1]);
       this.$router.push(`/search/${encodeURIComponent(tagContent.split("#")[1])}`);
     },
     isMobile() {
@@ -334,6 +347,17 @@ export default {
       }
     },
     challenge() {
+      if(this.$store.state.challengeStore.challenge.challenge_no){
+        isSubscribe(this.$store.state.challengeStore.challenge.challenge_no, this.$store.state.challengeStore.challenge.user_no,
+        (response) => {
+          if(response.data.success)
+            this.$store.state.challengeStore.challenge.subscription = true;
+          else
+            this.$store.state.challengeStore.challenge.subscription = false;
+
+        },
+        () => {});
+      }
       return this.$store.state.challengeStore.challenge;
     },
     postList() {
@@ -367,6 +391,7 @@ export default {
     if(this.$route.query.postNo){
       this.sortBy = 'post_regdate';
     }
+
   },
 };
 </script>

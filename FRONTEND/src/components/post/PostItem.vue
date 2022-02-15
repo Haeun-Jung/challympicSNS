@@ -181,8 +181,8 @@ export default {
     };
   },
   created() {
-    // console.log("debug");
-    // console.log(!this.user);
+    // console.log("debug-user");
+    // console.log(this.user);
     // console.log("debug-post");
     // console.log(this.post);
     // console.log("debug-challengePost");
@@ -201,11 +201,14 @@ export default {
       }
 
       // 좋아요 API 요청
-      if (post.isLike) {
-        post.likeCnt += 1;
-      } else {
+      if (post.isLike && post.likeCnt > 0) {
+        // 클릭된 상태
         post.likeCnt -= 1;
+      } else {
+        post.likeCnt += 1;
       }
+
+      post.isLike = !post.isLike;
 
       postLikeList(
         this.post.post_no,
