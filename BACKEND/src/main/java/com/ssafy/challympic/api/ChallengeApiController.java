@@ -236,9 +236,25 @@ public class ChallengeApiController {
         Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
         if(challenge == null) return new Result(false, HttpStatus.BAD_REQUEST.value());
         else {
+
             ChallengeDto challengeResponse = new ChallengeDto(challenge);
             return new Result(true, HttpStatus.OK.value(), challengeResponse);
         }
+    }
+
+    /**
+     *  구독 여부 확인
+     * */
+    @GetMapping("/challenge/{challengeNo}/subscribe/{userNo}")
+    public Result isSubscription(@PathVariable int challengeNo, @PathVariable int userNo){
+        Subscription subscription = null;
+
+        subscription = subscriptionService.findSubscriptionByChallengeAndUser(challengeNo, userNo);
+
+        if(subscription != null){
+            return new Result(true, HttpStatus.OK.value());
+        }
+        return new Result(false, HttpStatus.OK.value());
     }
 
 

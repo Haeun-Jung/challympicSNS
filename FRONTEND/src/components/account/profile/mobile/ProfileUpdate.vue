@@ -23,7 +23,6 @@
               @change="imageUpload"
               multiple
             />
-            <!--<profile-upload-button />-->
           </v-container>
         </v-col>
         <v-col>
@@ -37,10 +36,12 @@
                 <!--label에는 후에 selected 에 user.title로 가져오기-->
                 <v-select
                   :items="userInfo.titles"
+                  item-text="title_name"
+                  item-value="title_name"
                   :label="userInfo.user_title"
                   dense
                   outlined
-                  @click="titleChange(item)"
+                  v-model=title
                 ></v-select>
               </v-col>
             </v-row>
@@ -109,7 +110,6 @@
                             :items="AllTags"
                             :search-input.sync="search"
                             hide-selected
-                            hint="최대 5가지 태그 추가 가능"
                             label=""
                             multiple
                             item-text="tag_content"
@@ -201,12 +201,9 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import { getSearchList } from "@/api/search.js";
-// import ProfileUploadButton from "@/components/button/ProfilelUploadButton.vue";
 import { save } from "@/api/user.js";
 const userStore = "userStore";
 export default {
-  // components: { ProfileUploadButton },
-  //props: [selectedFile],
   computed: {
     ...mapState(userStore, ["userInfo", "listInterest"]),
     possibleNickname() {
@@ -235,10 +232,8 @@ export default {
       nicknameValidation: false,
       duplicateNicknameCheck: false,
       profile: null,
-      titles: ["밥 잘먹는", "타이틀2"],
       title: null,
       dialog: false,
-      disabledTrue: false,
       AllTags: [], //전체 태그
       model: [],
       file: {}, //업로드용 파일
@@ -263,9 +258,13 @@ export default {
       this.$store.state.userStore.fileSavedName;
   },
   methods: {
-    ...mapActions(userStore, ["getUserInfo", "getInterest", "modifyUser"]),
+    ...mapActions(userStore, ["getUserInfo", "modifyUser"]),
     onSubmit() {
-      if (!this.nickname && !this.title && this.profile === `http://d3iu4sf4n4i2qf.cloudfront.net/${this.$store.state.userStore.filePath}/${this.$store.state.userStore.fileSavedName}`) {
+      if (this.nickname == null && this.title == null && this.profile === `http://d3iu4sf4n4i2qf.cloudfront.net/${this.$store.state.userStore.filePath}/${this.$store.state.userStore.fileSavedName}`) {
+        this.alertMsg = "변경사항이 없습니다.";
+        return;
+      }
+      if (this.nickname == null && this.title == null && !this.profile) {
         this.alertMsg = "변경사항이 없습니다.";
         return;
       }
@@ -277,16 +276,14 @@ export default {
         this.alertMsg = "현재 사용중인 닉네임입니다.";
         return;
       }
-      if (this.nickname == null) {
+       if (this.nickname == null) {
         this.nickname = this.userInfo.user_nickname;
       }
+      else this.formData.set("user_nickname", this.nickname);
       if (this.title == null) {
         this.title = this.userInfo.user_title;
       }
-      this.formData.append("user_nickname", this.nickname);
-      this.formData.append("user_title", "");
-      // if (this.nickname != null) this.formData.append("user_nickname", this.nickname);
-      // if (this.title != null) this.formData.append("user_title", this.title);
+      else this.formData.set("user_title", this.title);
       this.modifyUser({
         file: this.formData,
         token: sessionStorage.getItem("Authorization"),
@@ -320,14 +317,10 @@ export default {
       }
     },
     saveInterest() {
-      alert("저장되었습니다");
+      console.log("저장되었습니다");
       this.dialog = false;
-      this.disabledTrue = false;
       save(this.userInfo.user_no, this.selectedAllTags.tag_no);
       location.reload();
-    },
-    titleChange(title) {
-      this.title = title;
     },
     imageUpload() {
       this.formData.append("file", this.$refs.file.files[0]);
@@ -366,7 +359,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .profile-setting-avatar-container {
   justify-content: center !important;
   flex-direction: row !important;
@@ -377,12 +370,12 @@ export default {
 .row-bottom {
   margin-bottom: -40px;
 }
-.alert-message {
+div.alert-message {
   color: #db3425;
   font-weight: bold;
   text-align: right;
   padding-right: 0px;
-  margin-top: -10px;
+  margin-top: -50px;
   margin-right: 0px;
   margin-bottom: 6px;
 }
