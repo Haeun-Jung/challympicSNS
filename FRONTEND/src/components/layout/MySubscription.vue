@@ -13,8 +13,7 @@
     <v-list-group>
       <template v-slot:activator class="title-background">
         <v-card-subtitle class="title-width">
-          <h2 v-if="!isMobile()">구독</h2>
-          <h4 v-else>구독</h4>
+          <h2>구독</h2>
         </v-card-subtitle>
       </template>
       <v-chip
@@ -60,7 +59,6 @@ export default {
       this.index++; //카운트 해줘야 다음 태그 제대로 지워짐
       // 이렇게 하고, 페이지 refresh 해서 태그 다시 받아와야함.....
       this.listsubscription = [...this.listsubscription];
-      this.disabledTrue = false;
       this.$store.dispatch("userStore/deleteSubscription", {
         no,
         token: sessionStorage.getItem("Authorization"),
@@ -68,17 +66,6 @@ export default {
       setTimeout(() => {
         this.getUserInfo(sessionStorage.getItem("Authorization"));
       }, 300);
-    },
-    isMobile() {
-      if (
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          navigator.userAgent
-        )
-      ) {
-        return true;
-      } else {
-        return false;
-      }
     },
   },
   created() {
