@@ -14,7 +14,7 @@
       </v-btn>
     </template>
 
-    <v-card v-if="alertList" width="300">
+    <v-card v-if="alertList.length > 0" width="300">
       <v-list class="overflow-y-auto">
         <v-list-item
           v-for="(item, i) in alertList"
@@ -23,7 +23,7 @@
           class="px-3; mx-1;,my-2"
         >
           <v-list-item-title>
-            {{ item.alert_content.split('"')[3] }}
+            {{ item.alert_content }}
             <span class="date-text">{{
               dayjsRegDate(item.alert_regDate)
             }}</span>
@@ -62,7 +62,7 @@ export default {
       return 300;
     },
     activeAlert() {
-      if (this.alertMenu.length > 1) {
+      if (this.alertMenu.length > 0) {
         return true;
       }
       return false;
@@ -98,6 +98,16 @@ export default {
 </script>
 
 <style scoped>
+#alert-badge {
+  position: absolute;
+  top: 2px;
+  right: 13px;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+  z-index: 1;
+}
 ::v-deep .v-list-item {
   padding: 2px 16px;
 }
