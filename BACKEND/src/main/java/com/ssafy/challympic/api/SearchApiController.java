@@ -56,7 +56,6 @@ public class SearchApiController {
     public Result searchTagList(@RequestBody TagSearchRequest request) {
         List<Challenge> challenges = searchService.findChallengeListByTagContent("#" + request.tag_content);
         List<Post> posts = searchService.findPostListByTagContent("#" + request.tag_content);
-
         List<ChallengeDto> challengeList = challenges.stream()
                 .map(c -> {
                     List<Post> postListByChallengeNo = postService.getPostList(c.getChallenge_no());
@@ -71,16 +70,18 @@ public class SearchApiController {
         data.put("challengeList", challengeList);
         data.put("postList", postList);
 
-        if(request.user_no != 0){
+        if(request.user_no > 0){
             // 검색 기록 저장
             User user = userService.findUser(request.user_no);
-            if(user != null) searchService.saveSearchRecord("#" + request.tag_content, user);
+            if(user != null) {
+                searchService.saveSearchRecord("#" + request.tag_content, user);
+            }
 
             Tag findTag = tagService.findTagByTagContent("#" + request.tag_content);
 
             if(findTag.getIsChallenge() != null) {
                 SearchChallenge searchChallenge = new SearchChallenge();
-                searchChallenge.setChallenge(challengeService.findChallengeByTitle("#" + request.tag_content).get(0)); //TODO
+                searchChallenge.setChallenge(challengeService.findChallengeByTitle(request.tag_content).get(0)); //TODO
                 searchChallenge.setUser(user);
                 searchService.saveSearchChallenge(searchChallenge);
             }
@@ -118,30 +119,12 @@ public class SearchApiController {
 
     @GetMapping("/search/trending")
     public Result searchTrending() {
-        List<Challenge> challenges = searchService.findTrendChallenge();
-        HashMap<Integer, Integer> t = new HashMap<>();
-        for (Challenge challenge : challenges) {
-            if(t.containsKey(challenge.getChallenge_no())){
-                int cnt = t.get(challenge.getChallenge_no());
-                t.put(challenge.getChallenge_no(), cnt+1);
-            }else {
-                t.put(challenge.getChallenge_no(), 0);
-            }
-        }
-        List<Integer> keySetList = new ArrayList<>(t.keySet());
-        Collections.sort(keySetList, (o1, o2) -> (t.get(o2).compareTo(t.get(o1))));
-        List<ChallengeDto> challengeList = new LinkedList<>();
-        for (Integer k : keySetList) {
-            Challenge c = challengeService.findChallengeByChallengeNo(k);
-            challengeList.add(new ChallengeDto(c));
-        }
-        List<ChallengeDto> collect = new ArrayList<>();
-        if(challengeList.size() < 5){
-            collect = challengeList;
-        }else{
-            collect = challengeList.subList(0,6);
-        }
-        return new Result(true, HttpStatus.OK.value(), collect);
+        List<Challenge> trendChallenge = searchService.findTrendChallenge();
+        List<ChallengeDto> trendChallengeList = trendChallenge.stream()
+                .map(c -> new ChallengeDto(c))
+                .collect(Collectors.toList());
+        for(Challenge c : trendChallenge) System.out.println(c.getChallenge_no());
+        return new Result(true, HttpStatus.OK.value(), trendChallengeList);
     }
 
     @GetMapping("/search/rank")

@@ -62,8 +62,7 @@ public class SearchRepository {
     }
 
     public List<Challenge> findChallengeByTrend() {
-        return em.createQuery("select sc.challenge from SearchChallenge sc where sc.search_regdate > :minGap", Challenge.class)
-                .setParameter("minGap", new Date(System.currentTimeMillis() - 600000L))
+        return em.createQuery("select sc.challenge from SearchChallenge sc", Challenge.class)
                 .getResultList();
     }
 

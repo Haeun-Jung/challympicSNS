@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -17,6 +20,7 @@ public class SearchService {
 
     private final SearchRepository searchRepository;
     private final TagRepository tagRepository;
+    private final ChallengeRepository challengeRepository;
 
     public List<Tag> findTagList() {
         return searchRepository.findTagList();
@@ -39,7 +43,28 @@ public class SearchService {
     }
 
     public List<Challenge> findTrendChallenge() {
-        return searchRepository.findChallengeByTrend();
+        List<Challenge> searchedChallenges = searchRepository.findChallengeByTrend();
+        List<Challenge> allChallenge = challengeRepository.findAll();
+        int challengeSize = allChallenge.size();
+        int[][] challengeCount = new int[challengeSize + 1][2];
+        for(int i = 1; i <= challengeSize; i++) challengeCount[i][0] = i;
+        for(Challenge c : searchedChallenges) {
+            challengeCount[c.getChallenge_no()][1]++;
+        }
+        Arrays.sort(challengeCount, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[1] - o2[1];
+            }
+        });
+
+        List<Challenge> trendChallenge = new ArrayList<>();
+        for(int i = 0; i <= (Math.min(challengeSize, 4)); i++) {
+            int challengeNo = challengeCount[i][0];
+            if(challengeCount[i][1] != 0) trendChallenge.add(challengeRepository.findByChallengeNo(challengeNo));
+        }
+
+        return trendChallenge;
     }
 
     public List<User> findRank() {
