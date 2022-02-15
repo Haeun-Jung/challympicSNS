@@ -205,7 +205,7 @@ export default {
   filters: {
     hashAnchor(str) {
       // TODO: anchor 태그에서 href base url 주석 처리된 url로 변경!!!!!
-      str = str.replace(
+      str = (str || "").replace(
         /#[^\s]+/g,
         '<a class="text-decoration-none" href="http://192.168.219.106:8080/search/$&">$&</a>'
       );
