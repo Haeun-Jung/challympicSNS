@@ -14,14 +14,12 @@
 		@keyup="test"
 		@keyup.delete="test"
 		@keydown.enter="keywordSearch"
-		class="ml-5"
 		flat
 		solo
 		item-text="key"
 		item-value="key"
 		clearable
 		append-icon="mdi-magnify"
-		width="600px"
 	>
 		<template v-slot:no-data>
 			<v-list-item>
@@ -72,19 +70,19 @@
 	};
 </script>
 
-<style>
+<style scoped>
 	.v-toolbar-title:hover {
 		cursor: pointer;
 	}
 	.v-text-field {
-		width: 600px;
-	}
-	.main-toolbar-search {
-		/*margin-bottom: 0%;*/
-		/*background-color: pink;*/
-	}
+		width: 200px;
+	} /*
+	.main-toolbar-search {*/
+	/*margin-bottom: 0%;*/
+	/*background-color: pink;*/
+	/*	}
 	.v-toolbar__content,
 	.v-toolbar__extension {
 		padding: 0;
-	}
+	}*/
 </style>
