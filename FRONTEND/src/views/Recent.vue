@@ -23,7 +23,12 @@
       }
     },
     created() {
-      this.$store.dispatch('postStore/getRecentPostList', this.$store.state.userStore.userInfo.user_no);
+      // 로그인 안 해도 action 호출 가능하도록 처리
+      let userNo = "";
+      if (this.$store.state.userStore.userInfo) {
+        userNo = this.$store.state.userStore.userInfo.user_no;
+      }
+      this.$store.dispatch('postStore/getRecentPostList', userNo);
     }
 	};
 </script>
