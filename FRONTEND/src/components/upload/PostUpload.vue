@@ -165,7 +165,8 @@
 <script>
 import { getChallengeList } from "@/api/challenge.js";
 import FileUpload from "vue-upload-component";
-import { updatePost } from "@/api/post.js";
+import { updatePost, createPost } from "@/api/post.js";
+import { createChallenge } from "@/api/challenge";
 
 export default {
   name: "PostUpload",
@@ -329,8 +330,6 @@ export default {
 
       formData.append("post_content", this.post.description);
 
-      console.log(this.post.description);
-
       let challenge_no = this.propChallenge.challengeNo;
       let post_no = this.propChallenge.postNo;
 
@@ -397,16 +396,9 @@ export default {
             ...this.propChallenge,
             endDate,
           };
-
-          this.$store.dispatch("challengeStore/createChallengeWithPost", {
-            challenge,
-            post: formData,
-          });
+          this.createChallengeWithPost(challenge, formData);
         } else {
-          this.$store.dispatch("challengeStore/createChallengeWithPost", {
-            challenge: this.propChallenge,
-            post: formData,
-          });
+          this.createChallengeWithPost(this.propChallenge, formData);
         }
       } else {
         // 바로 포스트 등록
@@ -419,17 +411,60 @@ export default {
         } else if (this.selectedChallenge) {
           challengeNo = this.selectedChallenge.challengeNo;
         }
-        this.$store.dispatch("postStore/createPost", {
-          challengeNo,
-          post: formData,
-        });
+        
+        createPost(challengeNo, formData
+        , (response) => {
+          this.dialog = false;
+          this.$emit("close-challenge-modal");
+          this.$emit("close-modal");     
+          this.$store.commit("challengeStore/RESET_POSSIBLE_STATUS");
+          this.$router.push({ name: `ChallengeDetail`, params: {challengeNo: challengeNo}, query: {postNo: response.data.data.post_no}});
+        }, (error) => {
+          console.log(error);
+        })
       }
+    },
+    createChallengeWithPost(challenge, post) {
+      const challengeItem = {
+        user_no: this.$store.state.userStore.userInfo.user_no,
+        challengers:
+          challenge.challengers.length > 1 ? challenge.challengers.split() : [],
+        challenge_title: challenge.challengeName,
+        challenge_content: challenge.description,
+        challenge_end: challenge.endDate,
+        challenge_type: challenge.fileType,
+        title_name: challenge.titleName,
+      };
 
-      this.$store.commit("challengeStore/RESET_POSSIBLE_STATUS");
-      this.dialog = false;
-      this.$emit("close-challenge-modal");
-      this.$emit("close-modal");
-      // window.location.href = "/recent";
+      let chall_no = -1;
+      createChallenge(
+        challengeItem,
+        (response) => {
+          chall_no = response.data.data.challenge_no;
+          console.log("챌린지 생성!");
+          if (response.data.code == 200) {
+            createPost(
+              response.data.data.challenge_no,
+              post,
+              (response) => {
+                console.log("포스트 생성!");
+                console.log(response);
+                this.dialog = false;
+                this.$emit("close-challenge-modal");
+                this.$emit("close-modal");     
+                this.$store.commit("challengeStore/RESET_POSSIBLE_STATUS");
+                this.$router.push({ name: `ChallengeDetail`, params: {challengeNo: chall_no}, query: {postNo: response.data.data.post_no}});
+              },
+              (error) => {
+                // 아직 백에서 challenge_no가 안 넘어와서 생성 실패하는 상태입니다.
+                console.log("포스트 생성 실패");
+                console.log(error);
+              }
+            );
+          }
+        },
+        () => {}
+      );
     },
   },
   created() {
