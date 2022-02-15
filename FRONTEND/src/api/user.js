@@ -10,7 +10,7 @@ function join(user, success, fail) {
 /* 로그인 */
 async function login(user, success, fail) {
   await api
-    .post("/challympic/login", JSON.stringify(user))
+    .post("/challympic/api/login", JSON.stringify(user))
     .then(success)
     .catch(fail);
 }
