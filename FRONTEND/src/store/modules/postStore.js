@@ -24,7 +24,7 @@ const postStore = {
       state.postList = postList.map(post => {
         return {
           ...post,
-          post_content: post.post_content.split('"')[1],
+          post_content: post.post_content,
           post_regdate: post.post_regdate.split("T")[0].replace(/-/g, ".")
         }
       });
