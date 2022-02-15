@@ -1,5 +1,6 @@
 package com.ssafy.challympic.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +21,7 @@ public class Tag {
 
     private String isChallenge;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "tag", fetch = LAZY)
     private List<Interest> interest;
 

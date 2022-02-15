@@ -91,7 +91,7 @@ export default {
   computed: {
     loginFailed() {
       return this.$store.state.userStore.loginFailed;
-    }
+    },
   },
   methods: {
     ...mapActions(userStore, ["getUserInfo", "getInterest"]),
@@ -107,7 +107,10 @@ export default {
         this.$cookies.set("emailCookie", this.email);
       }
 
-      await this.$store.dispatch('userStore/login', { user_email: this.email, user_pwd: this.password });
+      await this.$store.dispatch("userStore/login", {
+        user_email: this.email,
+        user_pwd: this.password,
+      });
       this.getUserInfo(sessionStorage.getItem("Authorization"));
       this.getInterest(sessionStorage.getItem("Authorization"));
     },

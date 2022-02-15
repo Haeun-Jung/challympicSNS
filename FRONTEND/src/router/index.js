@@ -50,12 +50,12 @@ const routes = [
     path: "/",
     name: "Main",
     component: Main,
-    redirect:"/recent",
+    redirect: "/recent",
     children: [
       {
         path: "/recent",
         name: Recent,
-        component:Recent,
+        component: Recent,
       },
       {
         path: "/search/:keyword/",
@@ -64,17 +64,18 @@ const routes = [
         redirect: "/search/challenge/:keyword",
         children: [
           {
-            path:  "/search/challenge/:keyword",
+            path: "/search/challenge/:keyword",
             name: "ChallengeSearch",
-            component:ChallengeSearch,
-          }, {
+            component: ChallengeSearch,
+          },
+          {
             path: "/search/post/:keyword",
             name: "PostSearch",
-            component:PostSearch,
+            component: PostSearch,
           },
         ],
-      }
-    ]
+      },
+    ],
   },
   {
     path: "/user/account/",
@@ -161,7 +162,7 @@ const routes = [
         name: "Subscribe",
         component: Subscribe,
       },
-    ]
+    ],
   },
   {
     path: "/join",
@@ -183,51 +184,51 @@ const routes = [
     path: "/admin/",
     name: "Admin",
     component: Admin,
-    redirect:"/admin/user",
+    redirect: "/admin/user",
     //redirect를 stat으로 하기
     children: [
       {
         path: "/admin/user",
         name: "UserManagement",
-        component:UserManagement,
+        component: UserManagement,
       },
       {
         path: "/admin/challenge",
         name: "ChallengeManagement",
-        component:ChallengeManagement,
+        component: ChallengeManagement,
       },
       {
         path: "/admin/comment",
         name: "CommentManagement",
-        component:CommentManagement,
+        component: CommentManagement,
       },
       {
         path: "/admin/qna",
         name: "QnAManagement",
-        component:QnAManagement,
+        component: QnAManagement,
       },
       {
         path: "/admin/stats",
         name: "StatManagement",
-        component:StatManagement,
+        component: StatManagement,
       },
-    ]
-  }
+    ],
+  },
 ];
 
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
-  scrollBehavior (to) {
+  scrollBehavior(to) {
     if (to.hash) {
       return {
         selector: to.hash,
-        behavior: 'smooth'
+        behavior: "smooth",
       };
     }
     return { x: 0, y: 0 };
-  }
+  },
 });
 
 export default router;

@@ -113,7 +113,7 @@ public class ChallengeApiController {
 
         // 챌린지 제목 저장
         tagContentList.add(request.challenge_title);
-        tagService.saveTag(request.challenge_title, true);
+        tagService.saveTag("#" + request.challenge_title, true);
         for(char c : content.toCharArray()) {
             if(c == '#') {
                 if(sb != null) {

@@ -41,7 +41,7 @@ public class PostService {
     }
 
     @Transactional
-    public int update(int postNo, Post newPost){
+    public int update(Integer postNo, Post newPost){
         Post post = postRepository.findByPostNo(postNo);
         if(newPost.getPost_content() != null){
             post.setPost_content(newPost.getPost_content());
