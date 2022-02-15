@@ -125,6 +125,13 @@ public class PostApiController {
         private int challenge_no;
     }
 
+    @Data
+    @Setter @Getter
+    static class CreateResult{
+        private Media media;
+        private Integer post_no;
+    }
+
     @GetMapping("/main/recent/post")
     public Result getRecentPosts(@RequestParam(required = false) Integer userNo){
         // 최대 50개 가져오기
@@ -419,9 +426,12 @@ public class PostApiController {
                 }
             }
 
-            if(postId != -1)
-                return new Result(true, HttpStatus.OK.value(), media);
-
+            if(postId != -1) {
+                CreateResult cr = new CreateResult();
+                cr.setPost_no(postId);
+                cr.setMedia(media);
+                return new Result(true, HttpStatus.OK.value(), cr);
+            }
         } catch(Exception e){
             e.printStackTrace();
         }

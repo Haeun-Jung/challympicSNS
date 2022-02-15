@@ -11,10 +11,7 @@
           top
           right
           icon
-          @click="
-            dialog = false;
-            $emit('close-dialog');
-          "
+          @click="$emit('close-dialog');"
         >
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -50,11 +47,19 @@
                 v-text="user.user_title"
                 src="https://cdn-icons-png.flaticon.com/512/744/744922.png"
               ></v-list-item-subtitle>
-              <v-list-item-title
-                v-text="user.user_nickname"
-              ></v-list-item-title>
+              <a
+                :href="`/feed/${user.user_no}`"
+                :class="[
+                  'text-decoration-none',
+                  [$vuetify.theme.dark ? 'dark-mode-text' : 'black-text'],
+                ]"
+              >
+                <v-list-item-title
+                  v-text="user.user_nickname"
+                ></v-list-item-title>
+              </a>
             </v-list-item-content>
-
+            <!-- 리스트에 있는 유저와 내(=로그인 유저)가 다를 때 -->
             <v-list-item-icon v-show="login_user != user.user_no">
               <v-btn
                 v-if="!user.follow"
@@ -89,6 +94,7 @@ export default {
   name: "FollowLikeModal",
   props: {
     type: String,
+    dialog: Boolean,
     login_user: Number,
     who_no: Number,
     followerCnt: Number,
@@ -96,97 +102,62 @@ export default {
   },
   data() {
     return {
-      dialog: true,
-      followList: [],
-      // followingCnt_p: this.followingCnt,
-    };
+      followList: []
+    }
   },
   methods: {
     follow(userNo, idx) {
-      console.log(userNo);
-      console.log(this.login_user);
       // 팔로우 API 요청 보내기
       // 해당 유저에 대한 isFollowing 값 변경
-      setFollow(this.login_user, userNo, (response) => {
-        console.log("저장/취소");
-        console.log(response.data);
-        console.log(
-          "who_no : " + this.who_no + "    login_user : " + this.login_user
-        );
-        // 유저가 팔로우하는 사람들
-        if (this.type === "following") {
-          //내 화면이라면
-          if (this.who_no == this.$store.state.userStore.userInfo.user_no) {
-            // 나를 팔로우 하는 사람들 => 취소
-            if (this.followList[idx].follow) {
-              this.$emit("decrementFollowerCnt");
-              console.log("decrese");
-            } else {
-              // 나를 팔로우 하는 사람들 => 내가 팔로우
-              this.$emit("incrementFollowerCnt");
-              console.log("intcrese");
-            }
-          }
-        } else if (this.type === "follower") {
-          // follower
-          // 유저를 팔로우하는 사람들
-
-          // 내 화면이라면
-          if (this.login_user == this.who_no) {
-            // 내가 팔로우 했던 사람 => 취소 following 감소
-            if (this.followList[idx].follow) {
-              this.$emit("decrementFollowingCnt");
-            } else {
-              // 내가 팔로우 하기
-              this.$emit("incrementFollowingCnt");
-            }
+      setFollow(this.login_user, userNo, () => {
+        // who_no: 피드 주인
+        // login_user: 로그인 한 유저
+        // userNo: 팔로잉/팔로워 리스트에 있는 유저
+        // 내 피드에서 팔로워/팔로잉 목록 볼 때만 부모 요소에서 값 변경 필요
+        if (this.who_no === this.login_user) {
+          // 이미 팔로우 중이라면 => 언팔로우
+          if (this.followList[idx].follow) {
+            this.$emit("decrementFollowingCnt");
+            console.log("팔로잉 -1");
+          } else {
+            // 팔로우 중이 아니라면 => 팔로우
+            this.$emit("incrementFollowingCnt");
+            console.log("팔로잉 +1");
           }
         }
         this.followList[idx].follow = !this.followList[idx].follow;
       });
-      // if(this.type === "following"){
-      //   getFollowerList(
-      //     this.who_no,
-      //     this.login_user,
-      //     (response) => {
-      //       console.log(response.data.data);
-      //       this.followList = response.data.data
-      //     }
-      //   )
-      // }else if(this.type === "follower"){
-      //   getFollowingList(
-      //     this.who_no,
-      //     this.login_user,
-      //     (response) => {
-      //       console.log(response.data.data);
-      //         this.followList = response.data.data
-      //     }
-      //   )
-      // }
     },
   },
-  created() {
-    // 유저가 팔로우한 목록
-    getFollowerList(this.who_no, this.login_user, (response) => {
-      if (this.type === "following") {
-        console.log(response.data.data);
-        this.followList = response.data.data;
+  watch: {
+    dialog() {
+      if (this.dialog === true) {
+        getFollowerList(this.who_no, this.login_user, (response) => {
+          if (this.type === "following") {
+            console.log("following");
+            this.followList = response.data.data;
+          }
+        });
+        getFollowingList(this.who_no, this.login_user, (response) => {
+          // console.log(response.data)
+          if (this.type === "follower") {
+            console.log("follower");
+            this.followList = response.data.data;
+          }
+        });
       }
-      console.log(this.followList);
-    });
-    // // 유저를 팔로우한 목록
-    getFollowingList(this.who_no, this.login_user, (response) => {
-      // console.log(response.data)
-      if (this.type === "follower") {
-        console.log(response.data.data);
-        this.followList = response.data.data;
-      }
-    });
+    }
   },
 };
 </script>
 
 <style scoped>
+.dark-mode-text {
+  color: rgb(255, 255, 255, 0.6);
+}
+.black-text {
+  color: black;
+}
 .card-title-align {
   display: flex;
   justify-content: center;

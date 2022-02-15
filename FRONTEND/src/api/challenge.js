@@ -18,9 +18,9 @@ function confirmChallengeName(challenge_title, success, fail) {
 }
 
 async function createChallenge(challenge, success, fail) {
-  api
+  await api
     .post("/challympic/challenge", JSON.stringify(challenge))
-    .then(await success)
+    .then(success)
     .catch(fail);
 }
 

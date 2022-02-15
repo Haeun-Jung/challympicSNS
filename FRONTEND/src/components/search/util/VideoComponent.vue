@@ -45,7 +45,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .vjs-afterglow-skin .vjs-big-play-button:before {
   display: none;
 }
