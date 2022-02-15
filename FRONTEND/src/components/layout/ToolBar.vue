@@ -290,7 +290,7 @@ export default {
       this.onSelect = true;
     },
     goMain() {
-      this.$router.push("/");
+      this.$router.push("/").catch(()=>{});
     },
     clickLoginBtn() {
       this.$router.push("/login");
