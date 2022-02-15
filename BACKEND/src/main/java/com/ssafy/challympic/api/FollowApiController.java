@@ -39,6 +39,9 @@ public class FollowApiController {
 
     @GetMapping("/{userNo}/follow/{followerNo}")
     public Result isFollow(@PathVariable("userNo") int user_no, @PathVariable("followerNo") int follow_follower_no){
+        if(user_no == follow_follower_no){
+            return new Result(true, HttpStatus.OK.value(), null, false);
+        }
         boolean follow = followService.isFollow(user_no, follow_follower_no);
         return new Result(true, HttpStatus.OK.value(), null, follow);
     }

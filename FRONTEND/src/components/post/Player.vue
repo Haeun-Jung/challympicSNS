@@ -1,8 +1,8 @@
 <template>
-  <div id="video-wrapper">
+  <div>
     <video-player
       id="player"
-      class="video-player-box video-item"
+      class="video-player-box vjs-big-play-centered"
       ref="videoPlayer"
       playsinline
       :options="playerOptions"
@@ -41,16 +41,22 @@ export default {
 
 <style scoped>
 .video-player-box {
+  position: relative;
+  /* 16:9 비율 설정 */
+  padding-top: 56.25%;
   background-color: rgb(0, 0, 0);
 }
-::v-deep .video-js .vjs-big-play-button {
-  top: 45%;
-  left: 38%;
-}
 ::v-deep .video-js {
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 343px;
-  max-height: 550px;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  top: 0;
+}
+::v-deep .video-js .vjs-tech {
+  width: auto;
+  left: auto;
 }
 </style>

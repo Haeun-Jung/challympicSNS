@@ -244,7 +244,7 @@ export default {
       file: {}, //업로드용 파일
       changeFile: {}, //업로드용 파일
       filePreview: {},
-      formData: "",
+      formData: new FormData(),
       alertMsg: "",
       selectedAllTags: "",
       search: "",
@@ -265,6 +265,10 @@ export default {
   methods: {
     ...mapActions(userStore, ["getUserInfo", "getInterest", "modifyUser"]),
     onSubmit() {
+      if (!this.nickname && !this.title && this.profile === `http://d3iu4sf4n4i2qf.cloudfront.net/${this.$store.state.userStore.filePath}/${this.$store.state.userStore.fileSavedName}`) {
+        this.alertMsg = "변경사항이 없습니다.";
+        return;
+      }
       if (this.nickname != null && !this.duplicateNicknameCheck) {
         this.alertMsg = "닉네임 중복체크를 해주세요.";
         return;
@@ -273,43 +277,20 @@ export default {
         this.alertMsg = "현재 사용중인 닉네임입니다.";
         return;
       }
-      /* 사진 변경 X */
-      if (
-        this.profile ==
-        "http://d3iu4sf4n4i2qf.cloudfront.net/" +
-          this.$store.state.userStore.filePath +
-          "/" +
-          this.$store.state.userStore.fileSavedName
-      ) {
-        if (this.nickname == null && this.title == null) {
-          this.profile =
-            "http://d3iu4sf4n4i2qf.cloudfront.net/" +
-            this.$store.state.userStore.filePath +
-            "/" +
-            this.$store.state.userStore.fileSavedName;
-          return;
-        }
-        if (this.nickname == null) this.nickname = this.userInfo.user_nickname;
-        if (this.title == null) this.title = this.userInfo.user_title;
-        let formData = new FormData();
-        formData.append("user_nickname", this.nickname);
-        formData.append("user_title", this.title);
-        // if (this.nickname != null) this.formData.append("user_nickname", this.nickname);
-        // if (this.title != null) this.formData.append("user_title", this.title);
-        // this.modifyUser({file: formData, token: sessionStorage.getItem("Authorization")});
-      } else {
-        /* 사진 변경 O */
-        if (this.nickname == null) this.nickname = this.userInfo.user_nickname;
-        if (this.title == null) this.title = null;
-        this.formData.append("user_nickname", this.nickname);
-        this.formData.append("user_title", "");
-        // if (this.nickname != null) this.formData.append("user_nickname", this.nickname);
-        // if (this.title != null) this.formData.append("user_title", this.title);
-        this.modifyUser({
-          file: this.formData,
-          token: sessionStorage.getItem("Authorization"),
-        });
+      if (this.nickname == null) {
+        this.nickname = this.userInfo.user_nickname;
       }
+      if (this.title == null) {
+        this.title = this.userInfo.user_title;
+      }
+      this.formData.append("user_nickname", this.nickname);
+      this.formData.append("user_title", "");
+      // if (this.nickname != null) this.formData.append("user_nickname", this.nickname);
+      // if (this.title != null) this.formData.append("user_title", this.title);
+      this.modifyUser({
+        file: this.formData,
+        token: sessionStorage.getItem("Authorization"),
+      });
       this.duplicateNicknameCheck = true;
       this.alertMsg = "회원정보가 변경되었습니다.";
       // setTimeout(() => {
@@ -349,9 +330,7 @@ export default {
       this.title = title;
     },
     imageUpload() {
-      let formData = new FormData();
-      formData.append("file", this.$refs.file.files[0]);
-      this.formData = formData;
+      this.formData.append("file", this.$refs.file.files[0]);
       this.changeFile = {
         //실제 파일
         file: this.$refs.file.files,

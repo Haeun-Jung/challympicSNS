@@ -39,17 +39,34 @@ export default {
   name: "TagBar",
   created() {
 		if(this.$store.state.userStore.userInfo) {
+      console.log("추천태그 유저 번호");
+      console.log(this.$store.state.userStore.userInfo.user_no);
 			getRecommend(
-      this.$store.state.userStore.userInfo.user_no,
-      (response) => {
-        console.log(response);
-        this.tagList = response.data.data.tagList;
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-		}
+        this.$store.state.userStore.userInfo.user_no,
+        (response) => {
+          console.log("추천태그 userNo있을 때");
+          console.log(response.data.data);
+          this.tagList = response.data.data.tagList;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+		}else{
+      console.log("추천태그 유저 번호");
+      console.log(0);
+      getRecommend(
+        0,
+        (response) => {
+          console.log("추천태그 userNo0 일때");
+          console.log(response.data.data);
+          this.tagList = response.data.data.tagList;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    }
   },
   methods: {
     moveTag(tag_content) {
