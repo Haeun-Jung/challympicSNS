@@ -228,15 +228,17 @@ export default {
   created() {
     console.log("this.login_user");
     console.log(this.login_user);
-    // 유저 번호와 로그인 한 사람의 팔로우 관계
-    checkFollow(this.login_user, this.who_no, (response) => {
-      this.isFollower = response.data.following;
-    }),
-      // 유저의 팔로우, 팔로잉 cnt
-      getFollowCnt(this.who_no, (response) => {
-        this.followerCnt = response.data.data.followerCnt;
-        this.followingCnt = response.data.data.followingCnt;
-      });
+    if(!this.$store.state.userStore.userInfo){
+      // 유저 번호와 로그인 한 사람의 팔로우 관계
+      checkFollow(this.login_user, this.who_no, (response) => {
+        this.isFollower = response.data.following;
+      })
+    }
+    // 유저의 팔로우, 팔로잉 cnt
+    getFollowCnt(this.who_no, (response) => {
+      this.followerCnt = response.data.data.followerCnt;
+      this.followingCnt = response.data.data.followingCnt;
+    });
   },
   methods: {
     isMobile() {
