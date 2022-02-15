@@ -193,6 +193,7 @@
 											:post="post"
 											:type="challenge.challenge_type"
 											:key="post.post_no"
+                      :user="userData"
 										></post-item>
 									</template>
 								</v-data-iterator>
@@ -263,6 +264,7 @@ export default {
         // 댓글 목록 요청은 따로 보내므로 주석 처리 해두었습니다.
         // { text: "댓글 순", value: "comments.length" },
       ],
+      userData: null,
     };
   },
   methods: {
@@ -390,6 +392,8 @@ export default {
 			if (this.$route.query.postNo) {
 				this.sortBy = "post_regdate";
 			}
+
+      this.userData = this.$store.state.userStore.userInfo;
 		},
 	};
 </script>

@@ -43,6 +43,7 @@
 			search: String,
 		},
 		created() {
+			console.log("test");
 			searchTagList(
 				this.searchKey,
 				(response) => {
