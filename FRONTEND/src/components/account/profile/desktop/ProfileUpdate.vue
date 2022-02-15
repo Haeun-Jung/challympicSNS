@@ -27,10 +27,10 @@
           <v-container>
             <v-row class="row-bottom">
               <!-- 타이틀 -->
-              <v-col md="4">
+              <v-col cols="3">
                 <v-list-item-title>대표 타이틀</v-list-item-title>
               </v-col>
-              <v-col>
+              <v-col cols="7">
                 <!--label에는 후에 selected 에 user.title로 가져오기-->
                 <v-select
                   :items="userInfo.titles"
@@ -40,14 +40,13 @@
                   @click="titleChange(item)"
                 ></v-select>
               </v-col>
-              <v-col md="2" />
             </v-row>
             <!-- 닉네임 -->
             <v-row class="row-bottom">
-              <v-col md="4">
+              <v-col cols="3">
                 <v-list-item-title>닉네임</v-list-item-title>
               </v-col>
-              <v-col>
+              <v-col cols="7">
                 <v-text-field
                   :rules="nicknameRules"
                   :success-messages="nicknameSuccess"
@@ -61,7 +60,7 @@
                   clearable
                 ></v-text-field>
               </v-col>
-              <v-col md="2">
+              <v-col cols="2">
                 <v-btn text color="primary" width="45px" @click="checkNickname"
                   >중복확인</v-btn
                 >
@@ -69,7 +68,7 @@
             </v-row>
             <!-- 이메일 -->
             <v-row>
-              <v-col md="4">
+              <v-col cols="3">
                 <v-list-item-title>이메일</v-list-item-title>
               </v-col>
               <v-col>
@@ -78,7 +77,7 @@
             </v-row>
             <!-- 내 관심사 -->
             <v-row>
-              <v-col md="4">
+              <v-col cols="4">
                 <v-list-item-title
                   >내 관심사
                   <!-- icon 누를 시 모달 창 pop up-->
@@ -176,7 +175,7 @@
         <v-btn class="text-none" depressed color="primary" @click="onSubmit">
           회원 정보 수정</v-btn
         >
-        <v-col md="1" />
+        <v-col cols="1" />
       </v-row>
     </v-container>
   </v-card>
@@ -232,7 +231,7 @@ export default {
       file: {}, //업로드용 파일
       changeFile: {}, //업로드용 파일
       filePreview: {},
-      formData: "",
+      formData: new FormData(),
       alertMsg: "",
       selectedAllTags: "",
       listInterest:[""],
@@ -253,6 +252,10 @@ export default {
   methods: {
     ...mapActions(userStore, ["getUserInfo", "modifyUser"]),
     onSubmit() {
+      if (!this.nickname && !this.title && this.profile === `http://d3iu4sf4n4i2qf.cloudfront.net/${this.$store.state.userStore.filePath}/${this.$store.state.userStore.fileSavedName}`) {
+        this.alertMsg = "변경사항이 없습니다.";
+        return;
+      }
       if (this.nickname != null && !this.duplicateNicknameCheck) {
         this.alertMsg = "닉네임 중복체크를 해주세요.";
         return;
@@ -261,42 +264,18 @@ export default {
         this.alertMsg = "현재 사용중인 닉네임입니다.";
         return;
       }
-      /* 사진 변경 X */
-      if (
-        this.profile ==
-        "http://d3iu4sf4n4i2qf.cloudfront.net/" +
-          this.$store.state.userStore.filePath +
-          "/" +
-          this.$store.state.userStore.fileSavedName
-      ) {
-        if (this.nickname == null && this.title == null) {
-          this.profile =
-            "http://d3iu4sf4n4i2qf.cloudfront.net/" +
-            this.$store.state.userStore.filePath +
-            "/" +
-            this.$store.state.userStore.fileSavedName;
-          return;
-        }
-        if (this.nickname == null) this.nickname = this.userInfo.user_nickname;
-        if (this.title == null) this.title = this.userInfo.user_title;
-        let formData = new FormData();
-        formData.append("user_nickname", this.nickname);
-        formData.append("user_title", this.title);
-        this.modifyUser({
-          file: formData,
-          token: sessionStorage.getItem("Authorization"),
-        });
-      } else {
-        /* 사진 변경 O */
-        if (this.nickname == null) this.nickname = this.userInfo.user_nickname;
-        if (this.title == null) this.title = this.userInfo.user_title;
-        this.formData.append("user_nickname", this.nickname);
-        this.formData.append("user_title", this.title);
-        this.modifyUser({
-          file: this.formData,
-          token: sessionStorage.getItem("Authorization"),
-        });
+      if (this.nickname == null) {
+        this.nickname = this.userInfo.user_nickname;
       }
+      if (this.title == null) {
+        this.title = this.userInfo.user_title;
+      }
+      this.formData.append("user_nickname", this.nickname);
+      this.formData.append("user_title", this.title);
+      this.modifyUser({
+        file: this.formData,
+        token: sessionStorage.getItem("Authorization"),
+      });
       this.duplicateNicknameCheck = true;
       this.alertMsg = "회원정보가 변경되었습니다.";
       // setTimeout(() => {
@@ -340,9 +319,8 @@ export default {
       // this.disabledTrue = false;
     },
     imageUpload() {
-      let formData = new FormData();
-      formData.append("file", this.$refs.file.files[0]);
-      this.formData = formData;
+      this.formData.append("file", this.$refs.file.files[0]);
+      this.profile = "changed";
       this.changeFile = {
         //실제 파일
         file: this.$refs.file.files,
