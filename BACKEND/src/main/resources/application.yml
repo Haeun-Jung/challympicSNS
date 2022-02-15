@@ -6,8 +6,8 @@ spring:
     password: ssafy
   jpa:
     hibernate:
-      ddl-auto: update
-#      ddl-auto: create
+#      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
 #        show_sql: true
@@ -22,6 +22,9 @@ server:
   port: 7777
   servlet:
     context-path: /challympic
+  tomcat:
+    remoteip:
+      protocol-header: x-forwarded-proto
 
 logging:
   level:
