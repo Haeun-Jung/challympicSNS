@@ -39,14 +39,19 @@ public class FollowApiController {
 
     @GetMapping("/{userNo}/follow/{followerNo}")
     public Result isFollow(@PathVariable("userNo") int user_no, @PathVariable("followerNo") int follow_follower_no){
+        if(user_no == follow_follower_no){
+            return new Result(true, HttpStatus.OK.value(), null, false);
+        }
         boolean follow = followService.isFollow(user_no, follow_follower_no);
+        System.out.println(follow);
+        System.out.println("=============================================================================");
         return new Result(true, HttpStatus.OK.value(), null, follow);
     }
 
     @GetMapping("/{userNo}/follow")
     public Result followCnt(@PathVariable("userNo") int user_no){
-        int followerCnt = followService.followingCnt(user_no); // 나를 팔로우한
-        int followingCnt = followService.followerCnt(user_no); // 내가 팔로우한
+        int followerCnt = followService.followingCnt(user_no); // 피드 주인을 팔로우한
+        int followingCnt = followService.followerCnt(user_no); // 피드 주인이 팔로우한
 
         return new Result(true, HttpStatus.OK.value(), new FollowCnt(followerCnt, followingCnt));
     }

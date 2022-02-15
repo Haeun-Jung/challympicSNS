@@ -9,12 +9,12 @@
   >
     <template v-slot:activator="{ on, attrs }">
       <v-btn icon v-bind="attrs" v-on="on">
-        <div v-if="activeAlert" id="alert-badge"></div>
+        <div v-if="alertList && alertList.length > 0" id="alert-badge"></div>
         <v-icon> mdi-bell-outline </v-icon>
       </v-btn>
     </template>
 
-    <v-card v-if="alertList.length > 0" width="300">
+    <v-card v-if="alertList && alertList.length > 0" width="300">
       <v-list class="overflow-y-auto">
         <v-list-item
           v-for="(item, i) in alertList"
@@ -61,12 +61,6 @@ export default {
       }
       return 300;
     },
-    activeAlert() {
-      if (this.alertMenu.length > 0) {
-        return true;
-      }
-      return false;
-    },
     alertList() {
       return this.$store.state.userStore.alertList;
     },
@@ -101,9 +95,9 @@ export default {
 #alert-badge {
   position: absolute;
   top: 2px;
-  right: 13px;
-  width: 10px;
-  height: 10px;
+  right: 14px;
+  width: 9px;
+  height: 9px;
   background-color: red;
   border-radius: 50%;
   z-index: 1;

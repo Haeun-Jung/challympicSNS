@@ -5,12 +5,12 @@ import com.ssafy.challympic.service.TagService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,5 +44,32 @@ public class TagApiController {
 
     static class tagRequest {
         private List<Integer> tag_noList;
+    }
+
+    @Data
+    static class TagDto{
+        private int tag_no;
+        private String tag_content;
+
+        public TagDto(Tag tag) {
+            this.tag_no = tag.getTag_no();
+            this.tag_content = tag.getTag_content();
+        }
+    }
+
+    @GetMapping("/allTags")
+    public Result getAllTags(){
+        List<Tag> allTagList = tagService.findRecentAllTagList();
+        List<Tag> allTags = new ArrayList<>();
+        for (Tag tag : allTagList) {
+            if(tag.getIsChallenge() == null){
+                allTags.add(tag);
+            }
+        }
+        List<TagDto> TagResponse = allTags.stream()
+                .map(t -> new TagDto(t))
+                .collect(Collectors.toList());
+
+        return new Result(true, HttpStatus.OK.value(), TagResponse);
     }
 }

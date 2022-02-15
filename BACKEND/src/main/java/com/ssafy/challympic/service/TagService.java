@@ -68,4 +68,8 @@ public class TagService {
     public List<Tag> findAllTagList() {
         return tagRepository.findAllTagList();
     }
+
+    public List<Tag> findRecentAllTagList() {
+        return tagRepository.findRecentAllTagList();
+    }
 }

@@ -268,15 +268,11 @@ public class UserApiController {
                     })
                     .collect(Collectors.toList());
         }
-
-        List<UserDto> collect = new ArrayList<>();
         if(userList.size() < 5){
-            collect = userList;
+            return new Result(true, HttpStatus.OK.value(), userList);
         }else {
-            collect = userList.subList(0,6);
+            return new Result(true, HttpStatus.OK.value(), userList.subList(0,5));
         }
-
-        return new Result(true, HttpStatus.OK.value(), collect);
     }
 
     @Data
