@@ -1,10 +1,9 @@
-import { apiInstance } from './index.js';
+import { apiInstance } from "./index.js";
 
 const api = apiInstance();
 
-
 function getChallengeList(success, fail) {
-  api.get('/challympic/challenge').then(success).catch(fail);
+  api.get("/challympic/challenge").then(success).catch(fail);
 }
 
 function getChallenge(challengeNo, success, fail) {
@@ -12,15 +11,33 @@ function getChallenge(challengeNo, success, fail) {
 }
 
 function confirmChallengeName(challenge_title, success, fail) {
-  api.post('/challympic/challenge/confirm', JSON.stringify({ challenge_title })).then(success).catch(fail);
+  api
+    .post("/challympic/challenge/confirm", JSON.stringify({ challenge_title }))
+    .then(success)
+    .catch(fail);
 }
 
 async function createChallenge(challenge, success, fail) {
-  api.post('/challympic/challenge', JSON.stringify(challenge)).then(await success).catch(fail);
+  api
+    .post("/challympic/challenge", JSON.stringify(challenge))
+    .then(await success)
+    .catch(fail);
 }
 
 async function setSubscription(challengeNo, userNo, success, fail) {
-  api.post(`/challympic/challenge/${challengeNo}/subscribe/${userNo}`, JSON.stringify({challengeNo, userNo})).then(await success).catch(fail);
+  api
+    .post(
+      `/challympic/challenge/${challengeNo}/subscribe/${userNo}`,
+      JSON.stringify({ challengeNo, userNo })
+    )
+    .then(await success)
+    .catch(fail);
 }
 
-export { getChallengeList, getChallenge, confirmChallengeName, createChallenge, setSubscription };
+export {
+  getChallengeList,
+  getChallenge,
+  confirmChallengeName,
+  createChallenge,
+  setSubscription,
+};
