@@ -300,7 +300,7 @@ export default {
         console.log("로그아웃");
         sessionStorage.removeItem("Authorization");
         this.$store.commit("userStore/LOGOUT");
-        this.$router.push("/login");
+        this.$router.push("/recent");
       }
     },
     keywordSearch(val) {
@@ -348,7 +348,7 @@ export default {
     },
   },
   created() {
-    console.log("user_no " + this.$store.state.userStore.userInfo.user_no);
+    // console.log("user_no " + this.$store.state.userStore.userInfo.user_no);
     getSearchList(
       (response) => {
         this.obj1 = response.data.data.tagList;

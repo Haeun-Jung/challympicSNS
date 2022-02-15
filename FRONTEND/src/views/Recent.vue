@@ -5,6 +5,7 @@
       :post="post"
       :type="post.challenge_type"
       :key="post.post_no"
+      :user="user"
     ></post-item>
   </div>
 </template>
@@ -15,7 +16,9 @@ export default {
   name: "Recent",
   components: { PostItem },
   data() {
-    return {};
+    return {
+      user: null,
+    };
   },
   computed: {
     recentPostList() {

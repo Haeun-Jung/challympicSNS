@@ -28,8 +28,8 @@ const postStore = {
         return {
           ...post,
           post_content: post.post_content,
-          post_regdate: post.post_regdate.split("T")[0].replace(/-/g, "."),
-        };
+          post_regdate: post.post_regdate.split("T")[0].replace(/-/g, ".")
+        }
       });
       console.log(state.postList);
     },
@@ -39,12 +39,17 @@ const postStore = {
   },
   actions: {
     getRecentPostList({ commit }, userNo) {
+      if (!userNo) {
+        userNo = "";
+        console.log(userNo);
+      }
       getRecentPostList(
         userNo,
         (response) => {
           commit("SET_RECENT_POST_LIST", response.data.data);
         },
-        () => {
+        (error) => {
+          console.log(error);
           console.log("메인 페이지 포스트 가져오기 오류");
         }
       );
@@ -61,7 +66,6 @@ const postStore = {
       );
     },
     createPost(context, { challengeNo, post }) {
-      console.log(context);
       createPost(
         challengeNo,
         post,

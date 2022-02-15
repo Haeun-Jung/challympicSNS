@@ -145,6 +145,12 @@
                 @click="uploadStart()"
                 >챌린지 등록하기</label
               >
+              <label
+                v-else-if="type === 'modify'"
+                class="upload-btn"
+                @click="modifyStart()"
+                >수정하기</label
+              >
               <label v-else class="upload-btn" @click="uploadStart()"
                 >참여하기</label
               >
@@ -159,6 +165,7 @@
 <script>
 import { getChallengeList } from "@/api/challenge.js";
 import FileUpload from "vue-upload-component";
+import { updatePost } from "@/api/post.js";
 
 export default {
   name: "PostUpload",
@@ -179,7 +186,6 @@ export default {
     selectedChallenge: {
       challengeNo: "",
       challengeType: "",
-      challengeName: "",
     },
     post: {
       file: [],
@@ -235,7 +241,7 @@ export default {
       )
         type = "VIDEO";
 
-      if (type !== this.selectedChallenge.challengeType) {
+      if (type !== this.selectedChallenge.challengeType.toUpperCase()) {
         alert(
           "해당 챌린지는 " +
             this.selectedChallenge.challengeType +
@@ -262,7 +268,7 @@ export default {
 
       if (this.propChallenge) {
         // 챌린지 등록에서 넘어온 경우
-        if (type !== this.propChallenge.fileType) {
+        if (type !== this.propChallenge.fileType.toUpperCase()) {
           alert(
             "해당 챌린지는 " +
               this.propChallenge.fileType +
@@ -274,7 +280,7 @@ export default {
         }
       } else if (this.propChallengeName) {
         // 챌린지에 바로 참여하기
-        if (type !== this.propChallengeName.challangeType) {
+        if (type !== this.propChallengeName.challangeType.toUpperCase()) {
           alert(
             "해당 챌린지는 " +
               this.propChallengeName.challangeType +
@@ -285,7 +291,7 @@ export default {
           this.fileType = type;
         }
       } else if (this.selectedChallenge.challengeType) {
-        if (type !== this.selectedChallenge.challengeType) {
+        if (type !== this.selectedChallenge.challengeType.toUpperCase()) {
           alert(
             "해당 챌린지는 " +
               this.selectedChallenge.challengeType +
@@ -298,6 +304,53 @@ export default {
         }
       }
     },
+    modifyStart() {
+      if (this.post.challengeName.length == 0) {
+        this.post.challengeName = this.propChallenge.challengeName;
+      }
+
+      if (
+        !this.post.file[0] &&
+        this.post.challengeNo < 0 &&
+        this.post.description.length == 0
+      ) {
+        this.error = "변경 사항이 없습니다.";
+        return;
+      } else {
+        this.error = false;
+      }
+
+      let formData = new FormData();
+
+      if (this.post.file.length != 0) {
+        formData.append("file", this.post.file[0].file);
+      }
+      formData.append("user_no", this.$store.state.userStore.userInfo.user_no);
+
+      formData.append("post_content", this.post.description);
+
+      console.log(this.post.description);
+
+      let challenge_no = this.propChallenge.challengeNo;
+      let post_no = this.propChallenge.postNo;
+
+      updatePost(
+        challenge_no,
+        post_no,
+        formData,
+        (response) => {
+          console.log(response);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+
+      this.dialog = false;
+      this.$emit("close-challenge-modal");
+      this.$emit("close-modal");
+      // window.location.href = "/recent";
+    },
     uploadStart() {
       // 챌린지명이 prop으로 넘어왔을 경우 처리
       if (this.post.challengeName.length == 0) {
@@ -309,8 +362,6 @@ export default {
           this.post.challengeName = this.selectedChallenge.challengeName;
         }
       }
-
-      console.log("챌린지 네임"+this.post.challengeName);
 
       // 항목들 입력 여부 확인
       if (
@@ -346,6 +397,7 @@ export default {
             ...this.propChallenge,
             endDate,
           };
+
           this.$store.dispatch("challengeStore/createChallengeWithPost", {
             challenge,
             post: formData,
@@ -362,9 +414,9 @@ export default {
         let challengeNo = -1;
         if (this.propChallenge) {
           challengeNo = this.propChallenge.challengeNo;
-        }
-
-        if (this.selectedChallenge) {
+        } else if (this.propChallengeName) {
+          challengeNo = this.propChallengeName.challengeNo;
+        } else if (this.selectedChallenge) {
           challengeNo = this.selectedChallenge.challengeNo;
         }
         this.$store.dispatch("postStore/createPost", {
@@ -377,6 +429,7 @@ export default {
       this.dialog = false;
       this.$emit("close-challenge-modal");
       this.$emit("close-modal");
+      // window.location.href = "/recent";
     },
   },
   created() {
@@ -401,7 +454,7 @@ export default {
       // 챌린지 정보를 가지고 들어올 때
       if (this.propChallenge) {
         this.fileType = this.propChallenge.fileType;
-      } else if (!this.propChallengeName) {
+      } else if (this.propChallengeName) {
         this.fileType = this.propChallengeName.challangeType;
       }
     }

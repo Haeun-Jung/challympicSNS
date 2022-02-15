@@ -1,7 +1,6 @@
 <template>
-  <!-- Post List for each ChallengeList -->
-
   <div class="holder">
+    <!-- Post List for each ChallengeList -->
     <v-carousel-item v-for="(item, idx) in post" :key="item.post_no">
       <div>
         <!-- v-if="isVideo === 'VIDEO'"-->
