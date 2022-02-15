@@ -1,26 +1,26 @@
 <template>
-	<v-card class="hidden-sm-and-down" flat elevation="100">
-		<side-contents />
-	</v-card>
+  <v-card class="hidden-sm-and-down" flat elevation="100">
+    <side-contents />
+  </v-card>
 </template>
 
 <script>
-	import SideContents from "../layout/SideContents.vue";
+import SideContents from "../layout/SideContents.vue";
 
-	export default {
-		name: "Side",
-		components: { SideContents },
+export default {
+  name: "Side",
+  components: { SideContents },
 
-		data() {
-			return {
-				user: false,
-			};
-		},
-	};
+  data() {
+    return {
+      user: false,
+    };
+  },
+};
 </script>
 
 <style scoped>
-	.sticky-card {
-		position: fixed;
-	}
+.sticky-card {
+  position: fixed;
+}
 </style>

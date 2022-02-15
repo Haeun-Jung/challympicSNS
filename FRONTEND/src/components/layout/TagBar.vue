@@ -1,5 +1,5 @@
 <template>
-	<!--
+  <!--
 	<v-toolbar dense fixed elevation="0"  app>
 	<v-app-bar flat dense style="top: 8%" elevation="0" app>
 	<v-app-bar flat dense style= "top: 600px" app elevation="0" class="meow">
@@ -65,7 +65,7 @@
 </script>
 
 <style scoped>
-	.meow {
-		padding: 0;
-	}
+.meow {
+  padding: 0;
+}
 </style>
