@@ -28,8 +28,8 @@ const postStore = {
         return {
           ...post,
           post_content: post.post_content,
-          post_regdate: post.post_regdate.split("T")[0].replace(/-/g, ".")
-        }
+          post_regdate: post.post_regdate.split("T")[0].replace(/-/g, "."),
+        };
       });
       console.log(state.postList);
     },
@@ -69,7 +69,8 @@ const postStore = {
       createPost(
         challengeNo,
         post,
-        () => {},
+        () => {
+        },
         () => {}
       );
     },
