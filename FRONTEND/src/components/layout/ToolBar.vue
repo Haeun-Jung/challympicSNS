@@ -1,6 +1,7 @@
 <template>
 	<!-- 태그바 fixed 잡고 포지션 고정시키면 됨-->
 	<v-app-bar
+		v-if="!isMobile()"
 		fixed
 		flat
 		outlined
@@ -8,27 +9,21 @@
 		:color="$vuetify.theme.dark ? '#424242' : 'grey lighten-4'"
 		app
 	>
-		<v-toolbar-items>
-			<v-app-bar-nav-icon
-				slot="activator"
-				@click.stop="drawer = !drawer"
-				class="hidden-sm-and-up"
-			></v-app-bar-nav-icon>
-		</v-toolbar-items>
-		<!--logo-->
-		<v-toolbar-title class="v-toolbar-title font-weight" @click="goMain"
-			>Challympic</v-toolbar-title
-		>
-		<v-spacer />
-		<div class="main-toolbar-search" v-if="!isMobile()">
-			<desktop-search-bar :tags="tags" @searchInput="childSearch" />
-		</div>
-		<v-spacer></v-spacer>
-		<!--search on small screen -->
-		<div v-if="isMobile()">
-			<mobile-search-bar :tags="tags" />
-		</div>
+		<!--레이아웃 시작  : -->
 
+		<v-spacer />
+		<v-toolbar-title class="v-toolbar-title font-weight" @click="goMain">
+			<v-img
+				src="@/assets/challympic_title.png"
+				width="200px"
+				v-if="!$vuetify.theme.dark"
+			/>
+			<v-img src="@/assets/title_black_theme.png" width="200px" v-else />
+		</v-toolbar-title>
+
+		<v-col cols="1" />
+		<desktop-search-bar :tags="tags" @searchInput="childSearch" />
+		<v-col cols="1" />
 		<v-btn
 			v-if="!isLoggedIn"
 			@click="clickLoginBtn"
@@ -38,8 +33,7 @@
 			x-small
 			>로그인</v-btn
 		>
-
-		<div v-if="!isMobile() && isLoggedIn">
+		<div v-if="isLoggedIn">
 			<!-- 알림 버튼 위치 -->
 			<alert-button />
 			<v-menu bottom left offset-y display="block">
@@ -61,7 +55,43 @@
 				</v-list>
 			</v-menu>
 		</div>
-		<div v-if="isMobile() && isLoggedIn">
+		<v-col cols="2" />
+	</v-app-bar>
+	<!-- 모바일 햄버거 버튼일 때, 사이드로 열리는 컴포넌트-->
+	<v-app-bar
+		v-else
+		fixed
+		flat
+		outlined
+		elevation="0"
+		:color="$vuetify.theme.dark ? '#424242' : 'grey lighten-4'"
+		app
+	>
+		<!--모바일인 경우의 햄버거 버튼 -->
+		<v-toolbar-items>
+			<v-app-bar-nav-icon
+				slot="activator"
+				@click.stop="drawer = !drawer"
+			></v-app-bar-nav-icon>
+		</v-toolbar-items>
+
+		<v-toolbar-title class="v-toolbar-title font-weight" @click="goMain">
+			<!--<v-img src="@/assets/challympic_title.png" width="120px" />-->
+			<!--<v-img src="@/assets/logo.png" width="50px" />-->
+		</v-toolbar-title>
+		<v-spacer />
+		<mobile-search-bar :tags="tags" />
+		<v-btn
+			v-if="!isLoggedIn"
+			@click="clickLoginBtn"
+			color="primary"
+			outlined
+			small
+			x-small
+			>로그인</v-btn
+		>
+
+		<div v-else>
 			<alert-button />
 			<v-menu bottom left offset-y width="300px">
 				<template v-slot:activator="{ on, attrs }">
@@ -82,8 +112,6 @@
 				</v-list>
 			</v-menu>
 		</div>
-
-		<!-- Add a navigation bar -->
 		<v-navigation-drawer
 			hide-overlay
 			v-model="drawer"
@@ -94,7 +122,19 @@
 			class="hidden-sm-and-up"
 			app
 		>
-			<v-card-title><h3>Challympic</h3></v-card-title>
+			<v-card-title>
+				<v-toolbar-title
+					class="v-toolbar-title font-weight mt-5"
+					@click="goMain"
+				>
+					<v-img
+						src="@/assets/challympic_title.png"
+						width="200px"
+						v-if="!$vuetify.theme.dark"
+					/>
+					<v-img src="@/assets/title_black_theme.png" width="200px" v-else />
+				</v-toolbar-title>
+			</v-card-title>
 			<v-container>
 				<side-contents />
 			</v-container>
@@ -313,12 +353,12 @@
 	}
 </script>
 <style>
-	.v-toolbar-title:hover {
+	/*	.v-toolbar-title:hover {
 		cursor: pointer;
 	}
 	.v-text-field {
-		width: 600px;
-	}
+		width: 600;
+	}*/
 	.v-toolbar__content,
 	.v-toolbar__extension {
 		padding: 0;
@@ -357,3 +397,4 @@
 		background-color: #424242;
 	}
 </style>
+ㄴ
