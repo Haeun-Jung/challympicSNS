@@ -66,7 +66,8 @@ public class FollowService {
 
 
     public boolean isFollow(int following_no, int follower_no) {
-        Follow follow = followRepository.findOne(following_no, follower_no);
+        Follow follow = new Follow();
+        follow = followRepository.findOne(following_no, follower_no);
         if(follow != null){
             return true;
         }else {
