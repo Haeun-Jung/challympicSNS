@@ -407,16 +407,6 @@ function renameKeyInObjArray(array, oldKey, newKey, oldKey2, newKey2) {
 .font-weight {
   font-weight: bold;
 }
-#alert-badge {
-  position: absolute;
-  top: 2px;
-  right: 13px;
-  width: 10px;
-  height: 10px;
-  background-color: red;
-  border-radius: 50%;
-  z-index: 1;
-}
 .v-menu__content::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px #5d5d5d;
   background-color: #5d5d5d;
