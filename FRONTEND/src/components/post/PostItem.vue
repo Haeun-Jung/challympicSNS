@@ -170,8 +170,8 @@
 		created() {
 			// console.log("debug-user");
 			// console.log(this.user);
-			// console.log("debug-post");
-			// console.log(this.post);
+			console.log("debug-post");
+			console.log(this.post);
 			// console.log("debug-challengePost");
 			// console.log(this.challengePost);
 		},
@@ -259,6 +259,11 @@
 			},
 			addComment() {
 				console.log("댓글 등록 호출");
+
+				if (this.commentInput.length == 0) {
+					return;
+				}
+
 				let post_no = this.post.post_no;
 				let user_no = this.user.user_no;
 				let comment_content = this.commentInput;
@@ -272,6 +277,7 @@
 						const { data } = response;
 						// TODO: 리턴받은 댓글 정보에 + user_no, user_nickname, user_profile 추가해서 this.post.commentList에 append
 						this.post.commentList.push(data.data);
+						console.log(data.data);
 					},
 					() => {}
 				);

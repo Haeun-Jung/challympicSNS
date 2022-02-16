@@ -70,7 +70,6 @@
 
 <script>
 	import ConfirmReport from "../report/ConfirmReport.vue";
-	//import NickNameModule from "@/components/admin/util/NickNameModule.vue";
 	import {
 		updateComment,
 		deleteComment,
@@ -78,11 +77,7 @@
 		commentReport,
 	} from "@/api/comment.js";
 	export default {
-		components: {
-			ConfirmReport,
-
-			//NickNameModule
-		},
+		components: { ConfirmReport },
 		name: "CommentList",
 		props: {
 			comments: Array,

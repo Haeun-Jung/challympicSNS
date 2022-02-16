@@ -10,6 +10,7 @@
 		>
 			<template v-slot:default="props">
 				<v-row>
+					<!-- <div>{{props.items}}</div> -->
 					<v-col
 						v-for="item in props.items"
 						:key="item.name"
