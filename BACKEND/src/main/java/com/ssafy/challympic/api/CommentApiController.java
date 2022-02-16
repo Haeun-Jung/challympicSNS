@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -154,7 +155,7 @@ public class CommentApiController {
             this.user_no = comment.getUser().getUser_no();
             this.user_nickname = comment.getUser().getUser_nickname();
             if(comment.getUser().getMedia() != null){
-                this.user_profile = comment.getUser().getMedia().getFile_path()+"/"+comment.getUser().getMedia().getFile_savedname();
+                this.user_profile = comment.getUser().getMedia().getFile_path()+File.separator+comment.getUser().getMedia().getFile_savedname();
             }
         }
     }

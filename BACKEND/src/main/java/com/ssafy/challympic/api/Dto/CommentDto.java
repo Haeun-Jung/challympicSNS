@@ -4,6 +4,7 @@ import com.ssafy.challympic.domain.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.io.File;
 import java.util.Date;
 
 @Data
@@ -27,7 +28,8 @@ public class CommentDto {
         this.user_no = comment.getUser().getUser_no();
         this.user_nickname = comment.getUser().getUser_nickname();
         if(comment.getUser().getMedia() != null)
-            this.user_profile = comment.getUser().getMedia().getFile_path() + "/" + comment.getUser().getMedia().getFile_savedname();
+            this.user_profile = comment.getUser().getMedia().getFile_path() +             File.separator
+                    + comment.getUser().getMedia().getFile_savedname();
         this.post_no = comment.getPost().getPost_no();
         this.comment_content = comment.getComment_content();
         this.comment_regdate = comment.getComment_regdate();
