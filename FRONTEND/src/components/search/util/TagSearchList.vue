@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import {postLikeList } from "@/api/post.js"
+import { postLikeList } from "@/api/post.js";
 
 export default {
   name: "TagSearchList",
@@ -114,7 +114,7 @@ export default {
       ],
     };
 
-      this.user = this.$store.state.userStore.userInfo;
+    this.user = this.$store.state.userStore.userInfo;
   },
   data() {
     return {
@@ -167,7 +167,7 @@ export default {
       this.$router.go();
     },
     pushLike() {
-           if (!this.user) {
+      if (!this.user) {
         alert("로그인이 필요한 서비스입니다.");
         return;
       }

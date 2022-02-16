@@ -15,7 +15,7 @@ import {
   getQnA,
   registerQuestion,
   getAlertList,
-  setInterests
+  setInterests,
 } from "@/api/user.js";
 
 const userStore = {
@@ -28,7 +28,7 @@ const userStore = {
     userNickname: "",
     userEmail: "",
     userInfo: null,
-    tempUserEmail: "", 
+    tempUserEmail: "",
     filePath: "",
     fileSavedName: "",
     possibleEmail: false,
@@ -81,9 +81,9 @@ const userStore = {
     DELETE_ALERT(state) {
       state.alertList = null;
     },
-    TEMP_USER_EMAIL(state, tempUserEmail){
+    TEMP_USER_EMAIL(state, tempUserEmail) {
       state.tempUserEmail = tempUserEmail;
-    }
+    },
   },
   actions: {
     async login({ commit, dispatch }, user) {
@@ -125,7 +125,7 @@ const userStore = {
         }
       );
     },
-    async setInterests( state, info){
+    async setInterests(state, info) {
       // console.log("스토어");
       // console.log(info.user_email);
       // console.log(info.interests);
@@ -139,9 +139,8 @@ const userStore = {
           router.push({ name: "Login" });
         },
         (err) => {
-          console.log("조인후 인터레스트 불가")
+          console.log("조인후 인터레스트 불가");
           console.log(err);
-        
         }
       );
     },

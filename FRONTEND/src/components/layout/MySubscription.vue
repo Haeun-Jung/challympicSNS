@@ -69,7 +69,7 @@ export default {
     },
   },
   created() {
-    if(this.$store.state.userStore.userInfo){
+    if (this.$store.state.userStore.userInfo) {
       getSubscription(
         this.$store.state.userStore.userInfo.user_no,
         (response) => {

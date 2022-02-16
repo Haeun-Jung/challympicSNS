@@ -57,6 +57,11 @@ public class ActivityApiController {
 
         // 최신 태그 5개 불러오기
         List<Tag> allTagList = tagService.findRecentAllTagList();
+        if(!allTagList.isEmpty()){
+            allTagList.removeIf(t -> t.getIsChallenge() != null);
+        }
+
+        for(Tag t : allTagList) System.out.println(t.getTag_content());
 
         if(userNo == 0){
             System.out.println("userNo가 0");
@@ -68,12 +73,7 @@ public class ActivityApiController {
             System.out.println("태그가 있어");
 
             for (Tag tag : allTagList) {
-                if(tag.getIsChallenge() == null){
-                    System.out.println("================================================================");
-
-                    System.out.println(tag.getTag_content());
-                    tagDtos.add(new TagDto(tag));
-                }
+                tagDtos.add(new TagDto(tag));
             }
 
             if(tagDtos.size() < 5){
@@ -85,12 +85,14 @@ public class ActivityApiController {
             }
         }else {
             List<Tag> tagResponse = getTagsVer01(userNo);
+            tagResponse.removeIf(t -> t.getIsChallenge() != null);
             List<TagDto> tagDtoResponse = new ArrayList<>();
 
             if (!tagResponse.isEmpty()) {
                 tagDtoResponse = tagResponse.stream()
                         .map(t -> new TagDto(t))
                         .collect(Collectors.toList());
+                for (TagDto t : tagDtoResponse) System.out.println(t.tag_content);
                 return new Result(true, HttpStatus.OK.value(), new ActivityResponse(tagDtoResponse));
             } else {
                 return new Result(true, HttpStatus.OK.value(), null);

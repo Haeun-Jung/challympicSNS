@@ -106,4 +106,8 @@ public class PostService {
         List<CommentLike> commentLikeList = postRepository.findPostLikeByPostNo(post_no);
         return commentLikeList.size();
     }
+
+    public List<Post> getPostByTag(String tag_content) {
+        return postRepository.findPostByTag(tag_content);
+    }
 }

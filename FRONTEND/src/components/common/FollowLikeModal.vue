@@ -11,7 +11,7 @@
           top
           right
           icon
-          @click="$emit('close-dialog');"
+          @click="$emit('close-dialog')"
         >
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -102,8 +102,8 @@ export default {
   },
   data() {
     return {
-      followList: []
-    }
+      followList: [],
+    };
   },
   methods: {
     follow(userNo, idx) {
@@ -146,7 +146,7 @@ export default {
           }
         });
       }
-    }
+    },
   },
 };
 </script>

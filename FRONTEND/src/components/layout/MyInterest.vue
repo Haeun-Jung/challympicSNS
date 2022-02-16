@@ -83,7 +83,7 @@ export default {
     },
   },
   created() {
-    if(this.$store.state.userStore.userInfo){
+    if (this.$store.state.userStore.userInfo) {
       getInterest(this.$store.state.userStore.userInfo.user_no, (response) => {
         this.listInterest = response.data.data;
       });
