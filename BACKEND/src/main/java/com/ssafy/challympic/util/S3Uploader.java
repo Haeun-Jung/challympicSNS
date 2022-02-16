@@ -58,7 +58,7 @@ public class S3Uploader {
         String dateStr = new SimpleDateFormat("yyyyMMdd").format(date);
         String timeStr = new SimpleDateFormat("HHmmss").format(date);
 
-        String savedFileName = new MD5Generator(uploadFile.getName()).toString();
+        String savedFileName = new MD5Generator(uploadFile.getName() + "_" + timeStr).toString();
 
         // 3. 원본 파일 AWS S3의 input 폴더에 업로드
         String inputPath = "input" + "/" + category + "/" + dateStr + "/" + timeStr;
@@ -79,16 +79,17 @@ public class S3Uploader {
 
         } else {
             // 해당 파일을 변환해서 저장
-            if(hlsConverter(uploadFile.getName())){
+            if(hlsConverter(uploadFile.getName(), timeStr)){
                 // HLS 파일로 변환한 파일들이 저장된 경로
-                String convertPath = System.getProperty("user.dir") + "\\files\\" + dateStr + "\\convert";
+                String convertPath = System.getProperty("user.dir") + File.separator + "files" + File.separator
+                        + dateStr + File.separator + "convert";
 
                 // 썸네일 업로드
-                File thumbnail = new File(convertPath + "/" +savedFileName + ".png");
+                File thumbnail = new File(convertPath + File.separator + savedFileName + ".png");
                 upload(thumbnail, outputPath+"/thumbnail", savedFileName+".png");
 
                 // 동영상 파일 업로드
-                convertPath += "\\" + savedFileName;
+                convertPath += File.separator + savedFileName;
                 uploadHLSFolder(convertPath, outputPath+"/video");
 
                 // 5. 원본 파일 제거
@@ -195,17 +196,17 @@ public class S3Uploader {
         Date date = new Date();
         String dateStr = new SimpleDateFormat("yyyyMMdd").format(date);
 
-        String FILE_PATH = System.getProperty("user.dir") + "\\files";
+        String FILE_PATH = System.getProperty("user.dir") + File.separator + "files";
         makeDirectory(FILE_PATH);
 
-        FILE_PATH += "\\" + dateStr;
+        FILE_PATH += File.separator + dateStr;
         makeDirectory(FILE_PATH);
 
-        FILE_PATH += "\\origin";
+        FILE_PATH += File.separator + "origin";
         makeDirectory(FILE_PATH);
 
         // 로컬에 저장된 파일을 읽어옴(실제 파일명)
-        File convertFile = new File(FILE_PATH + "\\" + file.getOriginalFilename());
+        File convertFile = new File(FILE_PATH + File.separator + file.getOriginalFilename());
 
         if(!convertFile.exists()) {
             if(convertFile.createNewFile()) { // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
@@ -221,12 +222,12 @@ public class S3Uploader {
         return Optional.empty();
     }
 
-    public boolean hlsConverter(String fileName){
+    public boolean hlsConverter(String fileName, String var){
         try{
             SimpleDateFormat date = new SimpleDateFormat("yyyyMMdd");
 
-            final String ROOT_DIR = System.getProperty("user.dir") + "\\files\\" + date.format(new Date());
-            final String UPLOAD_DIR = ROOT_DIR + "\\convert";
+            final String ROOT_DIR = System.getProperty("user.dir") + File.separator+  "files" + File.separator + date.format(new Date());
+            final String UPLOAD_DIR = ROOT_DIR + File.separator + "convert";
 
             if(!new File(UPLOAD_DIR).exists()) {
                 new File(UPLOAD_DIR).mkdir();
@@ -234,22 +235,22 @@ public class S3Uploader {
 
             log.info(System.getProperty("user.dir"));
 
-            final String FFMPEG_PATH = "convert_exe\\bin";
+            final String FFMPEG_PATH = "convert_exe" + File.separator + "bin";
             final String FFMPEG = "ffmpeg.exe";
             final String FFPROBE = "ffprobe.exe";
 
-            final String FILEPATH = ROOT_DIR + "\\origin\\" + fileName;    // 저장된 파일 경로
+            final String FILEPATH = ROOT_DIR + File.separator + "origin" + File.separator + fileName;    // 저장된 파일 경로
 //            final String ONLY_FILENAME = fileName.substring(0, fileName.lastIndexOf("."));  // 확장자를 제가함 파일명
-            final String SAVED_FILENAME = new MD5Generator(fileName).toString();
-            String TS_PATH = UPLOAD_DIR + "\\" + SAVED_FILENAME;   // ex) {UPLOAD_DIR}/sample
+            final String SAVED_FILENAME = new MD5Generator(fileName+ "_" + var).toString();
+            String TS_PATH = UPLOAD_DIR + File.separator + SAVED_FILENAME;   // ex) {UPLOAD_DIR}/sample
             File tsPath = new File(TS_PATH); // 파일명으로 폴더 생성
 
             if(!tsPath.exists()) {
                 tsPath.mkdir();
             }
 
-            FFmpeg ffmpeg = new FFmpeg(FFMPEG_PATH + "\\" + FFMPEG);
-            FFprobe ffprobe = new FFprobe(FFMPEG_PATH + "\\" + FFPROBE);
+            FFmpeg ffmpeg = new FFmpeg(FFMPEG_PATH + File.separator + FFMPEG);
+            FFprobe ffprobe = new FFprobe(FFMPEG_PATH + File.separator + FFPROBE);
             FFmpegProbeResult probeResult = ffprobe.probe(FILEPATH);
 
             log.debug("========== VideoFileUtils.getMediaInfo() ==========");
@@ -267,7 +268,7 @@ public class S3Uploader {
             FFmpegBuilder builder = new FFmpegBuilder()
                     .overrideOutputFiles(true) // 오버라이드 여부
                     .setInput(FILEPATH) // 동영상파일
-                    .addOutput(TS_PATH + "\\" + SAVED_FILENAME + ".m3u8")
+                    .addOutput(TS_PATH + File.separator + SAVED_FILENAME + ".m3u8")
                     .addExtraArgs("-profile:v", "baseline") //
                     .addExtraArgs("-level", "3.0") //
                     .addExtraArgs("-start_number", "0") //
@@ -284,7 +285,7 @@ public class S3Uploader {
                     .overrideOutputFiles(true) // 오버라이드 여부
                     .setInput(FILEPATH) // 동영상파일
                     .addExtraArgs("-ss", "00:00:03") // 썸네일 추출 시작점
-                    .addOutput(UPLOAD_DIR + "\\" + SAVED_FILENAME + ".png") // 썸네일 경로
+                    .addOutput(UPLOAD_DIR + File.separator + SAVED_FILENAME + ".png") // 썸네일 경로
                     .setFrames(1) // 프레임 수
                     .done();
 
