@@ -24,6 +24,8 @@ public class CommentApiController {
 
     @PostMapping("/comment")
     public Result save(@RequestBody CommentRequest request){
+        System.out.println("댓글달기");
+        System.out.println(request.getComment_content());
         User findUser = userService.findUser(request.user_no);
         Post findPost = postService.getPost(request.post_no);
         if(findUser == null || findPost == null){
@@ -151,7 +153,9 @@ public class CommentApiController {
             this.comment_regdate = formatter.format(comment.getComment_regdate());
             this.user_no = comment.getUser().getUser_no();
             this.user_nickname = comment.getUser().getUser_nickname();
-            this.user_profile = comment.getUser().getMedia().getFile_path()+"/"+comment.getUser().getMedia().getFile_savedname();
+            if(comment.getUser().getMedia() != null){
+                this.user_profile = comment.getUser().getMedia().getFile_path()+"/"+comment.getUser().getMedia().getFile_savedname();
+            }
         }
     }
 
