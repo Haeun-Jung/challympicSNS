@@ -44,7 +44,7 @@
 											<span v-if="challenge.challenge_official == 'true'"
 												>✅</span
 											>
-											<share-button size="x-large" />
+											<share-button size="x-large" :challenge-no="challenge.challenge_no" />
 											<v-btn
 												v-if="challenge.subscription"
 												@click="subscribe"
@@ -169,8 +169,14 @@
 							<div>
 								<!-- End of Mobile -->
 								<!--Data Iterator -->
+                <battle-item
+									v-if="challenge.challenge_challengers.length === 1"
+									:postList="postList"
+									:type="challenge.challenge_type"
+                  :user="userData"
+								/>
 								<v-data-iterator
-									v-if="postList.length != 2"
+									v-else
 									:items="postList"
 									:items-per-page.sync="itemsPerPage"
 									:sort-by="sortBy"
@@ -198,18 +204,14 @@
 										<post-item
 											v-for="post in props.items"
 											:post="post"
+                      :challengeNo="challenge.challenge_no"
 											:type="challenge.challenge_type"
 											:key="post.post_no"
 											:user="userData"
 										></post-item>
 									</template>
 								</v-data-iterator>
-								<battle-item
-									v-else
-									:postList="postList"
-									:type="challenge.challenge_type"
-                  :user="userData"
-								/>
+								
 							</div>
 							<confirm-report
 								:confirm-report-dialog="confirmReportDialog"
@@ -373,6 +375,9 @@
 					.filter((word) => {
 						return word.startsWith("#");
 					});
+        if (this.challenge.challenge_challengers.length === 1) {
+          splitedContent.push("#1:1");
+        }
 				if (splitedContent.length > 0) {
 					return splitedContent;
 				} else {

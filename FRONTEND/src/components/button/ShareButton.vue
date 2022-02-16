@@ -27,6 +27,7 @@
 		name: "ShareButton",
 		props: {
 			postNo: Number,
+      challengeNo: Number,
 		},
 		data() {
 			return {
@@ -41,10 +42,8 @@
 				// 크로스 브라우징 이슈 때문에 execCommand 메서드를 사용했습니다.
 				const inputTag = document.createElement("input");
 				document.body.appendChild(inputTag);
-				inputTag.value = window.document.location.href;
-				if (inputTag.value[inputTag.value.length - 1] === "#") {
-					inputTag.value = inputTag.value.split("#")[0];
-				}
+				// inputTag.value = window.document.location.href;
+        inputTag.value = window.location.origin + "/challenge/" + this.challengeNo;
 				if (this.postNo) {
 					inputTag.value += `#${this.postNo}`;
 				}
