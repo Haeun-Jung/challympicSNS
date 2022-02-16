@@ -57,7 +57,7 @@
 	export default {
 		name: "MobileSearchBar",
 		props: {
-			tags: Object,
+			tags: Array,
 		},
 		data() {
 			return {
@@ -84,6 +84,9 @@
 			mobiletest() {
 				if (this.mobileSearch.trim().length > 0) this.dynamicArr = this.tags;
 				else if (this.mobileSearch.length == 0) this.dynamicArr = this.empty;
+			},
+			onClickOutside() {
+				this.active = false;
 			},
 			mobileKeywordSearch() {
 				var to = this.mobileSearchInput.substring(1);
