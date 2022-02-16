@@ -1,6 +1,7 @@
 <template>
 	<v-card
 		height="100%"
+		min-height="100vh"
 		width="100%"
 		class="justify-center mobile-profile-delete-user-container"
 	>
