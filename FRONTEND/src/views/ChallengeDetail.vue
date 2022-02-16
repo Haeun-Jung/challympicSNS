@@ -194,6 +194,7 @@
 									v-else
 									:postList="postList"
 									:type="challenge.challenge_type"
+                  :user="userData"
 								/>
 							</div>
 							<confirm-report
