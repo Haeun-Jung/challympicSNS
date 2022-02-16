@@ -162,6 +162,7 @@
 				challengePost: {
 					challengeName: "",
 					fileType: "",
+          post_content: "",
 					challengeNo: "",
 					fileNo: "",
 				},

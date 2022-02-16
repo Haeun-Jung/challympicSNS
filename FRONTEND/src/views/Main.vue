@@ -1,7 +1,6 @@
 <template>
 	<v-main>
 		<tag-bar />
-		<fab-button />
 		<v-container fluid>
 			<v-layout row>
 				<!-- 패딩pr-16 16준게 최선..사이드바 어디에놔도이상함..-->
@@ -41,8 +40,8 @@
 <script>
 	import TagBar from "../components/layout/TagBar.vue";
 	import Side from "../components/layout/Side.vue";
-	import FabButton from "../components/button/FabButton.vue";
+
 	export default {
-		components: { TagBar, Side, FabButton },
+		components: { TagBar, Side },
 	};
 </script>
