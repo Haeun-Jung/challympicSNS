@@ -16,10 +16,10 @@
     </div>
     <v-row>
       <v-col cols="12" md="6">
-        <post-item :post="postList[0]" :type="type" />
+        <post-item :post="postList[0]" :type="type" :user="user"/>
       </v-col>
       <v-col cols="12" md="6">
-        <post-item :post="postList[1]" :type="type" />
+        <post-item :post="postList[1]" :type="type" :user="user"/>
       </v-col>
     </v-row>
   </div>
@@ -33,6 +33,7 @@ export default {
   props: {
     type: String,
     postList: Array,
+    user: Object,
   },
   computed: {
     value() {

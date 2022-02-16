@@ -56,7 +56,7 @@
 				</v-btn>
 			</span>
 			<span>
-				<share-button :post-no="post.post_no" />
+				<share-button :post-no="post.post_no" :challenge-no="post.challenge_no > 0 ? post.challenge_no : challengeNo" />
 			</span>
 		</v-card-text>
 		<v-card-text class="py-2">
@@ -150,6 +150,7 @@
 		props: {
 			type: String,
 			post: Object,
+      challengeNo: Number,
 			user: Object,
 		},
 		data() {
@@ -162,6 +163,7 @@
 				challengePost: {
 					challengeName: "",
 					fileType: "",
+          post_content: "",
 					challengeNo: "",
 					fileNo: "",
 				},

@@ -253,7 +253,9 @@ public class UserApiController {
         List<User> allUser = userService.findAllUser();
         List<Kings> kings = new ArrayList<>();
         for (User user : allUser) {
-            kings.add(new Kings(user.getUser_no(), postService.getPostListByUserNo(user.getUser_no()).size() ));
+            if(user.getUser_no() != 1){
+                kings.add(new Kings(user.getUser_no(), postService.getPostListByUserNo(user.getUser_no()).size() ));
+            }
         }
 
         Collections.sort(kings);
