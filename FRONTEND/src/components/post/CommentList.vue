@@ -8,7 +8,7 @@
     </v-card-text> -->
 		<!-- <v-divider></v-divider> -->
 		<v-card-text
-			v-for="comment in comments"
+			v-for="(comment, idx) in comments"
 			class="content-and-btns py-2"
 			:key="comment.comment_no"
 		>
@@ -59,8 +59,21 @@
 					</v-btn>
 				</span>
 				<span v-else>
-					<v-btn @click="likeComment(comment.comment_no)" icon>
+					<!--
+        		<v-btn
+						@click="likeComment(comment.comment_no, comment.like_cnt)"
+						icon
+					>
 						<v-icon :class="{ 'active-like-btn': comment.isLiked }" small>
+							mdi-heart-outline
+						</v-icon>
+					</v-btn>
+          -->
+					<v-btn @click="pushLike(comment.comment_no, idx)" icon>
+						<v-icon
+							:color="comment.isLiked ? 'red' : 'grey lighten-3'"
+							size="32"
+						>
 							mdi-heart-outline
 						</v-icon>
 					</v-btn>
@@ -116,6 +129,22 @@
 			likeComment(comment_no) {
 				// 댓글 좋아요 API 호출
 				// emit event => 현재 comment에 대한 isLiked 값 수정
+				commentLike(
+					this.$store.state.userStore.userInfo.user_no,
+					comment_no,
+					(response) => {
+						console.log(response);
+					}
+				);
+			},
+			pushLike(comment_no, arrIdx) {
+				console.log(comment_no);
+				this.comments[arrIdx].isLiked = !this.comments[arrIdx].isLiked;
+				if (this.comments[arrIdx].isLiked) {
+					this.comments[arrIdx].like_cnt++;
+				} else {
+					this.comments[arrIdx].like_cnt--;
+				}
 				commentLike(
 					this.$store.state.userStore.userInfo.user_no,
 					comment_no,
