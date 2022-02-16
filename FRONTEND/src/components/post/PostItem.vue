@@ -16,6 +16,9 @@
 					alt="profile img"
 				/>
 				<nick-name-module :itemno="post.user_no" :item="post.user_nickname" />
+        <v-btn color="#3396f4" dark small class="ml-2" style="width: 10%" title="챌린지 보기" @click="goChallengeEvent(post.challenge_no)">
+          <v-icon dark>mdi-arrow-right</v-icon>
+        </v-btn>
 			</div>
 			<!-- 'nickname'을 현재 로그인한 유저의 닉네임으로 수정 -->
 			<div v-if="this.user">
@@ -81,7 +84,14 @@
 			<span
 				:class="[$vuetify.theme.dark ? 'dark-mode-text' : 'black-text']"
 				v-html="$options.filters.hashAnchor(this.post.post_content)"
-			></span>
+			>
+      </span>
+      <!-- <span
+				:class="[$vuetify.theme.dark ? 'dark-mode-text' : 'black-text']"
+        v-bind="$options.filters.hashAnchor(this.post.post_content)" 
+      >
+      </span> -->
+      
 			<p>{{ post.post_regdate }}</p>
 		</v-card-text>
 		<v-divider />
@@ -122,12 +132,10 @@
 			type="modify"
 		></post-upload>
 
-		<follow-like-modal
-			v-if="likeDialog"
-			:users="likeList"
-			:type="dialogType"
+		<like-modal
 			@close-dialog="toggleLikeDialog"
-			:propChallenge="challenge"
+			:likeUserList="userLikeList"
+      :dialog="likeDialog"
 		/>
 	</v-card>
 </template>
@@ -135,12 +143,12 @@
 <script>
 	import PostImage from "./PostImage.vue";
 	import Player from "./Player.vue";
-	import FollowLikeModal from "../common/FollowLikeModal.vue";
+	import LikeModal from "../common/LikeModal.vue";
 	import CommentList from "./CommentList.vue";
 	import ShareButton from "../button/ShareButton.vue";
 	import { createComment } from "@/api/comment.js";
 	import PostUpload from "@/components/upload/PostUpload.vue";
-	import { deletePost, postLikeList } from "@/api/post.js";
+	import { deletePost, postLikeList, getLikeList } from "@/api/post.js";
 	import NickNameModule from "@/components/admin/util/NickNameModule.vue";
 
 	export default {
@@ -148,7 +156,7 @@
 		components: {
 			PostImage,
 			Player,
-			FollowLikeModal,
+			LikeModal,
 			CommentList,
 			ShareButton,
 			PostUpload,
@@ -174,6 +182,7 @@
 					challengeNo: "",
 					fileNo: "",
 				},
+        userLikeList: [],
 			};
 		},
 		created() {
@@ -184,12 +193,11 @@
 			// console.log("debug-challengePost");
 			// console.log(this.challengePost);
 		},
-		computed: {
-			likeList() {
-				return this.$store.state.postStore.likeList;
-			},
-		},
 		methods: {
+      goChallengeEvent(challenge_no){
+        event.preventDefault;
+        this.$router.push({ name: `ChallengeDetail`, params: {challengeNo: challenge_no}});
+      },
 			like(post) {
 				if (!this.user) {
 					alert("로그인이 필요한 서비스입니다.");
@@ -226,10 +234,14 @@
 			toggleLikeDialog() {
 				this.likeDialog = !this.likeDialog;
 				if (this.likeDialog) {
-					this.$store.dispatch("postStore/getLikeList", {
-						postNo: this.post.post_no,
-						userNo: this.$store.state.userStore.userInfo.user_no,
-					});
+            
+          getLikeList(this.post.post_no, this.$store.state.userStore.userInfo.user_no,
+          (response) => {
+            this.userLikeList = response.data.data;
+          },
+          (error) => {
+            console.log(error);
+          });
 				}
 			},
 			editPost() {
@@ -286,7 +298,8 @@
 						const { data } = response;
 						// TODO: 리턴받은 댓글 정보에 + user_no, user_nickname, user_profile 추가해서 this.post.commentList에 append
 						this.post.commentList.push(data.data);
-						console.log(data.data);
+            console.log("createComment");
+            console.log(data.data);
 					},
 					() => {}
 				);
@@ -299,14 +312,14 @@
 				if (!str.includes("#") && !str.includes("@")) {
 					return str;
 				}
+
+        // #있는 키워드를 
 				str = str.replace(
 					/#[^\s]+/g,
-					'<a class="text-decoration-none" href="http://192.168.0.8:8080/search/$&">$&</a>'
+					// '<post-content-tag :keyword="$&"></post-content-tag>'
+          '<a class="text-decoration-none" href="/search/$&">$&</a>'
+
 				);
-				// str = str.replace(
-				//   /#[^\s]+/g,
-				//   '<a class="text-decoration-none" href="http://i6b101.p.ssafy.io/search/$&">$&</a>'
-				// );
 				return str.replace(/\/#/g, "/");
 			},
 		},
@@ -346,4 +359,5 @@
 		display: flex;
 		align-items: center;
 	}
+
 </style>
