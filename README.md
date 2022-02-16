@@ -53,6 +53,7 @@
 ### 📌 Main
 - 태그와 사용자 검색 가능
 - 인기 챌린지와 도전왕 확인 가능
+
 ![main](https://user-images.githubusercontent.com/53832553/154306212-e573c27f-5cf3-4440-8376-b7da3e920280.png)
 
 ---
@@ -62,6 +63,7 @@
 - 챌린지에 참여된 포스트 확인 가능
 - 챌린지 구독 가능
 - 포스트 좋아요, 댓글 가능
+
 ![ChallengeDetail](https://user-images.githubusercontent.com/53832553/154307326-8f2b0f5a-8b45-45ca-a747-7f7ad0455005.png)
 
 ---
@@ -72,6 +74,7 @@
 - 종료일 지정
 - 파일 형식 지정
 - 챌린지 생성자는 포스트 업로드 필수
+
 ![ChallengeUpload](https://user-images.githubusercontent.com/53832553/154306702-5d11b7e0-5e38-445f-b894-34fa40a9bf9b.png)
 
 ---
@@ -79,6 +82,7 @@
 ### 📌 Post Upload
 - 챌린지 지정
 - 포스트 업로드
+
 ![Post_Upload](https://user-images.githubusercontent.com/53832553/154306940-5e1aedd8-4f07-4638-91ae-142249120df9.png)
 
 ---
@@ -88,18 +92,21 @@
 - 참여하거나 좋아요한 포스트 확인 가능
 - 만들거나 구독한 챌린지 확인 가능
 - 팔로우, 팔로워 확인
+
 ![UserFeed](https://user-images.githubusercontent.com/53832553/154307634-d8e5e74a-b74f-47e8-ad4f-13d557e77501.png)
 
 ---
 
 ### 📌 Dark Mode
 - 모든 페이지 다크 모드 구현
+
 ![DarkMode](https://user-images.githubusercontent.com/53832553/154307808-fd2701f5-ceb0-4ce1-a4cd-1173bae2c4f4.png)
 
 ---
 
 ### 📌 Mobile
 - 모든 페이지 모바일 환경 최적화
+
 ![Mobile](https://user-images.githubusercontent.com/53832553/154308231-39ed3fab-47ee-4981-b076-37428af41cd4.png)
 
 <br>
@@ -130,7 +137,7 @@
 <br>
 
 ## 🍏 API
-[API 명세서](https://documenter.getpostman.com/view/18058395/UVkgyesU)
+### [API 명세서](https://documenter.getpostman.com/view/18058395/UVkgyesU)
 
 <br>
 
