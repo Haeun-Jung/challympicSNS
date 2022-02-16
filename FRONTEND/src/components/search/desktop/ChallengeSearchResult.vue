@@ -10,7 +10,6 @@
 		>
 			<template v-slot:default="props">
 				<v-row>
-					<!-- <div>{{props.items}}</div> -->
 					<v-col
 						v-for="item in props.items"
 						:key="item.name"
@@ -159,7 +158,7 @@
 	// import ChallengeList from "../util/ChallengeList.vue";
 	import { searchTagList } from "@/api/search.js";
 	import { setSubscription } from "@/api/challenge.js";
-	import { setLike } from "@/api/post.js";
+	import { postLikeList } from "@/api/post.js";
 	import VideoComponent from "../util/VideoComponent.vue";
 
 	export default {
@@ -186,24 +185,36 @@
 				);
 			},
 			pushLike(post) {
-				console.log(post);
-				setLike(
-					post.post_no,
-					post.user_no,
-					(response) => {
-						console.log(response);
-						// post.isLike = !post.isLike;
-					},
-					(error) => {
-						console.log(error);
-					}
-				);
+				if (this.$store.state.userStore.userInfo.user_no == 0) {
+					alert("로그인이 필요한 서비스입니다.");
+					return;
+				}
+
+			// 좋아요 API 요청
+			if (post.isLike && post.post_like_count > 0) {
+				// 클릭된 상태
+				post.post_like_count -= 1;
+			} else {
+				post.post_like_count += 1;
+			}
+
+			post.isLike = !post.isLike;
+
+			postLikeList(
+				post.post_no,
+				post.user_no,
+				(response) => {
+				console.log(response);
+				},
+				(error) => {
+				console.log(error);
+				}
+			);
 			},
 		},
 		created() {
 			const user_no = this.$store.state.userStore.userInfo.user_no;
 			const tag_content = this.search.substring(1);
-			console.log("user_no : " + this.$store.state.userStore.userInfo.user_no);
 			searchTagList(
 				{ user_no, tag_content },
 				(response) => {
