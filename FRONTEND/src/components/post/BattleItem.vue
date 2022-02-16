@@ -1,27 +1,33 @@
 <template>
   <div>
     <!-- 게이지바 -->
-    <div class="gauge-items my-3">
-      <strong class="ml-auto nickname">{{ postList[0].user_nickname }}</strong>
-      <v-progress-linear
-        background-color="#3396F4"
-        color="pink lighten-1"
-        :value="value"
-        height="17px"
-      >
-        <strong>{{ postList[0].likeCnt }}</strong>
-        <strong>{{ postList[1].likeCnt }}</strong>
-      </v-progress-linear>
-      <strong class="mr-auto nickname">{{ postList[1].user_nickname }}</strong>
+    <div v-if="postList.length > 1">
+      <div class="gauge-items my-3">
+        <strong class="ml-auto nickname">{{ postList[0].user_nickname }}</strong>
+        <v-progress-linear
+          background-color="#3396F4"
+          color="pink lighten-1"
+          :value="value"
+          height="17px"
+        >
+          <strong>{{ postList[0].likeCnt }}</strong>
+          <strong>{{ postList[1].likeCnt }}</strong>
+        </v-progress-linear>
+        <strong class="mr-auto nickname">{{ postList[1].user_nickname }}</strong>
+      </div>
+      <v-row>
+        <v-col cols="12" md="6">
+          <post-item :post="postList[0]" :type="type" :user="user"/>
+        </v-col>
+        <v-col cols="12" md="6">
+          <post-item :post="postList[1]" :type="type" :user="user"/>
+        </v-col>
+      </v-row>
     </div>
-    <v-row>
-      <v-col cols="12" md="6">
-        <post-item :post="postList[0]" :type="type" :user="user"/>
-      </v-col>
-      <v-col cols="12" md="6">
-        <post-item :post="postList[1]" :type="type" :user="user"/>
-      </v-col>
-    </v-row>
+    <div v-else>
+      <v-chip class="info-text">아직 참여하지 않은 챌린저가 있습니다.</v-chip>
+      <post-item :post="postList[0]" :type="type" :user="user"/>
+    </div>
   </div>
 </template>
 
@@ -63,5 +69,8 @@ export default {
   justify-content: space-between;
   padding: 0 0.5rem;
   color: white;
+}
+.info-text {
+  margin-top: 0.5rem;
 }
 </style>

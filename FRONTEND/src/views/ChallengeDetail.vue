@@ -143,6 +143,16 @@
 										>
 											{{ tag }}
 										</v-chip>
+										<v-chip
+											v-for="challenger in challenge.challenge_challengers"
+											:key="challenger.user_no"
+											class="mt-6 ml-4 challenge-chip"
+											color="#3396F4"
+                      outlined
+                      @click="clickUser(challenger.user_no)"
+										>
+											@{{ challenger.user_nickname }}
+										</v-chip>
 									</v-list-item-subtitle>
 
 									<v-card-subtitle>
@@ -152,17 +162,7 @@
 											"
 										></span>
 									</v-card-subtitle>
-                  					<v-list-item-subtitle>
-										<v-chip
-											v-for="challenger in challenge.challenge_challengers"
-											:key="challenger.user_no"
-											class="mt-6 ml-4 challenge-chip"
-											color="#3396F4"
-                      						outlined
-                      						@click="clickUser(challenger.user_no)"
-										>
-											@{{ challenger.user_nickname }}
-										</v-chip>
+                  <v-list-item-subtitle>
 									</v-list-item-subtitle>
 								</v-main>
 							</v-layout>
