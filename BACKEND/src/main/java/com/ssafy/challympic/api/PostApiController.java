@@ -175,15 +175,16 @@ public class PostApiController {
             postDto.setFile_savedname(post.getMedia().getFile_savedname());
 
             // 좋아요 수
-            if(postLikeList == null){
+            if(postLikeList.size() == 0){
                 postDto.setLikeCnt(0);
             } else{
                 postDto.setLikeCnt(postLikeList.size());
             }
 
             if(userNo != null) {
-                boolean isLike = postService.getPostLikeByPostNoAndUserNo(post.getPost_no(), user.getUser_no());
+                boolean isLike = postService.getPostLikeByPostNoAndUserNo(post.getPost_no(), userNo);
                 postDto.setIsLike(isLike);
+                log.info("istLike : " + isLike);
 
                 List<Comment> comments = commentService.findByPost(post.getPost_no());
                 List<CommentDto> commentList = comments.stream()
@@ -499,6 +500,8 @@ public class PostApiController {
     @DeleteMapping("/post/{postNo}")
     public Result delete(@PathVariable("postNo") int postNo){
 
+        log.info("postNo : "+ postNo);
+
         Post post = postService.getPost(postNo);
 
         Media media = post.getMedia();
@@ -506,6 +509,13 @@ public class PostApiController {
         s3Uploader.deleteS3(media.getFile_path());
 
         mediaService.delete(media.getFile_no());
+
+        List<PostTag> ptl = tagService.findPostTagList(postNo);
+
+        for(PostTag pt : ptl){
+            log.info("post_tag_no : " + pt.getPost_tag_no());
+            tagService.deletePostTag(pt);
+        }
 
         postService.delete(postNo);
 

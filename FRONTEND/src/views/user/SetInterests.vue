@@ -50,17 +50,17 @@ export default {
   methods: {
     saveInterests(event){
       event.preventDefault();
-      console.log("유저 이메일");
-      console.log(this.$store.state.userStore.tempUserEmail);
-      console.log(this.selectInterests);
+      // console.log("유저 이메일");
+      // console.log(this.$store.state.userStore.tempUserEmail);
+      // console.log(this.selectInterests);
       this.$store.dispatch("userStore/setInterests", {user_email: this.$store.state.userStore.tempUserEmail, interests: this.selectInterests});
     }
   },
   created(){
     getAllInterest(
       (response) => {
-        console.log("전체 태그");
-        console.log(response.data);
+        // console.log("전체 태그");
+        // console.log(response.data);
         this.tagList = response.data.data;
       }
     )

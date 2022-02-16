@@ -2,9 +2,7 @@ package com.ssafy.challympic.api;
 
 import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.service.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -141,6 +139,9 @@ public class CommentApiController {
         private int like_cnt;
         private String comment_regdate;
         private int comment_report;
+        private int user_no;
+        private String user_nickname;
+        private String user_profile;
 
         public CommentDto(Comment comment) {
             this.comment_no = comment.getComment_no();
@@ -148,6 +149,9 @@ public class CommentApiController {
             this.comment_report = comment.getComment_report();
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             this.comment_regdate = formatter.format(comment.getComment_regdate());
+            this.user_no = comment.getUser().getUser_no();
+            this.user_nickname = comment.getUser().getUser_nickname();
+            this.user_profile = comment.getUser().getMedia().getFile_path()+"/"+comment.getUser().getMedia().getFile_savedname();
         }
     }
 
@@ -178,4 +182,5 @@ public class CommentApiController {
             this.data = data;
         }
     }
+
 }

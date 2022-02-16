@@ -53,6 +53,10 @@ public class TagRepository {
 //        em.flush();
     }
 
+    public void deletePostTag(PostTag pt){
+        em.remove(pt);
+    }
+
     public void savePostTag(PostTag postTag) {
         em.persist(postTag);
     }
