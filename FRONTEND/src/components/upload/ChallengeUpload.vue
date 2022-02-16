@@ -236,6 +236,9 @@ export default {
       }
     },
     uploadPost() {
+      this.challenge.challengers = this.challenge.challengers.length > 0 ? this.challenge.challengers.split("@") : [];
+      console.log("챌린저");
+      console.log(this.challenge.challengers);
       if (!this.possibleChallengeName) {
         this.clickNextBtn = true;
         return;

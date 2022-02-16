@@ -25,6 +25,7 @@ public class SearchApiController {
     private final PostService postService;
     private final CommentService commentService;
     private final SubscriptionService subscriptionService;
+    private final ActivityService activityService;
     private final PostLikeService postLikeService;
 
     @GetMapping("/search")
@@ -78,14 +79,21 @@ public class SearchApiController {
                 searchService.saveSearchRecord("#" + request.tag_content, user);
             }
 
-            Tag findTag = tagService.findTagByTagContent("#" + request.tag_content);
-
-            if(findTag.getIsChallenge() != null) {
-                SearchChallenge searchChallenge = new SearchChallenge();
-                searchChallenge.setChallenge(challengeService.findChallengeByTitle(request.tag_content).get(0)); //TODO
-                searchChallenge.setUser(user);
-                searchService.saveSearchChallenge(searchChallenge);
+            List<Challenge> tagContainChallenges = challengeService.findChallengesByTag("#" + request.tag_content);
+            for(Challenge c : tagContainChallenges) {
+                SearchChallenge sc = new SearchChallenge();
+                sc.setUser(user);
+                sc.setChallenge(c);
+                searchService.saveSearchChallenge(sc);
             }
+        }
+
+        List<Post> tagContainPost = postService.getPostByTag(request.tag_content);
+        for(Post p : tagContainPost) {
+            Activity activity = new Activity();
+            activity.setPost_no(p.getPost_no());
+            activity.setUser_no(request.getUser_no());
+            activityService.saveActivity(activity);
         }
 
         return new Result(true, HttpStatus.OK.value(), data);

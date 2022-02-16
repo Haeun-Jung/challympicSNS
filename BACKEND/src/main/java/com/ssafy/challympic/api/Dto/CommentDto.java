@@ -20,6 +20,7 @@ public class CommentDto {
     private int like_cnt;
     private int comment_report;
     private boolean IsLiked;
+    private int file_no;
 
     public CommentDto(Comment comment, boolean IsLiked) {
         this.comment_no = comment.getComment_no();
@@ -34,5 +35,6 @@ public class CommentDto {
         this.like_cnt = comment.getCommentLike().size();
         this.comment_report = comment.getComment_report();
         this.IsLiked = IsLiked;
+
     }
 }
