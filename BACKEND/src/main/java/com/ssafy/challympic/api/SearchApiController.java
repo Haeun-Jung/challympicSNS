@@ -26,6 +26,7 @@ public class SearchApiController {
     private final CommentService commentService;
     private final SubscriptionService subscriptionService;
     private final ActivityService activityService;
+    private final PostLikeService postLikeService;
 
     @GetMapping("/search")
     public Result getSearchList() {
@@ -60,12 +61,12 @@ public class SearchApiController {
         List<ChallengeDto> challengeList = challenges.stream()
                 .map(c -> {
                     List<Post> postListByChallengeNo = postService.getPostList(c.getChallenge_no());
-                    List<PostDto> postList = postToDto(postListByChallengeNo);
+                    List<PostDto> postList = postToDto(postListByChallengeNo, request.user_no);
                     boolean isSubscription = subscriptionService.findSubscriptionByChallengeAndUser(c.getChallenge_no(), c.getUser().getUser_no()) != null;
                     return new ChallengeDto(c, postList, isSubscription);
                 })
                 .collect(Collectors.toList());
-        List<PostDto> postList = postToDto(posts);
+        List<PostDto> postList = postToDto(posts, request.getUser_no());
 
         Map<String, List> data = new HashMap<>();
         data.put("challengeList", challengeList);
@@ -99,14 +100,14 @@ public class SearchApiController {
         return new Result(true, HttpStatus.OK.value(), data);
     }
 
-    private List<PostDto> postToDto(List<Post> posts) {
+    private List<PostDto> postToDto(List<Post> posts, Integer userNo) {
         return posts.stream()
                 .map(p -> {
                     String challengeTitle = challengeService.findChallengeByChallengeNo(p.getChallenge_no()).getChallenge_title();
-                    int postLikeCount = postService.getPostLikeCountByPostNo(p.getPost_no());
+                    List<PostLike> postLikeList = postLikeService.getPostLikeListByPostNo(p.getPost_no());
                     int commentCount = commentService.postCommentCnt(p.getPost_no());
-                    boolean isLike = postService.getPostLikeByPostNoAndUserNo(p.getPost_no(), p.getUser().getUser_no());
-                    return new PostDto(p,challengeTitle, postLikeCount, commentCount, isLike);
+                    boolean isLike = postService.getPostLikeByPostNoAndUserNo(p.getPost_no(), userNo);
+                    return new PostDto(p,challengeTitle, postLikeList.size(), commentCount, isLike);
                 })
                 .collect(Collectors.toList());
     }

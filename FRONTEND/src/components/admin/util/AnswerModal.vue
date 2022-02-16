@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <v-dialog
     v-model="dialogNote[item.qna_no]"
     scrollable
@@ -31,6 +32,40 @@
             <v-icon>mdi-calendar-month</v-icon>
             {{ item.qna_question_regdate }}
             <!--	<v-icon>mdi-clipboard-text-outline</v-icon>
+=======
+	<v-dialog
+		v-model="dialogNote[item.qna_no]"
+		scrollable
+		lazy
+		max-width="500"
+		persistent
+		:key="item.qna_no"
+	>
+		<v-card>
+			<v-card-title class="lighten-2 card-title-align">
+				답변
+				<v-btn
+					class="cancel-btn"
+					absolute
+					top
+					right
+					icon
+					@click.stop="$set(dialogNote, item.qna_no, false)"
+				>
+					<v-icon>mdi-close</v-icon>
+				</v-btn>
+			</v-card-title>
+			<v-divider />
+			<div class="mx-6">
+				<v-list class="overflow-y-auto">
+					<v-list-item-title class="ma-2 ml-2 pr-2">
+						[문의 제목] {{ item.qna_title }}
+					</v-list-item-title>
+					<v-list-item-subtitle class="ma-2 ml-2 grey--text">
+						<v-icon>mdi-calendar-month</v-icon>
+						{{ item.qna_question_regdate }}
+						<!--	<v-icon>mdi-clipboard-text-outline</v-icon>
+>>>>>>> a014fa4771d1067af18b61e94217d8ace066a5a6
 						{{ item.user_nickname }}-->
           </v-list-item-subtitle>
           <v-sheet

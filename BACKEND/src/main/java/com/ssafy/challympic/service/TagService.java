@@ -57,6 +57,8 @@ public class TagService {
         tagRepository.savePostTag(postTag);
     }
 
+    public void deletePostTag(PostTag postTag){ tagRepository.deletePostTag(postTag);}
+
     public List<Tag> findPostTagListByPostNo(int postNo) {
         return tagRepository.findPostTagListByPostNo(postNo);
     }

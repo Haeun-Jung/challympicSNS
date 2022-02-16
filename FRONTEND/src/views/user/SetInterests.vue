@@ -44,6 +44,7 @@ export default {
   methods: {
     saveInterests(event) {
       event.preventDefault();
+<<<<<<< HEAD
       console.log("유저 이메일");
       console.log(this.$store.state.userStore.tempUserEmail);
       console.log(this.selectInterests);
@@ -60,6 +61,23 @@ export default {
       this.tagList = response.data.data;
     });
   },
+=======
+      // console.log("유저 이메일");
+      // console.log(this.$store.state.userStore.tempUserEmail);
+      // console.log(this.selectInterests);
+      this.$store.dispatch("userStore/setInterests", {user_email: this.$store.state.userStore.tempUserEmail, interests: this.selectInterests});
+    }
+  },
+  created(){
+    getAllInterest(
+      (response) => {
+        // console.log("전체 태그");
+        // console.log(response.data);
+        this.tagList = response.data.data;
+      }
+    )
+  }
+>>>>>>> a014fa4771d1067af18b61e94217d8ace066a5a6
 };
 </script>
 
