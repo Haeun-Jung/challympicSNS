@@ -5,31 +5,6 @@
 		 api(/challenge/{challengeNo}/post) 로
 		
 		-->
-<<<<<<< HEAD
-    <v-data-iterator
-      :items="posts"
-      :footer-props="{
-        'items-per-page-options': [5, 10, 15, 20],
-      }"
-      :items-per-page="6"
-    >
-      <template v-slot:default="props">
-        <v-row>
-          <v-col
-            v-for="item in props.items"
-            :key="item.name"
-            cols="12"
-            sm="6"
-            md="6"
-            lg="4"
-          >
-            <tag-search-list :post="item" />
-          </v-col>
-        </v-row>
-      </template>
-    </v-data-iterator>
-  </v-container>
-=======
 		<v-data-iterator
 			:items="posts"
 			:footer-props="{
@@ -53,58 +28,12 @@
 			</template>
 		</v-data-iterator>
 	</v-container>
->>>>>>> a014fa4771d1067af18b61e94217d8ace066a5a6
 </template>
 
 <script>
 import TagSearchList from "../util/TagSearchList.vue";
 import { searchTagList } from "@/api/search.js";
 
-<<<<<<< HEAD
-export default {
-  name: "TagSearchResult",
-  components: {
-    TagSearchList,
-  },
-  props: {
-    search: String,
-  },
-  created() {
-    const user_no = this.$store.state.userStore.userInfo.user_no;
-    const tag_content = this.search.substring(1);
-    console.log("user_no : " + this.$store.state.userStore.userInfo.user_no);
-    searchTagList(
-      { user_no, tag_content },
-      (response) => {
-        this.posts = response.data.data.postList;
-        console.log(this.posts);
-        console.log(this.searchKey);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  },
-  data() {
-    return {
-      itemsPerPageArray: [3, 6, 9],
-      searchProp: "",
-      filter: {},
-      sortDesc: false,
-      page: 1,
-      user_no: !this.$store.state.userStore.userInfo
-        ? ""
-        : this.$store.state.userStore.userInfo.user_no,
-      searchKey: {
-        user_no: this.user_no,
-        tag_content: this.search.substring(1),
-      },
-      itemsPerPage: 6,
-      posts: [],
-    };
-  },
-};
-=======
 	export default {
 		name: "TagSearchResult",
 		components: {
@@ -149,5 +78,4 @@ export default {
 			};
 		},
 	};
->>>>>>> a014fa4771d1067af18b61e94217d8ace066a5a6
 </script>
