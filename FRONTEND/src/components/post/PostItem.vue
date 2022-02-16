@@ -174,6 +174,7 @@ export default {
       postDialog: false,
       challengePost: {
         challengeName: "",
+        post_content: "",
         fileType: "",
         challengeNo: "",
         fileNo: "",
@@ -254,7 +255,6 @@ export default {
       if (!confirm("정말 삭제하시겠습니까?")) {
         return;
       }
-
       deletePost(
         this.post.post_no,
         (response) => {
