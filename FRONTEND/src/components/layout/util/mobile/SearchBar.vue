@@ -31,6 +31,7 @@
 			@change="mobileKeywordSearch"
 			@keyup="mobiletest"
 			@keyup.delete="mobiletest"
+			placeholder="#태그 @사용자 검색"
 		>
 			<template v-slot:no-data>
 				<v-list-item>
@@ -123,5 +124,8 @@
 	.v-toolbar__content,
 	.v-toolbar__extension {
 		padding: 0;
+	}
+	.v-autocomplete:not(.v-input--is-focused).v-select--chips >>> input {
+		max-height: inherit;
 	}
 </style>
