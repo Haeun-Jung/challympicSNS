@@ -5,10 +5,9 @@
 		fixed
 		elevation="0"
 		><!-- 추천 태그 리스트 뿌리기ㅣ 이부분 어차피 나중에 template써서 다시 해야하니 지금은 관상용으로만 냅두기 -->
-		<v-row>
-			<v-col class="hidden-md-and-down" />
-			<v-col class="hidden-sm-and-up" />
-			<v-chip-group class="ml-15 hidden-md-and-down">
+		<v-row v-if="!isMobile()">
+			<v-col />
+			<v-chip-group class="ml-15">
 				<v-chip
 					v-for="tag in tagList"
 					class="s recommendation-chips"
@@ -20,23 +19,26 @@
 					{{ tag.tag_content }}
 				</v-chip>
 			</v-chip-group>
-			<v-chip-group class="hidden-sm-and-up ml-3">
-				<v-chip
-					v-for="(tag, idx) in mobileTagList"
-					class="s recommendation-chips"
-					:key="tag.tag_no"
-					:value="tag"
-					text-color="#3396F4"
-					@click="moveTag(tag.tag_content)"
-				>
-					<div v-if="idx < 4">
-						{{ tag.tag_content }}
-					</div>
-					<div v-else>아니 왜 안돼</div>
-				</v-chip>
-			</v-chip-group>
-			<v-col class="hidden-md-and-down" />
-			<v-col class="hidden-sm-and-up" />
+			<v-col />
+		</v-row>
+		<v-row v-else>
+			<div style="margin: 0 auto">
+				<v-chip-group>
+					<v-chip
+						v-for="(tag, idx) in mobileTagList"
+						class="s recommendation-chips"
+						:key="tag.tag_no"
+						:value="tag"
+						text-color="#3396F4"
+						@click="moveTag(tag.tag_content)"
+					>
+						<div v-if="idx < 4">
+							{{ tag.tag_content }}
+						</div>
+						<div v-else>아니 왜 안돼</div>
+					</v-chip>
+				</v-chip-group>
+			</div>
 		</v-row>
 	</v-toolbar>
 </template>
@@ -77,6 +79,17 @@
 			makeFour(list) {
 				for (var i = 0; i < 4; i++) {
 					this.mobileTagList.push(list[i]);
+				}
+			},
+			isMobile() {
+				if (
+					/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+						navigator.userAgent
+					)
+				) {
+					return true;
+				} else {
+					return false;
 				}
 			},
 		},
