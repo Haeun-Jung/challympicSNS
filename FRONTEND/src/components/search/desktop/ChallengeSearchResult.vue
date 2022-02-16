@@ -10,6 +10,7 @@
 		>
 			<template v-slot:default="props">
 				<v-row>
+					<!-- <div>{{props.items}}</div> -->
 					<v-col
 						v-for="item in props.items"
 						:key="item.name"
@@ -85,56 +86,56 @@
 													<v-spacer />
 												</v-card-title>
 
-                        <v-card-subtitle
-                          style="
-                            text-shadow: 1px 1px 3px #424242;
-                            -webkit-text-stroke-width: 0.1px;
-                            -webkit-text-stroke-color: #424242;
-                          "
-                        >
-                          <strong>
-                            좋아요{{ post.post_like_count }} 개 댓글
-                            {{ post.comment_count }}개</strong
-                          >
-                        </v-card-subtitle>
-                      </div>
-                      <!-- 좋아요-->
-                      <div class="bar-heart">
-                        <v-btn @click="pushLike(post)" icon>
-                          <v-icon
-                            :color="post.isLike ? 'red' : 'grey lighten-3'"
-                            size="32"
-                          >
-                            mdi-heart-outline
-                          </v-icon>
-                        </v-btn>
-                      </div>
-                    </v-carousel-item>
-                  </div>
-                </div>
-              </v-carousel>
-              <v-list two-line>
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-list-item-title>
-                      <router-link
-                        :to="{ path: `/challenge/${item.challenge_no}` }"
-                        style="text-decoration: none; color: inherit; mr-2"
-                        class="title-block"
-                      >
-                        {{ item.challenge_title }}
-                      </router-link>
-                    </v-list-item-title>
-                    <v-list-item-subtitle>
-                      {{ item.challenge_content }}
-                    </v-list-item-subtitle>
-                    <v-list-item-subtitle>
-                      {{ item.challenge_tag }}
-                    </v-list-item-subtitle>
-                  </v-list-item-content>
-                  <v-list-item-action>
-                    <span>
-                      <!-- v-if user_subscribe == true -> filled 된 애로 보여주기
+												<v-card-subtitle style="color: white">
+													<strong
+														style="
+															text-shadow: 1px 1px 3px #424242;
+															-webkit-text-stroke-width: 0.1px;
+															-webkit-text-stroke-color: #424242;
+														"
+													>
+														좋아요{{ post.post_like_count }} 개 댓글
+														{{ post.comment_count }}개</strong
+													>
+												</v-card-subtitle>
+											</div>
+											<!-- 좋아요-->
+											<div class="bar-heart">
+												<v-btn @click="pushLike(post)" icon>
+													<v-icon
+														:color="post.isLike ? 'red' : 'grey lighten-3'"
+														size="32"
+													>
+														mdi-heart-outline
+													</v-icon>
+												</v-btn>
+											</div>
+										</v-carousel-item>
+									</div>
+								</div>
+							</v-carousel>
+							<v-list two-line>
+								<v-list-item>
+									<v-list-item-content>
+										<v-list-item-title>
+											<router-link
+												:to="{ path: `/challenge/${item.challenge_no}` }"
+												style="text-decoration: none; color: inherit; mr-2"
+												class="title-block"
+											>
+												{{ item.challenge_title }}
+											</router-link>
+										</v-list-item-title>
+										<v-list-item-subtitle>
+											{{ item.challenge_content }}
+										</v-list-item-subtitle>
+										<v-list-item-subtitle>
+											{{ item.challenge_tag }}
+										</v-list-item-subtitle>
+									</v-list-item-content>
+									<v-list-item-action>
+										<span>
+											<!-- v-if user_subscribe == true -> filled 된 애로 보여주기
 											지금 이게 없어서 작동 못함...-->
 											<v-btn icon @click="setSubscribe(item)">
 												<v-icon
@@ -204,17 +205,17 @@
 			const tag_content = this.search.substring(1);
 			console.log("user_no : " + this.$store.state.userStore.userInfo.user_no);
 			searchTagList(
-				{user_no, tag_content},
+				{ user_no, tag_content },
 				(response) => {
 					this.challenges = response.data.data.challengeList;
 					console.log(this.challenges);
-					console.log("created")
+					console.log("created");
 					console.log(this.searchKey);
 				},
 				(error) => {
 					console.log(error);
 					console.log("create false");
-				},
+				}
 			);
 		},
 		data() {

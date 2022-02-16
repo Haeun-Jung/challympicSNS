@@ -6,8 +6,6 @@
 		hide-selected
 		hide-details="true"
 		label=""
-		v-click-outside="onClickOutside"
-		:close="onClickOutside"
 		rounded
 		small-chips
 		@change="keywordSearch"
@@ -20,6 +18,7 @@
 		item-value="key"
 		clearable
 		append-icon="mdi-magnify"
+		placeholder="#태그 @사용자 검색"
 	>
 		<template v-slot:no-data>
 			<v-list-item>
@@ -45,7 +44,7 @@
 	export default {
 		name: "DesktopSearchBar",
 		props: {
-			tags: Object,
+			tags: Array,
 		},
 		data() {
 			return {
@@ -71,6 +70,9 @@
 </script>
 
 <style scoped>
+	.v-autocomplete:not(.v-input--is-focused).v-select--chips >>> input {
+		max-height: inherit;
+	}
 	.v-toolbar-title:hover {
 		cursor: pointer;
 	}

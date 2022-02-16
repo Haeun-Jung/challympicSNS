@@ -68,7 +68,6 @@ function postLikeList(postNo, userNo, success, fail) {
 
 /* 포스트 좋아요/취소 */
 function setLike(postNo, userNo, success, fail) {
-  console.log("주석 처리되어있음 해제할 필요");
   api
     .post(
       `challympic/post/${postNo}/like/${userNo}`,

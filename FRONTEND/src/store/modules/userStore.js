@@ -53,6 +53,7 @@ const userStore = {
     },
     LOGOUT(state) {
       state.isLoggedIn = false;
+      state.userNo = 0;
       state.userInfo = null;
       state.userNo = 0;
     },
@@ -100,7 +101,7 @@ const userStore = {
               "Authorization",
               response.headers["authorization"]
             );
-            router.push({ name: "Main" });
+            // router.push({ name: "Main" });
           } else {
             commit("LOGIN_FAILED", true);
           }
@@ -134,13 +135,13 @@ const userStore = {
       await setInterests(
         info.user_email,
         info.interests,
-        (response) => {
-          console.log("조인 후 인터레스트");
-          console.log(response);
+        () => {
+          // console.log("조인 후 인터레스트");
+          // console.log(response);
           router.push({ name: "Login" });
         },
         (err) => {
-          console.log("조인후 인터레스트 불가")
+          // console.log("조인후 인터레스트 불가")
           console.log(err);
         
         }
