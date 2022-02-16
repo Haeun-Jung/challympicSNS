@@ -10,6 +10,25 @@
 							@click="movePage(post)"
 						>
 							<v-img
+                v-if="post.video"
+                min-height="190"
+                max-height="344"
+								:src="
+									'http://d3iu4sf4n4i2qf.cloudfront.net/' +
+									post.file_path +
+									'/thumbnail/' +
+									post.file_savedname +
+                  '.png'
+								"
+							>
+                <v-icon icon class="play-btn"
+                  >mdi-play</v-icon
+                >
+							</v-img>
+							<v-img
+                v-else
+                min-height="190"
+                max-height="344"
 								:src="
 									'http://d3iu4sf4n4i2qf.cloudfront.net/' +
 									post.file_path +
@@ -17,10 +36,6 @@
 									post.file_savedname
 								"
 							>
-								<!-- 비디오일때만 -->
-								<v-icon v-if="post.video" icon class="play-btn"
-									>mdi-play</v-icon
-								>
 							</v-img>
 							<v-fade-transition>
 								<v-overlay v-if="hover" absolute color="#2E2E2E">

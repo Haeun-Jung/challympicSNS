@@ -489,6 +489,7 @@ export default {
       // 챌린지 정보를 가지고 들어올 때
       if (this.propChallenge) {
         this.fileType = this.propChallenge.fileType;
+        this.post.description = this.propChallenge.post_content;
       } else if (this.propChallengeName) {
         this.fileType = this.propChallengeName.challangeType;
       }
