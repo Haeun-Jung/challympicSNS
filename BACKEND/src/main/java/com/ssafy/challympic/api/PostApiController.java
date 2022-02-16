@@ -500,6 +500,8 @@ public class PostApiController {
     @DeleteMapping("/post/{postNo}")
     public Result delete(@PathVariable("postNo") int postNo){
 
+        log.info("postNo : "+ postNo);
+
         Post post = postService.getPost(postNo);
 
         Media media = post.getMedia();
@@ -507,6 +509,13 @@ public class PostApiController {
         s3Uploader.deleteS3(media.getFile_path());
 
         mediaService.delete(media.getFile_no());
+
+        List<PostTag> ptl = tagService.findPostTagList(postNo);
+
+        for(PostTag pt : ptl){
+            log.info("post_tag_no : " + pt.getPost_tag_no());
+            tagService.deletePostTag(pt);
+        }
 
         postService.delete(postNo);
 
