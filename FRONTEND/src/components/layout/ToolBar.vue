@@ -338,9 +338,10 @@
 	}
 </script>
 <style>
-	/*	.v-toolbar-title:hover {
+	.v-toolbar-title:hover {
 		cursor: pointer;
 	}
+	/*
 	.v-text-field {
 		width: 600;
 	}*/
