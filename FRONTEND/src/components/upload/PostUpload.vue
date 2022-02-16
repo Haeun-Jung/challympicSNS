@@ -469,8 +469,8 @@
 									this.$emit("close-modal");
 									this.$store.commit("challengeStore/RESET_POSSIBLE_STATUS");
 									// this.$router.push({ name: `ChallengeDetail`, params: {challengeNo: chall_no}, query: {postNo: response.data.data.post_no}});
-									window.location =
-										"challenge/" +
+									location.href =
+										"/challenge/" +
 										chall_no +
 										"?postNo=" +
 										response.data.data.post_no;
