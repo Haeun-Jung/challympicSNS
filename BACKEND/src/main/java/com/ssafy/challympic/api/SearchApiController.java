@@ -79,13 +79,12 @@ public class SearchApiController {
                 searchService.saveSearchRecord("#" + request.tag_content, user);
             }
 
-            Tag findTag = tagService.findTagByTagContent("#" + request.tag_content);
-
-            if(findTag.getIsChallenge() != null) {
-                SearchChallenge searchChallenge = new SearchChallenge();
-                searchChallenge.setChallenge(challengeService.findChallengeByTitle(request.tag_content).get(0));
-                searchChallenge.setUser(user);
-                searchService.saveSearchChallenge(searchChallenge);
+            List<Challenge> tagContainChallenges = challengeService.findChallengesByTag("#" + request.tag_content);
+            for(Challenge c : tagContainChallenges) {
+                SearchChallenge sc = new SearchChallenge();
+                sc.setUser(user);
+                sc.setChallenge(c);
+                searchService.saveSearchChallenge(sc);
             }
         }
 

@@ -90,4 +90,8 @@ public class ChallengeService {
     public int findPostCnt(int challenge_no) {
         return postRepository.findByChallengNo(challenge_no).size();
     }
+
+    public List<Challenge> findChallengesByTag(String tag_content) {
+        return challengeRepository.findByTagContent(tag_content);
+    }
 }
