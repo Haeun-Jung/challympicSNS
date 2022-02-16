@@ -54,6 +54,7 @@ const userStore = {
     LOGOUT(state) {
       state.isLoggedIn = false;
       state.userInfo = null;
+      state.userNo = 0;
     },
     SET_USER_INFO: (state, userInfo) => {
       state.userInfo = userInfo;
