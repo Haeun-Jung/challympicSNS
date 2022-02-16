@@ -43,9 +43,13 @@
 			search: String,
 		},
 		created() {
-			const user_no = this.$store.state.userStore.userInfo.user_no;
+			const user_no = this.$store.state.userStore.userInfo ? this.$store.state.userStore.userInfo.user_no : 0;
 			const tag_content = this.search.substring(1);
-			console.log("user_no : " + this.$store.state.userStore.userInfo.user_no);
+      this.searchKey = {
+					user_no: user_no,
+					tag_content: this.search.substring(1),
+				},
+			// console.log("user_no : " + this.$store.state.userStore.userInfo.user_no);
 			searchTagList(
 				{user_no, tag_content},
 				(response) => {
@@ -69,10 +73,11 @@
 				user_no: !this.$store.state.userStore.userInfo
 					? ""
 					: this.$store.state.userStore.userInfo.user_no,
-				searchKey: {
-					user_no: this.user_no,
-					tag_content: this.search.substring(1),
-				},
+        searchKey: {},
+				// searchKey: {
+				// 	user_no: this.user_no,
+				// 	tag_content: this.search.substring(1),
+				// },
 				itemsPerPage: 6,
 				posts: [],
 			};

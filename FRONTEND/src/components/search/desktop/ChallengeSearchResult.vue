@@ -213,7 +213,7 @@
 			},
 		},
 		created() {
-			const user_no = this.$store.state.userStore.userInfo.user_no;
+			const user_no = this.$store.state.userStore.userInfo ?  this.$store.state.userStore.userInfo.user_no : 0;
 			const tag_content = this.search.substring(1);
 			searchTagList(
 				{ user_no, tag_content },
