@@ -40,8 +40,8 @@ export default {
   },
   created() {
     getTrend((response) => {
-      // console.log("인기 급상승")
-      // console.log(response.data.data)
+      console.log("인기 급상승")
+      console.log(response.data.data)
       this.keywords = response.data.data;
     });
   },
