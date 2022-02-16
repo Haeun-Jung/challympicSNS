@@ -1,5 +1,5 @@
 <template>
-	<v-card height="100%" elevation="0">
+	<v-card height="100%" min-height="100vh" elevation="0">
 		<v-card-title
 			>문의하기
 			<!-- <v-spacer />-->
