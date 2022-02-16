@@ -155,83 +155,6 @@
   </v-container>
 </template>
 <script>
-<<<<<<< HEAD
-// import ChallengeList from "../util/ChallengeList.vue";
-import { searchTagList } from "@/api/search.js";
-import { setSubscription } from "@/api/challenge.js";
-import { setLike } from "@/api/post.js";
-import VideoComponent from "../util/VideoComponent.vue";
-
-export default {
-  name: "ChallengeSearchResult",
-  components: {
-    VideoComponent,
-  },
-  props: {
-    search: String,
-  },
-  methods: {
-    setSubscribe(challenge) {
-      // console.log(challenge);
-      challenge.subscription = !challenge.subscription;
-      setSubscription(
-        challenge.challenge_no,
-        challenge.user_no,
-        (response) => {
-          console.log(response);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    },
-    pushLike(post) {
-      console.log(post);
-      setLike(
-        post.post_no,
-        post.user_no,
-        (response) => {
-          console.log(response);
-          // post.isLike = !post.isLike;
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    },
-  },
-  created() {
-    const user_no = this.$store.state.userStore.userInfo.user_no;
-    const tag_content = this.search.substring(1);
-    console.log("user_no : " + this.$store.state.userStore.userInfo.user_no);
-    searchTagList(
-      { user_no, tag_content },
-      (response) => {
-        this.challenges = response.data.data.challengeList;
-        console.log(this.challenges);
-        console.log("created");
-        console.log(this.searchKey);
-      },
-      (error) => {
-        console.log(error);
-        console.log("create false");
-      }
-    );
-  },
-  data() {
-    return {
-      overlay: false,
-      user_no: !this.$store.state.userStore.userInfo
-        ? 0
-        : this.$store.state.userStore.userInfo.user_no,
-      searchKey: {
-        user_no: this.user_no,
-        tag_content: this.search.substring(1),
-      },
-      itemsPerPageArray: [3, 6, 9],
-      searchProp: "",
-      filter: {},
-=======
 	// import ChallengeList from "../util/ChallengeList.vue";
 	import { searchTagList } from "@/api/search.js";
 	import { setSubscription } from "@/api/challenge.js";
@@ -319,7 +242,6 @@ export default {
 				itemsPerPageArray: [3, 6, 9],
 				searchProp: "",
 				filter: {},
->>>>>>> a014fa4771d1067af18b61e94217d8ace066a5a6
 
       sortDesc: false,
       page: 1,

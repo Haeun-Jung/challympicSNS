@@ -141,11 +141,7 @@ const userStore = {
           router.push({ name: "Login" });
         },
         (err) => {
-<<<<<<< HEAD
-          console.log("조인후 인터레스트 불가");
-=======
           // console.log("조인후 인터레스트 불가")
->>>>>>> a014fa4771d1067af18b61e94217d8ace066a5a6
           console.log(err);
         }
       );
