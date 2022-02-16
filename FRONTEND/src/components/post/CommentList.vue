@@ -13,11 +13,18 @@
       :key="comment.comment_no"
     >
       <div class="profile-img-and-comment">
-        <img
+
+        <img v-if="comment.user_profile"
           class="profile mr-2"
-          src="../../assets/profile.png"
-          alt="profile img"
+          :src="`https://d3iu4sf4n4i2qf.cloudfront.net/${comment.user_profile}`"
+          alt="img"
         />
+ 
+        <img v-else
+          class="profile mr-2"
+          src="@/assets/profile.png"
+          alt="img"
+        />       
         <span>
           <div>
             <span class="font-weight-bold">
@@ -90,7 +97,7 @@ export default {
       alert: false,
     };
   },
-  watch: {},
+  watch: { },
   methods: {
     editComment(comment_no, comment_content) {
       // 댓글 수정 API 호출

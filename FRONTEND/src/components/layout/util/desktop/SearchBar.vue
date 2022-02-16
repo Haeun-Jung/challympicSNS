@@ -6,8 +6,6 @@
 		hide-selected
 		hide-details="true"
 		label=""
-		v-click-outside="onClickOutside"
-		:close="onClickOutside"
 		rounded
 		small-chips
 		@change="keywordSearch"
@@ -45,7 +43,7 @@
 	export default {
 		name: "DesktopSearchBar",
 		props: {
-			tags: Object,
+			tags: Array,
 		},
 		data() {
 			return {

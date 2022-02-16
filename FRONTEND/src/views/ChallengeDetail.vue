@@ -278,6 +278,7 @@ export default {
     },
     subscribe() {
       let challenge = this.$store.state.challengeStore.challenge;
+
       if (challenge.subscription) {
         // 챌린지 구독 delete 요청
         removeSubscription(challenge.challenge_no, challenge.user_no,
