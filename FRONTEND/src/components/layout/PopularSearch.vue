@@ -2,7 +2,7 @@
   <div>
     <v-card-subtitle>
       <h2>
-        인기 급상승<v-icon icon class="chart-icon">mdi-chart-line</v-icon>
+        최신 인기 챌린지<v-icon icon class="chart-icon">mdi-chart-line</v-icon>
       </h2>
     </v-card-subtitle>
     <v-list-item-content class="side-contents-trend-container">
