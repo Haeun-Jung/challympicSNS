@@ -38,9 +38,15 @@
 			<alert-button />
 			<v-menu bottom left offset-y display="block">
 				<template v-slot:activator="{ on, attrs }">
+					<!--
 					<v-btn icon v-bind="attrs" v-on="on">
 						<v-icon>mdi-account-circle</v-icon>
 					</v-btn>
+					 v-if="!this.$store.state.userStore.filePath"
+					-->
+					<v-avatar v-bind="attrs" v-on="on" size="48">
+						<v-img :src="imageUrl"></v-img>
+					</v-avatar>
 				</template>
 
 				<v-list>
@@ -159,6 +165,7 @@
 		},
 		data() {
 			return {
+				imageUrl: "",
 				drawer: false,
 				onSelect: false,
 				loading: false,
@@ -251,19 +258,6 @@
 					this.$router.push("/recent");
 				}
 			},
-			/*keywordSearch(val) {
-				var to = val.substring(1);
-				let searchCategory = this.searchInput.charAt(0);
-				if (searchCategory === "@") {
-					var foundValue = this.obj2.filter((obj) => obj.key == val);
-					to = foundValue[0].no; // : feed 번호
-					this.dynamicArr = this.empty;
-					this.$router.push("/feed/" + to);
-				} else if (searchCategory === "#") {
-					this.dynamicArr = this.empty;
-					this.$router.push("/search/" + to);
-				}
-			},*/
 			childSearch(searchInput) {
 				this.searchInput = searchInput;
 				var to = this.searchInput.substring(1);
@@ -278,24 +272,6 @@
 					this.$router.push("/search/" + to);
 				}
 			},
-			/*		mobileKeywordSearch() {
-				var to = this.mobileSearchInput.substring(1);
-				let searchCategory = this.mobileSearchInput.charAt(0);
-				alert(this.mobileSearchInput);
-				if (searchCategory === "@") {
-					var foundValue = this.obj2.filter(
-						(obj) => obj.key == this.mobileSearchInput
-					);
-					this.mobileSearchInput = "";
-					to = foundValue[0].no; // : feed 번호
-					this.dynamicArr = this.empty;
-					this.$router.push("/feed/" + to);
-				} else if (searchCategory === "#") {
-					this.mobileSearchInput = "";
-					this.dynamicArr = this.empty;
-					window.location.href = "search/" + to;
-				}
-			},*/
 
 			isMobile() {
 				if (
@@ -310,6 +286,15 @@
 			},
 		},
 		created() {
+			if (this.$store.state.userStore.filePath)
+				this.imageUrl =
+					"http://d3iu4sf4n4i2qf.cloudfront.net/" +
+					this.$store.state.userStore.filePath +
+					`/` +
+					this.$store.state.userStore.fileSavedName;
+			else {
+				this.imageUrl = require("@/assets/profile.png");
+			}
 			getSearchList(
 				(response) => {
 					this.obj1 = response.data.data.tagList;
