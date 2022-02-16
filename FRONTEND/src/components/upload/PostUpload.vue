@@ -430,7 +430,7 @@ export default {
         user_no: this.$store.state.userStore.userInfo.user_no,
         challengers:
           challenge.challengers.length > 1 ? challenge.challengers : [],
-        challenge_title: challenge.challengeName,
+        challenge_title: challenge.challengeName + "_챌린지",
         challenge_content: challenge.description,
         challenge_end: challenge.endDate,
         challenge_type: challenge.fileType,
