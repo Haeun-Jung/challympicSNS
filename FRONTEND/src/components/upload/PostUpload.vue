@@ -384,10 +384,10 @@ export default {
       // 챌린지 등록에서 넘어왔을 경우
       if (this.propChallenge) {
         // 챌린저 처리
-        if (this.propChallenge.challengers.length > 1) {
-          this.propChallenge.challengers =
-            this.propChallenge.challengers.split();
-        }
+        // if (this.propChallenge.challengers.length > 1) {
+        //   this.propChallenge.challengers =
+        //     this.propChallenge.challengers.split();
+        // }
         // 종료일 계산
         const propEndDate = this.propChallenge.endDate;
         if (propEndDate.length < 3) {
@@ -425,10 +425,11 @@ export default {
       }
     },
     createChallengeWithPost(challenge, post) {
+      console.log(challenge.challengers);
       const challengeItem = {
         user_no: this.$store.state.userStore.userInfo.user_no,
         challengers:
-          challenge.challengers.length > 1 ? challenge.challengers.split() : [],
+          challenge.challengers.length > 1 ? challenge.challengers : [],
         challenge_title: challenge.challengeName,
         challenge_content: challenge.description,
         challenge_end: challenge.endDate,
