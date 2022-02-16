@@ -12,6 +12,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -159,7 +160,7 @@ public class PostApiController {
             postDto.setUser_nickname(user.getUser_nickname());
             postDto.setUser_title(user.getUser_title());
             if(user.getMedia() != null)
-                postDto.setUser_profile(user.getMedia().getFile_path() + "/" + user.getMedia().getFile_savedname());
+                postDto.setUser_profile(user.getMedia().getFile_path() + File.separator + user.getMedia().getFile_savedname());
             else
                 postDto.setUser_profile(null);
 
@@ -237,7 +238,7 @@ public class PostApiController {
             postDto.setUser_nickname(user.getUser_nickname());
             postDto.setUser_title(user.getUser_title());
             if(user.getMedia() != null)
-                postDto.setUser_profile(user.getMedia().getFile_path() + "/" + user.getMedia().getFile_savedname());
+                postDto.setUser_profile(user.getMedia().getFile_path() + File.separator + user.getMedia().getFile_savedname());
             else
                 postDto.setUser_profile(null);
 
