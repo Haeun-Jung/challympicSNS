@@ -2,6 +2,7 @@ package com.ssafy.challympic.api;
 
 import com.ssafy.challympic.api.Dto.ChallengeDto;
 import com.ssafy.challympic.api.Dto.SubscriptionDto;
+import com.ssafy.challympic.api.Dto.UserDto;
 import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.domain.defaults.ChallengeAccess;
 import com.ssafy.challympic.domain.defaults.ChallengeType;
@@ -46,6 +47,18 @@ public class ChallengeApiController {
 
     private final AlertService alertService;
 
+    @Data
+    static class CreateChallengeRequest {
+        private int user_no;
+        private List<String> challengers;
+        private Date challenge_end;
+        private ChallengeType challenge_type;
+        private String challenge_title;
+        private String challenge_content;
+        private String title_name;
+    }
+
+
     /**
      * 챌린지 등록
      */
@@ -56,13 +69,15 @@ public class ChallengeApiController {
         List<Integer> challengers = new ArrayList<>(); // 초대된 인원
         // 챌린지 초대한 사람이 없으면 PUBLIC
         if(request.getChallengers().size() == 0){
+            System.out.println("사람없어");
             challenge_access = ChallengeAccess.PUBLIC;
         }
         // 챌린지 초대한 사람이 있으면 PRIVATE
         else{
+            System.out.println("사람 있엉~!~!~!~");
             challenge_access = ChallengeAccess.PRIVATE;
-            for(String str : request.getChallengers()) {
-                String user_nickname = str.substring(1);
+            for(String str : request.getChallengers().subList(1, request.getChallengers().size())) {
+                String user_nickname = str;
                 User challengerUser = userService.findByNickname(user_nickname);
                 if(challengerUser == null) return new Result(false, HttpStatus.BAD_REQUEST.value());
                 challengers.add(challengerUser.getUser_no());
@@ -164,17 +179,6 @@ public class ChallengeApiController {
         private int challenge_no;
     }
 
-    @Data
-    static class CreateChallengeRequest {
-        private int user_no;
-        private List<String> challengers;
-        private Date challenge_end;
-        private ChallengeType challenge_type;
-        private String challenge_title;
-        private String challenge_content;
-        private String title_name;
-    }
-
     @PostMapping("/challenge/confirm")
     public Result ChallengeTitleCheck(@RequestBody ChallengeTitleCheckRequest request) {
         List<Challenge> challenges = challengeService.findChallengeByTitle(request.getChallenge_title());
@@ -236,8 +240,21 @@ public class ChallengeApiController {
         Challenge challenge = challengeService.findChallengeByChallengeNo(challengeNo);
         if(challenge == null) return new Result(false, HttpStatus.BAD_REQUEST.value());
         else {
+            List<Challenger> challenger = challengeService.getChallengerByChallengeNo(challengeNo);
+            List<UserDto> challengers = new ArrayList<>();
+            if(!challenger.isEmpty()){
+                challengers = challenger.stream()
+                        .map(cs -> {
+                            User user = userService.findUser(cs.getUser().getUser_no());
+                            return new UserDto(user);
+                        }).collect(Collectors.toList());
+                System.out.println("챌린저 잇엉");
 
-            ChallengeDto challengeResponse = new ChallengeDto(challenge);
+            }else{
+                System.out.println("챌린저 업엉");
+            }
+
+            ChallengeDto challengeResponse = new ChallengeDto(challenge, challengers);
             return new Result(true, HttpStatus.OK.value(), challengeResponse);
         }
     }
