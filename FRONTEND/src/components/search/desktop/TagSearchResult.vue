@@ -21,7 +21,7 @@
 						sm="6"
 						md="6"
 						lg="4"
-					>
+					>	
 						<tag-search-list :post="item" />
 					</v-col>
 				</v-row>
@@ -49,6 +49,7 @@
 			searchTagList(
 				{user_no, tag_content},
 				(response) => {
+					console.log("searchTagList")
 					this.posts = response.data.data.postList;
 					console.log(this.posts);
 					console.log(this.searchKey)
