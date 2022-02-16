@@ -13,13 +13,20 @@
 			:key="comment.comment_no"
 		>
 			<div class="profile-img-and-comment">
-				<img
-					class="profile mr-2"
-					src="../../assets/profile.png"
-					alt="profile img"
-				/>
+				<v-avatar v-if="comment.user_profile == null">
+					<v-icon size="50">mdi-account-circle</v-icon>
+				</v-avatar>
+				<v-avatar v-else size="40" class="ml-1">
+					<img
+					:src="
+						'http://d3iu4sf4n4i2qf.cloudfront.net/' +
+						comment.user_profile
+					"
+					alt="John"
+					/>
+				</v-avatar>
 				<span>
-					<div>
+					<div class="ml-3">
 						<span class="font-weight-bold">
 							<router-link
 								:to="{ path: `/feed/${comment.user_no}` }"
@@ -30,7 +37,7 @@
 						</span>
 						<span>{{ comment.comment_content }}</span>
 					</div>
-					<div class="comment-info">
+					<div class="comment-info ml-1">
 						<span class="mr-2">{{ comment.regdate }}</span>
 						<span class="mr-2">좋아요 {{ comment.like_cnt }}</span>
 						<span @click="confirmReportDialog = true" class="report-btn"

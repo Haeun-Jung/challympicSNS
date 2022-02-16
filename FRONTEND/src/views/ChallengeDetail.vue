@@ -64,14 +64,14 @@
 											>
 												<v-icon large>mdi-alarm-light-outline</v-icon>
 											</v-btn>
-												<v-btn
-													v-show="canUser"
-													@click="postDialog = true"
-													outlined
-													color="#3396F4"
-												>
-													참여하기
-												</v-btn>
+											<v-btn
+												v-show="canUser"
+												@click="postDialog = true"
+												outlined
+												color="#3396F4"
+											>
+												참여하기
+											</v-btn>
 										</v-card-title>
 
 										<v-list-item-subtitle class="ml-5">
@@ -121,17 +121,14 @@
 												>
 													<v-icon>mdi-alarm-light-outline</v-icon>
 												</v-btn>
-												<div v-if="canUser">
-
-<v-btn
+												<v-btn
+													v-show="canUser"
 													@click="postDialog = true"
 													outlined
 													color="#3396F4"
 												>
 													참여하기
 												</v-btn>
-												</div>
-											
 											</v-card>
 										</v-row>
 									</div>

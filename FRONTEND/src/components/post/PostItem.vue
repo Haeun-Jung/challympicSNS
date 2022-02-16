@@ -92,11 +92,18 @@
 			</div>
 		</v-expand-transition>
 		<v-card-text class="profile-img-and-comment-input">
-			<img
-				class="comment-profile mr-2"
-				src="../../assets/profile.png"
-				alt="profile img"
-			/>
+			<v-avatar v-if="!this.$store.state.userStore.filePath" class="mr-3">
+				<v-icon size="50">mdi-account-circle</v-icon>
+			</v-avatar>
+			<v-avatar v-else size="40" class="mr-3">
+				<img
+				:src="
+					'http://d3iu4sf4n4i2qf.cloudfront.net/' +
+					this.$store.state.userStore.filePath+`/`+this.$store.state.userStore.fileSavedName
+				"
+				alt="John"
+				/>
+			</v-avatar>
 			<v-text-field
 				v-model="commentInput"
 				class="rounded-pill"
