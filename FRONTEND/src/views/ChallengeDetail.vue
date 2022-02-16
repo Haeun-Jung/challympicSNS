@@ -46,7 +46,7 @@
 											>
 											<share-button size="x-large" :challenge-no="challenge.challenge_no" />
 											<v-btn
-												v-if="challenge.subscription"
+												v-if="isSubscription"
 												@click="subscribe"
 												class="icon-margin"
 												icon
@@ -279,6 +279,7 @@
 					// { text: "댓글 순", value: "comments.length" },
 				],
 				userData: null,
+				isSubscription: false,
 			};
 		},
 		methods: {
@@ -293,13 +294,13 @@
 			subscribe() {
 				let challenge = this.$store.state.challengeStore.challenge;
 
-				if (challenge.subscription) {
+				if (this.isSubscription) {
 					// 챌린지 구독 delete 요청
 					removeSubscription(
 						challenge.challenge_no,
 						challenge.user_no,
 						() => {
-							this.$store.state.challengeStore.challenge.subscription = false;
+							this.isSubscription = false;
 						},
 						(error) => {
 							console.log(error);
@@ -311,7 +312,7 @@
 						challenge.challenge_no,
 						challenge.user_no,
 						() => {
-							this.$store.state.challengeStore.challenge.subscription = true;
+							this.isSubscription = true;
 						},
 						(error) => {
 							console.log(error);
@@ -396,9 +397,9 @@
 						this.$store.state.challengeStore.challenge.user_no,
 						(response) => {
 							if (response.data.success)
-								this.$store.state.challengeStore.challenge.subscription = true;
+								this.isSubscription = true;
 							else
-								this.$store.state.challengeStore.challenge.subscription = false;
+								this.isSubscription = false;
 						},
 						() => {}
 					);
