@@ -44,7 +44,7 @@
 											<span v-if="challenge.challenge_official == 'true'"
 												>✅</span
 											>
-											<share-button size="x-large" />
+											<share-button size="x-large" :challenge-no="challenge.challenge_no" />
 											<v-btn
 												v-if="challenge.subscription"
 												@click="subscribe"
@@ -64,13 +64,14 @@
 											>
 												<v-icon large>mdi-alarm-light-outline</v-icon>
 											</v-btn>
-											<v-btn
-												@click="postDialog = true"
-												outlined
-												color="#3396F4"
-											>
-												참여하기
-											</v-btn>
+												<v-btn
+													v-show="canUser"
+													@click="postDialog = true"
+													outlined
+													color="#3396F4"
+												>
+													참여하기
+												</v-btn>
 										</v-card-title>
 
 										<v-list-item-subtitle class="ml-5">
@@ -120,13 +121,17 @@
 												>
 													<v-icon>mdi-alarm-light-outline</v-icon>
 												</v-btn>
-												<v-btn
+												<div v-if="canUser">
+
+<v-btn
 													@click="postDialog = true"
 													outlined
 													color="#3396F4"
 												>
 													참여하기
 												</v-btn>
+												</div>
+											
 											</v-card>
 										</v-row>
 									</div>
@@ -150,15 +155,16 @@
 											"
 										></span>
 									</v-card-subtitle>
-                  <v-list-item-subtitle>
+                  					<v-list-item-subtitle>
 										<v-chip
 											v-for="challenger in challenge.challenge_challengers"
 											:key="challenger.user_no"
 											class="mt-6 ml-4 challenge-chip"
 											color="#3396F4"
-											text-color="white"
+                      						outlined
+                      						@click="clickUser(challenger.user_no)"
 										>
-											{{ challenger.user_nickname }}
+											@{{ challenger.user_nickname }}
 										</v-chip>
 									</v-list-item-subtitle>
 								</v-main>
@@ -166,8 +172,14 @@
 							<div>
 								<!-- End of Mobile -->
 								<!--Data Iterator -->
+                <battle-item
+									v-if="challenge.challenge_challengers.length === 1"
+									:postList="postList"
+									:type="challenge.challenge_type"
+                  :user="userData"
+								/>
 								<v-data-iterator
-									v-if="postList.length != 2"
+									v-else
 									:items="postList"
 									:items-per-page.sync="itemsPerPage"
 									:sort-by="sortBy"
@@ -195,18 +207,14 @@
 										<post-item
 											v-for="post in props.items"
 											:post="post"
+                      :challengeNo="challenge.challenge_no"
 											:type="challenge.challenge_type"
 											:key="post.post_no"
 											:user="userData"
 										></post-item>
 									</template>
 								</v-data-iterator>
-								<battle-item
-									v-else
-									:postList="postList"
-									:type="challenge.challenge_type"
-                  :user="userData"
-								/>
+								
 							</div>
 							<confirm-report
 								:confirm-report-dialog="confirmReportDialog"
@@ -319,6 +327,12 @@
 					`/search/${encodeURIComponent(tagContent.split("#")[1])}`
 				);
 			},
+      		clickUser(no) {
+				  console.log(no);
+				this.$router.push(
+					`/feed/`+no+`/post`
+				);
+			},
 			isMobile() {
 				if (
 					/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -346,6 +360,10 @@
 			},
 		},
 		computed: {
+			canUser(){
+				if(this.challenge.challenge_challengers.find(o => o.user_no === this.$store.state.userStore.userInfo.user_no)) return true;
+				return false;
+			},
 			sortDesc() {
 				if (this.sortBy === "likeCnt" || this.sortBy === "post_regdate") {
 					return true;
@@ -360,6 +378,9 @@
 					.filter((word) => {
 						return word.startsWith("#");
 					});
+        if (this.challenge.challenge_challengers.length === 1) {
+          splitedContent.push("#1:1");
+        }
 				if (splitedContent.length > 0) {
 					return splitedContent;
 				} else {
@@ -382,10 +403,11 @@
 				}
 				return this.$store.state.challengeStore.challenge;
 			},
-      challengers(){
-        console.log(this.challenge);
-        return this.challenge.challenge_challengers;
-      },
+      // challengers(){
+      //   console.log(this.challenge);
+      //   console.log("this.challenge");
+      //   return this.challenge.challenge_challengers;
+      // },
 			postList() {
 				if (this.$route.query.postNo) {
 					let org = this.$store.state.postStore.postList;
