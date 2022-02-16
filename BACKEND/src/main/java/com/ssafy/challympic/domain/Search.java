@@ -20,7 +20,7 @@ public class Search {
     @Column(name = "search_no")
     private int search_no;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_no")
     private User user;
 

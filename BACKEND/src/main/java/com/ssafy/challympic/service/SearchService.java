@@ -23,7 +23,9 @@ public class SearchService {
     private final ChallengeRepository challengeRepository;
 
     public List<Tag> findTagList() {
-        return searchRepository.findTagList();
+        List<Tag> tagList = searchRepository.findTagList();
+        tagList.removeIf(t -> t.getIsChallenge() != null);
+        return tagList;
     }
 
     public List<User> findUserList(){
