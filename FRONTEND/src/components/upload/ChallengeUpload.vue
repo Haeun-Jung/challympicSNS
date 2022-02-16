@@ -232,7 +232,7 @@ export default {
         this.selectChallenger = !this.selectChallenger;
         document
           .querySelector("input.challenger-input")
-          .setAttribute("disabled", this.selectChallenger); //TODO
+          .setAttribute("disabled", this.selectChallenger);
       }
     },
     uploadPost() {

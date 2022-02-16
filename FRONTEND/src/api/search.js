@@ -9,10 +9,7 @@ function getSearchList(success, fail) {
 /*태그 검색 결과 */
 function searchTagList(searchKey, success, fail) {
   api
-    .post(`/challympic/search/tag`, {
-      user_no: searchKey.user_no,
-      tag_content: searchKey.tag_content,
-    })
+    .post(`/challympic/search/tag`, {user_no: searchKey.user_no, tag_content: searchKey.tag_content})
     .then(success)
     .catch(fail);
 }
@@ -26,7 +23,10 @@ function list(challenges, success, fail) {
 }
 
 function getRecommend(userNo, success, fail) {
-  api.get(`/challympic/activity/${userNo}`).then(success).catch(fail);
+  api
+    .get(`/challympic/activity/${userNo}`)
+    .then(success)
+    .catch(fail);
 }
 
 export { getSearchList, searchTagList, list, getRecommend };

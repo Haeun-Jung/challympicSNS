@@ -38,7 +38,7 @@
                   :label="userInfo.user_title"
                   dense
                   outlined
-                  v-model="title"
+                  v-model=title
                 ></v-select>
               </v-col>
             </v-row>
@@ -160,7 +160,7 @@
                   color="primary"
                   outlined
                   close
-                  @click:close="remove(idx, tag.tag_no)"
+                 @click:close="remove(idx, tag.tag_no)"
                   class="tag-one"
                 >
                   {{ tag.tag_content }}
@@ -186,7 +186,7 @@
 import { mapState, mapActions } from "vuex";
 import { getSearchList } from "@/api/search.js";
 import { save } from "@/api/user.js";
-import { getInterest } from "@/api/user.js";
+import { getInterest } from "@/api/user.js"
 
 const userStore = "userStore";
 
@@ -230,7 +230,7 @@ export default {
       formData: new FormData(),
       alertMsg: "",
       selectedAllTags: "",
-      listInterest: [""],
+      listInterest:[""],
     };
   },
   /* 프로필 이미지 설정 */
@@ -249,12 +249,7 @@ export default {
   methods: {
     ...mapActions(userStore, ["getUserInfo", "modifyUser", "getInterest"]),
     onSubmit() {
-      if (
-        this.nickname == null &&
-        this.title == null &&
-        this.profile ===
-          `http://d3iu4sf4n4i2qf.cloudfront.net/${this.$store.state.userStore.filePath}/${this.$store.state.userStore.fileSavedName}`
-      ) {
+      if (this.nickname == null && this.title == null && this.profile === `http://d3iu4sf4n4i2qf.cloudfront.net/${this.$store.state.userStore.filePath}/${this.$store.state.userStore.fileSavedName}`) {
         this.alertMsg = "변경사항이 없습니다.";
         return;
       }
@@ -272,10 +267,12 @@ export default {
       }
       if (this.nickname == null) {
         this.nickname = this.userInfo.user_nickname;
-      } else this.formData.set("user_nickname", this.nickname);
+      }
+      else this.formData.set("user_nickname", this.nickname);
       if (this.title == null) {
         this.title = this.userInfo.user_title;
-      } else this.formData.set("user_title", this.title);
+      }
+      else this.formData.set("user_title", this.title);
       this.modifyUser({
         file: this.formData,
         token: sessionStorage.getItem("Authorization"),

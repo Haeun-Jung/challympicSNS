@@ -411,25 +411,17 @@ export default {
         } else if (this.selectedChallenge) {
           challengeNo = this.selectedChallenge.challengeNo;
         }
-
-        createPost(
-          challengeNo,
-          formData,
-          (response) => {
-            this.dialog = false;
-            this.$emit("close-challenge-modal");
-            this.$emit("close-modal");
-            this.$store.commit("challengeStore/RESET_POSSIBLE_STATUS");
-            this.$router.push({
-              name: `ChallengeDetail`,
-              params: { challengeNo: challengeNo },
-              query: { postNo: response.data.data.post_no },
-            });
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
+        
+        createPost(challengeNo, formData
+        , (response) => {
+          this.dialog = false;
+          this.$emit("close-challenge-modal");
+          this.$emit("close-modal");     
+          this.$store.commit("challengeStore/RESET_POSSIBLE_STATUS");
+          this.$router.push({ name: `ChallengeDetail`, params: {challengeNo: challengeNo}, query: {postNo: response.data.data.post_no}});
+        }, (error) => {
+          console.log(error);
+        })
       }
     },
     createChallengeWithPost(challenge, post) {
@@ -459,13 +451,9 @@ export default {
                 console.log(response);
                 this.dialog = false;
                 this.$emit("close-challenge-modal");
-                this.$emit("close-modal");
+                this.$emit("close-modal");     
                 this.$store.commit("challengeStore/RESET_POSSIBLE_STATUS");
-                this.$router.push({
-                  name: `ChallengeDetail`,
-                  params: { challengeNo: chall_no },
-                  query: { postNo: response.data.data.post_no },
-                });
+                this.$router.push({ name: `ChallengeDetail`, params: {challengeNo: chall_no}, query: {postNo: response.data.data.post_no}});
               },
               (error) => {
                 // 아직 백에서 challenge_no가 안 넘어와서 생성 실패하는 상태입니다.

@@ -1,4 +1,7 @@
-import { getChallenge, confirmChallengeName } from "@/api/challenge.js";
+import {
+  getChallenge,
+  confirmChallengeName,
+} from "@/api/challenge.js";
 
 const challengeStore = {
   namespaced: true,
