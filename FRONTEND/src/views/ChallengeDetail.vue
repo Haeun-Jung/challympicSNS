@@ -64,14 +64,14 @@
 											>
 												<v-icon large>mdi-alarm-light-outline</v-icon>
 											</v-btn>
-												<v-btn
-													v-show="canUser"
-													@click="postDialog = true"
-													outlined
-													color="#3396F4"
-												>
-													참여하기
-												</v-btn>
+											<v-btn
+												v-show="canUser"
+												@click="postDialog = true"
+												outlined
+												color="#3396F4"
+											>
+												참여하기
+											</v-btn>
 										</v-card-title>
 
 										<v-list-item-subtitle class="ml-5">
@@ -121,17 +121,14 @@
 												>
 													<v-icon>mdi-alarm-light-outline</v-icon>
 												</v-btn>
-												<div v-if="canUser">
-
-<v-btn
+												<v-btn
+													v-show="canUser"
 													@click="postDialog = true"
 													outlined
 													color="#3396F4"
 												>
 													참여하기
 												</v-btn>
-												</div>
-											
 											</v-card>
 										</v-row>
 									</div>
@@ -146,6 +143,16 @@
 										>
 											{{ tag }}
 										</v-chip>
+										<v-chip
+											v-for="challenger in challenge.challenge_challengers"
+											:key="challenger.user_no"
+											class="mt-6 ml-4 challenge-chip"
+											color="#3396F4"
+                      outlined
+                      @click="clickUser(challenger.user_no)"
+										>
+											@{{ challenger.user_nickname }}
+										</v-chip>
 									</v-list-item-subtitle>
 
 									<v-card-subtitle>
@@ -155,17 +162,7 @@
 											"
 										></span>
 									</v-card-subtitle>
-                  					<v-list-item-subtitle>
-										<v-chip
-											v-for="challenger in challenge.challenge_challengers"
-											:key="challenger.user_no"
-											class="mt-6 ml-4 challenge-chip"
-											color="#3396F4"
-                      						outlined
-                      						@click="clickUser(challenger.user_no)"
-										>
-											@{{ challenger.user_nickname }}
-										</v-chip>
+                  <v-list-item-subtitle>
 									</v-list-item-subtitle>
 								</v-main>
 							</v-layout>

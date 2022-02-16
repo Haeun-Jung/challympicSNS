@@ -8,18 +8,25 @@
     </v-card-text> -->
 		<!-- <v-divider></v-divider> -->
 		<v-card-text
-			v-for="comment in comments"
+			v-for="(comment, idx) in comments"
 			class="content-and-btns py-2"
 			:key="comment.comment_no"
 		>
 			<div class="profile-img-and-comment">
-				<img
-					class="profile mr-2"
-					src="../../assets/profile.png"
-					alt="profile img"
-				/>
+				<v-avatar v-if="comment.user_profile == null">
+					<v-icon size="50">mdi-account-circle</v-icon>
+				</v-avatar>
+				<v-avatar v-else size="40" class="ml-1">
+					<img
+					:src="
+						'http://d3iu4sf4n4i2qf.cloudfront.net/' +
+						comment.user_profile
+					"
+					alt="John"
+					/>
+				</v-avatar>
 				<span>
-					<div>
+					<div class="ml-3">
 						<span class="font-weight-bold">
 							<router-link
 								:to="{ path: `/feed/${comment.user_no}` }"
@@ -30,7 +37,7 @@
 						</span>
 						<span>{{ comment.comment_content }}</span>
 					</div>
-					<div class="comment-info">
+					<div class="comment-info ml-1">
 						<span class="mr-2">{{ comment.regdate }}</span>
 						<span class="mr-2">좋아요 {{ comment.like_cnt }}</span>
 						<span @click="confirmReportDialog = true" class="report-btn"
@@ -52,8 +59,21 @@
 					</v-btn>
 				</span>
 				<span v-else>
-					<v-btn @click="likeComment(comment.comment_no)" icon>
+					<!--
+        		<v-btn
+						@click="likeComment(comment.comment_no, comment.like_cnt)"
+						icon
+					>
 						<v-icon :class="{ 'active-like-btn': comment.isLiked }" small>
+							mdi-heart-outline
+						</v-icon>
+					</v-btn>
+          -->
+					<v-btn @click="pushLike(comment.comment_no, idx)" icon>
+						<v-icon
+							:color="comment.isLiked ? 'red' : 'grey lighten-3'"
+							size="32"
+						>
 							mdi-heart-outline
 						</v-icon>
 					</v-btn>
@@ -109,6 +129,22 @@
 			likeComment(comment_no) {
 				// 댓글 좋아요 API 호출
 				// emit event => 현재 comment에 대한 isLiked 값 수정
+				commentLike(
+					this.$store.state.userStore.userInfo.user_no,
+					comment_no,
+					(response) => {
+						console.log(response);
+					}
+				);
+			},
+			pushLike(comment_no, arrIdx) {
+				console.log(comment_no);
+				this.comments[arrIdx].isLiked = !this.comments[arrIdx].isLiked;
+				if (this.comments[arrIdx].isLiked) {
+					this.comments[arrIdx].like_cnt++;
+				} else {
+					this.comments[arrIdx].like_cnt--;
+				}
 				commentLike(
 					this.$store.state.userStore.userInfo.user_no,
 					comment_no,

@@ -59,6 +59,8 @@ public class ActivityApiController {
         List<Tag> allTagList = tagService.findRecentAllTagList();
         if(!allTagList.isEmpty()){
             allTagList.removeIf(t -> t.getIsChallenge() != null);
+        }else{
+            return new Result(true, HttpStatus.OK.value(), null);
         }
 
         for(Tag t : allTagList) System.out.println(t.getTag_content());
