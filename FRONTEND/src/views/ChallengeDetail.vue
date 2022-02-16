@@ -150,6 +150,17 @@
 											"
 										></span>
 									</v-card-subtitle>
+                  <v-list-item-subtitle>
+										<v-chip
+											v-for="challenger in challenge.challenge_challengers"
+											:key="challenger.user_no"
+											class="mt-6 ml-4 challenge-chip"
+											color="#3396F4"
+											text-color="white"
+										>
+											{{ challenger.user_nickname }}
+										</v-chip>
+									</v-list-item-subtitle>
 								</v-main>
 							</v-layout>
 							<div>
@@ -371,6 +382,10 @@
 				}
 				return this.$store.state.challengeStore.challenge;
 			},
+      challengers(){
+        console.log(this.challenge);
+        return this.challenge.challenge_challengers;
+      },
 			postList() {
 				if (this.$route.query.postNo) {
 					let org = this.$store.state.postStore.postList;
