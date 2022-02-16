@@ -11,7 +11,7 @@
 						<v-card
 							class="mx-auto img-frame"
 							max-width="344"
-							@click="movePage(post)"
+							@click="movePage(challenge)"
 						>
 							<v-img
                 v-if="post.video"

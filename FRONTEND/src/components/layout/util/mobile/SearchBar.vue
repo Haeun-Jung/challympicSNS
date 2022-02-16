@@ -31,6 +31,7 @@
 			@change="mobileKeywordSearch"
 			@keyup="mobiletest"
 			@keyup.delete="mobiletest"
+			placeholder="#태그 @사용자 검색"
 		>
 			<template v-slot:no-data>
 				<v-list-item>
@@ -57,7 +58,7 @@
 	export default {
 		name: "MobileSearchBar",
 		props: {
-			tags: Object,
+			tags: Array,
 		},
 		data() {
 			return {
@@ -84,6 +85,9 @@
 			mobiletest() {
 				if (this.mobileSearch.trim().length > 0) this.dynamicArr = this.tags;
 				else if (this.mobileSearch.length == 0) this.dynamicArr = this.empty;
+			},
+			onClickOutside() {
+				this.active = false;
 			},
 			mobileKeywordSearch() {
 				var to = this.mobileSearchInput.substring(1);
@@ -120,5 +124,8 @@
 	.v-toolbar__content,
 	.v-toolbar__extension {
 		padding: 0;
+	}
+	.v-autocomplete:not(.v-input--is-focused).v-select--chips >>> input {
+		max-height: inherit;
 	}
 </style>
