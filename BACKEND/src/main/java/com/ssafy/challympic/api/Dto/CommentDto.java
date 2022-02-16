@@ -18,6 +18,9 @@ public class CommentDto {
     private int like_cnt;
     private int comment_report;
     private boolean IsLiked;
+    private String user_nickname;
+    private int file_no;
+    private String user_profile;
 
     public CommentDto(Comment comment, boolean IsLiked) {
         this.comment_no = comment.getComment_no();
@@ -29,5 +32,9 @@ public class CommentDto {
         this.like_cnt = comment.getCommentLike().size();
         this.comment_report = comment.getComment_report();
         this.IsLiked = IsLiked;
+        this.user_nickname = comment.getUser().getUser_nickname();
+        if(comment.getUser().getMedia() != null){
+            this.user_profile = comment.getUser().getMedia().getFile_path()+"/"+comment.getUser().getMedia().getFile_savedname();
+        }
     }
 }
