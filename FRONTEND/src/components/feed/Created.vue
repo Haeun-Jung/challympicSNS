@@ -1,5 +1,4 @@
 <template>
-<<<<<<< HEAD
   <v-container fluid>
     <v-row dense>
       <v-col
@@ -12,20 +11,33 @@
             <v-card
               class="mx-auto img-frame"
               max-width="344"
-              @click="movePage(post)"
+              @click="movePage(challenge)"
             >
               <v-img
+                v-if="post.video"
+                min-height="190"
+                max-height="344"
                 :src="
                   'http://d3iu4sf4n4i2qf.cloudfront.net/' +
-                  challenge.file_path +
-                  '/' +
-                  challenge.file_savedname
+                  post.file_path +
+                  '/thumbnail/' +
+                  post.file_savedname +
+                  '.png'
                 "
               >
-                <!-- 비디오일때만 -->
-                <v-icon v-if="challenge.video" icon class="play-btn"
-                  >mdi-play</v-icon
-                >
+                <v-icon icon class="play-btn">mdi-play</v-icon>
+              </v-img>
+              <v-img
+                v-else
+                min-height="190"
+                max-height="344"
+                :src="
+                  'http://d3iu4sf4n4i2qf.cloudfront.net/' +
+                  post.file_path +
+                  '/' +
+                  post.file_savedname
+                "
+              >
               </v-img>
               <v-fade-transition>
                 <v-overlay v-if="hover" absolute color="#2E2E2E">
@@ -51,74 +63,6 @@
       </v-col>
     </v-row>
   </v-container>
-=======
-	<v-container fluid>
-		<v-row dense>
-			<v-col
-				v-for="challenge in challenges"
-				:key="challenge.challenge_no"
-				:cols="4"
-			>
-				<v-hover>
-					<template v-slot:default="{ hover }">
-						<v-card
-							class="mx-auto img-frame"
-							max-width="344"
-							@click="movePage(challenge)"
-						>
-							<v-img
-                v-if="post.video"
-                min-height="190"
-                max-height="344"
-								:src="
-									'http://d3iu4sf4n4i2qf.cloudfront.net/' +
-									post.file_path +
-									'/thumbnail/' +
-									post.file_savedname +
-                  '.png'
-								"
-							>
-                <v-icon icon class="play-btn"
-                  >mdi-play</v-icon
-                >
-							</v-img>
-							<v-img
-                v-else
-                min-height="190"
-                max-height="344"
-								:src="
-									'http://d3iu4sf4n4i2qf.cloudfront.net/' +
-									post.file_path +
-									'/' +
-									post.file_savedname
-								"
-							>
-							</v-img>
-							<v-fade-transition>
-								<v-overlay v-if="hover" absolute color="#2E2E2E">
-									<div class="info-wrapper">
-										<div class="challenge-info">
-											<v-icon icon class="icon hashtag-icon">mdi-pound</v-icon
-											>{{ challenge.challenge_title }}
-										</div>
-										<div class="participated-info">
-											<v-icon icon class="icon challenger-icon"
-												>mdi-account-plus</v-icon
-											>{{ challenge.post_cnt
-											}}<v-icon icon class="icon bookmark-icon"
-												>mdi-bookmark</v-icon
-											>{{ challenge.subscription_cnt }}
-										</div>
-									</div>
-								</v-overlay>
-							</v-fade-transition>
-						</v-card>
-					</template>
-				</v-hover>
-			</v-col>
-		</v-row>
-	</v-container>
->>>>>>> a014fa4771d1067af18b61e94217d8ace066a5a6
 </template>
 
 <script>

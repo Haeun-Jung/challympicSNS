@@ -30,7 +30,7 @@ export default {
       this.$store.dispatch("postStore/getRecentPostList");
     } else {
       console.log("유저 번호 있을 때");
-      console.log(this.$store.state.userStore.userInfo.user_no)
+      console.log(this.$store.state.userStore.userInfo.user_no);
       this.$store.dispatch(
         "postStore/getRecentPostList",
         this.$store.state.userStore.userInfo.user_no

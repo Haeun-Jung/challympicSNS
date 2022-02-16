@@ -1,5 +1,4 @@
 <template>
-<<<<<<< HEAD
   <v-container fluid>
     <v-row dense>
       <v-col v-for="post in posts" :key="post.post_no" :cols="4">
@@ -11,6 +10,23 @@
               @click="movePage(post)"
             >
               <v-img
+                v-if="post.video"
+                min-height="190"
+                max-height="344"
+                :src="
+                  'http://d3iu4sf4n4i2qf.cloudfront.net/' +
+                  post.file_path +
+                  '/thumbnail/' +
+                  post.file_savedname +
+                  '.png'
+                "
+              >
+                <v-icon icon class="play-btn">mdi-play</v-icon>
+              </v-img>
+              <v-img
+                v-else
+                min-height="190"
+                max-height="344"
                 :src="
                   'http://d3iu4sf4n4i2qf.cloudfront.net/' +
                   post.file_path +
@@ -18,10 +34,6 @@
                   post.file_savedname
                 "
               >
-                <!-- 비디오일때만 -->
-                <v-icon v-if="post.video" icon class="play-btn"
-                  >mdi-play</v-icon
-                >
               </v-img>
               <v-fade-transition>
                 <v-overlay v-if="hover" absolute color="#2E2E2E">
@@ -47,70 +59,6 @@
       </v-col>
     </v-row>
   </v-container>
-=======
-	<v-container fluid>
-		<v-row dense>
-			<v-col v-for="post in posts" :key="post.post_no" :cols="4">
-				<v-hover>
-					<template v-slot:default="{ hover }">
-						<v-card
-							class="mx-auto img-frame"
-							max-width="344"
-							@click="movePage(post)"
-						>
-							<v-img
-                v-if="post.video"
-                min-height="190"
-                max-height="344"
-								:src="
-									'http://d3iu4sf4n4i2qf.cloudfront.net/' +
-									post.file_path +
-									'/thumbnail/' +
-									post.file_savedname +
-                  '.png'
-								"
-							>
-                <v-icon icon class="play-btn"
-                  >mdi-play</v-icon
-                >
-							</v-img>
-							<v-img
-                v-else
-                min-height="190"
-                max-height="344"
-								:src="
-									'http://d3iu4sf4n4i2qf.cloudfront.net/' +
-									post.file_path +
-									'/' +
-									post.file_savedname
-								"
-							>
-							</v-img>
-							<v-fade-transition>
-								<v-overlay v-if="hover" absolute color="#2E2E2E">
-									<div class="info-wrapper">
-										<div class="challenge-info">
-											<v-icon icon class="icon hashtag-icon">mdi-pound</v-icon
-											>{{ post.challenge_title }}
-										</div>
-										<div>
-											<v-icon icon class="icon">mdi-heart</v-icon
-											>{{ post.like_cnt }}
-											<v-icon icon class="icon comment-icon"
-												>mdi-comment</v-icon
-											>
-											{{ post.comment_cnt }}
-										</div>
-									</div>
-								</v-overlay>
-							</v-fade-transition>
-						</v-card>
-					</template>
-				</v-hover>
-			</v-col>
-		</v-row>
-	</v-container>
->>>>>>> a014fa4771d1067af18b61e94217d8ace066a5a6
 </template>
 
 <script>

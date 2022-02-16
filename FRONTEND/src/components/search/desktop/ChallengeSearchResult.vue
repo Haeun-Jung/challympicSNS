@@ -85,56 +85,56 @@
                           <v-spacer />
                         </v-card-title>
 
-												<v-card-subtitle style="color: white">
-													<strong
-														style="
-															text-shadow: 1px 1px 3px #424242;
-															-webkit-text-stroke-width: 0.1px;
-															-webkit-text-stroke-color: #424242;
-														"
-													>
-														좋아요{{ post.post_like_count }} 개 댓글
-														{{ post.comment_count }}개</strong
-													>
-												</v-card-subtitle>
-											</div>
-											<!-- 좋아요-->
-											<div class="bar-heart">
-												<v-btn @click="pushLike(post)" icon>
-													<v-icon
-														:color="post.isLike ? 'red' : 'grey lighten-3'"
-														size="32"
-													>
-														mdi-heart-outline
-													</v-icon>
-												</v-btn>
-											</div>
-										</v-carousel-item>
-									</div>
-								</div>
-							</v-carousel>
-							<v-list two-line>
-								<v-list-item>
-									<v-list-item-content>
-										<v-list-item-title>
-											<router-link
-												:to="{ path: `/challenge/${item.challenge_no}` }"
-												style="text-decoration: none; color: inherit; mr-2"
-												class="title-block"
-											>
-												{{ item.challenge_title }}
-											</router-link>
-										</v-list-item-title>
-										<v-list-item-subtitle>
-											{{ item.challenge_content }}
-										</v-list-item-subtitle>
-										<v-list-item-subtitle>
-											{{ item.challenge_tag }}
-										</v-list-item-subtitle>
-									</v-list-item-content>
-									<v-list-item-action>
-										<span>
-											<!-- v-if user_subscribe == true -> filled 된 애로 보여주기
+                        <v-card-subtitle style="color: white">
+                          <strong
+                            style="
+                              text-shadow: 1px 1px 3px #424242;
+                              -webkit-text-stroke-width: 0.1px;
+                              -webkit-text-stroke-color: #424242;
+                            "
+                          >
+                            좋아요{{ post.post_like_count }} 개 댓글
+                            {{ post.comment_count }}개</strong
+                          >
+                        </v-card-subtitle>
+                      </div>
+                      <!-- 좋아요-->
+                      <div class="bar-heart">
+                        <v-btn @click="pushLike(post)" icon>
+                          <v-icon
+                            :color="post.isLike ? 'red' : 'grey lighten-3'"
+                            size="32"
+                          >
+                            mdi-heart-outline
+                          </v-icon>
+                        </v-btn>
+                      </div>
+                    </v-carousel-item>
+                  </div>
+                </div>
+              </v-carousel>
+              <v-list two-line>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      <router-link
+                        :to="{ path: `/challenge/${item.challenge_no}` }"
+                        style="text-decoration: none; color: inherit; mr-2"
+                        class="title-block"
+                      >
+                        {{ item.challenge_title }}
+                      </router-link>
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      {{ item.challenge_content }}
+                    </v-list-item-subtitle>
+                    <v-list-item-subtitle>
+                      {{ item.challenge_tag }}
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <span>
+                      <!-- v-if user_subscribe == true -> filled 된 애로 보여주기
 											지금 이게 없어서 작동 못함...-->
                       <v-btn icon @click="setSubscribe(item)">
                         <v-icon
@@ -155,93 +155,93 @@
   </v-container>
 </template>
 <script>
-	// import ChallengeList from "../util/ChallengeList.vue";
-	import { searchTagList } from "@/api/search.js";
-	import { setSubscription } from "@/api/challenge.js";
-	import { postLikeList } from "@/api/post.js";
-	import VideoComponent from "../util/VideoComponent.vue";
+// import ChallengeList from "../util/ChallengeList.vue";
+import { searchTagList } from "@/api/search.js";
+import { setSubscription } from "@/api/challenge.js";
+import { postLikeList } from "@/api/post.js";
+import VideoComponent from "../util/VideoComponent.vue";
 
-	export default {
-		name: "ChallengeSearchResult",
-		components: {
-			VideoComponent,
-		},
-		props: {
-			search: String,
-		},
-		methods: {
-			setSubscribe(challenge) {
-				// console.log(challenge);
-				challenge.subscription = !challenge.subscription;
-				setSubscription(
-					challenge.challenge_no,
-					challenge.user_no,
-					(response) => {
-						console.log(response);
-					},
-					(error) => {
-						console.log(error);
-					}
-				);
-			},
-			pushLike(post) {
-				if (this.$store.state.userStore.userInfo.user_no == 0) {
-					alert("로그인이 필요한 서비스입니다.");
-					return;
-				}
+export default {
+  name: "ChallengeSearchResult",
+  components: {
+    VideoComponent,
+  },
+  props: {
+    search: String,
+  },
+  methods: {
+    setSubscribe(challenge) {
+      // console.log(challenge);
+      challenge.subscription = !challenge.subscription;
+      setSubscription(
+        challenge.challenge_no,
+        challenge.user_no,
+        (response) => {
+          console.log(response);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    pushLike(post) {
+      if (this.$store.state.userStore.userInfo.user_no == 0) {
+        alert("로그인이 필요한 서비스입니다.");
+        return;
+      }
 
-			// 좋아요 API 요청
-			if (post.isLike && post.post_like_count > 0) {
-				// 클릭된 상태
-				post.post_like_count -= 1;
-			} else {
-				post.post_like_count += 1;
-			}
+      // 좋아요 API 요청
+      if (post.isLike && post.post_like_count > 0) {
+        // 클릭된 상태
+        post.post_like_count -= 1;
+      } else {
+        post.post_like_count += 1;
+      }
 
-			post.isLike = !post.isLike;
+      post.isLike = !post.isLike;
 
-			postLikeList(
-				post.post_no,
-				post.user_no,
-				(response) => {
-				console.log(response);
-				},
-				(error) => {
-				console.log(error);
-				}
-			);
-			},
-		},
-		created() {
-			const user_no = this.$store.state.userStore.userInfo.user_no;
-			const tag_content = this.search.substring(1);
-			searchTagList(
-				{ user_no, tag_content },
-				(response) => {
-					this.challenges = response.data.data.challengeList;
-					console.log(this.challenges);
-					console.log("created");
-					console.log(this.searchKey);
-				},
-				(error) => {
-					console.log(error);
-					console.log("create false");
-				}
-			);
-		},
-		data() {
-			return {
-				overlay: false,
-				user_no: !this.$store.state.userStore.userInfo
-					? 0
-					: this.$store.state.userStore.userInfo.user_no,
-				searchKey: {
-					user_no: this.user_no,
-					tag_content: this.search.substring(1),
-				},
-				itemsPerPageArray: [3, 6, 9],
-				searchProp: "",
-				filter: {},
+      postLikeList(
+        post.post_no,
+        post.user_no,
+        (response) => {
+          console.log(response);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+  },
+  created() {
+    const user_no = this.$store.state.userStore.userInfo.user_no;
+    const tag_content = this.search.substring(1);
+    searchTagList(
+      { user_no, tag_content },
+      (response) => {
+        this.challenges = response.data.data.challengeList;
+        console.log(this.challenges);
+        console.log("created");
+        console.log(this.searchKey);
+      },
+      (error) => {
+        console.log(error);
+        console.log("create false");
+      }
+    );
+  },
+  data() {
+    return {
+      overlay: false,
+      user_no: !this.$store.state.userStore.userInfo
+        ? 0
+        : this.$store.state.userStore.userInfo.user_no,
+      searchKey: {
+        user_no: this.user_no,
+        tag_content: this.search.substring(1),
+      },
+      itemsPerPageArray: [3, 6, 9],
+      searchProp: "",
+      filter: {},
 
       sortDesc: false,
       page: 1,

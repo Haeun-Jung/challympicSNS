@@ -42,7 +42,6 @@
 </template>
 
 <script>
-<<<<<<< HEAD
 import { getRecommend } from "@/api/search.js";
 export default {
   name: "TagBar",
@@ -97,54 +96,6 @@ export default {
     };
   },
 };
-=======
-	import { getRecommend } from "@/api/search.js";
-	export default {
-		name: "TagBar",
-		created() {
-			if (this.$store.state.userStore.userInfo) {
-				getRecommend(
-					this.$store.state.userStore.userInfo.user_no,
-					(response) => {
-						this.tagList = response.data.data.tagList;
-						this.list = this.makeFour(response.data.data.tagList);
-					},
-					(error) => {
-						console.log(error);
-					}
-				);
-			} else {
-				getRecommend(
-					0,
-					(response) => {
-						this.tagList = response.data.data.tagList;
-					},
-					(error) => {
-						console.log(error);
-					}
-				);
-			}
-		},
-		methods: {
-			moveTag(tag_content) {
-				const subTag = tag_content.substring(1);
-				this.$router.push(`/search/${encodeURIComponent(subTag)}`);
-			},
-			makeFour(list) {
-				for (var i = 0; i < 4; i++) {
-					this.mobileTagList.push(list[i]);
-				}
-			},
-		},
-		data() {
-			return {
-				tagList: [],
-				list: [],
-				mobileTagList: [],
-			};
-		},
-	};
->>>>>>> a014fa4771d1067af18b61e94217d8ace066a5a6
 </script>
 
 <style scoped>
