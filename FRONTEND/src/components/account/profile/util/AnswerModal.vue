@@ -7,7 +7,7 @@
 		persistent
 		:key="item.qna_no"
 	>
-		<v-card class="ma-10">
+		<v-card>
 			<v-card-title class="lighten-2 card-title-align">
 				답변
 				<v-btn
@@ -22,7 +22,7 @@
 				</v-btn>
 			</v-card-title>
 			<v-divider />
-			<div>
+			<div class="mx-6">
 				<v-list class="overflow-y-auto">
 					<v-list-item-title class="ma-2 ml-2 pr-2">
 						[문의 제목] {{ item.qna_title }}
