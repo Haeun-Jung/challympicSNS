@@ -9,7 +9,7 @@
 			:timeout="timeout"
 			color="success"
 			outlined
-			style="font-weight: bold; border: 2px solid"
+			style="font-weight: bold; border: 2px solid; color: transparent;"
 		>
 			{{ text }}
 

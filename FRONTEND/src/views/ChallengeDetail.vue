@@ -233,7 +233,7 @@
                   :timeout="timeout"
                   color="red"
                   outlined
-                  style="font-weight: bold; border: 2px solid"
+                  style="font-weight: bold; border: 2px solid; color: transparent;"
                 >
                   {{ text }}
 
@@ -478,7 +478,7 @@
 				this.sortBy = "post_regdate";
 			}
 
-			this.userData = this.$store.state.userStore.userInfo;
+			this.userData = this.$store.state.userStore.userInfo;	
 		},
 	};
 </script>
