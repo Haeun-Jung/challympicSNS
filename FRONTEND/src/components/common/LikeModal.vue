@@ -19,11 +19,11 @@
 
       <div>
         <v-list class="overflow-y-auto">
-        <div style="text-align: center;" v-if="likeUserList.length == 0">
+        <div style="text-align: center;" v-if="likeList.length == 0">
             <h4>첫 좋아요를 눌러주세요!</h4>
         </div>
 
-          <v-list-item v-else v-for="(user, idx) in likeUserList" :key="user.user_no">
+          <v-list-item v-else v-for="(user, idx) in likeList" :key="user.user_no">
             <img
               v-if="user.user_title"
               class="medal-icon"
@@ -31,14 +31,8 @@
             />
             <v-list-item-avatar class="user-image">
               <v-img
-                v-if="user.file_savedname"
                 :alt="`${user.user_nickname} avatar`"
-                :src="`https://d384sk7z91xokb.cloudfront.net/${user.file_path}/${user.file_savedname}`"
-              ></v-img>
-              <v-img
-                v-else
-                :alt="`${user.user_nickname} avatar`"
-                src="../../assets/profile.png"
+                :src='imageUrl(user.file_path, user.file_savedname)'
               ></v-img>
             </v-list-item-avatar>
 
@@ -105,9 +99,22 @@ export default {
   data() {
     return {
         login_user: null,
+        likeList: null,
+        defaultPath: "http://d3iu4sf4n4i2qf.cloudfront.net/",
     }
   },
+  watch: {
+    likeUserList(newList){
+        this.likeList = newList;
+    }
+	},
   methods: {
+    imageUrl(file_path, file_savedname){
+      if(!file_path)
+        return require("@/assets/profile.png");
+        
+      return this.defaultPath + file_path + "/" + file_savedname;
+    },
     follow(userNo, idx) {
       // 팔로우 API 요청 보내기
       // 해당 유저에 대한 isFollowing 값 변경
@@ -133,6 +140,7 @@ export default {
   },
   created(){
       this.login_user = this.$store.state.userStore.userInfo;
+      this.likeList = this.likeUserList;
   }
 };
 </script>

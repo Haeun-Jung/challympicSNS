@@ -173,7 +173,7 @@
 									v-if="challenge.challenge_challengers && challenge.challenge_challengers.length === 1"
 									:postList="postList"
 									:type="challenge.challenge_type"
-                  :user="userData"
+									:user="userData"
 								/>
 								<v-data-iterator
 									v-else
@@ -204,7 +204,7 @@
 										<post-item
 											v-for="post in props.items"
 											:post="post"
-                      :challengeNo="challenge.challenge_no"
+                      						:challengeNo="challenge.challenge_no"
 											:type="challenge.challenge_type"
 											:key="post.post_no"
 											:user="userData"
@@ -451,6 +451,7 @@
 				if (this.$route.query.postNo) {
 					let org = this.$store.state.postStore.postList;
 					let list = [];
+
 					for (let i = 0; i < org.length; i++) {
 						if (org[i].post_no == this.$route.query.postNo) {
 							list.unshift(org[i]);
