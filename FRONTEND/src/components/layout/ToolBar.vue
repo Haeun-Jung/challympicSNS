@@ -38,12 +38,6 @@
 			<alert-button />
 			<v-menu bottom left offset-y display="block">
 				<template v-slot:activator="{ on, attrs }">
-					<!--
-					<v-btn icon v-bind="attrs" v-on="on">
-						<v-icon>mdi-account-circle</v-icon>
-					</v-btn>
-					 v-if="!this.$store.state.userStore.filePath"
-					-->
 					<v-avatar v-bind="attrs" v-on="on" size="48">
 						<v-img :src="imageUrl"></v-img>
 					</v-avatar>
@@ -63,7 +57,7 @@
 		</div>
 		<v-col cols="2" />
 	</v-app-bar>
-	<!-- 모바일 햄버거 버튼일 때, 사이드로 열리는 컴포넌트-->
+	<!-- 모바일 툴바 -->
 	<v-app-bar
 		v-else
 		fixed
@@ -82,11 +76,10 @@
 		</v-toolbar-items>
 
 		<v-toolbar-title class="v-toolbar-title font-weight" @click="goMain">
-			<!--<v-img src="@/assets/challympic_title.png" width="120px" />-->
-			<!--<v-img src="@/assets/logo.png" width="50px" />-->
 		</v-toolbar-title>
 		<v-spacer />
-		<mobile-search-bar :tags="tags" />
+		<!-- 모바일 검색-->
+		<mobile-search-bar :tags="tags" @mobileSearchInput="mobileChildSearch" />
 		<v-btn
 			v-if="!isLoggedIn"
 			@click="clickLoginBtn"
@@ -96,14 +89,13 @@
 			x-small
 			>로그인</v-btn
 		>
-
 		<div v-else>
 			<alert-button />
 			<v-menu bottom left offset-y width="300px">
 				<template v-slot:activator="{ on, attrs }">
-					<v-btn icon v-bind="attrs" v-on="on">
-						<v-icon>mdi-account-circle</v-icon>
-					</v-btn>
+					<v-avatar v-bind="attrs" v-on="on" size="35">
+						<v-img :src="imageUrl"></v-img>
+					</v-avatar>
 				</template>
 
 				<v-list>
@@ -207,13 +199,7 @@
 								this.$store.state.userStore.userInfo.user_no +
 								"/",
 						},
-						{
-							title: "내 피드",
-							link1:
-								"/feed/" + this.$store.state.userStore.userInfo.user_no + "/",
-							link2:
-								"/feed/" + this.$store.state.userStore.userInfo.user_no + "/",
-						}
+						{ title: "내 피드" }
 					);
 				} else {
 					menu.push({
@@ -245,7 +231,9 @@
 				this.onSelect = true;
 			},
 			goMain() {
-				this.$router.push("/");
+				//this.$router.push("/");
+				//window.location.href = "/";
+				window.location.assign("/"); //without post
 			},
 			clickLoginBtn() {
 				this.$router.push("/login");
@@ -256,7 +244,9 @@
 					sessionStorage.removeItem("Authorization");
 					this.$store.commit("userStore/LOGOUT");
 					this.$router.push("/recent");
-				}
+				} else if (this.profileMenu[i].title === "내 피드") {
+          window.location.href = `/feed/${this.$store.state.userStore.userInfo.user_no}`;
+        }
 			},
 			childSearch(searchInput) {
 				this.searchInput = searchInput;
@@ -266,13 +256,35 @@
 					var foundValue = this.obj2.filter((obj) => obj.key == searchInput);
 					to = foundValue[0].no; // : feed 번호
 					this.dynamicArr = this.empty;
-					this.$router.push("/feed/" + to);
+					//this.$router.push("/feed/" + to);
+					window.location.href = "/feed/" + to;
 				} else if (searchCategory === "#") {
 					this.dynamicArr = this.empty;
-					this.$router.push("/search/" + to);
+					//this.$router.push("/search/" + to);
+					window.location.href = "/search/" + to;
 				}
 			},
-
+			mobileChildSearch(mobileSearchInput) {
+				this.mobileSearchInput = mobileSearchInput;
+				var to = this.mobileSearchInput.substring(1);
+				let searchCategory = this.mobileSearchInput.charAt(0);
+				if (searchCategory === "@") {
+					var foundValue = this.obj2.filter(
+						(obj) => obj.key == this.mobileSearchInput
+					);
+					//console.log("모바일");
+					this.mobileSearchInput = "";
+					to = foundValue[0].no; // : feed 번호
+					this.dynamicArr = this.empty;
+					//this.$router.push("/feed/" + to);
+					window.location.href = "/feed/" + to;
+				} else if (searchCategory === "#") {
+					this.mobileSearchInput = "";
+					this.dynamicArr = this.empty;
+					//this.$router.push("/search/" + to);
+					window.location.href = "/search/" + to;
+				}
+			},
 			isMobile() {
 				if (
 					/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(

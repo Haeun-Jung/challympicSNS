@@ -65,8 +65,8 @@
 												<v-icon large>mdi-alarm-light-outline</v-icon>
 											</v-btn>
 											<v-btn
-												v-show="canUser"
-												@click="postDialog = true"
+												v-show="canUser && !isEnded"
+												@click="userData ? postDialog = true : failParticipateChallenge()"
 												outlined
 												color="#3396F4"
 											>
@@ -99,7 +99,7 @@
 											<v-card width="100%" elevation="0" color="transparent">
 												<share-button />
 												<v-btn
-													v-if="challenge.subscription"
+													v-if="isSubscription"
 													@click="subscribe"
 													class="icon-margin"
 													icon
@@ -122,8 +122,8 @@
 													<v-icon>mdi-alarm-light-outline</v-icon>
 												</v-btn>
 												<v-btn
-													v-show="canUser"
-													@click="postDialog = true"
+													v-show="canUser && !isEnded"
+													@click="userData ? postDialog = true : failParticipateChallenge()"
 													outlined
 													color="#3396F4"
 												>
@@ -170,10 +170,10 @@
 								<!-- End of Mobile -->
 								<!--Data Iterator -->
                 <battle-item
-									v-if="challenge.challenge_challengers.length === 1"
+									v-if="challenge.challenge_challengers && challenge.challenge_challengers.length === 1"
 									:postList="postList"
 									:type="challenge.challenge_type"
-                  :user="userData"
+									:user="userData"
 								/>
 								<v-data-iterator
 									v-else
@@ -227,12 +227,29 @@
 								}"
 								@close-modal="postDialog = false"
 							/>
+              <div style="color: transparent">
+                <v-snackbar
+                  v-model="snackbar"
+                  :timeout="timeout"
+                  color="red"
+                  outlined
+                  style="font-weight: bold; border: 2px solid"
+                >
+                  {{ text }}
+
+                  <template v-slot:action="{ attrs }">
+                    <v-btn color="red" text v-bind="attrs" @click="snackbar = false">
+                      Close
+                    </v-btn>
+                  </template>
+                </v-snackbar>
+              </div>
 						</v-flex>
 					</v-layout>
 				</v-flex>
 				<v-flex xs2 class="hidden-md-and-down" />
 			</v-layout>
-
+      
 			<!--
       -->
 		</v-container>
@@ -246,6 +263,8 @@
 	import ShareButton from "@/components/button/ShareButton.vue";
 	import ConfirmReport from "@/components/report/ConfirmReport.vue";
 	import PostUpload from "@/components/upload/PostUpload.vue";
+  import { checkEnd } from "@/plugins/dayjs.js"
+
 	import {
 		setSubscription,
 		removeSubscription,
@@ -280,6 +299,9 @@
 				],
 				userData: null,
 				isSubscription: false,
+        snackbar: false,
+				text: "로그인이 필요한 서비스입니다.",
+				timeout: 1500,
 			};
 		},
 		methods: {
@@ -291,9 +313,15 @@
 					this.alert = false;
 				}, 3000);
 			},
+      failParticipateChallenge() {
+        this.snackbar = true;
+      },
 			subscribe() {
 				let challenge = this.$store.state.challengeStore.challenge;
-
+        if (this.userData === null) {
+          this.snackbar = true;
+          return;
+        }
 				if (this.isSubscription) {
 					// 챌린지 구독 delete 요청
 					removeSubscription(
@@ -301,11 +329,6 @@
 						this.$store.state.userStore.userInfo.user_no,
 						() => {
 							this.isSubscription = false;
-							if (this.$store.state.userStore.userInfo) {
-								this.$store.dispatch("userStore/getSubscription", {
-									token: sessionStorage.getItem("Authorization"),
-								});
-							}
 						},
 						(error) => {
 							console.log(error);
@@ -318,11 +341,6 @@
 						this.$store.state.userStore.userInfo.user_no,
 						() => {
 							this.isSubscription = true;
-							if (this.$store.state.userStore.userInfo) {
-								this.$store.dispatch("userStore/getSubscription", {
-									token: sessionStorage.getItem("Authorization"),
-								});
-							}
 						},
 						(error) => {
 							console.log(error);
@@ -391,30 +409,37 @@
 					.filter((word) => {
 						return word.startsWith("#");
 					});
-				if (this.challenge.challenge_challengers.length === 1) {
-				splitedContent.push("#1:1");
-				}
+        if (this.challenge.challenge_challengers && this.challenge.challenge_challengers.length === 1) {
+          splitedContent.push("#1:1");
+        }
 				if (splitedContent.length > 0) {
 					return splitedContent;
 				} else {
 					return null;
 				}
 			},
+      isEnded() {
+				if (checkEnd(this.$store.state.challengeStore.challenge.challenge_end.replace(/./g, "-"))) {
+          return true;
+        }
+        return false;
+      },
 			challenge() {
 				if (this.$store.state.challengeStore.challenge.challenge_no) {
 					isSubscribe(
-                        this.$store.state.challengeStore.challenge.challenge_no,
-                        this.$store.state.userStore.userInfo.user_no,
+						this.$store.state.challengeStore.challenge.challenge_no,
+						this.$store.state.challengeStore.challenge.user_no,
 						(response) => {
-							if (response.data.success)
+							if (response.data.success) {
 								this.isSubscription = true;
-							else
+              }
+							else {
 								this.isSubscription = false;
+              }
 						},
 						() => {}
 					);
 				}
-
 				return this.$store.state.challengeStore.challenge;
 			},
       // challengers(){
@@ -426,6 +451,7 @@
 				if (this.$route.query.postNo) {
 					let org = this.$store.state.postStore.postList;
 					let list = [];
+
 					for (let i = 0; i < org.length; i++) {
 						if (org[i].post_no == this.$route.query.postNo) {
 							list.unshift(org[i]);

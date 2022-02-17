@@ -28,13 +28,15 @@
 				v-for="(challenge, idx) in listsubscription"
 				:key="challenge.challenge_no"
 				:value="challenge"
-				:to="{ path: '/challenge/' + challenge.challenge_no }"
 				v-model="challenge.isOpen"
 				color="primary"
 				outlined
 				close
+        @click="goChallengePage(challenge.challenge_no)"
 				@click:close="remove(challenge.challenge_no, idx)"
 			>
+			<!-- 				:to="{ path: '/challenge/' + challenge.challenge_no }"
+ -->
 				{{ challenge.challenge_title }}
 			</v-chip>
 		</v-list-group>
@@ -78,6 +80,9 @@
 			toggle() {
 				this.active = true;
 			},
+      goChallengePage(challengeNo) {
+        window.location.href = `/challenge/${challengeNo}`;
+      },
 		},
 		created() {
 			if (this.$store.state.userStore.userInfo) {

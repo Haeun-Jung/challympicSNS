@@ -16,4 +16,12 @@ const fromNow = (dateTime) => {
   return dayjs(dateTime).format("YYYY-MM-DD");
 };
 
-export default fromNow;
+const checkEnd = (dateTime) => {
+  const diff = dayjs().diff(dateTime, "days");
+  if (diff > 0) {
+    return true;
+  }
+  return false;
+};
+
+export { fromNow, checkEnd };

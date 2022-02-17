@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import fromNow from "@/plugins/dayjs.js";
+import { fromNow } from "@/plugins/dayjs.js";
 export default {
   name: "AlertButton",
   data() {
