@@ -1,5 +1,5 @@
 <template>
-	<div style="color: transparent">
+	<span>
 		<v-btn @click="copyChallengeLink" class="icon-margin" icon>
 			<v-icon large class="hidden-md-and-down"> mdi-export-variant</v-icon>
 			<v-icon class="hidden-sm-and-up"> mdi-export-variant</v-icon>
@@ -9,7 +9,7 @@
 			:timeout="timeout"
 			color="success"
 			outlined
-			style="font-weight: bold; border: 2px solid"
+			style="font-weight: bold; border: 2px solid; color: transparent"
 		>
 			{{ text }}
 
@@ -19,7 +19,7 @@
 				</v-btn>
 			</template>
 		</v-snackbar>
-	</div>
+	</span>
 </template>
 
 <script>
@@ -27,7 +27,7 @@
 		name: "ShareButton",
 		props: {
 			postNo: Number,
-      challengeNo: Number,
+			challengeNo: Number,
 		},
 		data() {
 			return {
@@ -43,7 +43,8 @@
 				const inputTag = document.createElement("input");
 				document.body.appendChild(inputTag);
 				// inputTag.value = window.document.location.href;
-        inputTag.value = window.location.origin + "/challenge/" + this.challengeNo;
+				inputTag.value =
+					window.location.origin + "/challenge/" + this.challengeNo;
 				if (this.postNo) {
 					inputTag.value += `#${this.postNo}`;
 				}

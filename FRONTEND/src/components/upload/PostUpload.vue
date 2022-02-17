@@ -159,6 +159,21 @@
 				</v-card-text>
 			</v-card>
 		</v-dialog>
+		 <v-snackbar
+			v-model="snackbar"
+			:timeout="timeout"
+			color="error"
+			outlined
+			style="font-weight: bold; border: 2px solid; color:transparent;"
+			>
+			{{ text }}
+
+			<template v-slot:action="{ attrs }">
+				<v-btn color="red" text v-bind="attrs" @click="snackbar = false">
+				Close
+				</v-btn>
+			</template>
+		</v-snackbar>
 	</v-app>
 </template>
 
@@ -200,6 +215,9 @@
 				{ text: "name", value: "name" },
 				{ text: "size", value: "size" },
 			],
+			snackbar: false,
+			text: "로그인이 필요한 서비스입니다.",
+			timeout: 1500,
 		}),
 		methods: {
 			getEndDate(period) {
@@ -243,13 +261,10 @@
 					type = "VIDEO";
 
 				if (type !== this.selectedChallenge.challengeType.toUpperCase()) {
-					alert(
-						"해당 챌린지는 " +
-							this.selectedChallenge.challengeType +
-							"타입 챌린지입니다."
-					);
-					this.selectedChallenge = -1;
+					this.text = "해당 챌린지는 " + this.selectedChallenge.challengeType + "타입 챌린지입니다.";
+					this.snackbar = true;
 					this.post.file = [];
+					this.selectedChallenge = -1;
 				} else {
 					this.fileType = type;
 				}
@@ -270,11 +285,8 @@
 				if (this.propChallenge) {
 					// 챌린지 등록에서 넘어온 경우
 					if (type !== this.propChallenge.fileType.toUpperCase()) {
-						alert(
-							"해당 챌린지는 " +
-								this.propChallenge.fileType +
-								"타입 챌린지입니다."
-						);
+						this.text = "해당 챌린지는 " + this.propChallenge.fileType + "타입 챌린지입니다."
+						this.snackbar = true
 						this.post.file = [];
 					} else {
 						this.fileType = type;
@@ -282,22 +294,16 @@
 				} else if (this.propChallengeName) {
 					// 챌린지에 바로 참여하기
 					if (type !== this.propChallengeName.challangeType.toUpperCase()) {
-						alert(
-							"해당 챌린지는 " +
-								this.propChallengeName.challangeType +
-								"타입 챌린지입니다."
-						);
+						this.text = "해당 챌린지는 " + this.propChallengeName.challangeType + "타입 챌린지입니다."
+						this.snackbar = true
 						this.post.file = [];
 					} else {
 						this.fileType = type;
 					}
 				} else if (this.selectedChallenge.challengeType) {
 					if (type !== this.selectedChallenge.challengeType.toUpperCase()) {
-						alert(
-							"해당 챌린지는 " +
-								this.selectedChallenge.challengeType +
-								"타입 챌린지입니다."
-						);
+						this.text = "해당 챌린지는 " + this.selectedChallenge.challengeType + "타입 챌린지입니다."
+						this.snackbar = true
 						this.post.file = [];
 						this.selectedChallenge = -1;
 					} else {
@@ -426,11 +432,11 @@
 							this.$emit("close-challenge-modal");
 							this.$emit("close-modal");
 							this.$store.commit("challengeStore/RESET_POSSIBLE_STATUS");
-							this.$router.push({
-								name: `ChallengeDetail`,
-								params: { challengeNo: challengeNo },
-								query: { postNo: response.data.data.post_no },
-							});
+							location.href =
+								"/challenge/" +
+								challengeNo +
+								"?postNo=" +
+								response.data.data.post_no;
 						},
 						(error) => {
 							console.log(error);
@@ -439,7 +445,6 @@
 				}
 			},
 			createChallengeWithPost(challenge, post) {
-				console.log(challenge.challengers);
 				const challengeItem = {
 					user_no: this.$store.state.userStore.userInfo.user_no,
 					challengers:

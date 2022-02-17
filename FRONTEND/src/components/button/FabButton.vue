@@ -39,7 +39,7 @@
       :timeout="timeout"
       color="error"
       outlined
-      style="font-weight: bold; border: 2px solid"
+      style="font-weight: bold; border: 2px solid; color:transparent;"
     >
       {{ text }}
 

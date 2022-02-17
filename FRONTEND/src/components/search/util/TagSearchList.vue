@@ -81,6 +81,21 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
+     <v-snackbar
+      v-model="snackbar"
+      :timeout="timeout"
+      color="error"
+      outlined
+      style="font-weight: bold; border: 2px solid; color:transparent;"
+    >
+      {{ text }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn color="red" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-card>
 </template>
 
@@ -129,6 +144,9 @@ export default {
       postLike: this.post.isLike, //유저테이블에서 가져오기
       mediaType: "",
       user: null,
+          snackbar: false,
+    text: "로그인이 필요한 서비스입니다.",
+    timeout: 1500,
     };
   },
   computed: {
@@ -159,7 +177,7 @@ export default {
   },
   methods: {
     goPost() {
-      alert("상세 페이지로 이동 where postno = " + this.post.post_no);
+      // alert("상세 페이지로 이동 where postno = " + this.post.post_no);
     },
     goChallenge() {
       const path = "/challenge/" + this.post.challenge_no;
@@ -167,8 +185,8 @@ export default {
       this.$router.go();
     },
     pushLike() {
-           if (!this.user) {
-        alert("로그인이 필요한 서비스입니다.");
+        if (!this.user) {
+          this.snackbar = true;
         return;
       }
 
@@ -194,7 +212,7 @@ export default {
       );
     },
     pushSubscribe() {
-      alert("???");
+      // alert("???");
       //	alert(this.challenge.challenge_subscribe);
       //해당 챌린지 challenge.challenge_no로 구독 취소
       this.challenge.challenge_subscribe = !this.challenge.challenge_subscribe;
