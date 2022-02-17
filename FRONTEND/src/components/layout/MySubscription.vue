@@ -11,14 +11,14 @@
   <!-- 로그인 O -->
   <v-list v-else class="title-width">
     <v-list-group v-model="active" @click="toggle">
+  <template v-if="!active && listSubscription.length == 0" v-slot:activator class="title-background">
       <v-card-subtitle
         class="title-width"
-        v-if="!active && listSubscription.length == 0"
       >
         <h2>구독</h2>
       </v-card-subtitle>
-
-      <template v-slot:activator class="title-background">
+      </template>
+      <template v-else v-slot:activator class="title-background">
         <v-card-subtitle class="title-width">
           <h2>구독</h2>
         </v-card-subtitle>
@@ -32,7 +32,7 @@
         color="primary"
         outlined
         close
-        @click="goChallengePage(challenge.challenge_no)"
+		@click="goChallengePage(challenge.challenge_no)"
         @click:close="remove(challenge.challenge_no)"
       >
         {{ challenge.challenge_title }}
@@ -44,6 +44,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+// import { getSubscription } from "@/api/user.js";
 const userStore = "userStore";
 export default {
   name: "MySubscription",
@@ -56,12 +57,16 @@ export default {
   },
   data() {
     return {
-      active: true,
+    	active: true,
     };
   },
   methods: {
     ...mapActions(userStore, ["getUserInfo"]),
     remove(no) {
+      // this.listsubscription.splice(idx, 1);
+      // this.index++; //카운트 해줘야 다음 태그 제대로 지워짐
+      // // 이렇게 하고, 페이지 refresh 해서 태그 다시 받아와야함.....
+      // this.listsubscription = [...this.listsubscription];
       this.$store.dispatch("userStore/deleteSubscription", {
         no,
         token: sessionStorage.getItem("Authorization"),
@@ -75,6 +80,9 @@ export default {
     toggle() {
       this.active = true;
     },
+	goChallengePage(challengeNo) {
+		window.location.href = `/challenge/${challengeNo}`;
+	},
   },
   created() {
     if (this.$store.state.userStore.userInfo) {
@@ -85,6 +93,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .title-width {
@@ -102,3 +111,4 @@ export default {
   margin: 3px;
 }
 </style>
+
