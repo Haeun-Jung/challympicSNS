@@ -16,7 +16,7 @@ import {
   getQnA,
   registerQuestion,
   getAlertList,
-  setInterests
+  setInterests,
 } from "@/api/user.js";
 
 const userStore = {
@@ -29,7 +29,7 @@ const userStore = {
     userNickname: "",
     userEmail: "",
     userInfo: null,
-    tempUserEmail: "", 
+    tempUserEmail: "",
     filePath: "",
     fileSavedName: "",
     possibleEmail: false,
@@ -79,10 +79,8 @@ const userStore = {
     SET_INTERESTS(state, interests) {
       state.listInterest = interests;
     },
-    SET_SUBSCRIPTION(state, subscriptions){
-      state.listSubscription = subscriptions
-      console.log("구독조회3")
-      console.log(state.listSubscription);
+    SET_SUBSCRIPTION(state, subscriptions) {
+      state.listSubscription = subscriptions;
     },
     SET_QNA(state, qna) {
       state.listQnA = qna;
@@ -93,9 +91,9 @@ const userStore = {
     DELETE_ALERT(state) {
       state.alertList = null;
     },
-    TEMP_USER_EMAIL(state, tempUserEmail){
+    TEMP_USER_EMAIL(state, tempUserEmail) {
       state.tempUserEmail = tempUserEmail;
-    }
+    },
   },
   actions: {
     async login({ commit, dispatch }, user) {
@@ -133,27 +131,18 @@ const userStore = {
         },
         (err) => {
           console.log(err);
-          console.log("회원가입 실패");
         }
       );
     },
-    async setInterests( state, info){
-      // console.log("스토어");
-      // console.log(info.user_email);
-      // console.log(info.interests);
-
+    async setInterests(state, info) {
       await setInterests(
         info.user_email,
         info.interests,
         () => {
-          // console.log("조인 후 인터레스트");
-          // console.log(response);
           router.push({ name: "Login" });
         },
         (err) => {
-          // console.log("조인후 인터레스트 불가")
           console.log(err);
-        
         }
       );
     },
@@ -163,11 +152,8 @@ const userStore = {
         decode_token.user_no,
         (response) => {
           if (response.data.code === 200) {
-            console.log(response.data.data);
             commit("SET_USER_INFO", response.data.data);
             window.location.href = "/recent";
-          } else {
-            console.log("유저 정보 없음!!");
           }
         },
         (error) => {
@@ -206,15 +192,10 @@ const userStore = {
         decode_token.user_no,
         user,
         (response) => {
-          console.log(response);
           if (response.data.code === 200) {
-            console.log("200안에서 찍음", response.data.code);
             commit("CHANGE_PASSWORD", true);
           } else if (response.data.code === 204) {
-            console.log("204안에서 찍음", response.data.code);
             commit("CHANGE_PASSWORD", false);
-          } else {
-            console.log("변경 실패");
           }
         },
         (error) => {
@@ -226,16 +207,12 @@ const userStore = {
       let token = tokenUser.token;
       let decode_token = jwt_decode(token);
       let user = tokenUser.file;
-      console.log("user ", user);
       await modifyUser(
         decode_token.user_no,
         user,
         (response) => {
           if (response.data.code === 200) {
-            console.log("modifyUser: ", response.data.data);
             commit("SET_USER_INFO", response.data.data);
-          } else {
-            console.log("변경 실패");
           }
         },
         (error) => {
@@ -251,9 +228,6 @@ const userStore = {
           if (response.data.code === 200) {
             commit("SET_USER_INFO", null);
             sessionStorage.removeItem("Authorization");
-            console.log("탈퇴 성공");
-          } else {
-            console.log("탈퇴 실패");
           }
         },
         (error) => {
@@ -267,10 +241,7 @@ const userStore = {
         decode_token.user_no,
         (response) => {
           if (response.data.code === 200) {
-            console.log("getInter: ", response);
             commit("SET_INTERESTS", response.data.data);
-          } else {
-            console.log("관심사 가져오기 오류!");
           }
         },
         (error) => {
@@ -281,20 +252,11 @@ const userStore = {
     async deleteInterest(state, tokenTag) {
       let token = tokenTag.token;
       let decode_token = jwt_decode(token);
-      console.log("decode ", decode_token);
       let tag = tokenTag.no;
-      console.log("tag ", tag);
       await deleteInterest(
         decode_token.user_no,
         tag,
-        (response) => {
-          console.log(response);
-          if (response.data.code === 200) {
-            console.log("삭제 성공");
-          } else {
-            console.log("삭제 실패");
-          }
-        },
+        () => {},
         (error) => {
           console.log("error", error);
         }
@@ -303,39 +265,30 @@ const userStore = {
     async deleteSubscription(state, tokenSub) {
       let token = tokenSub.token;
       let decode_token = jwt_decode(token);
-      console.log("decode ", decode_token);
       let sub = tokenSub.no;
-      console.log("sub ", sub);
       await deleteSubscription(
         sub,
         decode_token.user_no,
-        (response) => {
-          console.log(response);
-          if (response.data.code === 200) {
-            console.log("구독 삭제 성공");
-          } else {
-            console.log("구독 삭제 실패");
-          }
-        },
+        () => {},
         (error) => {
           console.log("error", error);
         }
       );
     },
-    async getSubscription({commit}, tokenSub){
+    async getSubscription({ commit }, tokenSub) {
       let token = tokenSub.token;
       let decode_token = jwt_decode(token);
       await getSubscription(
         decode_token.user_no,
         (response) => {
-          if(response.data.code == 200){
-            commit("SET_SUBSCRIPTION",response.data.data)
+          if (response.data.code == 200) {
+            commit("SET_SUBSCRIPTION", response.data.data);
           }
         },
         (error) => {
           console.log(error);
         }
-      )
+      );
     },
     async getQnA({ commit }, token) {
       let decode_token = jwt_decode(token);
@@ -343,10 +296,7 @@ const userStore = {
         decode_token.user_no,
         (response) => {
           if (response.data.code === 200) {
-            console.log(response);
             commit("SET_QNA", response.data.data);
-          } else {
-            console.log("문의하기 오류!");
           }
         },
         (error) => {
@@ -366,10 +316,7 @@ const userStore = {
         qna,
         (response) => {
           if (response.data.code === 200) {
-            console.log("qna response: ", response);
             commit("SET_QNA", response.data.data.data);
-          } else {
-            console.log("문의 등록 오류!");
           }
         },
         (error) => {
@@ -382,11 +329,8 @@ const userStore = {
         userNo,
         (response) => {
           commit("SET_ALERT_LIST", response.data.data);
-          console.log("알림 가져오기 성공");
         },
-        () => {
-          console.log("알림 가져오기 오류");
-        }
+        () => {}
       );
     },
   },

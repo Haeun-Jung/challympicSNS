@@ -1,7 +1,4 @@
-import {
-  getChallenge,
-  confirmChallengeName,
-} from "@/api/challenge.js";
+import { getChallenge, confirmChallengeName } from "@/api/challenge.js";
 
 const challengeStore = {
   namespaced: true,
@@ -29,8 +26,6 @@ const challengeStore = {
           .replace(/-/g, "."),
         challenge_end: challenge.challenge_end.split("T")[0].replace(/-/g, "."),
       };
-      console.log("챌린지 조회2");
-      console.log(state.challenge);
     },
     CONFIRM_CHALLENGE_NAME(state) {
       state.possibleChallengeName = true;
@@ -50,13 +45,9 @@ const challengeStore = {
         challengeNo,
         (response) => {
           const { data } = response;
-          console.log("챌린지 조회1");
-          console.log(data.data);
           commit("SET_CHALLENGE", data.data);
         },
-        () => {
-          console.log("챌린지 가져오기 실패");
-        }
+        () => {}
       );
     },
     confirmChallengeName({ commit }, challengeName) {
@@ -68,7 +59,6 @@ const challengeStore = {
         challengeName,
         (response) => {
           const { data } = response;
-          console.log(data);
           if (data.success) {
             commit("CONFIRM_CHALLENGE_NAME");
           } else {

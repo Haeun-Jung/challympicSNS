@@ -40,7 +40,6 @@ export default {
         },
       ],
     };
-    //console.log(this.playerOptions.sources.src);
   },
 };
 </script>

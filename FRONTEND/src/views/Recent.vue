@@ -21,9 +21,7 @@ export default {
     };
   },
   computed: {
-    recentPostList() {   
-      console.log("Recent에서 가져온 post를 넘겨줄 때");
-      console.log(this.$store.state.postStore.recentPostList);
+    recentPostList() {
       return this.$store.state.postStore.recentPostList;
     },
   },

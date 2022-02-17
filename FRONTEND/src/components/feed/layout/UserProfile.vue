@@ -34,7 +34,10 @@
                 <div class="user-name font-weight">
                   {{ userInfo.user_nickname }}
                 </div>
-                <v-col v-if="this.login_user > 0 && this.who_no != this.login_user" class="pt-1">
+                <v-col
+                  v-if="this.login_user > 0 && this.who_no != this.login_user"
+                  class="pt-1"
+                >
                   <!-- 상대 프로필일 때 -->
                   <v-btn
                     v-if="isFollower"
@@ -96,22 +99,22 @@
     <!-- Mobile -->
     <v-row v-else>
       <!-- 이름 -->
-        <v-col md="6" class="profile-setting-avatar-container">
-          <v-avatar v-if="userInfo.file_no == 0" size="150">
-            <v-icon size="150">mdi-account-circle-outline</v-icon>
-          </v-avatar>
-          <v-avatar v-else size="150">
-            <img
-              :src="
-                'http://d3iu4sf4n4i2qf.cloudfront.net/' +
-                this.userInfo.file_path +
-                '/' +
-                this.userInfo.file_savedname
-              "
-              alt="John"
-            />
-          </v-avatar>
-        </v-col>
+      <v-col md="6" class="profile-setting-avatar-container">
+        <v-avatar v-if="userInfo.file_no == 0" size="150">
+          <v-icon size="150">mdi-account-circle-outline</v-icon>
+        </v-avatar>
+        <v-avatar v-else size="150">
+          <img
+            :src="
+              'http://d3iu4sf4n4i2qf.cloudfront.net/' +
+              this.userInfo.file_path +
+              '/' +
+              this.userInfo.file_savedname
+            "
+            alt="John"
+          />
+        </v-avatar>
+      </v-col>
       <v-row>
         <v-col>
           <v-container>
@@ -234,18 +237,20 @@ export default {
     },
     computedFollowingCnt() {
       return this.followingCnt;
-    }
+    },
   },
   created() {
-    this.login_user = this.$store.state.userStore.userInfo ? this.$store.state.userStore.userInfo.user_no : 0;
-    console.log("this.login_user");
-    console.log(this.login_user);
-    console.log(this.userInfo);
-    if(this.$store.state.userStore.userInfo && this.$store.state.userStore.userInfo.user_no > 0){
+    this.login_user = this.$store.state.userStore.userInfo
+      ? this.$store.state.userStore.userInfo.user_no
+      : 0;
+    if (
+      this.$store.state.userStore.userInfo &&
+      this.$store.state.userStore.userInfo.user_no > 0
+    ) {
       // 유저 번호와 로그인 한 사람의 팔로우 관계
       checkFollow(this.login_user, this.who_no, (response) => {
         this.isFollower = response.data.following;
-      })
+      });
     }
     // 유저의 팔로우, 팔로잉 cnt
     getFollowCnt(this.who_no, (response) => {
@@ -289,20 +294,10 @@ export default {
         this.followerCnt += 1;
       }
     },
-    // decrementFollowerCnt() {
-    //   console.log("decrementFollowerCnt");
-    //   this.followerCnt -= 1;
-    // },
-    // incrementFollowerCnt() {
-    //   console.log("incrementFollowerCnt");
-    //   this.followerCnt += 1;
-    // },
     decrementFollowingCnt() {
-      console.log("decrementFollowingCnt");
       this.followingCnt -= 1;
     },
     incrementFollowingCnt() {
-      console.log("incrementFollowingCnt");
       this.followingCnt += 1;
     },
   },

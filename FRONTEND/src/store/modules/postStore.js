@@ -31,7 +31,6 @@ const postStore = {
           post_regdate: post.post_regdate.split("T")[0].replace(/-/g, "."),
         };
       });
-      console.log(state.postList);
     },
     SET_LIKE_LIST(state, likeList) {
       state.likeList = likeList;
@@ -41,7 +40,6 @@ const postStore = {
     getRecentPostList({ commit }, userNo) {
       if (!userNo) {
         userNo = "";
-        console.log(userNo);
       }
       getRecentPostList(
         userNo,
@@ -50,7 +48,6 @@ const postStore = {
         },
         (error) => {
           console.log(error);
-          console.log("메인 페이지 포스트 가져오기 오류");
         }
       );
     },
@@ -69,8 +66,7 @@ const postStore = {
       createPost(
         challengeNo,
         post,
-        () => {
-        },
+        () => {},
         () => {}
       );
     },

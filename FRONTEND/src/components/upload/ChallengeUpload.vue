@@ -236,9 +236,10 @@ export default {
       }
     },
     uploadPost() {
-      this.challenge.challengers = this.challenge.challengers.length > 0 ? this.challenge.challengers.split("@") : [];
-      console.log("챌린저");
-      console.log(this.challenge.challengers);
+      this.challenge.challengers =
+        this.challenge.challengers.length > 0
+          ? this.challenge.challengers.split("@")
+          : [];
       if (!this.possibleChallengeName) {
         this.clickNextBtn = true;
         return;
@@ -285,7 +286,6 @@ export default {
         /* 유효한 종료일일 때, 값 저장 */
         this.challenge.endDate = endDate;
         this.error = false;
-        console.log(this.challenge.endDate);
       }
     },
   },

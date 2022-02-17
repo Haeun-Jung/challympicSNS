@@ -86,14 +86,12 @@ export default {
     };
   },
   created() {
-    // console.log('decodeURIComponent(this.$router.currentRoute.path).split("/")[2]');
-    // console.log(decodeURIComponent(this.$router.currentRoute.path).split("/")[2]);
-    this.login_user = this.$store.state.userStore.userInfo ? this.$store.state.userStore.userInfo.user_no : 0;
+    this.login_user = this.$store.state.userStore.userInfo
+      ? this.$store.state.userStore.userInfo.user_no
+      : 0;
     getFeedUserInfo(
       decodeURIComponent(this.$router.currentRoute.path).split("/")[2],
       (response) => {
-        // console.log("userinfo");
-        // console.log(response.data);
         this.userInfo = response.data.data;
       }
     );

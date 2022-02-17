@@ -123,7 +123,7 @@ export default {
         delete this.users[0];
       },
       (error) => {
-        if (error) console.log("er");
+        console.log(error);
       }
     );
   },
