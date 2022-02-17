@@ -74,4 +74,5 @@ public class TagService {
     public List<Tag> findRecentAllTagList() {
         return tagRepository.findRecentAllTagList();
     }
+
 }

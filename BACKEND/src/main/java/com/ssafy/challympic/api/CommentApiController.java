@@ -25,8 +25,6 @@ public class CommentApiController {
 
     @PostMapping("/comment")
     public Result save(@RequestBody CommentRequest request){
-        System.out.println("댓글달기");
-        System.out.println(request.getComment_content());
         User findUser = userService.findUser(request.user_no);
         Post findPost = postService.getPost(request.post_no);
         if(findUser == null || findPost == null){

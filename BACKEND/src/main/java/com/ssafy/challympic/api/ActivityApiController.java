@@ -2,6 +2,7 @@ package com.ssafy.challympic.api;
 
 import com.ssafy.challympic.domain.*;
 import com.ssafy.challympic.service.ActivityService;
+import com.ssafy.challympic.service.SearchService;
 import com.ssafy.challympic.service.TagService;
 import com.ssafy.challympic.service.UserService;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ public class ActivityApiController {
 
     private final ActivityService activityService;
     private final TagService tagService;
-    private final UserService userService;
+    private final SearchService searchService;
 
     @PostMapping("/activity")
     public Result setActivity(@RequestBody ActivityRequest request) {
@@ -63,26 +64,19 @@ public class ActivityApiController {
             return new Result(true, HttpStatus.OK.value(), null);
         }
 
-        for(Tag t : allTagList) System.out.println(t.getTag_content());
-
         if(userNo == 0){
-            System.out.println("userNo가 0");
             List<TagDto> tagDtos = new ArrayList<>();
             if(allTagList.size() == 0){
-                System.out.println("태그가 없어");
                 return new Result(true, HttpStatus.OK.value(), null);
             }
-            System.out.println("태그가 있어");
 
             for (Tag tag : allTagList) {
                 tagDtos.add(new TagDto(tag));
             }
 
             if(tagDtos.size() < 5){
-                System.out.println("태그가 5개보다 적어");
                 return new Result(true, HttpStatus.OK.value(), new ActivityResponse(tagDtos));
             }else{
-                System.out.println("태그가 5개보다 많아");
                 return new Result(true, HttpStatus.OK.value(), new ActivityResponse(tagDtos.subList(0,5)));
             }
         }else {
@@ -94,7 +88,6 @@ public class ActivityApiController {
                 tagDtoResponse = tagResponse.stream()
                         .map(t -> new TagDto(t))
                         .collect(Collectors.toList());
-                for (TagDto t : tagDtoResponse) System.out.println(t.tag_content);
                 return new Result(true, HttpStatus.OK.value(), new ActivityResponse(tagDtoResponse));
             } else {
                 return new Result(true, HttpStatus.OK.value(), null);
@@ -104,31 +97,28 @@ public class ActivityApiController {
     }
 
     private List<Tag> getTagsVer01(int userNo) {
-        List<Activity> activityList = activityService.findActivityListByUserNo(userNo);
+        List<Search> searchList = searchService.findTagListByUserNo(userNo);
         List<Tag> tagAll = new ArrayList<>();
-        for(Activity activity : activityList) {
-            List<PostTag> postTagList = tagService.findPostTagList(activity.getPost_no());
-            for(PostTag postTag : postTagList) {
-                if(postTag.getTag().getIsChallenge() == null){
-                    tagAll.add(postTag.getTag());
-                }
-            }
+        for(Search search : searchList) {
+            Tag searchTag = tagService.findTagByTagContent(search.getTag_content());
+            if(searchTag.getIsChallenge()  == null) tagAll.add(searchTag);
         }
+
         List<Tag> tempTagList = tagService.findAllTagList();
         int maxTag = tempTagList.size();
         int[][] tagCount = new int[maxTag][2];
 
         for(int i = 0; i < maxTag; i++) tagCount[i][0] = i + 1;
         for(Tag tag : tagAll) {
-            tagCount[tag.getTag_no()][1]++;
+            tagCount[tag.getTag_no() - 1][1]++;
         }
 
         Arrays.sort(tagCount, (int[] o1, int[] o2) -> {
-            return o1[1] - o2[1];
+            return o2[1] - o1[1];
         });
 
         List<Tag> tagResponse = new ArrayList<>();
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < Math.min(maxTag, 5); i++) {
             tagResponse.add(tagService.findOne(tagCount[i][0]));
         }
         return tagResponse;

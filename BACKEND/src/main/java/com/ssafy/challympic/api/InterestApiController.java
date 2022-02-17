@@ -50,7 +50,6 @@ public class InterestApiController {
 
     @PostMapping("/setInterests")
     public Result saves(@RequestBody JoinAfterInterest request){
-        System.out.println(request.getUser_email());
 
         User user = userService.findByEmail(request.getUser_email());
 

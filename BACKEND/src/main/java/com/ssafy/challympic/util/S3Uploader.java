@@ -151,7 +151,6 @@ public class S3Uploader {
 
                 // 폴더 내부 폴더, 파일 삭제
                 for (int i = 0; i < folder_list.length; i++) {
-                    System.out.println(folder_list[i].getName());
                     if(folder_list[i].isFile()) {
                         upload(folder_list[i], dirPath, folder_list[i].getName());
                         log.info("파일이 등록되었습니다.");

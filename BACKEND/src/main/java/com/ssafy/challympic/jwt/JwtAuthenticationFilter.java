@@ -36,7 +36,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     // /login 요청을 하면 로그인 시도를 위해서 실행되는 함수
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        System.out.println("JwtAuthenticationFilter: 로그인 시도중");
 
         // 1. username과 password를 받아서
         Authentication authentication = null;
@@ -78,7 +77,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     // JWT 토큰을 만들어서 request 요청한 사용자에게 JWT 토큰을 response 해야 한다.
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        System.out.println("로그인 성공!");
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 
         // RSA 방식이 아닌 Hash 암호방식
@@ -90,11 +88,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET)); // secrete 값
 
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX +jwtToken); // 헤더에 담겨 사용자에게 응답
-//        System.out.println(principalDetails.getUser().getUser_email());
-//        System.out.println(principalDetails.getUser().getUser_pwd());
         Result result = new Result(true, HttpStatus.OK.value(), new UserDto(principalDetails.getUser().getUser_no(), principalDetails.getUser().getUser_email()));
         String json = new ObjectMapper().writeValueAsString(result);
-//        System.out.println(json);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(json);
@@ -111,7 +106,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        System.out.println("로그인 실패!");
         Result result = new Result(false, HttpStatus.BAD_REQUEST.value());
         String json = new ObjectMapper().writeValueAsString(result);
         response.setContentType("application/json");

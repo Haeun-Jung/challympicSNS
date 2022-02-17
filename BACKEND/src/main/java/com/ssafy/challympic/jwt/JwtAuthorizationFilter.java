@@ -40,14 +40,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             return ;
         }
 
-        System.out.println("인증이나 권한이 필요한 주소 요청이 있을 경우");
         // JWT 토큰을 검증해서 정상적인 사용자인지 확인
         String jwtToken = request.getHeader("Authorization").replace("Bearer ","");
         int user_no = JWT.require(Algorithm.HMAC512("challympic")).build().verify(jwtToken).getClaim("user_no").asInt();
 
         // 서명이 정상적으로 됨
         if(user_no > 0){
-            System.out.println("서명 정상이야?");
             User user = userRepository.findOne(user_no);
 
             PrincipalDetails principalDetails = new PrincipalDetails(user);
@@ -60,9 +58,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
 
            chain.doFilter(request, response);
-        }else{
-            System.out.println("서명 정상아냐ㅠㅠ");
         }
-
     }
 }

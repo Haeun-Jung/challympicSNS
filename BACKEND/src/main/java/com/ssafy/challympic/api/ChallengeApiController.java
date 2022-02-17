@@ -34,9 +34,6 @@ public class ChallengeApiController {
     @GetMapping("/challenge")
     public Result challenges() {
         List<Challenge> findChallenges = challengeService.findChallenges();
-        for(Challenge c : findChallenges) {
-            System.out.println(c);
-        }
         List<ChallengeDto> collect = findChallenges.stream()
                 .map(c -> {
                     return new ChallengeDto(c);
@@ -69,12 +66,10 @@ public class ChallengeApiController {
         List<Integer> challengers = new ArrayList<>(); // 초대된 인원
         // 챌린지 초대한 사람이 없으면 PUBLIC
         if(request.getChallengers().size() == 0){
-            System.out.println("사람없어");
             challenge_access = ChallengeAccess.PUBLIC;
         }
         // 챌린지 초대한 사람이 있으면 PRIVATE
         else{
-            System.out.println("사람 있엉~!~!~!~");
             challenge_access = ChallengeAccess.PRIVATE;
             for(String str : request.getChallengers().subList(1, request.getChallengers().size())) {
                 String user_nickname = str;
@@ -248,12 +243,7 @@ public class ChallengeApiController {
                             User user = userService.findUser(cs.getUser().getUser_no());
                             return new UserDto(user);
                         }).collect(Collectors.toList());
-                System.out.println("챌린저 잇엉");
-
-            }else{
-                System.out.println("챌린저 업엉");
             }
-
             ChallengeDto challengeResponse = new ChallengeDto(challenge, challengers);
             return new Result(true, HttpStatus.OK.value(), challengeResponse);
         }

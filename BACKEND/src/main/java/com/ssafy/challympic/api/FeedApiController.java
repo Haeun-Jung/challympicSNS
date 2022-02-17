@@ -154,7 +154,6 @@ public class FeedApiController {
         if(!postListByUserNo.isEmpty()){
             collect = postListByUserNo.stream()
                     .map(p -> {
-                        System.out.println("왜.. 안들어가");
                         int challenge_no = p.getChallenge_no();
                         Challenge challenge = challengeService.findChallengeByChallengeNo(challenge_no);
                         int like_cnt = postLikeService.postLikeCnt(p.getPost_no());

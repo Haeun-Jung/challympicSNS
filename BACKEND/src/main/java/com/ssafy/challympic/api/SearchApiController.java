@@ -132,7 +132,6 @@ public class SearchApiController {
         List<ChallengeDto> trendChallengeList = trendChallenge.stream()
                 .map(c -> new ChallengeDto(c))
                 .collect(Collectors.toList());
-        for(Challenge c : trendChallenge) System.out.println(c.getChallenge_no());
         return new Result(true, HttpStatus.OK.value(), trendChallengeList);
     }
 
