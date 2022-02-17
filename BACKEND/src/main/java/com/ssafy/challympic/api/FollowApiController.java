@@ -90,12 +90,16 @@ public class FollowApiController {
         private String user_nickname;
         private String user_title;
         private boolean isFollow;
+        private String user_profile;
 
         public FollowResponse(User user, boolean isFollow) {
             this.user_no = user.getUser_no();
             this.user_nickname = user.getUser_nickname();
             this.user_title = user.getUser_title();
             this.isFollow = isFollow;
+            if(user.getMedia() != null){
+                this.user_profile = user.getMedia().getFile_path()+"/"+user.getMedia().getFile_savedname();
+            }
         }
     }
 

@@ -204,7 +204,7 @@
 										<post-item
 											v-for="post in props.items"
 											:post="post"
-                      :challengeNo="challenge.challenge_no"
+                      						:challengeNo="challenge.challenge_no"
 											:type="challenge.challenge_type"
 											:key="post.post_no"
 											:user="userData"
@@ -301,6 +301,11 @@
 						this.$store.state.userStore.userInfo.user_no,
 						() => {
 							this.isSubscription = false;
+							if (this.$store.state.userStore.userInfo) {
+								this.$store.dispatch("userStore/getSubscription", {
+									token: sessionStorage.getItem("Authorization"),
+								});
+							}
 						},
 						(error) => {
 							console.log(error);
@@ -313,6 +318,11 @@
 						this.$store.state.userStore.userInfo.user_no,
 						() => {
 							this.isSubscription = true;
+							if (this.$store.state.userStore.userInfo) {
+								this.$store.dispatch("userStore/getSubscription", {
+									token: sessionStorage.getItem("Authorization"),
+								});
+							}
 						},
 						(error) => {
 							console.log(error);
@@ -381,9 +391,9 @@
 					.filter((word) => {
 						return word.startsWith("#");
 					});
-        if (this.challenge.challenge_challengers.length === 1) {
-          splitedContent.push("#1:1");
-        }
+				if (this.challenge.challenge_challengers.length === 1) {
+				splitedContent.push("#1:1");
+				}
 				if (splitedContent.length > 0) {
 					return splitedContent;
 				} else {
@@ -393,8 +403,8 @@
 			challenge() {
 				if (this.$store.state.challengeStore.challenge.challenge_no) {
 					isSubscribe(
-						this.$store.state.challengeStore.challenge.challenge_no,
-						this.$store.state.challengeStore.challenge.user_no,
+                        this.$store.state.challengeStore.challenge.challenge_no,
+                        this.$store.state.userStore.userInfo.user_no,
 						(response) => {
 							if (response.data.success)
 								this.isSubscription = true;
@@ -404,6 +414,7 @@
 						() => {}
 					);
 				}
+
 				return this.$store.state.challengeStore.challenge;
 			},
       // challengers(){
