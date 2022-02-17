@@ -414,10 +414,12 @@ public class PostApiController {
             // 태그한 사람 알림
             for(String str : splitSharp) {
                 if(str.startsWith("@")) {
+                    // 태그 당한 닉네임
                     String user_nickname = str.substring(1);
 
                     Alert alert = new Alert();
                     User user = userService.findByNickname(user_nickname);
+                    // 태그 당한 유저
                     if(user == null) {
                         continue;
                     }
@@ -547,7 +549,7 @@ public class PostApiController {
             Alert alert = new Alert();
             User writer = postService.getPost(postNo).getUser();
             alert.setUser(writer);
-            alert.setAlert_content(writer.getUser_nickname() + "님이 포스트에 좋아요를 눌렀습니다.");
+            alert.setAlert_content(userService.findUser(userNo).getUser_nickname() + "님이 포스트에 좋아요를 눌렀습니다.");
             alertService.saveAlert(alert);
         }
 
