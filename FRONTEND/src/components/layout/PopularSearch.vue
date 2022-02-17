@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     goChallengePage(challengeNo) {
-      this.$router.push(`/challenge/${challengeNo}`);
+      window.location.href = `/challenge/${challengeNo}`;
     },
   },
   created() {

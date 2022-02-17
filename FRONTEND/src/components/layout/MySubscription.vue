@@ -28,11 +28,11 @@
 				v-for="(challenge, idx) in listsubscription"
 				:key="challenge.challenge_no"
 				:value="challenge"
-				@click="moveChallenge(challenge.challenge_no)"
 				v-model="challenge.isOpen"
 				color="primary"
 				outlined
 				close
+        @click="goChallengePage(challenge.challenge_no)"
 				@click:close="remove(challenge.challenge_no, idx)"
 			>
 			<!-- 				:to="{ path: '/challenge/' + challenge.challenge_no }"
@@ -64,9 +64,6 @@
 		},
 		methods: {
 			...mapActions(userStore, ["getUserInfo"]),
-			moveChallenge(challenge_no){
-				window.location.href = `/challenge/${challenge_no}`;
-			},
 			remove(no, idx) {
 				this.listsubscription.splice(idx, 1);
 				this.index++; //카운트 해줘야 다음 태그 제대로 지워짐
@@ -83,6 +80,9 @@
 			toggle() {
 				this.active = true;
 			},
+      goChallengePage(challengeNo) {
+        window.location.href = `/challenge/${challengeNo}`;
+      },
 		},
 		created() {
 			if (this.$store.state.userStore.userInfo) {

@@ -14,7 +14,7 @@ export default {
   methods: {
     moveToAd() {
       //  TODO: this.$router.push("/challenge/" + this.challengeNo); 로 수정하기
-      this.$router.push("/challenge/1");
+      window.location.href = `/challenge/5`;
     },
   },
 };
