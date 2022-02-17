@@ -176,53 +176,57 @@ import { setSubscription } from "@/api/challenge.js";
 import { postLikeList } from "@/api/post.js";
 import VideoComponent from "../util/VideoComponent.vue";
 
-export default {
-  name: "ChallengeSearchResult",
-  components: {
-    VideoComponent,
-  },
-  props: {
-    search: String,
-  },
-  methods: {
-    setSubscribe(challenge) {
-      challenge.subscription = !challenge.subscription;
-      setSubscription(
-        challenge.challenge_no,
-        challenge.user_no,
-        () => {},
-        (error) => {
-          console.log(error);
-        }
-      );
-    },
-    pushLike(post) {
-      if (this.$store.state.userStore.userInfo.user_no == 0) {
-        this.snackbar = true;
-        return;
-      }
+	export default {
+		name: "ChallengeSearchResult",
+		components: {
+			VideoComponent,
+		},
+		props: {
+			search: String,
+		},
+		methods: {
+			setSubscribe(challenge) {
+				setSubscription(
+					challenge.challenge_no,
+					this.$store.state.userStore.userInfo?this.$store.state.userStore.userInfo.user_no:0,
+					() => {
+						this.$store.dispatch("userStore/getSubscription", {
+							token: sessionStorage.getItem("Authorization"),
+						});
+						challenge.subscription = !challenge.subscription;
+					},
+					(error) => {
+						console.log(error);
+					}
+				);
+			},
+			pushLike(post) {
+				if (this.$store.state.userStore.userInfo.user_no == 0) {
+					this.snackbar = true;
+					return;
+				}
 
-      // 좋아요 API 요청
-      if (post.isLike && post.post_like_count > 0) {
-        // 클릭된 상태
-        post.post_like_count -= 1;
-      } else {
-        post.post_like_count += 1;
-      }
+				// 좋아요 API 요청
+				if (post.isLike && post.post_like_count > 0) {
+					// 클릭된 상태
+					post.post_like_count -= 1;
+				} else {
+					post.post_like_count += 1;
+				}
 
-      post.isLike = !post.isLike;
+				post.isLike = !post.isLike;
 
-      postLikeList(
-        post.post_no,
-        this.$store.state.userStore.userInfo
-          ? this.$store.state.userStore.userInfo.user_no
-          : 0,
-        () => {},
-        () => {}
-      );
-    },
-  },
-  created() {
+				postLikeList(
+					post.post_no,
+					this.$store.state.userStore.userInfo
+					? this.$store.state.userStore.userInfo.user_no
+					: 0,
+					() => {},
+					() => {}
+				);
+    		},
+	},
+	created() {
     const user_no = this.$store.state.userStore.userInfo
       ? this.$store.state.userStore.userInfo.user_no
       : 0;
