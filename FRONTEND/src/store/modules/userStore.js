@@ -11,6 +11,7 @@ import {
   deleteUser,
   getInterest,
   deleteInterest,
+  getSubscription,
   deleteSubscription,
   getQnA,
   registerQuestion,
@@ -36,6 +37,7 @@ const userStore = {
     changePassword: false,
     pushAlert: true,
     listInterest: null,
+    listSubscription: [""],
     listQnA: null,
     alertList: null,
   },
@@ -76,6 +78,11 @@ const userStore = {
     },
     SET_INTERESTS(state, interests) {
       state.listInterest = interests;
+    },
+    SET_SUBSCRIPTION(state, subscriptions){
+      state.listSubscription = subscriptions
+      console.log("구독조회3")
+      console.log(state.listSubscription);
     },
     SET_QNA(state, qna) {
       state.listQnA = qna;
@@ -314,6 +321,21 @@ const userStore = {
           console.log("error", error);
         }
       );
+    },
+    async getSubscription({commit}, tokenSub){
+      let token = tokenSub.token;
+      let decode_token = jwt_decode(token);
+      await getSubscription(
+        decode_token.user_no,
+        (response) => {
+          if(response.data.code == 200){
+            commit("SET_SUBSCRIPTION",response.data.data)
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
     },
     async getQnA({ commit }, token) {
       let decode_token = jwt_decode(token);
