@@ -329,6 +329,9 @@
 						this.$store.state.userStore.userInfo.user_no,
 						() => {
 							this.isSubscription = false;
+							this.$store.dispatch("userStore/getSubscription", {
+								token: sessionStorage.getItem("Authorization"),
+							});
 						},
 						(error) => {
 							console.log(error);
@@ -341,6 +344,9 @@
 						this.$store.state.userStore.userInfo.user_no,
 						() => {
 							this.isSubscription = true;
+							this.$store.dispatch("userStore/getSubscription", {
+								token: sessionStorage.getItem("Authorization"),
+							});
 						},
 						(error) => {
 							console.log(error);
