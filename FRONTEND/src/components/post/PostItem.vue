@@ -217,11 +217,9 @@
 				postLikeList(
 					this.post.post_no,
 					this.user.user_no,
-					(response) => {
-						console.log(response);
+					() => {
 					},
-					(error) => {
-						console.log(error);
+					() => {
 					}
 				);
 			},
@@ -232,6 +230,7 @@
 				}
 			},
 			toggleLikeDialog() {
+
 				this.likeDialog = !this.likeDialog;
 				if (this.likeDialog) {
 					getLikeList(this.post.post_no, this.$store.state.userStore.userInfo.user_no,
