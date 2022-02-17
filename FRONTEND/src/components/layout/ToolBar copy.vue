@@ -253,7 +253,7 @@
 
 <script>
 import SideContents from "@/components/layout/SideContents.vue";
-import fromNow from "@/plugins/dayjs.js";
+import { fromNow } from "@/plugins/dayjs.js";
 
 export default {
   name: "ToolBar",
