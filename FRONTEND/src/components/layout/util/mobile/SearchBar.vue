@@ -59,6 +59,8 @@
 		name: "MobileSearchBar",
 		props: {
 			tags: Array,
+			//	obj1: Array,
+			//	obj2: Array,
 		},
 		data() {
 			return {
@@ -90,7 +92,8 @@
 				this.active = false;
 			},
 			mobileKeywordSearch() {
-				var to = this.mobileSearchInput.substring(1);
+				this.$emit("mobileSearchInput", this.mobileSearchInput);
+				/*	var to = this.mobileSearchInput.substring(1);
 				let searchCategory = this.mobileSearchInput.charAt(0);
 				if (searchCategory === "@") {
 					var foundValue = this.obj2.filter(
@@ -104,7 +107,7 @@
 					this.mobileSearchInput = "";
 					this.dynamicArr = this.empty;
 					this.$router.push("/search/" + to);
-				}
+				}*/
 			},
 		},
 	};
