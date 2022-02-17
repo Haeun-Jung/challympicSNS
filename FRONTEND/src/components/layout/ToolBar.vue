@@ -206,13 +206,7 @@
 								this.$store.state.userStore.userInfo.user_no +
 								"/",
 						},
-						{
-							title: "내 피드",
-							link1:
-								"/feed/" + this.$store.state.userStore.userInfo.user_no + "/",
-							link2:
-								"/feed/" + this.$store.state.userStore.userInfo.user_no + "/",
-						}
+						{ title: "내 피드" }
 					);
 				} else {
 					menu.push({
@@ -255,7 +249,9 @@
 					sessionStorage.removeItem("Authorization");
 					this.$store.commit("userStore/LOGOUT");
 					this.$router.push("/recent");
-				}
+				} else if (this.profileMenu[i].title === "내 피드") {
+          window.location.href = `/feed/${this.$store.state.userStore.userInfo.user_no}`;
+        }
 			},
 			childSearch(searchInput) {
 				this.searchInput = searchInput;
