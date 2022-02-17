@@ -55,7 +55,10 @@ const userStore = {
       state.isLoggedIn = false;
       state.userNo = 0;
       state.userInfo = null;
-      state.userNo = 0;
+      state.filePath = "";
+      state.fileSavedName = "";
+      state.userEmail = "";
+      state.listInterest = null;
     },
     SET_USER_INFO: (state, userInfo) => {
       state.userInfo = userInfo;
