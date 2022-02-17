@@ -14,30 +14,28 @@
 							@click="movePage(challenge)"
 						>
 							<v-img
-                v-if="post.video"
-                min-height="190"
-                max-height="344"
+								v-if="challenge.video"
+								min-height="190"
+								max-height="344"
 								:src="
 									'http://d3iu4sf4n4i2qf.cloudfront.net/' +
-									post.file_path +
+									challenge.file_path +
 									'/thumbnail/' +
-									post.file_savedname +
-                  '.png'
+									challenge.file_savedname +
+									'.png'
 								"
 							>
-                <v-icon icon class="play-btn"
-                  >mdi-play</v-icon
-                >
+								<v-icon icon class="play-btn">mdi-play</v-icon>
 							</v-img>
 							<v-img
-                v-else
-                min-height="190"
-                max-height="344"
+								v-else
+								min-height="190"
+								max-height="344"
 								:src="
 									'http://d3iu4sf4n4i2qf.cloudfront.net/' +
-									post.file_path +
+									challenge.file_path +
 									'/' +
-									post.file_savedname
+									challenge.file_savedname
 								"
 							>
 							</v-img>

@@ -14,30 +14,28 @@
 							@click="movePage(challenge)"
 						>
 							<v-img
-                v-if="post.video"
-                min-height="190"
-                max-height="344"
+								v-if="challenge.video"
+								min-height="190"
+								max-height="344"
 								:src="
 									'http://d3iu4sf4n4i2qf.cloudfront.net/' +
-									post.file_path +
+									challenge.file_path +
 									'/thumbnail/' +
-									post.file_savedname +
-                  '.png'
+									challenge.file_savedname +
+									'.png'
 								"
 							>
-                <v-icon icon class="play-btn"
-                  >mdi-play</v-icon
-                >
+								<v-icon icon class="play-btn">mdi-play</v-icon>
 							</v-img>
 							<v-img
-                v-else
-                min-height="190"
-                max-height="344"
+								v-else
+								min-height="190"
+								max-height="344"
 								:src="
 									'http://d3iu4sf4n4i2qf.cloudfront.net/' +
-									post.file_path +
+									challenge.file_path +
 									'/' +
-									post.file_savedname
+									challenge.file_savedname
 								"
 							>
 							</v-img>
@@ -81,9 +79,9 @@
 		created() {
 			// 유저가 만든 포스트 목록
 			getUserMadeChallege(this.who_no, (response) => {
-				console.log("포스트목록");
-				console.log(response.data.data);
+				//	console.log("포스트목록");
 				this.challenges = response.data.data;
+				//	console.log(this.challenges);
 			});
 		},
 		methods: {
