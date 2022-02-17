@@ -329,6 +329,9 @@
 						this.$store.state.userStore.userInfo.user_no,
 						() => {
 							this.isSubscription = false;
+							this.$store.dispatch("userStore/getSubscription", {
+								token: sessionStorage.getItem("Authorization"),
+							});
 						},
 						(error) => {
 							console.log(error);
@@ -341,6 +344,9 @@
 						this.$store.state.userStore.userInfo.user_no,
 						() => {
 							this.isSubscription = true;
+							this.$store.dispatch("userStore/getSubscription", {
+								token: sessionStorage.getItem("Authorization"),
+							});
 						},
 						(error) => {
 							console.log(error);
@@ -428,7 +434,7 @@
 				if (this.$store.state.challengeStore.challenge.challenge_no) {
 					isSubscribe(
 						this.$store.state.challengeStore.challenge.challenge_no,
-						this.$store.state.challengeStore.challenge.user_no,
+						this.$store.state.userStore.userInfo.user_no,
 						(response) => {
 							if (response.data.success) {
 								this.isSubscription = true;
