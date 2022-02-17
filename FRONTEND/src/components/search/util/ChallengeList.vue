@@ -109,10 +109,10 @@ export default {
       }
     },
     goChallenge() {
-      alert(
-        "챌린지 상세 페이지로 이동 where challenge_no:" +
-          this.challenge.challenge_no
-      );
+      // alert(
+      //   "챌린지 상세 페이지로 이동 where challenge_no:" +
+      //     this.challenge.challenge_no
+      // );
       const path = "/challenge/" + this.challenge.challenge_no;
       this.$router.push(path);
     },
