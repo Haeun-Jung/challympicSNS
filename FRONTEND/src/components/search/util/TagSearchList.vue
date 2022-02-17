@@ -186,7 +186,7 @@ export default {
     },
     pushLike() {
         if (!this.user) {
-          this.snackBar = true;
+          this.snackbar = true;
         return;
       }
 
