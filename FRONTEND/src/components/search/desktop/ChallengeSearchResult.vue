@@ -152,6 +152,21 @@
 				</v-row>
 			</template>
 		</v-data-iterator>
+		<v-snackbar
+			v-model="snackbar"
+			:timeout="timeout"
+			color="success"
+			outlined
+			style="font-weight: bold; border: 2px solid; color: transparent;"
+		>
+			{{ text }}
+
+			<template v-slot:action="{ attrs }">
+				<v-btn color="success" text v-bind="attrs" @click="snackbar = false">
+					Close
+				</v-btn>
+			</template>
+		</v-snackbar>
 	</v-container>
 </template>
 <script>
@@ -186,7 +201,7 @@
 			},
 			pushLike(post) {
 				if (this.$store.state.userStore.userInfo.user_no == 0) {
-					alert("로그인이 필요한 서비스입니다.");
+					this.snackbar = true;
 					return;
 				}
 
@@ -203,11 +218,11 @@
 			postLikeList(
 				post.post_no,
 				post.user_no,
-				(response) => {
-				console.log(response);
+				() => {
+				// console.log(response);
 				},
-				(error) => {
-				console.log(error);
+				() => {
+				// console.log(error);
 				}
 			);
 			},
@@ -219,13 +234,13 @@
 				{ user_no, tag_content },
 				(response) => {
 					this.challenges = response.data.data.challengeList;
-					console.log(this.challenges);
-					console.log("created");
-					console.log(this.searchKey);
+					// console.log(this.challenges);
+					// console.log("created");
+					// console.log(this.searchKey);
 				},
-				(error) => {
-					console.log(error);
-					console.log("create false");
+				() => {
+					// console.log(error);
+					// console.log("create false");
 				}
 			);
 		},
@@ -248,6 +263,9 @@
 
 				itemsPerPage: 6,
 				challenges: [],
+				snackbar: false,
+				text: "로그인이 필요한 서비스입니다.",
+				timeout: 1500,
 			};
 		},
 	};

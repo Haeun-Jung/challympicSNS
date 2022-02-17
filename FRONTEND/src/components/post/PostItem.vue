@@ -45,6 +45,23 @@
 				/>
 			</span>
 		</v-card-text>
+
+		<v-snackbar
+		v-model="snackbar"
+		:timeout="timeout"
+		color="error"
+		outlined
+		style="font-weight: bold; border: 2px solid; color:transparent;"
+		>
+		{{ text }}
+
+		<template v-slot:action="{ attrs }">
+			<v-btn color="red" text v-bind="attrs" @click="snackbar = false">
+			Close
+			</v-btn>
+		</template>
+		</v-snackbar>
+
 		<v-card-text class="d-flex justify-space-between pt-0 pl-0 pb-0">
 			<span>
 				<v-btn @click="like(post)" class="icon-margin" icon>
@@ -183,6 +200,9 @@
 					fileNo: "",
 				},
         		userLikeList: [],
+				snackbar: false,
+				text: "로그인이 필요한 서비스입니다.",
+				timeout: 1500,
 			};
 		},
 		created() {
@@ -200,7 +220,7 @@
       },
 			like(post) {
 				if (!this.user) {
-					alert("로그인이 필요한 서비스입니다.");
+					this.snackbar = true;
 					return;
 				}
 
@@ -277,7 +297,11 @@
 				return;
 			},
 			addComment() {
-				console.log("댓글 등록 호출");
+
+				if (!this.user) {
+					this.snackbar = true;
+					return;
+				}
 
 				if (this.commentInput.length == 0) {
 					return;
@@ -296,8 +320,6 @@
 						const { data } = response;
 						// TODO: 리턴받은 댓글 정보에 + user_no, user_nickname, user_profile 추가해서 this.post.commentList에 append
 						this.post.commentList.push(data.data);
-            console.log("createComment");
-            console.log(data.data);
 					},
 					() => {}
 				);
