@@ -176,6 +176,7 @@
 				dialogType: "like",
 				postDialog: false,
 				challengePost: {
+          postNo: "",
 					challengeName: "",
 					fileType: "",
           post_content: "",
@@ -235,7 +236,7 @@
 				this.likeDialog = !this.likeDialog;
 				if (this.likeDialog) {
             
-          getLikeList(this.post.post_no, this.$store.state.userStore.userInfo.user_no,
+          getLikeList(this.post.post_no, (this.$store.state.userStore.userInfo ? this.$store.state.userStore.userInfo.user_no : 0),
           (response) => {
             this.userLikeList = response.data.data;
           },

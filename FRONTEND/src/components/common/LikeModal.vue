@@ -25,7 +25,7 @@
 
           <v-list-item v-else v-for="(user, idx) in likeUserList" :key="user.user_no">
             <img
-              v-if="user.user_title"
+              v-if="user.user_title != '도전자'"
               class="medal-icon"
               src="https://cdn-icons-png.flaticon.com/512/744/744922.png"
             />
@@ -63,7 +63,7 @@
               <!-- 클릭 간격 조절 -->
             </v-list-item-content>
             <!-- 리스트에 있는 유저와 내(=로그인 유저)가 다를 때 -->
-            <v-list-item-icon v-if="login_user.user_no != user.user_no">
+            <v-list-item-icon v-if="(login_user ? login_user.user_no : 0) != user.user_no">
               <v-btn
                 v-if="!user.follow"
                 @click="follow(user.user_no, idx)"

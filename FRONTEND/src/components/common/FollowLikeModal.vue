@@ -23,15 +23,15 @@
 				<v-list class="overflow-y-auto">
 					<v-list-item v-for="(user, idx) in followList" :key="user.user_no">
 						<img
-							v-if="user.user_title"
+							v-if="user.user_title != '도전자'"
 							class="medal-icon"
 							src="https://cdn-icons-png.flaticon.com/512/744/744922.png"
 						/>
 						<v-list-item-avatar class="user-image">
 							<v-img
-								v-if="user.file_savedname"
+								v-if="user.user_profile"
 								:alt="`${user.user_nickname} avatar`"
-								:src="`https://d384sk7z91xokb.cloudfront.net/${user.file_path}/${user.file_savedname}`"
+								:src="`https://d384sk7z91xokb.cloudfront.net/${user.user_profile}`"
 							></v-img>
 							<v-img
 								v-else

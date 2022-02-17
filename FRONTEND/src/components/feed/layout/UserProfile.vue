@@ -24,6 +24,7 @@
               <v-list-item-title class="title-wrapper">
                 <!-- 타이틀이 있을 때만 -->
                 <img
+                  v-if="userInfo.user_title != '도전자'"
                   class="medal-icon"
                   src="https://cdn-icons-png.flaticon.com/512/744/744922.png"
                 />
@@ -119,6 +120,7 @@
               <v-col>
                 <v-list-item-title class="title-wrapper">
                   <img
+                    v-if="userInfo.user_title != '도전자'"
                     class="medal-icon"
                     src="https://cdn-icons-png.flaticon.com/512/744/744922.png"
                   />
