@@ -428,7 +428,7 @@
 				if (this.$store.state.challengeStore.challenge.challenge_no) {
 					isSubscribe(
 						this.$store.state.challengeStore.challenge.challenge_no,
-						this.$store.state.challengeStore.challenge.user_no,
+						this.$store.state.userStore.userInfo.user_no,
 						(response) => {
 							if (response.data.success) {
 								this.isSubscription = true;
