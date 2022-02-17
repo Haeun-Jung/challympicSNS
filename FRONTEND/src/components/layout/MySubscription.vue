@@ -32,7 +32,7 @@
         color="primary"
         outlined
         close
-		@click="goChallengePage(challenge.challenge_no)"
+		    @click="goChallengePage(challenge.challenge_no)"
         @click:close="remove(challenge.challenge_no)"
       >
         {{ challenge.challenge_title }}
