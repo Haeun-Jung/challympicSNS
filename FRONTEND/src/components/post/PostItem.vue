@@ -168,6 +168,7 @@
 			@close-dialog="toggleLikeDialog"
 			:likeUserList="userLikeList"
 			:dialog="likeDialog"
+			:login_user="this.login_user"
 		/>
 	</v-card>
 </template>
@@ -219,6 +220,7 @@
 				snackbar: false,
 				text: "로그인이 필요한 서비스입니다.",
 				timeout: 1500,
+				login_user: this.$store.state.userStore.userInfo?this.$store.state.userStore.userInfo.user_no:0,
 			};
 		},
 		methods: {
@@ -263,7 +265,7 @@
 				if (this.likeDialog) {
 					getLikeList(
 						this.post.post_no,
-						this.$store.state.userStore.userInfo.user_no,
+						this.$store.state.userStore.userInfo?this.$store.state.userStore.userInfo.user_no:-1,
 						(response) => {
 							this.userLikeList = response.data.data;
 						},

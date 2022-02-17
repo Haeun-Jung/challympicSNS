@@ -300,7 +300,7 @@ public class PostApiController {
         List<PostLikeUserDto> userList = new ArrayList<>();
         for(PostLike postLike : postLikeList){
             User user = userService.findUser(postLike.getUser_no());
-            boolean follow = followService.follow(userNo, user.getUser_no());
+            boolean follow = followService.isFollow(userNo, user.getUser_no());
             userList.add(new PostLikeUserDto(user, user.getMedia(), follow));
         }
 

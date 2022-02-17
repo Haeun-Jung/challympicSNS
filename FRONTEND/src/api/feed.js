@@ -10,6 +10,7 @@ function checkFollow(user_no, follow_follower_no, success, fail) {
 }
 
 function setFollow(user_no, follow_follower_no, success, fail) {
+  console.log("setFollow 실행");
   api.defaults.headers["Authorization"] =
     sessionStorage.getItem("Authorization");
   api
