@@ -64,6 +64,7 @@
 					0,
 					(response) => {
 						this.tagList = response.data.data.tagList;
+						this.list = this.makeFour(response.data.data.tagList);
 					},
 					(error) => {
 						console.log(error);
