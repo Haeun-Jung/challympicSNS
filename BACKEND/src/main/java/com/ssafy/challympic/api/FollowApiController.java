@@ -88,11 +88,13 @@ public class FollowApiController {
     static class FollowResponse{
         private int user_no;
         private String user_nickname;
+        private String user_title;
         private boolean isFollow;
 
         public FollowResponse(User user, boolean isFollow) {
             this.user_no = user.getUser_no();
             this.user_nickname = user.getUser_nickname();
+            this.user_title = user.getUser_title();
             this.isFollow = isFollow;
         }
     }
