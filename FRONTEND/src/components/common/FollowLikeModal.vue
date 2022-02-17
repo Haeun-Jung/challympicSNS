@@ -29,14 +29,8 @@
             />
             <v-list-item-avatar class="user-image">
               <v-img
-                v-if="user.user_profile"
                 :alt="`${user.user_nickname} avatar`"
-                :src="`https://d384sk7z91xokb.cloudfront.net/${user.user_profile}`"
-              ></v-img>
-              <v-img
-                v-else
-                :alt="`${user.user_nickname} avatar`"
-                src="../../assets/profile.png"
+                :src="imageUrl(user.user_profile)"
               ></v-img>
             </v-list-item-avatar>
 
@@ -78,6 +72,21 @@
           </v-list-item>
         </v-list>
       </div>
+		<v-snackbar
+			v-model="snackbar"
+			:timeout="timeout"
+			color="error"
+			outlined
+			style="font-weight: bold; border: 2px solid; color: transparent"
+		>
+			{{ text }}
+
+			<template v-slot:action="{ attrs }">
+				<v-btn color="red" text v-bind="attrs" @click="snackbar = false">
+					Close
+				</v-btn>
+			</template>
+		</v-snackbar>
     </v-card>
   </v-dialog>
 </template>
@@ -97,10 +106,18 @@ export default {
   data() {
     return {
       followList: [],
+      defaultPath: "http://d3iu4sf4n4i2qf.cloudfront.net/",
+      snackbar: false,
+			text: "로그인이 필요한 서비스입니다.",
+			timeout: 1500,
     };
   },
   methods: {
     follow(userNo, idx) {
+				if (!this.$store.state.userStore.userInfo) {
+					this.snackbar = true;
+					return;
+				}
       // 팔로우 API 요청 보내기
       // 해당 유저에 대한 isFollowing 값 변경
       setFollow(this.login_user, userNo, () => {
@@ -124,6 +141,11 @@ export default {
       this.$emit("close-dialog");
       this.dialog = false;
       location.href = "/feed/" + userno;
+    },
+    imageUrl(user_profile) {
+      if (!user_profile) return require("@/assets/profile.png");
+
+      return this.defaultPath + user_profile;
     },
   },
   watch: {

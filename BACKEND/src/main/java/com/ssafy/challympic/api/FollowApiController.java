@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -96,7 +97,7 @@ static class FollowResponse{
         this.user_title = user.getUser_title();
         this.isFollow = isFollow;
         if(user.getMedia() != null){
-            this.user_profile = user.getMedia().getFile_path()+"/"+user.getMedia().getFile_savedname();
+            this.user_profile = user.getMedia().getFile_path()+ File.separator+user.getMedia().getFile_savedname();
         }
     }
 }

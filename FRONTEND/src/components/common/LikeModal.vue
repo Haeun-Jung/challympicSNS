@@ -31,7 +31,7 @@
 
           <v-list-item
             v-else
-            v-for="(user, idx) in likeList"
+            v-for="(user, idx) in likeUserList"
             :key="user.user_no"
           >
             <img
@@ -71,7 +71,7 @@
               v-if="(login_user ? login_user.user_no : 0) != user.user_no"
             >
               <v-btn
-                v-if="!user.follow"
+                v-if="!user.isFollowing"
                 @click="follow(user.user_no, idx)"
                 color="#3396F4"
                 class="white--text rounded-xl"
@@ -93,6 +93,21 @@
           </v-list-item>
         </v-list>
       </div>
+		<v-snackbar
+			v-model="snackbar"
+			:timeout="timeout"
+			color="error"
+			outlined
+			style="font-weight: bold; border: 2px solid; color: transparent"
+		>
+			{{ text }}
+
+			<template v-slot:action="{ attrs }">
+				<v-btn color="red" text v-bind="attrs" @click="snackbar = false">
+					Close
+				</v-btn>
+			</template>
+		</v-snackbar>
     </v-card>
   </v-dialog>
 </template>
@@ -106,18 +121,15 @@ export default {
   props: {
     dialog: Boolean,
     likeUserList: Array,
+    login_user: Number,
   },
   data() {
     return {
-      login_user: null,
       likeList: null,
-      defaultPath: "http://d3iu4sf4n4i2qf.cloudfront.net/",
+      snackbar: false,
+			text: "로그인이 필요한 서비스입니다.",
+			timeout: 1500,
     };
-  },
-  watch: {
-    likeUserList(newList) {
-      this.likeList = newList;
-    },
   },
   methods: {
     imageUrl(file_path, file_savedname) {
@@ -126,29 +138,20 @@ export default {
       return this.defaultPath + file_path + "/" + file_savedname;
     },
     follow(userNo, idx) {
+				if (!this.$store.state.userStore.userInfo) {
+					this.snackbar = true;
+					return;
+				}
+    console.log("좋아요한 애들");
+    console.log( this.likeUserList);
       // 팔로우 API 요청 보내기
       // 해당 유저에 대한 isFollowing 값 변경
-      setFollow(this.login_user, userNo, () => {
-        // who_no: 피드 주인
-        // login_user: 로그인 한 유저
-        // userNo: 팔로잉/팔로워 리스트에 있는 유저
-        // 내 피드에서 팔로워/팔로잉 목록 볼 때만 부모 요소에서 값 변경 필요
-        if (this.who_no === this.login_user) {
-          // 이미 팔로우 중이라면 => 언팔로우
-          if (this.followList[idx].follow) {
-            this.$emit("decrementFollowingCnt");
-          } else {
-            // 팔로우 중이 아니라면 => 팔로우
-            this.$emit("incrementFollowingCnt");
-          }
-        }
-        this.followList[idx].follow = !this.followList[idx].follow;
+      setFollow(this.login_user, userNo, (response) => {
+        console.log("setFollow 호출 반환값");
+        console.log(response);
+        this.likeUserList[idx].isFollowing = !this.likeUserList[idx].isFollowing;
       });
     },
-  },
-  created() {
-    this.login_user = this.$store.state.userStore.userInfo;
-    this.likeList = this.likeUserList;
   },
 };
 </script>
