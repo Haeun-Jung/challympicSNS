@@ -298,7 +298,7 @@
 					// 챌린지 구독 delete 요청
 					removeSubscription(
 						challenge.challenge_no,
-						challenge.user_no,
+						this.$store.state.userStore.userInfo.user_no,
 						() => {
 							this.isSubscription = false;
 						},
@@ -310,7 +310,7 @@
 					// 챌린지 구독 post 요청
 					setSubscription(
 						challenge.challenge_no,
-						challenge.user_no,
+						this.$store.state.userStore.userInfo.user_no,
 						() => {
 							this.isSubscription = true;
 						},
