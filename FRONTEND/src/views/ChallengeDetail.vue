@@ -380,14 +380,16 @@
 		filters: {
 			hashAnchor(str) {
 				// TODO: anchor 태그에서 href base url 주석 처리된 url로 변경!!!!!
-				str = (str || "").replace(
+				if (!str.includes("#") && !str.includes("@")) {
+					return str;
+				}
+
+				str = str.replace(
 					/#[^\s]+/g,
-					'<a class="text-decoration-none" href="http://192.168.219.106:8080/search/$&">$&</a>'
+					// '<post-content-tag :keyword="$&"></post-content-tag>'
+          '<a class="text-decoration-none" href="/search/$&">$&</a>'
+
 				);
-				// str = str.replace(
-				//   /#[^\s]+/g,
-				//   '<a class="text-decoration-none" href="http://i6b101.p.ssafy.io/search/$&">$&</a>'
-				// );
 				return str.replace(/\/#/g, "/");
 			},
 		},
