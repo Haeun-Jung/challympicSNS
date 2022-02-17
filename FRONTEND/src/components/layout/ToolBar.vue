@@ -101,9 +101,15 @@
 			<alert-button />
 			<v-menu bottom left offset-y width="300px">
 				<template v-slot:activator="{ on, attrs }">
+					<!--
 					<v-btn icon v-bind="attrs" v-on="on">
 						<v-icon>mdi-account-circle</v-icon>
 					</v-btn>
+					 v-if="!this.$store.state.userStore.filePath"
+					-->
+					<v-avatar v-bind="attrs" v-on="on" size="35">
+						<v-img :src="imageUrl"></v-img>
+					</v-avatar>
 				</template>
 
 				<v-list>
