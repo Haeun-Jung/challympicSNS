@@ -16,9 +16,17 @@
 					alt="profile img"
 				/>
 				<nick-name-module :itemno="post.user_no" :item="post.user_nickname" />
-        <v-btn color="#3396f4" dark small class="ml-2" style="width: 10%" title="챌린지 보기" @click="goChallengeEvent(post.challenge_no)">
-          <v-icon dark>mdi-arrow-right</v-icon>
-        </v-btn>
+				<v-btn
+					color="#3396f4"
+					dark
+					small
+					class="ml-2"
+					style="width: 10%"
+					title="챌린지 보기"
+					@click="goChallengeEvent(post.challenge_no)"
+				>
+					<v-icon dark>mdi-arrow-right</v-icon>
+				</v-btn>
 			</div>
 			<!-- 'nickname'을 현재 로그인한 유저의 닉네임으로 수정 -->
 			<div v-if="this.user">
@@ -47,19 +55,19 @@
 		</v-card-text>
 
 		<v-snackbar
-		v-model="snackbar"
-		:timeout="timeout"
-		color="error"
-		outlined
-		style="font-weight: bold; border: 2px solid; color:transparent;"
+			v-model="snackbar"
+			:timeout="timeout"
+			color="error"
+			outlined
+			style="font-weight: bold; border: 2px solid; color: transparent"
 		>
-		{{ text }}
+			{{ text }}
 
-		<template v-slot:action="{ attrs }">
-			<v-btn color="red" text v-bind="attrs" @click="snackbar = false">
-			Close
-			</v-btn>
-		</template>
+			<template v-slot:action="{ attrs }">
+				<v-btn color="red" text v-bind="attrs" @click="snackbar = false">
+					Close
+				</v-btn>
+			</template>
 		</v-snackbar>
 
 		<v-card-text class="d-flex justify-space-between pt-0 pl-0 pb-0">
@@ -76,7 +84,12 @@
 				</v-btn>
 			</span>
 			<span>
-				<share-button :post-no="post.post_no" :challenge-no="post.challenge_no > 0 ? post.challenge_no : challengeNo" />
+				<share-button
+					:post-no="post.post_no"
+					:challenge-no="
+						post.challenge_no > 0 ? post.challenge_no : challengeNo
+					"
+				/>
 			</span>
 		</v-card-text>
 		<v-card-text class="py-2">
@@ -102,13 +115,13 @@
 				:class="[$vuetify.theme.dark ? 'dark-mode-text' : 'black-text']"
 				v-html="$options.filters.hashAnchor(this.post.post_content)"
 			>
-      </span>
-      <!-- <span
+			</span>
+			<!-- <span
 				:class="[$vuetify.theme.dark ? 'dark-mode-text' : 'black-text']"
         v-bind="$options.filters.hashAnchor(this.post.post_content)" 
       >
       </span> -->
-      
+
 			<p>{{ post.post_regdate }}</p>
 		</v-card-text>
 		<v-divider />
@@ -124,11 +137,13 @@
 			</v-avatar>
 			<v-avatar v-else size="40" class="mr-3">
 				<img
-				:src="
-					'http://d3iu4sf4n4i2qf.cloudfront.net/' +
-					this.$store.state.userStore.filePath+`/`+this.$store.state.userStore.fileSavedName
-				"
-				alt="John"
+					:src="
+						'http://d3iu4sf4n4i2qf.cloudfront.net/' +
+						this.$store.state.userStore.filePath +
+						`/` +
+						this.$store.state.userStore.fileSavedName
+					"
+					alt="John"
 				/>
 			</v-avatar>
 			<v-text-field
@@ -152,7 +167,7 @@
 		<like-modal
 			@close-dialog="toggleLikeDialog"
 			:likeUserList="userLikeList"
-      :dialog="likeDialog"
+			:dialog="likeDialog"
 		/>
 	</v-card>
 </template>
@@ -182,8 +197,9 @@
 		props: {
 			type: String,
 			post: Object,
-      		challengeNo: Number,
+			challengeNo: Number,
 			user: Object,
+			challengeTitle: String,
 		},
 		data() {
 			return {
@@ -195,11 +211,11 @@
 				challengePost: {
 					challengeName: "",
 					fileType: "",
-          		post_content: "",
+					post_content: "",
 					challengeNo: "",
 					fileNo: "",
 				},
-        		userLikeList: [],
+				userLikeList: [],
 				snackbar: false,
 				text: "로그인이 필요한 서비스입니다.",
 				timeout: 1500,
@@ -214,10 +230,13 @@
 			// console.log(this.challengePost);
 		},
 		methods: {
-      goChallengeEvent(challenge_no){
-        event.preventDefault;
-        this.$router.push({ name: `ChallengeDetail`, params: {challengeNo: challenge_no}});
-      },
+			goChallengeEvent(challenge_no) {
+				event.preventDefault;
+				this.$router.push({
+					name: `ChallengeDetail`,
+					params: { challengeNo: challenge_no },
+				});
+			},
 			like(post) {
 				if (!this.user) {
 					this.snackbar = true;
@@ -237,10 +256,8 @@
 				postLikeList(
 					this.post.post_no,
 					this.user.user_no,
-					() => {
-					},
-					() => {
-					}
+					() => {},
+					() => {}
 				);
 			},
 			toggleCommentShow() {
@@ -250,22 +267,25 @@
 				}
 			},
 			toggleLikeDialog() {
-
 				this.likeDialog = !this.likeDialog;
 				if (this.likeDialog) {
-					getLikeList(this.post.post_no, this.$store.state.userStore.userInfo.user_no,
-					(response) => {
-						this.userLikeList = response.data.data;
-					},
-					(error) => {
-						console.log(error);
-					});
+					getLikeList(
+						this.post.post_no,
+						this.$store.state.userStore.userInfo.user_no,
+						(response) => {
+							this.userLikeList = response.data.data;
+						},
+						(error) => {
+							console.log(error);
+						}
+					);
 				}
 			},
 			editPost() {
 				// 포스트 수정 API 요청
+
 				console.log("edit");
-				this.challengePost.challengeName = this.post.challenge_name;
+				this.challengePost.challengeName = this.challengeTitle;
 				this.challengePost.fileType = this.post.challenge_type.toUpperCase();
 				this.challengePost.post_content = this.post.post_content;
 				this.challengePost.challengeNo = this.post.challenge_no;
@@ -297,7 +317,6 @@
 				return;
 			},
 			addComment() {
-
 				if (!this.user) {
 					this.snackbar = true;
 					return;
@@ -333,12 +352,11 @@
 					return str;
 				}
 
-        // #있는 키워드를 
+				// #있는 키워드를
 				str = str.replace(
 					/#[^\s]+/g,
 					// '<post-content-tag :keyword="$&"></post-content-tag>'
-          '<a class="text-decoration-none" href="/search/$&">$&</a>'
-
+					'<a class="text-decoration-none" href="/search/$&">$&</a>'
 				);
 				return str.replace(/\/#/g, "/");
 			},
@@ -379,5 +397,4 @@
 		display: flex;
 		align-items: center;
 	}
-
 </style>
