@@ -35,6 +35,8 @@
         @click="goChallengePage(challenge.challenge_no)"
 				@click:close="remove(challenge.challenge_no, idx)"
 			>
+			<!-- 				:to="{ path: '/challenge/' + challenge.challenge_no }"
+ -->
 				{{ challenge.challenge_title }}
 			</v-chip>
 		</v-list-group>

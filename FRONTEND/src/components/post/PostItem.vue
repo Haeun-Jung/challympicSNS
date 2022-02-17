@@ -165,7 +165,7 @@
 		props: {
 			type: String,
 			post: Object,
-      challengeNo: Number,
+      		challengeNo: Number,
 			user: Object,
 		},
 		data() {
@@ -176,21 +176,20 @@
 				dialogType: "like",
 				postDialog: false,
 				challengePost: {
-          postNo: "",
 					challengeName: "",
 					fileType: "",
-          post_content: "",
+          		post_content: "",
 					challengeNo: "",
 					fileNo: "",
 				},
-        userLikeList: [],
+        		userLikeList: [],
 			};
 		},
 		created() {
 			// console.log("debug-user");
 			// console.log(this.user);
-			console.log("debug-post");
-			console.log(this.post);
+			// console.log("debug-post");
+			// console.log(this.post);
 			// console.log("debug-challengePost");
 			// console.log(this.challengePost);
 		},
@@ -218,11 +217,9 @@
 				postLikeList(
 					this.post.post_no,
 					this.user.user_no,
-					(response) => {
-						console.log(response);
+					() => {
 					},
-					(error) => {
-						console.log(error);
+					() => {
 					}
 				);
 			},
@@ -233,16 +230,16 @@
 				}
 			},
 			toggleLikeDialog() {
+
 				this.likeDialog = !this.likeDialog;
 				if (this.likeDialog) {
-            
-          getLikeList(this.post.post_no, (this.$store.state.userStore.userInfo ? this.$store.state.userStore.userInfo.user_no : 0),
-          (response) => {
-            this.userLikeList = response.data.data;
-          },
-          (error) => {
-            console.log(error);
-          });
+					getLikeList(this.post.post_no, this.$store.state.userStore.userInfo.user_no,
+					(response) => {
+						this.userLikeList = response.data.data;
+					},
+					(error) => {
+						console.log(error);
+					});
 				}
 			},
 			editPost() {

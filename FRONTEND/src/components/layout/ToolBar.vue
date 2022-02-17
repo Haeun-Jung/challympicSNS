@@ -89,17 +89,10 @@
 			x-small
 			>로그인</v-btn
 		>
-
 		<div v-else>
 			<alert-button />
 			<v-menu bottom left offset-y width="300px">
 				<template v-slot:activator="{ on, attrs }">
-					<!--
-					<v-btn icon v-bind="attrs" v-on="on">
-						<v-icon>mdi-account-circle</v-icon>
-					</v-btn>
-					 v-if="!this.$store.state.userStore.filePath"
-					-->
 					<v-avatar v-bind="attrs" v-on="on" size="35">
 						<v-img :src="imageUrl"></v-img>
 					</v-avatar>
@@ -238,7 +231,9 @@
 				this.onSelect = true;
 			},
 			goMain() {
-				this.$router.push("/");
+				//this.$router.push("/");
+				//window.location.href = "/";
+				window.location.assign("/"); //without post
 			},
 			clickLoginBtn() {
 				this.$router.push("/login");
@@ -261,10 +256,12 @@
 					var foundValue = this.obj2.filter((obj) => obj.key == searchInput);
 					to = foundValue[0].no; // : feed 번호
 					this.dynamicArr = this.empty;
-					this.$router.push("/feed/" + to);
+					//this.$router.push("/feed/" + to);
+					window.location.href = "/feed/" + to;
 				} else if (searchCategory === "#") {
 					this.dynamicArr = this.empty;
-					this.$router.push("/search/" + to);
+					//this.$router.push("/search/" + to);
+					window.location.href = "/search/" + to;
 				}
 			},
 			mobileChildSearch(mobileSearchInput) {
@@ -275,15 +272,17 @@
 					var foundValue = this.obj2.filter(
 						(obj) => obj.key == this.mobileSearchInput
 					);
-					console.log("모바일");
+					//console.log("모바일");
 					this.mobileSearchInput = "";
 					to = foundValue[0].no; // : feed 번호
 					this.dynamicArr = this.empty;
-					this.$router.push("/feed/" + to);
+					//this.$router.push("/feed/" + to);
+					window.location.href = "/feed/" + to;
 				} else if (searchCategory === "#") {
 					this.mobileSearchInput = "";
 					this.dynamicArr = this.empty;
-					this.$router.push("/search/" + to);
+					//this.$router.push("/search/" + to);
+					window.location.href = "/search/" + to;
 				}
 			},
 			isMobile() {
