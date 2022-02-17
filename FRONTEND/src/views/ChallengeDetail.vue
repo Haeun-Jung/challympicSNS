@@ -169,11 +169,11 @@
 							<div>
 								<!-- End of Mobile -->
 								<!--Data Iterator -->
-                <battle-item
+                				<battle-item
 									v-if="challenge.challenge_challengers.length === 1"
 									:postList="postList"
 									:type="challenge.challenge_type"
-                  :user="userData"
+									:user="userData"
 								/>
 								<v-data-iterator
 									v-else
@@ -204,7 +204,7 @@
 										<post-item
 											v-for="post in props.items"
 											:post="post"
-                      :challengeNo="challenge.challenge_no"
+                      						:challengeNo="challenge.challenge_no"
 											:type="challenge.challenge_type"
 											:key="post.post_no"
 											:user="userData"
@@ -377,13 +377,16 @@
 				let splitedContent = (
 					this.$store.state.challengeStore.challenge.challenge_content || ""
 				)
-					.split(" ")
-					.filter((word) => {
-						return word.startsWith("#");
-					});
-        if (this.challenge.challenge_challengers.length === 1) {
-          splitedContent.push("#1:1");
-        }
+				.split(" ")
+				.filter((word) => {
+					return word.startsWith("#");
+				});
+
+				if (this.challenge.challenge_challengers.length === 1) {
+					splitedContent.push("#1:1");
+				}
+
+
 				if (splitedContent.length > 0) {
 					return splitedContent;
 				} else {
@@ -415,6 +418,7 @@
 				if (this.$route.query.postNo) {
 					let org = this.$store.state.postStore.postList;
 					let list = [];
+
 					for (let i = 0; i < org.length; i++) {
 						if (org[i].post_no == this.$route.query.postNo) {
 							list.unshift(org[i]);
