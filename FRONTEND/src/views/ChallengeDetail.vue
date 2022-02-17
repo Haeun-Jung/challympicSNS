@@ -425,8 +425,10 @@
 				}
 			},
       isEnded() {
-				if (checkEnd(this.$store.state.challengeStore.challenge.challenge_end.replace(/./g, "-"))) {
-          return true;
+        if (this.$store.state.challengeStore.challenge.challenge_no) {
+          if (checkEnd(this.$store.state.challengeStore.challenge.challenge_end.replace(/./g, "-"))) {
+            return true;
+          }
         }
         return false;
       },
@@ -434,7 +436,7 @@
 				if (this.$store.state.challengeStore.challenge.challenge_no) {
 					isSubscribe(
 						this.$store.state.challengeStore.challenge.challenge_no,
-						this.$store.state.userStore.userInfo.user_no,
+						(this.$store.state.userStore.userInfo ? this.$store.state.userStore.userInfo.user_no : 0),
 						(response) => {
 							if (response.data.success) {
 								this.isSubscription = true;
