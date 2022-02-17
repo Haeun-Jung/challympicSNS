@@ -81,12 +81,12 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
-     <v-snackbar
+    <v-snackbar
       v-model="snackbar"
       :timeout="timeout"
       color="error"
       outlined
-      style="font-weight: bold; border: 2px solid; color:transparent;"
+      style="font-weight: bold; border: 2px solid; color: transparent"
     >
       {{ text }}
 
@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import {postLikeList } from "@/api/post.js"
+import { postLikeList } from "@/api/post.js";
 
 export default {
   name: "TagSearchList",
@@ -129,7 +129,7 @@ export default {
       ],
     };
 
-      this.user = this.$store.state.userStore.userInfo;
+    this.user = this.$store.state.userStore.userInfo;
   },
   data() {
     return {
@@ -144,9 +144,9 @@ export default {
       postLike: this.post.isLike, //유저테이블에서 가져오기
       mediaType: "",
       user: null,
-          snackbar: false,
-    text: "로그인이 필요한 서비스입니다.",
-    timeout: 1500,
+      snackbar: false,
+      text: "로그인이 필요한 서비스입니다.",
+      timeout: 1500,
     };
   },
   computed: {
@@ -173,7 +173,6 @@ export default {
       if (document.readyState === "complete") that.$set(that, "loaded", true);
     });
     //	this.playerOptions.sources.src = this.post.content;
-    //console.log(this.playerOptions.sources.src);
   },
   methods: {
     goPost() {
@@ -185,8 +184,8 @@ export default {
       this.$router.go();
     },
     pushLike() {
-        if (!this.user) {
-          this.snackbar = true;
+      if (!this.user) {
+        this.snackbar = true;
         return;
       }
 
@@ -203,9 +202,7 @@ export default {
       postLikeList(
         this.post.post_no,
         this.user.user_no,
-        (response) => {
-          console.log(response);
-        },
+        () => {},
         (error) => {
           console.log(error);
         }

@@ -39,7 +39,7 @@
       :timeout="timeout"
       color="error"
       outlined
-      style="font-weight: bold; border: 2px solid; color:transparent;"
+      style="font-weight: bold; border: 2px solid; color: transparent"
     >
       {{ text }}
 
@@ -80,7 +80,6 @@ export default {
   }),
   methods: {
     chooseDialog(item) {
-      console.log(item.title);
       let Auth = sessionStorage.getItem("Authorization");
       if (item.title == "챌린지 참여") {
         if (Auth) this.post = true;

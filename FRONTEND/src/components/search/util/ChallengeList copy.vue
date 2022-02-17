@@ -120,12 +120,10 @@ export default {
     };
   },
   created() {
-    console.log("몇번찍히나?" + this.challengeNo);
     list(
       this.challenges,
       (response) => {
         this.posts = response.data.data;
-        console.log(this.posts);
         //여기 나중에 중복제거 하나 잇어야할듯..
       },
       (error) => {
@@ -144,7 +142,6 @@ export default {
     pushLike(postid, arrIdx) {
       //arrInx는 화면 바로 바꾸는용도
       //postid로 좋아요 요청
-      console.log(postid);
       this.post[arrIdx].post_like = !this.post[arrIdx].post_like;
       if (this.post[arrIdx].post_like) {
         this.post[arrIdx].post_likes++;

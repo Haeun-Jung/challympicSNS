@@ -101,10 +101,9 @@ export default {
     challengeList(
       (response) => {
         this.challenges = response.data.data;
-        console.log(this.challenges);
       },
       (error) => {
-        if (error) console.log("er");
+        console.log(error);
       }
     );
   },

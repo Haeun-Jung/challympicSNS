@@ -133,9 +133,8 @@ export default {
         this.expanded.push(item);
       }
     },
-    answer(item) {
+    answer() {
       //	alert(item.qna_title + "에 대한 답변 등록하기");
-      console.log(item);
       this.show = !this.show;
       //alert(item.qna_title + "애 대한 답변 하기 - 모달창으로 답변 등록 후 ");
     },

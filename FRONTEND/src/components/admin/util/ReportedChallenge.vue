@@ -86,10 +86,9 @@ export default {
         challengeList(
           (response) => {
             this.challenges = response.data.data;
-            console.log(this.challenges);
           },
           (error) => {
-            if (error) console.log("er");
+            console.log(error);
           }
         );
       },
@@ -125,10 +124,9 @@ export default {
         this.challenges = this.challenges.filter(function (el) {
           return el.challenge_report != 0;
         });
-        console.log(this.challenges);
       },
       (error) => {
-        if (error) console.log("er");
+        console.log(error);
       }
     );
   },

@@ -41,10 +41,11 @@
 									<div v-if="!isMobile()">
 										<v-card-title>
 											<h2>{{ challenge.challenge_title }}</h2>
-											<span v-if="challenge.challenge_official == 'true'"
-												>✅</span
-											>
-											<share-button size="x-large" :challenge-no="challenge.challenge_no" />
+											<span v-if="challenge.challenge_official">✅</span>
+											<share-button
+												size="x-large"
+												:challenge-no="challenge.challenge_no"
+											/>
 											<v-btn
 												v-if="isSubscription"
 												@click="subscribe"
@@ -66,7 +67,11 @@
 											</v-btn>
 											<v-btn
 												v-show="canUser && !isEnded"
-												@click="userData ? postDialog = true : failParticipateChallenge()"
+												@click="
+													userData
+														? (postDialog = true)
+														: failParticipateChallenge()
+												"
 												outlined
 												color="#3396F4"
 											>
@@ -123,7 +128,11 @@
 												</v-btn>
 												<v-btn
 													v-show="canUser && !isEnded"
-													@click="userData ? postDialog = true : failParticipateChallenge()"
+													@click="
+														userData
+															? (postDialog = true)
+															: failParticipateChallenge()
+													"
 													outlined
 													color="#3396F4"
 												>
@@ -148,8 +157,8 @@
 											:key="challenger.user_no"
 											class="mt-6 ml-4 challenge-chip"
 											color="#3396F4"
-                      outlined
-                      @click="clickUser(challenger.user_no)"
+											outlined
+											@click="clickUser(challenger.user_no)"
 										>
 											@{{ challenger.user_nickname }}
 										</v-chip>
@@ -162,15 +171,17 @@
 											"
 										></span>
 									</v-card-subtitle>
-                  <v-list-item-subtitle>
-									</v-list-item-subtitle>
+									<v-list-item-subtitle> </v-list-item-subtitle>
 								</v-main>
 							</v-layout>
 							<div>
 								<!-- End of Mobile -->
 								<!--Data Iterator -->
-                <battle-item
-									v-if="challenge.challenge_challengers && challenge.challenge_challengers.length === 1"
+								<battle-item
+									v-if="
+										challenge.challenge_challengers &&
+										challenge.challenge_challengers.length === 1
+									"
 									:postList="postList"
 									:type="challenge.challenge_type"
 									:user="userData"
@@ -204,14 +215,14 @@
 										<post-item
 											v-for="post in props.items"
 											:post="post"
-                      						:challengeNo="challenge.challenge_no"
+											:challengeTitle="challenge.challenge_title"
+											:challengeNo="challenge.challenge_no"
 											:type="challenge.challenge_type"
 											:key="post.post_no"
 											:user="userData"
 										></post-item>
 									</template>
 								</v-data-iterator>
-								
 							</div>
 							<confirm-report
 								:confirm-report-dialog="confirmReportDialog"
@@ -227,29 +238,38 @@
 								}"
 								@close-modal="postDialog = false"
 							/>
-              <div style="color: transparent">
-                <v-snackbar
-                  v-model="snackbar"
-                  :timeout="timeout"
-                  color="red"
-                  outlined
-                  style="font-weight: bold; border: 2px solid; color: transparent;"
-                >
-                  {{ text }}
+							<div style="color: transparent">
+								<v-snackbar
+									v-model="snackbar"
+									:timeout="timeout"
+									color="red"
+									outlined
+									style="
+										font-weight: bold;
+										border: 2px solid;
+										color: transparent;
+									"
+								>
+									{{ text }}
 
-                  <template v-slot:action="{ attrs }">
-                    <v-btn color="red" text v-bind="attrs" @click="snackbar = false">
-                      Close
-                    </v-btn>
-                  </template>
-                </v-snackbar>
-              </div>
+									<template v-slot:action="{ attrs }">
+										<v-btn
+											color="red"
+											text
+											v-bind="attrs"
+											@click="snackbar = false"
+										>
+											Close
+										</v-btn>
+									</template>
+								</v-snackbar>
+							</div>
 						</v-flex>
 					</v-layout>
 				</v-flex>
 				<v-flex xs2 class="hidden-md-and-down" />
 			</v-layout>
-      
+
 			<!--
       -->
 		</v-container>
@@ -263,7 +283,7 @@
 	import ShareButton from "@/components/button/ShareButton.vue";
 	import ConfirmReport from "@/components/report/ConfirmReport.vue";
 	import PostUpload from "@/components/upload/PostUpload.vue";
-  import { checkEnd } from "@/plugins/dayjs.js"
+	import { checkEnd } from "@/plugins/dayjs.js";
 
 	import {
 		setSubscription,
@@ -299,7 +319,7 @@
 				],
 				userData: null,
 				isSubscription: false,
-        snackbar: false,
+				snackbar: false,
 				text: "로그인이 필요한 서비스입니다.",
 				timeout: 1500,
 			};
@@ -313,15 +333,15 @@
 					this.alert = false;
 				}, 3000);
 			},
-      failParticipateChallenge() {
-        this.snackbar = true;
-      },
+			failParticipateChallenge() {
+				this.snackbar = true;
+			},
 			subscribe() {
 				let challenge = this.$store.state.challengeStore.challenge;
-        if (this.userData === null) {
-          this.snackbar = true;
-          return;
-        }
+				if (this.userData === null) {
+					this.snackbar = true;
+					return;
+				}
 				if (this.isSubscription) {
 					// 챌린지 구독 delete 요청
 					removeSubscription(
@@ -359,11 +379,8 @@
 					`/search/${encodeURIComponent(tagContent.split("#")[1])}`
 				);
 			},
-      		clickUser(no) {
-				  console.log(no);
-				this.$router.push(
-					`/feed/`+no+`/post`
-				);
+			clickUser(no) {
+				this.$router.push(`/feed/` + no + `/post`);
 			},
 			isMobile() {
 				if (
@@ -380,23 +397,31 @@
 		filters: {
 			hashAnchor(str) {
 				// TODO: anchor 태그에서 href base url 주석 처리된 url로 변경!!!!!
-				str = (str || "").replace(
+				if (!str.includes("#") && !str.includes("@")) {
+					return str;
+				}
+
+				str = str.replace(
 					/#[^\s]+/g,
-					'<a class="text-decoration-none" href="http://192.168.219.106:8080/search/$&">$&</a>'
+					// '<post-content-tag :keyword="$&"></post-content-tag>'
+					'<a class="text-decoration-none" href="/search/$&">$&</a>'
 				);
-				// str = str.replace(
-				//   /#[^\s]+/g,
-				//   '<a class="text-decoration-none" href="http://i6b101.p.ssafy.io/search/$&">$&</a>'
-				// );
 				return str.replace(/\/#/g, "/");
 			},
 		},
 		computed: {
-			canUser(){
-				console.log("여기다")
-				console.log(this.challenge)
-				if(this.challenge.challenge_access==="PRIVATE"){
-					if(this.challenge.challenge_challengers.find(o => o.user_no === (this.$store.state.userStore.userInfo ? this.$store.state.userStore.userInfo.user_no : 0))) return true;
+			canUser() {
+				if (this.challenge.challenge_access === "PRIVATE") {
+					if (
+						this.challenge.challenge_challengers.find(
+							(o) =>
+								o.user_no ===
+								(this.$store.state.userStore.userInfo
+									? this.$store.state.userStore.userInfo.user_no
+									: 0)
+						)
+					)
+						return true;
 					return false;
 				}
 				return true;
@@ -415,44 +440,55 @@
 					.filter((word) => {
 						return word.startsWith("#");
 					});
-        if (this.challenge.challenge_challengers && this.challenge.challenge_challengers.length === 1) {
-          splitedContent.push("#1:1");
-        }
+				if (
+					this.challenge.challenge_challengers &&
+					this.challenge.challenge_challengers.length === 1
+				) {
+					splitedContent.push("#1:1");
+				}
 				if (splitedContent.length > 0) {
 					return splitedContent;
 				} else {
 					return null;
 				}
 			},
-      isEnded() {
-				if (checkEnd(this.$store.state.challengeStore.challenge.challenge_end.replace(/./g, "-"))) {
-          return true;
-        }
-        return false;
-      },
+			isEnded() {
+				if (this.$store.state.challengeStore.challenge.challenge_no) {
+					if (
+						checkEnd(
+							this.$store.state.challengeStore.challenge.challenge_end.replace(
+								/./g,
+								"-"
+							)
+						)
+					) {
+						return true;
+					}
+				}
+				return false;
+			},
 			challenge() {
 				if (this.$store.state.challengeStore.challenge.challenge_no) {
 					isSubscribe(
 						this.$store.state.challengeStore.challenge.challenge_no,
-						this.$store.state.userStore.userInfo.user_no,
+						this.$store.state.userStore.userInfo
+							? this.$store.state.userStore.userInfo.user_no
+							: 0,
 						(response) => {
 							if (response.data.success) {
 								this.isSubscription = true;
-              }
-							else {
+							} else {
 								this.isSubscription = false;
-              }
+							}
 						},
 						() => {}
 					);
 				}
 				return this.$store.state.challengeStore.challenge;
 			},
-      // challengers(){
-      //   console.log(this.challenge);
-      //   console.log("this.challenge");
-      //   return this.challenge.challenge_challengers;
-      // },
+			// challengers(){
+			//   return this.challenge.challenge_challengers;
+			// },
 			postList() {
 				if (this.$route.query.postNo) {
 					let org = this.$store.state.postStore.postList;
@@ -484,7 +520,7 @@
 				this.sortBy = "post_regdate";
 			}
 
-			this.userData = this.$store.state.userStore.userInfo;	
+			this.userData = this.$store.state.userStore.userInfo;
 		},
 	};
 </script>

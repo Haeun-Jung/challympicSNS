@@ -214,17 +214,17 @@
         </v-card>
       </v-menu>
       <v-menu bottom left offset-y>
-				<template v-slot:activator="{ on, attrs }">
-					<!--
+        <template v-slot:activator="{ on, attrs }">
+          <!--
 					<v-btn icon v-bind="attrs" v-on="on">
 						<v-icon>mdi-account-circle</v-icon>
 					</v-btn>
 					 v-if="!this.$store.state.userStore.filePath"
 					-->
-					<v-avatar v-bind="attrs" v-on="on" size="35">
-						<v-img :src="imageUrl"></v-img>
-					</v-avatar>
-				</template>
+          <v-avatar v-bind="attrs" v-on="on" size="35">
+            <v-img :src="imageUrl"></v-img>
+          </v-avatar>
+        </template>
 
         <v-list>
           <v-list-item
@@ -393,7 +393,6 @@ export default {
 			},*/
     keywordSearch() {
       if (this.searchInput) {
-        console.log(this.searchInput);
         alert(this.searchInput);
         //이쪽에서 start with @인지 #인지 확인
         let searchCategory = this.searchInput.charAt(0);
