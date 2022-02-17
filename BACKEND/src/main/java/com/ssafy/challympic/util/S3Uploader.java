@@ -254,14 +254,15 @@ public class S3Uploader {
             }
 
 
-            FFmpeg ffmpeg = new FFmpeg(FFMPEG_PATH + File.separator + FFMPEG);
-            FFprobe ffprobe = new FFprobe(FFMPEG_PATH + File.separator + FFPROBE);
-            FFmpegProbeResult probeResult = ffprobe.probe(FILEPATH);
+//            FFmpeg ffmpeg = new FFmpeg(FFMPEG_PATH + File.separator + FFMPEG);
+//            FFprobe ffprobe = new FFprobe(FFMPEG_PATH + File.separator + FFPROBE);
+//            FFmpegProbeResult probeResult = ffprobe.probe(FILEPATH);
 
             // AWS EC2용 Linux 버전이라 리눅스에서 설치 후 경로를 맞추어서 실행파일을 찾아줘야함, 밑에는 리눅스에서 경로 단축 링크(ln)을 걸어줘서
             // 실행파일 위치가 짧은 것, ffmpeg, ffrobe(설치 후 폴더 한 칸 밖으로 빼야함) 둘 다 경로 수정 필요
-//            FFmpeg ffmpeg = new FFmpeg(  File.separator + "usr" + File.separator + "bin" + File.separator + FFMPEG);
-//            FFprobe ffprobe = new FFprobe(File.separator + "usr" + File.separator + "bin" + File.separator +  FFPROBE);
+            FFmpeg ffmpeg = new FFmpeg(  File.separator + "usr" + File.separator + "bin" + File.separator + FFMPEG);
+            FFprobe ffprobe = new FFprobe(File.separator + "usr" + File.separator + "bin" + File.separator +  FFPROBE);
+            FFmpegProbeResult probeResult = ffprobe.probe(FILEPATH);
 
             log.debug("========== VideoFileUtils.getMediaInfo() ==========");
             log.debug("filename : {}", probeResult.getFormat().filename);
