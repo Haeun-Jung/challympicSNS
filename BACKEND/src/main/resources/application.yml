@@ -6,8 +6,8 @@ spring:
     password: ssafy
   jpa:
     hibernate:
-#      ddl-auto: update
-      ddl-auto: create
+      ddl-auto: update
+#      ddl-auto: create
     properties:
       hibernate:
 #        show_sql: true
@@ -22,10 +22,10 @@ server:
   port: 7777
   servlet:
     context-path: /challympic
-#  ssl:
-#    key-store: classpath:keystore.p12
-#    key-store-type: PKCS12
-#    key-store-password: ssafyB101!
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-type: PKCS12
+    key-store-password: ssafyB101!
 
 logging:
   level:

@@ -362,7 +362,7 @@
 				console.log("여기다")
 				console.log(this.challenge)
 				if(this.challenge.challenge_access==="PRIVATE"){
-					if(this.challenge.challenge_challengers.find(o => o.user_no === this.$store.state.userStore.userInfo.user_no)) return true;
+					if(this.challenge.challenge_challengers.find(o => o.user_no === (this.$store.state.userStore.userInfo ? this.$store.state.userStore.userInfo.user_no : 0))) return true;
 					return false;
 				}
 				return true;
