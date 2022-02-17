@@ -187,12 +187,15 @@
 		methods: {
 			setSubscribe(challenge) {
 				// console.log(challenge);
-				challenge.subscription = !challenge.subscription;
 				setSubscription(
 					challenge.challenge_no,
-					challenge.user_no,
+					this.$store.state.userStore.userInfo?this.$store.state.userStore.userInfo.user_no:0,
 					(response) => {
 						console.log(response);
+						this.$store.dispatch("userStore/getSubscription", {
+							token: sessionStorage.getItem("Authorization"),
+						});
+						challenge.subscription = !challenge.subscription;
 					},
 					(error) => {
 						console.log(error);

@@ -62,7 +62,7 @@ public class SearchApiController {
                 .map(c -> {
                     List<Post> postListByChallengeNo = postService.getPostList(c.getChallenge_no());
                     List<PostDto> postList = postToDto(postListByChallengeNo, request.user_no);
-                    boolean isSubscription = subscriptionService.findSubscriptionByChallengeAndUser(c.getChallenge_no(), c.getUser().getUser_no()) != null;
+                    boolean isSubscription = subscriptionService.findSubscriptionByChallengeAndUser(c.getChallenge_no(), request.user_no) != null;
                     return new ChallengeDto(c, postList, isSubscription);
                 })
                 .collect(Collectors.toList());
