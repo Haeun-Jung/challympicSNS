@@ -44,15 +44,13 @@ public class SearchService {
         return searchRepository.findPostByTagContent(tag);
     }
 
-    private final int maxChallenge = 1000000; //TODO : 현재 챌린지 지우면서 찾기 ㅇ어려워짐
-
     public List<Challenge> findTrendChallenge() {
         List<Challenge> searchedChallenges = searchRepository.findChallengeByTrend();
         List<Challenge> allChallenge = challengeRepository.findAll();
         int challengeSize = allChallenge.size();
         List<int[]> challengeCount = new ArrayList<>();
 
-        for(Challenge c : allChallenge) {
+        for(Challenge c : searchedChallenges) {
             boolean isFind = false;
             for(int[] count : challengeCount) {
                 if(count[0] == c.getChallenge_no()) {
@@ -68,14 +66,15 @@ public class SearchService {
         challengeCount.sort(new Comparator<int[]>() {
             @Override
             public int compare(int[] o1, int[] o2) {
-                return o1[1] - o2[1];
+                return o2[1] - o1[1];
             }
         });
 
         List<Challenge> trendChallenge = new ArrayList<>();
-        for(int i = 0; i <= (Math.min(challengeSize, 4)); i++) {
+        System.out.println(challengeSize);
+        for(int i = 0; i <= (Math.min(challengeSize-1, 4)); i++) {
             int challengeNo = challengeCount.get(i)[0];
-            if(challengeCount.get(i)[1] != 0) trendChallenge.add(challengeRepository.findByChallengeNo(challengeNo));
+            trendChallenge.add(challengeRepository.findByChallengeNo(challengeNo));
         }
 
         return trendChallenge;
