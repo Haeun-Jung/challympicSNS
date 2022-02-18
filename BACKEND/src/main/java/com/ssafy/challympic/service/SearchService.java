@@ -44,14 +44,16 @@ public class SearchService {
         return searchRepository.findPostByTagContent(tag);
     }
 
+    private final int maxChallenge = 1000000; //TODO : 현재 챌린지 지우면서 찾기 ㅇ어려워짐
+
     public List<Challenge> findTrendChallenge() {
         List<Challenge> searchedChallenges = searchRepository.findChallengeByTrend();
         List<Challenge> allChallenge = challengeRepository.findAll();
         int challengeSize = allChallenge.size();
-        int[][] challengeCount = new int[challengeSize + 1][2];
-        for(int i = 1; i <= challengeSize; i++) challengeCount[i][0] = i;
+        int[][] challengeCount = new int[maxChallenge][2];
+        for(int i = 0; i < maxChallenge; i++) challengeCount[i][0] = i + 1;
         for(Challenge c : searchedChallenges) {
-            challengeCount[c.getChallenge_no()][1]++;
+            challengeCount[c.getChallenge_no() - 1][1]++;
         }
         Arrays.sort(challengeCount, new Comparator<int[]>() {
             @Override
