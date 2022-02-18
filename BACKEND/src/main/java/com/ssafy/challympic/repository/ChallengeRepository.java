@@ -86,8 +86,7 @@ public class ChallengeRepository {
     }
 
     public List<Challenge> findByTagContent(String tag_content) {
-        return em.createQuery("select c from Challenge c where c.challenge_no = (" +
-                "select ct.challenge.challenge_no from ChallengeTag ct where ct.tag.tag_content = :tag_content)", Challenge.class)
+        return em.createQuery("select ct.challenge from ChallengeTag ct where ct.tag.tag_content = :tag_content", Challenge.class)
                 .setParameter("tag_content", tag_content)
                 .getResultList();
     }
