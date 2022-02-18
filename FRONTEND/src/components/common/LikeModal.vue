@@ -68,7 +68,7 @@
             </v-list-item-content>
             <!-- 리스트에 있는 유저와 내(=로그인 유저)가 다를 때 -->
             <v-list-item-icon
-              v-if="(login_user ? login_user.user_no : 0) != user.user_no"
+              v-if="(login_user ? login_user : 0) != user.user_no"
             >
               <v-btn
                 v-if="!user.isFollowing"
@@ -127,6 +127,7 @@ export default {
     return {
       likeList: null,
       snackbar: false,
+      defaultPath: "http://d3iu4sf4n4i2qf.cloudfront.net/",
 			text: "로그인이 필요한 서비스입니다.",
 			timeout: 1500,
     };

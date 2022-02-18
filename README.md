@@ -45,7 +45,29 @@
 - 태그와 사용자 검색 가능
 - 인기 챌린지와 도전왕 확인 가능
 
-![main](https://user-images.githubusercontent.com/53832553/154306212-e573c27f-5cf3-4440-8376-b7da3e920280.png)
+![Main](https://user-images.githubusercontent.com/53832553/154602710-167b17df-3abd-418f-a936-9448b9e94e97.png)
+
+---
+
+### 📌 Side
+- 인기 챌린지
+- 내 관심사 태그 확인
+- 구독 챌린지 확인
+- 광고 배너(공익 캠페인 가능)
+- 도전왕
+- 다크모드 설정
+- 사이드바 푸터
+
+![Side](https://user-images.githubusercontent.com/53832553/154602475-86471220-864d-44ad-96af-d5b067988a1a.png)
+
+---
+
+### 📌 Search
+- 사용자 검색
+- 태그 검색
+- 태그 검색 시 관련 챌린지와 포스트 확인 가능
+
+![Search](https://user-images.githubusercontent.com/53832553/154609725-5029781e-9ba4-4439-9daf-8c55785e2ec6.png)
 
 ---
 
@@ -64,7 +86,7 @@
 - 챌린지 구독 가능
 - 포스트 좋아요, 댓글 가능
 
-![ChallengeDetail](https://user-images.githubusercontent.com/53832553/154307326-8f2b0f5a-8b45-45ca-a747-7f7ad0455005.png)
+![ChallengeDetail](https://user-images.githubusercontent.com/53832553/154602025-a04c9237-b470-4477-83e4-de21f2fb820f.png)
 
 ---
 
@@ -81,7 +103,7 @@
 
 ### 📌 Post Upload
 - 챌린지 지정
-- 챌린지를 지정하면 지정된 파일 형식 출력
+- 챌린지를 지정하면 지정된 파일 형식 검사
 - 포스트 업로드
 - 드래그앤드랍 가능
 
@@ -108,7 +130,7 @@
 ### 📌 Dark Mode
 - 모든 페이지 다크 모드 구현
 
-![DarkMode](https://user-images.githubusercontent.com/53832553/154307808-fd2701f5-ceb0-4ce1-a4cd-1173bae2c4f4.png)
+![DarkMode](https://user-images.githubusercontent.com/53832553/154602066-8c30127d-1fac-492d-8a56-f314a692e769.png)
 
 ---
 
