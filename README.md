@@ -49,6 +49,15 @@
 
 ---
 
+### 📌 Tag Recommend
+- 회원가입 후 선호 태그 선택
+- 사용자의 선호 태그와 검색 데이터를 기준으로 태그 추천
+
+![TagRecommend](https://user-images.githubusercontent.com/53832553/154597825-e77f9d66-055b-45ef-9d98-3bb3e6bc3a11.png)
+![TagRecommend2](https://user-images.githubusercontent.com/53832553/154599978-a859687a-9598-4041-a13f-87a5cdf1b336.png)
+
+---
+
 ### 📌 Challenge Detail
 - 챌린지 상세보기
 - 챌린지에 참여된 포스트 확인 가능
@@ -72,7 +81,9 @@
 
 ### 📌 Post Upload
 - 챌린지 지정
+- 챌린지를 지정하면 지정된 파일 형식 출력
 - 포스트 업로드
+- 드래그앤드랍 가능
 
 ![Post_Upload](https://user-images.githubusercontent.com/53832553/154306940-5e1aedd8-4f07-4638-91ae-142249120df9.png)
 
@@ -85,6 +96,12 @@
 - 팔로우, 팔로워 확인
 
 ![UserFeed](https://user-images.githubusercontent.com/53832553/154307634-d8e5e74a-b74f-47e8-ad4f-13d557e77501.png)
+
+---
+
+### 📌 User Feed - Following
+- 본인의 계정의 팔로워, 팔로잉 사용자 확인
+![Following](https://user-images.githubusercontent.com/53832553/154600643-cad18a4d-1a13-4a8e-9630-cfd8fbe2fe32.png)
 
 ---
 
@@ -123,7 +140,7 @@
 <br>
 
 ## 🎈 ERD
-![ERD](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/7e812ca5-8b00-4850-a2ee-0589de4fcf88/challympic.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220216%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220216T151942Z&X-Amz-Expires=86400&X-Amz-Signature=5e56700a3398927d365e31b3d15d3d42255cff71cb6b608b45d09a46d818d53b&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22challympic.png%22&x-id=GetObject)
+![ERD](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/7e812ca5-8b00-4850-a2ee-0589de4fcf88/challympic.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220218%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220218T013019Z&X-Amz-Expires=86400&X-Amz-Signature=f9a6bbb5a7c9cf96cd9d61eb07e08e5a87a7cf072274a747b276bd7b561df2e9&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22challympic.png%22&x-id=GetObject)
 
 <br>
 
@@ -148,3 +165,8 @@
 - GitLab
 - Postman
 
+<br>
+
+## ✅ 개선할 점
+    ✔ 챌린지와 포스트까지 추천  
+    ✔ 추천 시스템 모델링
