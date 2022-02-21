@@ -162,7 +162,7 @@
 <br>
 
 ## 🎈 ERD
-![ERD](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/7e812ca5-8b00-4850-a2ee-0589de4fcf88/challympic.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220218%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220218T013019Z&X-Amz-Expires=86400&X-Amz-Signature=f9a6bbb5a7c9cf96cd9d61eb07e08e5a87a7cf072274a747b276bd7b561df2e9&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22challympic.png%22&x-id=GetObject)
+![ERD](https://user-images.githubusercontent.com/53832553/154911578-1ed14b5d-f2c8-47f2-8f72-9b6ec0790d72.png)
 
 <br>
 
