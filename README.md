@@ -5,6 +5,24 @@
 
 <br>
 
+### **📚 Contents**  
+
+1️⃣ [Target](#-target)   
+2️⃣ [Main Function](#-main-function)  
+3️⃣ [Challympic Service](#-challympic-service)  
+4️⃣ [How To Run](#-how-to-run)  
+5️⃣ [Team](#-team)  
+6️⃣ [Tech Architecture](#-tech-architecture)  
+7️⃣ [ERD](#-erd)  
+8️⃣ [API](#-api)  
+9️⃣ [Schedule](#-schedule)  
+🔟 [Cooperation Tool](#-cooperation-tool)  
+☑ [Improvement Plan](#-improvement-plan)
+
+> 버전 및 배포 : `exec/포팅 매뉴얼`
+
+<br>
+
 ## 😮 Target
     ✔ 숏폼 콘텐츠를 선호하는 사람
     ✔ 사소한 재능을 뽐내고 싶은 사람
@@ -13,7 +31,7 @@
 
 <br>
 
-## 👍 주요 기능
+## 👍 Main Function
 - **챌린지 서비스**
     - 사용자가 직접 챌린지를 생성할 수 있다.
     - 사용자가 존재하는 챌린지에 포스트를 업로드할 수 있다.
@@ -141,6 +159,34 @@
 
 <br>
 
+## 💾 How To Run
+- **Frontend**
+```
+npm install
+npm run serve
+```
+
+- **Backend**
+> 보안으로 AWS 관련 properties가 생략되었습니다.  
+> `BACKEND/src/main/resources/` 하위에, `aws.yml`을 추가해주세요.
+```aws.yml
+cloud:
+  aws:
+    credentials:
+      access-key: <your-aws-access-key>
+      secret-key: <your-aws-secret-key>
+    s3:
+      bucket: <your-bucket-name> # recommend name is challympic
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+```
+- 이후 Spring Boot를 실행
+
+
+<br>
+
 ## 😀 Team
 <br>
 
@@ -189,6 +235,6 @@
 
 <br>
 
-## ✅ 개선할 점
+## ✅ Improvement Plan
     ✔ 챌린지와 포스트까지 추천  
     ✔ 추천 시스템 모델링
