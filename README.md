@@ -193,9 +193,9 @@ cloud:
 <br>
 
 ## 👊 Cooperation Tool
-- [Notion](https://www.notion.so/ssafy6commonpjt/_-6-b449c8f84a6843a282e8a9158fa207f0)  
-- [Figma](https://www.figma.com/file/a33AYcxPjOG5C8ejxtZ35c/%ED%94%84%EB%A1%9C%ED%86%A0%ED%83%80%EC%9D%B4%ED%95%91?node-id=51%3A2)
-- [Jira](https://jira.ssafy.com/secure/RapidBoard.jspa?rapidView=11107&projectKey=S06P12B101)
+- Notion
+- Figma
+- Jira
 - Webex
 - Mattermost
 - Discord
@@ -207,3 +207,11 @@ cloud:
 ## ✅ Improvement Plan
     ✔ 챌린지와 포스트까지 추천  
     ✔ 추천 시스템 모델링
+    
+<br>
+
+## ⭐ 수상 내역
+
+    🏆 삼성 청년 SW 아카데미(SSAFY) 공통 프로젝트 우수상 수상
+
+<img src="https://user-images.githubusercontent.com/53832553/176002399-5ff45ac6-8666-4d02-82e7-01f99d613e7a.png" width="50%">
